@@ -1,4 +1,4 @@
-  // ======================
+// ======================
   // PWA register
   // ======================
   (function registerSW(){
@@ -61,7 +61,6 @@
     records: [],
     badges: { earned: [] },
     goalsByMonth: {},
-    vendorGoalsByMonth: {},
     vendorGoalsByMonth: {}
   };
 
@@ -1912,7 +1911,8 @@
   // Render completo do painel do vendedor (sempre mostra algo; nunca deixa a tela vazia)
   
   // Arena de Resultados (vendedor) — painel mensal + intervalo de datas + conquistas
-  function renderSellerView(){
+function renderSellerView(){
+
   try{
     state.options = state.options || { askValue:true, askPieces:true, vendorDivisor: 0 };
     state.sellers = Array.isArray(state.sellers) ? state.sellers : [];
@@ -1923,157 +1923,96 @@
 
   try{ ensureBadges(); }catch(e){ console.error(e); }
 
-  const ARENA_SEALS=[
-    {name:"Bronze",icon:"🥉",min:0},
-    {name:"Prata",icon:"🥈",min:800},
-    {name:"Ouro",icon:"🏅",min:1500},
-    {name:"Diamante",icon:"💎",min:2500},
-    {name:"Esmeralda",icon:"🟢",min:4000}
+  const ARENA_SEALS = [
+    { name:"Bronze", icon:"🥉", min:0 },
+    { name:"Prata", icon:"🥈", min:800 },
+    { name:"Ouro", icon:"🏅", min:1500 },
+    { name:"Esmeralda", icon:"🟢", min:2500 },
+    { name:"Diamante", icon:"💎", min:40000 }
+    
   ];
 
   function calcArenaScore(records){
-    let value=0,pieces=0,sales=0;
+    let value = 0, pieces = 0, sales = 0;
+
     for(const r of records){
-      if(r.outcome==="sold"){
+      if(r.outcome === "sold"){
         sales++;
-        value+=Number(r.value||0);
-        pieces+=Number(r.pieces||0);
+        value += Number(r.value || 0);
+        pieces += Number(r.pieces || 0);
       }
     }
-    const score=Math.round(value+(sales*50)+(pieces*25));
-    return{value,pieces,sales,score};
+
+    const score = Math.round(value + (sales * 50) + (pieces * 25));
+
+    return {
+      value,
+      pieces,
+      sales,
+      score
+    };
   }
 
   function getSeal(score){
-    let current=ARENA_SEALS[0];
+    let current = ARENA_SEALS[0];
+
     for(const s of ARENA_SEALS){
-      if(score>=s.min) current=s;
+      if(score >= s.min){
+        current = s;
+      }
     }
+
     return current;
   }
 
-  const view=document.getElementById("viewSeller");
+  const view = document.getElementById("viewSeller");
   if(!view) return;
 
-  view.innerHTML=`
-<section class="card arenaCard">
-<div class="cardHeader">
-<div class="arenaTitle">
-<h2>Arena de Resultados</h2>
-<div class="rowRight">
-<button class="btn" id="btnSellerDownloadBadges">Baixar selos</button>
-</div>
-</div>
-</div>
+  view.innerHTML = `
+  <section class="card arenaCard">
 
-<div class="cardBody">
+    <div class="cardHeader">
+      <div class="arenaTitle">
+        <h2>Arena de Resultados</h2>
 
-<div class="arenaFilters">
-<div class="field flex">
-<label>Vendedor</label>
-<select id="sellerViewSelect"></select>
-</div>
+        <div class="rowRight">
+          <button class="btn" id="btnSellerDownloadBadges">Baixar selos</button>
+        </div>
+      </div>
+    </div>
 
-<div class="field">
-<label>Mês</label>
-<input id="sellerViewMonth" type="month"/>
-</div>
-</div>
+    <div class="cardBody">
 
-<div class="divider"></div>
+      <div class="arenaFilters">
 
-<div id="arenaResultsRanking"></div>
+        <div class="field flex">
+          <label>Vendedor</label>
+          <select id="sellerViewSelect"></select>
+        </div>
 
-<div class="divider"></div>
+        <div class="field">
+          <label>Mês</label>
+          <input id="sellerViewMonth" type="month"/>
+        </div>
 
-<div class="arenaBadgesHead">
-<h3 class="arenaSectionTitle">Conquistas do mês</h3>
-</div>
+      </div>
 
-<div class="badgeGrid" id="sellerBadges"></div>
+      <div class="divider"></div>
 
-</div>
-</section>
-`;
+      <div id="arenaResultsRanking"></div>
 
-  const sel=document.getElementById("sellerViewSelect");
-  const mkInput=document.getElementById("sellerViewMonth");
+      <div class="divider"></div>
 
-  const active=state.sellers.filter(s=>s.active!==false);
+      <div class="arenaBadgesHead">
+        <h3 class="arenaSectionTitle">Conquistas do mês</h3>
+      </div>
 
-  sel.innerHTML=active.map(s=>`<option value="${s.id}">${s.name}</option>`).join("");
+      <div class="badgeGrid" id="sellerBadges"></div>
 
-  mkInput.value=monthKey();
+    </div>
 
-  function update(){
-
-    const sid=sel.value;
-    const mk=mkInput.value;
-
-    const rows=[];
-
-    for(const s of active){
-
-      const recs=state.records.filter(r=>r.sellerId===s.id&&r.monthKey===mk);
-
-      const arena=calcArenaScore(recs);
-
-      const seal=getSeal(arena.score);
-
-      rows.push({
-        name:s.name,
-        value:arena.value,
-        pieces:arena.pieces,
-        score:arena.score,
-        seal
-      });
-    }
-
-    rows.sort((a,b)=>b.score-a.score);
-
-    const wrap=document.getElementById("arenaResultsRanking");
-
-    wrap.innerHTML=`
-<div class="arenaRankingCard">
-
-<table class="arenaRankingTable">
-
-<thead>
-<tr>
-<th>#</th>
-<th>Vendedor</th>
-<th>Faturamento</th>
-<th>Peças</th>
-<th>Pontos</th>
-<th>Selo</th>
-</tr>
-</thead>
-
-<tbody>
-
-${rows.map((r,i)=>`
-<tr>
-<td>${i+1}</td>
-<td>${r.name}</td>
-<td>${formatMoney(r.value)}</td>
-<td>${formatNum(r.pieces)}</td>
-<td>${formatNum(r.score)}</td>
-<td>${r.seal.icon} ${r.seal.name}</td>
-</tr>
-`).join("")}
-
-</tbody>
-</table>
-
-</div>
-`;
-  }
-
-  sel.onchange=update;
-  mkInput.onchange=update;
-
-  update();
-}
+  </section>
+  `;
 
     const mkInput = document.getElementById('sellerViewMonth');
     const sel = document.getElementById('sellerViewSelect');
@@ -2315,7 +2254,7 @@ ${rows.map((r,i)=>`
         </div>
         <div class="divider"></div>
         <div class="meter good"><i style="width:${pctXP}%"></i></div>
-        <div class="hint" style="margin-top:8px">${stars>0 ? starIcons : 'Ganhe ⭐ batendo metas semanais e mensais.'}</div>
+        <div class="hint" style="margin-top:8px">${stars>0 ? starIcons : 'Ganhe ⭐ batendo metas semanais e mensais.'}$</div>
       `;
 
       const btn = document.getElementById('btnSellerDownloadBadges');
