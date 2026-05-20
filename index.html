@@ -1181,37 +1181,7 @@
 </div>
 </section>
 <!-- VENDEDOR -->
-<div id="viewSeller" style="display:none">
-<section class="card">
-<div class="cardHeader">
-<h2>Painel do Vendedor</h2>
-<div class="rowRight">
-<button class="btn" id="btnSellerDownloadBadges">Baixar selos</button>
-</div>
-</div>
-<div class="cardBody">
-<div class="row">
-<div class="field" style="min-width:260px">
-<label>Vendedor</label>
-<select id="sellerViewSelect"></select>
-</div>
-<div class="field" style="min-width:220px">
-<label>Mês</label>
-<input id="sellerViewMonth" type="month"/>
-</div>
-</div>
-<div class="divider"></div>
-<div class="kpis" id="sellerKpis"></div>
-<div class="divider"></div>
-<div class="noteBox" id="sellerGoalsBox"></div>
-<div class="divider"></div>
-<h3 style="margin:0 0 8px 0; font-size:14px; letter-spacing:.06em; text-transform:uppercase; color:#cfe0ff">Galeria de Selos</h3>
-<div class="badgeGrid" id="sellerBadges"></div>
-<div class="divider"></div>
-<div class="hint">No fim do mês, o vendedor pode baixar os selos e trocar por prêmios. 🔥</div>
-</div>
-</section>
-</div>
+<div id="viewSeller" style="display:none"></div>
 </div></main>
 <!-- FX Layer -->
 <div id="fxLayer"></div>
@@ -3722,6 +3692,7 @@
     if($("viewMetas").style.display !== "none") renderGoals();
     if($("viewMetasRank").style.display !== "none") renderMetaRank();
     if($("viewNoConv").style.display !== "none") renderNoConv();
+    if($("viewSeller").style.display !== "none") try{ renderSellerView(); }catch(e){ console.error("renderSellerView in renderAll failed", e); }
   }
 
   $("btnCallNext").addEventListener("click", callNext);
