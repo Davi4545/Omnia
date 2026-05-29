@@ -783,9 +783,3609 @@
 </style>
 </head>
 <body>
-<!-- Placeholder - Revert Complete -->
-<!-- The Arena de Resultados feature has been restored. -->
-<!-- Full HTML file needs to be uploaded from parent commit -->
-REVERT IN PROGRESS - Please refresh or wait for full restoration.
+<header>
+<div class="wrap">
+<div class="topbar">
+<div class="brand">
+<div class="logoBox" id="logoBox" title="Logo da loja">
+<span style="font-weight:900; color: var(--muted);">N</span>
+</div>
+<div>
+<h1>OMNIA</h1>
+<div class="sub"><span id="storeNameTop">Sua loja</span> · <span style="opacity:.7">powered by Spencer</span></div>
+</div>
+</div>
+<div class="rightTop">
+<div class="chip">Status: <b id="statusChip">Online</b></div>
+<button class="btn" id="btnRanking">Ranking</button>
+<button class="btn" id="btnData">Dados</button>
+<button class="btn" id="btnGoals">Metas</button>
+<button class="btn" id="btnGoalRank">Ranking Metas</button>
+<button class="btn" id="btnNoConv">Não Convertidos</button>
+<button class="btn" id="btnSeller">Arena de Resultados</button>
+<button class="btn" id="btnSettings">Config</button>
+<button class="btn install" id="btnInstall" style="display:none">Instalar</button>
+</div>
+</div>
+<div class="tabs">
+<button class="tab active" id="tabOps">Operação</button>
+<button class="tab" id="tabDados">Dados</button>
+<button class="tab" id="tabMetas">Metas</button>
+<button class="tab" id="tabMetasRank">Ranking Metas</button>
+<button class="tab" id="tabNoConv">Não Convertidos</button>
+<button class="tab" id="tabSeller">Arena de Resultados</button>
+</div>
+</div>
+</header>
+<main class="wrap">
+<!-- OPERACAO -->
+<div id="viewOps">
+<div class="grid">
+<section class="card">
+<div class="cardHeader">
+<h2>Lista da vez</h2>
+<div class="rowRight">
+<button class="btn" id="btnPreference">Preferência</button>
+<button class="btn warn" id="btnCallNext">Chamar próximo</button>
+<button class="btn" id="btnAddSeller">+ Vendedor</button>
+</div>
+</div>
+<div class="cardBody">
+<div class="hint">Regra OMNIA: atendimento só termina quando você <b>finalizar</b> (vendeu / não vendeu). Isso garante conversão real.</div>
+<div class="divider"></div>
+<div class="kpis" id="kpis"></div>
+<div class="divider"></div>
+<div class="list" id="queueList"></div>
+<div class="divider"></div>
+<div class="row" style="justify-content:space-between">
+<div class="tiny">Vendedores fora da fila</div>
+<div class="tiny">Clique para entrar / retomar</div>
+</div>
+<div class="list" id="poolList" style="margin-top:10px"></div>
+</div>
+</section>
+<section class="card">
+<div class="cardHeader">
+<h2>Em atendimento</h2>
+<div class="rowRight"><span class="tag" id="attendTag">Nenhum</span></div>
+</div>
+<div class="cardBody" id="attendPanel">
+<div class="hint">Chame o próximo para iniciar um atendimento.</div>
+</div>
+</section>
+</div>
+</div>
+<!-- DADOS -->
+<div id="viewDados" style="display:none">
+<section class="card">
+<div class="cardHeader">
+<h2>Banco de Dados</h2>
+<div class="rowRight">
+<button class="btn" id="btnExportCSV">Exportar CSV</button>
+<button class="btn" id="btnExportJSON">Exportar JSON</button>
+</div>
+</div>
+<div class="cardBody">
+<div class="row">
+<div class="field">
+<label>Data (ranking do dia)</label>
+<input id="dataDate" type="date"/>
+</div>
+<div class="field">
+<label>Mês (ranking do mês)</label>
+<input id="dataMonth" type="month"/>
+</div>
+<div class="field">
+<label>Visão</label>
+<select id="dataView">
+<option value="dayRank">Ranking do dia (data escolhida)</option>
+<option value="daily">Conversão por dia (Loja)</option>
+<option value="sellerDaily">Conversão por dia (Vendedor)</option>
+<option selected="" value="monthRank">Ranking do mês (mês escolhido)</option>
+<option value="raw">Registros (atendimentos do mês escolhido)</option>
+</select>
+</div>
+</div>
+<div class="divider"></div>
+<div class="kpis" id="kpisData"></div>
+<div class="divider"></div>
+<div id="dataTableWrap"></div>
+<div class="divider"></div>
+<div class="hint">
+          • <b>Conversão</b> = vendas ÷ atendimentos<br/>
+          • <b>P.A. por venda</b> = peças ÷ vendas<br/>
+          • <b>P.A. por atendimento</b> = peças ÷ atendimentos
+        </div>
+</div>
+</section>
+</div>
+<!-- METAS -->
+<div id="viewMetas" style="display:none">
+<section class="card">
+<div class="cardHeader">
+<h2>Metas</h2>
+<div class="rowRight">
+<button class="btn" id="btnAutoRedistribute">Auto redistribuir</button>
+<button class="btn good" id="btnSaveGoals">Salvar metas</button>
+</div>
+</div>
+<div class="cardBody">
+<div class="noteBox">
+          ✅ Ao digitar a <b>meta mensal</b> e as <b>% por semana</b>, o OMNIA calcula automaticamente:
+          <b>meta diária</b> (baseado nos dias restantes do mês) e <b>metas das semanas</b>.
+          <br/>✅ Ao clicar em <b>Fechar Semana</b>, o sistema redistribui o que falta para as semanas restantes.
+        </div>
+<div class="divider"></div>
+<div class="row">
+<div class="field">
+<label>Mês da meta</label>
+<input id="goalMonth" type="month"/>
+</div>
+<div class="field">
+<label>Meta mensal (R$)</label>
+<input id="goalMonthly" inputmode="decimal" placeholder="Ex: 120000,00"/>
+</div>
+<div class="field">
+<label>Meta diária (AUTO) (R$)</label>
+<input disabled="" id="goalDaily" inputmode="decimal" placeholder="Auto"/>
+</div>
+</div>
+<div class="divider"></div>
+<h3 style="margin:0 0 8px 0; font-size:14px; letter-spacing:.06em; text-transform:uppercase; color:#cfe0ff">Meta do Vendedor</h3>
+<div class="row" style="gap:12px">
+<div class="field" style="min-width:220px">
+<label>Dividir meta da loja por</label>
+<input id="goalVendorDivisor" inputmode="decimal" placeholder="Ex: 3,5"/>
+</div>
+<div class="field" style="min-width:260px">
+<label>Vendedor (ajuste opcional)</label>
+<select id="goalVendorSelect"></select>
+</div>
+<div class="field" style="min-width:240px">
+<label>Meta mensal do vendedor (override)</label>
+<input id="goalVendorMonthlyOverride" inputmode="decimal" placeholder="Deixe vazio p/ automático"/>
+</div>
+<div class="rowRight" style="margin-left:auto">
+<button class="btn" id="btnSaveVendorGoal">Salvar meta vendedor</button>
+</div>
+</div>
+<div class="kpis" id="kpisVendorGoals" style="margin-top:10px"></div>
+<div class="divider"></div>
+<h3 style="margin:0 0 8px 0; font-size:14px; letter-spacing:.06em; text-transform:uppercase; color:#cfe0ff">Distribuição semanal</h3>
+<div class="row" style="gap:12px">
+<div class="field" style="min-width:200px">
+<label>Semana atual</label>
+<input disabled="" id="goalCurrentWeek"/>
+</div>
+<div class="field" style="min-width:280px">
+<label>Semana fechada?</label>
+<input disabled="" id="goalWeekClosed"/>
+</div>
+<div class="rowRight" style="margin-left:auto">
+<button class="btn warn" id="btnCloseWeek">Fechar Semana Atual</button>
+<button class="btn ghost" id="btnReopenWeeks">Reabrir Semanas</button>
+</div>
+</div>
+<div class="divider"></div>
+<div class="row">
+<div class="field" style="min-width:180px">
+<label>% Semana 1 (base)</label>
+<input id="pW1" inputmode="decimal" placeholder="Ex: 25"/>
+</div>
+<div class="field" style="min-width:180px">
+<label>% Semana 2 (base)</label>
+<input id="pW2" inputmode="decimal" placeholder="Ex: 25"/>
+</div>
+<div class="field" style="min-width:180px">
+<label>% Semana 3 (base)</label>
+<input id="pW3" inputmode="decimal" placeholder="Ex: 25"/>
+</div>
+<div class="field" style="min-width:180px">
+<label>% Semana 4 (base)</label>
+<input id="pW4" inputmode="decimal" placeholder="Ex: 25"/>
+</div>
+</div>
+<div class="divider"></div>
+<div class="row">
+<div class="field" style="min-width:220px">
+<label>Meta Semana 1 (R$)</label>
+<input disabled="" id="goalW1"/>
+</div>
+<div class="field" style="min-width:220px">
+<label>Meta Semana 2 (R$)</label>
+<input disabled="" id="goalW2"/>
+</div>
+<div class="field" style="min-width:220px">
+<label>Meta Semana 3 (R$)</label>
+<input disabled="" id="goalW3"/>
+</div>
+<div class="field" style="min-width:220px">
+<label>Meta Semana 4 (R$)</label>
+<input disabled="" id="goalW4"/>
+</div>
+</div>
+<div class="divider"></div>
+<div class="row">
+<div class="field" style="min-width:220px">
+<label>% Semana 1 (recalculada)</label>
+<input disabled="" id="rpW1"/>
+</div>
+<div class="field" style="min-width:220px">
+<label>% Semana 2 (recalculada)</label>
+<input disabled="" id="rpW2"/>
+</div>
+<div class="field" style="min-width:220px">
+<label>% Semana 3 (recalculada)</label>
+<input disabled="" id="rpW3"/>
+</div>
+<div class="field" style="min-width:220px">
+<label>% Semana 4 (recalculada)</label>
+<input disabled="" id="rpW4"/>
+</div>
+</div>
+<div class="divider"></div>
+<h3 style="margin:0 0 8px 0; font-size:14px; letter-spacing:.06em; text-transform:uppercase; color:#cfe0ff">Progresso</h3>
+<div class="kpis" id="kpisGoals"></div>
+<div class="divider"></div>
+<div class="row" style="gap:14px">
+<div style="flex:1; min-width: 280px">
+<div class="row" style="justify-content:space-between">
+<div class="tiny">Meta diária (AUTO — dias restantes)</div>
+<div class="tiny"><b id="goalDailyText"></b></div>
+</div>
+<div class="bar"><i id="barDaily"></i></div>
+<div class="row" style="justify-content:space-between; margin-top:8px">
+<div class="tiny">Falta</div>
+<div class="tiny"><b id="goalDailyLeft"></b></div>
+</div>
+</div>
+<div style="flex:1; min-width: 280px">
+<div class="row" style="justify-content:space-between">
+<div class="tiny">Meta semanal (semana atual)</div>
+<div class="tiny"><b id="goalWeeklyText"></b></div>
+</div>
+<div class="bar"><i id="barWeekly"></i></div>
+<div class="row" style="justify-content:space-between; margin-top:8px">
+<div class="tiny">Falta</div>
+<div class="tiny"><b id="goalWeeklyLeft"></b></div>
+</div>
+</div>
+<div style="flex:1; min-width: 280px">
+<div class="row" style="justify-content:space-between">
+<div class="tiny">Meta mensal</div>
+<div class="tiny"><b id="goalMonthlyText"></b></div>
+</div>
+<div class="bar"><i id="barMonthly"></i></div>
+<div class="row" style="justify-content:space-between; margin-top:8px">
+<div class="tiny">Falta</div>
+<div class="tiny"><b id="goalMonthlyLeft"></b></div>
+</div>
+</div>
+</div>
+<div class="divider"></div>
+<div class="hint">
+          • Semana do mês usada: 1 (dias 1–7), 2 (8–14), 3 (15–21), 4 (22–final).<br/>
+          • Se você fechar a semana, o OMNIA redistribui o restante automaticamente.
+        </div>
+</div>
+</section>
+</div>
+<!-- RANKING METAS -->
+<div id="viewMetasRank" style="display:none">
+<section class="card">
+<div class="cardHeader">
+<h2>Ranking Metas</h2>
+<div class="rowRight">
+<button class="btn" id="btnRefreshMetaRank">Atualizar</button>
+</div>
+</div>
+<div class="cardBody">
+<div class="row">
+<div class="field">
+<label>Mês</label>
+<input id="metaRankMonth" type="month"/>
+</div>
+<div class="field">
+<label>Meta mensal (referência)</label>
+<input id="metaRankMonthly" inputmode="decimal" placeholder="Auto pela meta salva"/>
+</div>
+<div class="field">
+<label>Exibição</label>
+<select id="metaRankMode">
+<option value="seller">Progresso por vendedor (no mês)</option>
+<option selected="" value="store">Progresso da loja + corrida até a lua</option>
+</select>
+</div>
+</div>
+<div class="divider"></div>
+<div class="kpis" id="metaRankKpis"></div>
+<div class="divider"></div>
+<div class="race" id="race">
+<div class="track"></div>
+<div class="moon">🌙</div>
+<div class="moonBoom" id="moonBoom">
+<div>
+<div class="title">🚀 META BATIDA!</div>
+<div class="sub">Parabéns! Chegamos na lua. Bora manter o ritmo! 🔥</div>
+</div>
+</div>
+</div>
+<div class="divider"></div>
+<div id="metaRankTable"></div>
+</div>
+</section>
+</div>
+<!-- NÃO CONVERTIDOS -->
+<div id="viewNoConv" style="display:none">
+<section class="card">
+<div class="cardHeader">
+<h2>Análise — Não Convertidos</h2>
+<div class="rowRight">
+<button class="btn" id="btnNoConvRefresh">Atualizar</button>
+</div>
+</div>
+<div class="cardBody">
+<div class="row">
+<div class="field">
+<label>Data (análise do dia)</label>
+<input id="ncDate" type="date"/>
+</div>
+<div class="field">
+<label>Mês (análise do mês)</label>
+<input id="ncMonth" type="month"/>
+</div>
+<div class="field">
+<label>Visão</label>
+<select id="ncView">
+<option selected="" value="day">Dia</option>
+<option value="month">Mês</option>
+</select>
+</div>
+</div>
+<div class="divider"></div>
+<div class="compare">
+<div class="barCard">
+<div class="row" style="justify-content:space-between">
+<div style="font-weight:900">✅ Convertidos</div>
+<div class="tag good" id="convCount">0</div>
+</div>
+<div class="meter good"><i id="convBar"></i></div>
+<div class="hint" id="convHint" style="margin-top:8px">—</div>
+</div>
+<div class="barCard">
+<div class="row" style="justify-content:space-between">
+<div style="font-weight:900">❌ Não convertidos</div>
+<div class="tag bad" id="noConvCount">0</div>
+</div>
+<div class="meter bad"><i id="noConvBar"></i></div>
+<div class="hint" id="noConvHint" style="margin-top:8px">—</div>
+</div>
+</div>
+<div class="divider"></div>
+<div class="kpis" id="ncKpis"></div>
+<div class="divider"></div>
+<div class="row" style="gap:14px">
+<div id="ncReasonsWrap" style="flex:1; min-width: 300px"></div>
+<div id="ncItemsWrap" style="flex:1; min-width: 300px"></div>
+</div>
+<div class="divider"></div>
+<div class="row" style="gap:14px">
+<div id="ncGenderWrap" style="flex:1; min-width: 300px"></div>
+<div id="ncSizesWrap" style="flex:1; min-width: 300px"></div>
+</div>
+<div class="divider"></div>
+<div class="hint">
+          Aqui você enxerga o que mais está travando as vendas: preço, numeração, falta de peça, etc.
+          Isso vira ação prática (estoque, mix, VM, argumentação do time).
+        </div>
+</div>
+</section>
+<!-- VENDEDOR -->
+<div id="viewSeller" style="display:none">
+<section class="card">
+<div class="cardHeader">
+<h2>Painel do Vendedor</h2>
+<div class="rowRight">
+<button class="btn" id="btnSellerDownloadBadges">Baixar selos</button>
+</div>
+</div>
+<div class="cardBody">
+<div class="row">
+<div class="field" style="min-width:260px">
+<label>Vendedor</label>
+<select id="sellerViewSelect"></select>
+</div>
+<div class="field" style="min-width:220px">
+<label>Mês</label>
+<input id="sellerViewMonth" type="month"/>
+</div>
+</div>
+<div class="divider"></div>
+<div class="kpis" id="sellerKpis"></div>
+<div class="divider"></div>
+<div class="noteBox" id="sellerGoalsBox"></div>
+<div class="divider"></div>
+<h3 style="margin:0 0 8px 0; font-size:14px; letter-spacing:.06em; text-transform:uppercase; color:#cfe0ff">Galeria de Selos</h3>
+<div class="badgeGrid" id="sellerBadges"></div>
+<div class="divider"></div>
+<div class="hint">No fim do mês, o vendedor pode baixar os selos e trocar por prêmios. 🔥</div>
+</div>
+</section>
+</div>
+</div></main>
+<!-- FX Layer -->
+<div id="fxLayer"></div>
+<!-- THEME DOCK -->
+<div class="themeDock">
+<button class="themeBtn default" id="themeDefault" title="Tema padrão">
+<span class="themeTip">Padrão</span>
+<span class="dot"></span>
+</button>
+<button class="themeBtn neon" id="themeNeon" title="Tema neon">
+<span class="themeTip">Neon</span>
+<span class="dot"></span>
+</button>
+<button class="themeBtn ocean" id="themeOcean" title="Tema ocean">
+<span class="themeTip">Ocean</span>
+<span class="dot"></span>
+</button>
+<button class="themeBtn sunset" id="themeSunset" title="Tema sunset">
+<span class="themeTip">Sunset</span>
+<span class="dot"></span>
+</button>
+<button class="themeBtn spacewhite" id="themeSpaceWhite" title="Tema branco espacial">
+<span class="themeTip">Space</span>
+<span class="dot"></span>
+</button>
+<button class="themeBtn textured" id="themeTextured" title="Tema texturizado">
+<span class="themeTip">Texture</span>
+<span class="dot"></span>
+</button>
+<button class="themeBtn purple" id="themePurple" title="Tema purple">
+<span class="themeTip">Purple</span>
+<span class="dot"></span>
+</button>
+</div>
+<!-- MODAL SETTINGS -->
+<div class="modalBack" id="settingsBack">
+<div class="modal">
+<div class="modalHead">
+<h3>Configurações da Loja</h3>
+<button class="close" id="closeSettings">Fechar</button>
+</div>
+<div class="modalBody">
+<div class="row">
+<div class="field">
+<label>Nome da loja</label>
+<input id="storeName" placeholder="Ex: TXC Araguaína"/>
+</div>
+<div class="field">
+<label>Status</label>
+<select id="storeStatus">
+<option value="Online">Online</option>
+<option value="Offline">Offline</option>
+</select>
+</div>
+</div>
+<div class="divider"></div>
+<div class="row">
+<div class="field" style="min-width:320px">
+<label>Logo da loja (imagem)</label>
+<input accept="image/*" id="logoInput" type="file"/>
+<div class="hint">A logo fica no topo. O OMNIA continua como marca principal.</div>
+</div>
+</div>
+<div class="divider"></div>
+<div class="row">
+<div class="field">
+<label>Finalização pede Valor (R$)?</label>
+<select id="optValue">
+<option value="yes">Sim</option>
+<option value="no">Não</option>
+</select>
+</div>
+<div class="field">
+<label>Finalização pede Peças (P.A.)?</label>
+<select id="optPieces">
+<option value="yes">Sim</option>
+<option value="no">Não</option>
+</select>
+</div>
+</div>
+<div class="divider"></div>
+<div class="dangerZone" style="border-color: rgba(247,201,72,.40); background: rgba(247,201,72,.08);">
+<div>
+<div style="font-weight:800">Desativar vendedor (remover da operação)</div>
+<div class="tiny">Remove da fila/pool e não aparece mais para atendimento. Não apaga histórico.</div>
+</div>
+<button class="btn warn" id="btnDeactivateSeller">Desativar vendedor</button>
+</div>
+<div class="divider"></div>
+<div class="dangerZone">
+<div>
+<div style="font-weight:800">Zerar dia (apagar registros de hoje)</div>
+<div class="tiny">Mantém vendedores e fila. Apaga atendimentos finalizados de hoje.</div>
+</div>
+<button class="btn bad" id="btnResetDay">Zerar dia</button>
+</div>
+<div class="divider"></div>
+
+<div class="dangerZone" style="border-color: rgba(98,168,255,.45); background: rgba(98,168,255,.08);">
+  <div>
+    <div style="font-weight:800">Corrigir atualização / limpar cache do app</div>
+    <div class="tiny">Resolve quando alguma tela (ex: Arena) não abre por causa de cache do PWA ou dados antigos.</div>
+  </div>
+  <button class="btn" id="btnHardRefresh">Limpar cache e recarregar</button>
+</div>
+
+<div class="divider"></div>
+<div class="dangerZone">
+<div>
+<div style="font-weight:800">Reset total (apagar tudo)</div>
+<div class="tiny">Apaga vendedores, fila, logo, metas e todos os registros. Irreversível.</div>
+</div>
+<button class="btn bad" id="btnResetAll">Reset total</button>
+</div>
+</div>
+</div>
+</div>
+<!-- MODAL ADD SELLER -->
+<div class="modalBack" id="sellerBack">
+<div class="modal">
+<div class="modalHead">
+<h3>Novo vendedor</h3>
+<button class="close" id="closeSeller">Fechar</button>
+</div>
+<div class="modalBody">
+<div class="row">
+<div class="field">
+<label>Nome</label>
+<input id="sellerName" placeholder="Ex: Camila"/>
+</div>
+<div class="field" style="min-width:320px">
+<label>Foto (opcional)</label>
+<input accept="image/*" id="sellerPhoto" type="file"/>
+</div>
+</div>
+<div class="divider"></div>
+<div class="actions">
+<button class="btn good" id="btnCreateSeller">Criar vendedor</button>
+</div>
+<div class="hint" style="margin-top:10px">Depois de criar, clique no vendedor (fora da fila) para colocá-lo na fila.</div>
+</div>
+</div>
+</div>
+<!-- MODAL RANKING -->
+<div class="modalBack" id="rankingBack">
+<div class="modal">
+<div class="modalHead">
+<h3>Ranking do dia</h3>
+<button class="close" id="closeRanking">Fechar</button>
+</div>
+<div class="modalBody">
+<div class="hint">Ordenado por <b>Conversão</b>. Empate: mais vendas.</div>
+<div class="divider"></div>
+<div class="list" id="rankingList"></div>
+</div>
+</div>
+</div>
+<!-- MODAL PREFERÊNCIA -->
+<div class="modalBack" id="prefBack">
+<div class="modal">
+<div class="modalHead">
+<h3>Preferência do Cliente</h3>
+<button class="close" id="closePref">Fechar</button>
+</div>
+<div class="modalBody">
+<div class="hint">Selecione o vendedor que o cliente veio procurar. O atendimento inicia na hora.</div>
+<div class="divider"></div>
+<div class="list" id="prefList"></div>
+</div>
+</div>
+</div>
+<!-- MODAL DESATIVAR VENDEDOR -->
+<div class="modalBack" id="deactBack">
+<div class="modal">
+<div class="modalHead">
+<h3>Desativar Vendedor</h3>
+<button class="close" id="closeDeact">Fechar</button>
+</div>
+<div class="modalBody">
+<div class="hint">Escolha quem será removido da operação. (Histórico permanece.)</div>
+<div class="divider"></div>
+<div class="list" id="deactList"></div>
+<div class="divider"></div>
+<div class="noteBox">
+        Dica: desativado = some da fila/pool e não pode ser chamado por preferência.
+      </div>
+</div>
+</div>
+</div>
+<!-- MODAL INSTALL -->
+<div class="modalBack" id="installBack">
+<div class="modal">
+<div class="modalHead">
+<h3>Instalar NexxtOne</h3>
+<button class="close" id="closeInstall">Fechar</button>
+</div>
+<div class="modalBody">
+<div class="noteBox" id="installInfo">
+        Para instalar:
+        <br/>• <b>Android (Chrome)</b>: menu ⋮ → <b>Adicionar à tela inicial</b>
+<br/>• <b>iPhone/iPad (Safari)</b>: <b>Compartilhar</b> → <b>Adicionar à Tela de Início</b>
+<br/>• <b>PC (Chrome/Edge)</b>: ícone <b>Instalar</b> na barra de endereço
+        <div class="divider"></div>
+<span class="tiny">Obs: o botão de instalar funciona melhor quando o NexxtOne está em um link (http/https). Abrir por arquivo (file://) pode impedir a instalação.</span>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // ======================
+  // PWA register
+  // ======================
+  (function registerSW(){
+    try{
+      if("serviceWorker" in navigator){
+        navigator.serviceWorker.register("./sw.js").catch(()=>{});
+      }
+    }catch{}
+  })();
+
+  // ======================
+  // STORAGE + STATE
+  // ======================
+  const KEY = "nexxt_v3_preference_deactivate_themes";
+  const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch { return null; } };
+  const save = (s) => localStorage.setItem(KEY, JSON.stringify(s));
+  function uid(){ return Math.random().toString(16).slice(2) + Date.now().toString(16); }
+
+  function todayKey(d = new Date()){
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,"0");
+    const day = String(d.getDate()).padStart(2,"0");
+    return `${y}-${m}-${day}`;
+  }
+  function monthKey(d = new Date()){
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,"0");
+    return `${y}-${m}`;
+  }
+  function nowTs(){ return Date.now(); }
+
+  const NOSOLD_REASONS = [
+    "Pesquisando preço",
+    "Dando aquela olhadinha",
+    "Não tinha a numeração",
+    "Não tinha a peça na loja",
+    "Não curtiu o modelo / caimento",
+    "Volta depois / indeciso",
+    "Outro"
+  ];
+
+  const ITEM_TYPES = [
+    "Camiseta", "Calça", "Camisa MC", "Camisa ML", "Vestido", "Jaqueta",
+    "Acessórios", "Bermuda", "Saia", "Polo", "Boné"
+  ];
+
+  const defaultState = {
+    store: { name:"Sua loja", status:"Online", logoDataUrl:"" },
+    options: { askValue:true, askPieces:true, vendorDivisor: 0 },
+    ui: { theme: "default" }, // default | neon | ocean | sunset | purple
+    sellers: [
+      { id: uid(), name:"Erick", photo:"", paused:false, active:true },
+      { id: uid(), name:"Camila", photo:"", paused:false, active:true },
+      { id: uid(), name:"Mariana", photo:"", paused:false, active:true },
+    ],
+    queue: [],
+    pool: [],
+    currents: [], // [{ id, sellerId, startTs }]
+    current: null, // legacy (mantido p/ migração)
+    records: [],
+    badges: { earned: [] },
+    goalsByMonth: {},
+    vendorGoalsByMonth: {},
+    vendorGoalsByMonth: {}
+  };
+
+  let state = load() || defaultState;
+
+  // migração defensiva
+  state.ui = state.ui || { theme:"default" };
+  state.options = state.options || { askValue:true, askPieces:true, vendorDivisor: 0 };
+  state.sellers = (Array.isArray(state.sellers) ? state.sellers : []).map(s => ({
+    ...s,
+    active: (s.active === undefined ? true : !!s.active),
+    paused: !!s.paused
+  }));
+  state.queue = Array.isArray(state.queue) ? state.queue : [];
+  state.pool  = Array.isArray(state.pool) ? state.pool : [];
+  state.records = Array.isArray(state.records) ? state.records : [];
+  state.badges = state.badges || { earned: [] };
+  if(!Array.isArray(state.badges.earned)) state.badges.earned = [];
+  state.goalsByMonth = state.goalsByMonth || {};
+  state.vendorGoalsByMonth = state.vendorGoalsByMonth || {};
+  // migração: atendimento múltiplo
+  state.currents = state.currents || [];
+  if(state.current && state.current.sellerId){
+    state.currents.push({ id: uid(), sellerId: state.current.sellerId, startTs: state.current.startTs || nowTs() });
+    state.current = null;
+  }
+  // divisor de meta por vendedor (0 = auto)
+  if(!Number(state.options.vendorDivisor||0)){
+    const activeCount = (state.sellers||[]).filter(s=>s.active).length || 1;
+    state.options.vendorDivisor = activeCount;
+  }
+
+  if(state.pool.length === 0 && state.queue.length === 0){
+    const actives = state.sellers.filter(s=>s.active).map(s=>s.id);
+    state.pool = actives;
+    save(state);
+  }
+
+  // ======================
+  // HELPERS
+  // ======================
+  const $ = (id) => document.getElementById(id);
+  function getSeller(id){ return state.sellers.find(s => s.id === id) || null; }
+  function isActiveSeller(id){
+    const s = getSeller(id);
+    return !!(s && s.active);
+  }
+
+  function isSellerInAttendance(sid){
+    return (state.currents||[]).some(c=>c && c.sellerId===sid);
+  }
+  function getCurrentById(cid){
+    return (state.currents||[]).find(c=>c && c.id===cid) || null;
+  }
+  function getCurrentBySeller(sid){
+    return (state.currents||[]).find(c=>c && c.sellerId===sid) || null;
+  }
+
+  function parseBRNumber(str){
+    if(!str) return 0;
+    const cleaned = str.toString().trim().replace(/\./g, "").replace(",", ".");
+    const n = Number(cleaned);
+    return Number.isFinite(n) ? n : 0;
+  }
+  function formatMoney(v){
+    const n = Number(v || 0);
+    return n.toLocaleString("pt-BR", { style:"currency", currency:"BRL" });
+  }
+  function formatNum(n){ return (Number(n||0)).toLocaleString("pt-BR"); }
+  function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+
+  function daysInMonth(yyyyMm){
+    const [y,m] = yyyyMm.split("-").map(Number);
+    return new Date(y, m, 0).getDate();
+  }
+
+  function remainingDaysInMonthFromToday(yyyyMm){
+    const [y,m] = yyyyMm.split("-").map(Number);
+    const now = new Date();
+    if(now.getFullYear() !== y || (now.getMonth()+1) !== m) return daysInMonth(yyyyMm);
+    const total = daysInMonth(yyyyMm);
+    const today = now.getDate();
+    return Math.max(1, total - today + 1);
+  }
+
+  function weekOfMonth(dateKeyStr){
+    const day = Number(dateKeyStr.slice(8,10));
+    if(day <= 7) return 1;
+    if(day <= 14) return 2;
+    if(day <= 21) return 3;
+    return 4;
+  }
+
+  function agg(records){
+    let atend=records.length;
+    let sales=0, revenue=0, pieces=0, totalTime=0;
+    for(const r of records){
+      if(r.outcome === "sold") sales++;
+      revenue += Number(r.value||0);
+      pieces += Number(r.pieces||0);
+      totalTime += Math.max(0, (r.tsEnd||r.tsStart||0) - (r.tsStart||0));
+    }
+    const conv = atend>0 ? (sales/atend)*100 : 0;
+    const paPerSale = sales>0 ? (pieces/sales) : 0;
+    const paPerAttend = atend>0 ? (pieces/atend) : 0;
+    const avgTimeSec = atend>0 ? Math.round((totalTime/atend)/1000) : 0;
+    return { atend, sales, revenue, pieces, conv, paPerSale, paPerAttend, avgTimeSec };
+  }
+
+  function aggBySeller(records){
+    const map = new Map();
+    for(const r of records){
+      const sid = r.sellerId;
+      if(!map.has(sid)) map.set(sid, []);
+      map.get(sid).push(r);
+    }
+    const rows = [];
+    for(const [sid, recs] of map.entries()){
+      rows.push({ sellerId:sid, ...agg(recs) });
+    }
+    return rows;
+  }
+
+  function groupByDate(records){
+    const map = new Map();
+    for(const r of records){
+      const k = r.dateKey;
+      if(!map.has(k)) map.set(k, []);
+      map.get(k).push(r);
+    }
+    const rows = [];
+    for(const [k, recs] of map.entries()){
+      rows.push({ dateKey:k, ...agg(recs) });
+    }
+    rows.sort((a,b)=> a.dateKey.localeCompare(b.dateKey));
+    return rows;
+  }
+
+  function filterRecordsForDataView(){
+    const dateISO = $("dataDate")?.value;
+    const monthISO = $("dataMonth")?.value;
+    const chosenDate = dateISO ? dateISO : todayKey();
+    const chosenMonth = monthISO ? monthISO : monthKey();
+    return { chosenDate, chosenMonth };
+  }
+
+  // ======================
+  // THEME
+  // ======================
+  function applyTheme(){
+    const t = state.ui?.theme || "default";
+    const allowed = ["default","neon","ocean","sunset","purple","textured","spacewhite"];
+    document.documentElement.dataset.theme = allowed.includes(t) ? t : "default";
+  }
+
+  // ======================
+  // FX
+  // ======================
+  function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+  function burstFx(x, y){
+    const fx = $("fxLayer");
+    const count = 22;
+    for(let i=0;i<count;i++){
+      const p = document.createElement("div");
+      p.className = "particle";
+      const ang = Math.random()*Math.PI*2;
+      const dist = 70 + Math.random()*120;
+      const dx = Math.cos(ang)*dist;
+      const dy = Math.sin(ang)*dist;
+      const c = pick([
+        "rgba(0,255,154,.95)","rgba(255,59,122,.95)","rgba(106,124,255,.95)",
+        "rgba(255,209,102,.95)","rgba(255,255,255,.85)"
+      ]);
+      p.style.background = c;
+      p.style.left = x + "px";
+      p.style.top = y + "px";
+      p.style.setProperty("--x0", "0px");
+      p.style.setProperty("--y0", "0px");
+      p.style.setProperty("--x1", dx+"px");
+      p.style.setProperty("--y1", dy+"px");
+      fx.appendChild(p);
+      setTimeout(()=>p.remove(), 1000);
+    }
+  }
+
+  function rocketFx(x, y){
+    const fx = $("fxLayer");
+    const r = document.createElement("div");
+    r.className = "rocketFly";
+    r.textContent = "🚀";
+    r.style.left = x + "px";
+    r.style.top = y + "px";
+    r.style.setProperty("--rx0", "0px");
+    r.style.setProperty("--ry0", "0px");
+    r.style.setProperty("--rx1", (Math.random()*140+80)+"px");
+    r.style.setProperty("--ry1", (- (Math.random()*240+140))+"px");
+    fx.appendChild(r);
+    setTimeout(()=>r.remove(), 950);
+  }
+
+  // ======================
+  // HEADER
+  // ======================
+  function renderHeader(){
+    $("storeNameTop").textContent = state.store.name || "Sua loja";
+    $("statusChip").textContent = state.store.status || "Online";
+    const logoBox = $("logoBox");
+    logoBox.innerHTML = "";
+    if(state.store.logoDataUrl){
+      const img = document.createElement("img");
+      img.src = state.store.logoDataUrl;
+      logoBox.appendChild(img);
+    } else {
+      const img = document.createElement("img");
+      img.src = "./icon-192.png";
+      img.style.objectFit = "cover";
+      logoBox.appendChild(img);
+    }
+  }
+
+  // ======================
+  // OPERACAO
+  // ======================
+  function sellerStatsDay(sid, dateKey){
+    const recs = state.records.filter(r => r.dateKey === dateKey && r.sellerId === sid);
+    return agg(recs);
+  }
+
+  function renderKpis(){
+    const tk = todayKey();
+    const recsToday = state.records.filter(r => r.dateKey === tk);
+    const a = agg(recsToday);
+
+    const kpis = [
+      { t:"Atendimentos", v: formatNum(a.atend) },
+      { t:"Vendas", v: formatNum(a.sales) },
+      { t:"Conversão", v: a.conv.toFixed(1) + "%", cls:"good" },
+      { t:"Faturamento", v: formatMoney(a.revenue) },
+    ];
+    const el = $("kpis");
+    el.innerHTML = "";
+    for(const k of kpis){
+      const div = document.createElement("div");
+      div.className = "kpi";
+      div.innerHTML = `<div class="t">${k.t}</div><div class="v ${k.cls||""}">${k.v}</div>`;
+      el.appendChild(div);
+    }
+  }
+
+  function renderQueue(){
+    const q = $("queueList");
+    q.innerHTML = "";
+
+    // limpa ids inativos que ficaram perdidos
+    state.queue = state.queue.filter(id => isActiveSeller(id));
+
+    if(state.queue.length === 0){
+      const empty = document.createElement("div");
+      empty.className = "hint";
+      empty.textContent = "Fila vazia. Adicione vendedores do rodapé para começar.";
+      q.appendChild(empty);
+      return;
+    }
+
+    const tk = todayKey();
+
+    state.queue.forEach((sid, idx) => {
+      const s = getSeller(sid);
+      if(!s || !s.active) return;
+
+      const st = sellerStatsDay(sid, tk);
+
+      const item = document.createElement("div");
+      item.className = "item";
+      item.innerHTML = `
+        <div class="leftItem">
+          <div class="pos">${idx+1}</div>
+          <div class="avatar">${s.photo ? `<img src="${s.photo}">` : `<span style="color:var(--muted);font-weight:900">${(s.name||"?")[0].toUpperCase()}</span>`}</div>
+          <div class="nameBlock">
+            <div class="name">${s.name}</div>
+            <div class="meta">${st.atend} atend · ${st.sales} vendas · ${st.conv.toFixed(1)}% conv · PA(venda) ${st.paPerSale.toFixed(2)}</div>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn" data-act="up" data-id="${sid}">↑</button>
+          <button class="btn" data-act="down" data-id="${sid}">↓</button>
+          <button class="btn warn" data-act="pause" data-id="${sid}">${s.paused ? "Retomar" : "Pausar"}</button>
+          <button class="btn bad" data-act="remove" data-id="${sid}">Tirar</button>
+        </div>
+      `;
+      q.appendChild(item);
+    });
+
+    q.querySelectorAll("button[data-act]").forEach(btn=>{
+      btn.addEventListener("click", (e)=>{
+        const act = e.currentTarget.dataset.act;
+        const sid = e.currentTarget.dataset.id;
+        handleQueueAction(act, sid);
+      });
+    });
+  }
+
+  function renderPool(){
+    const p = $("poolList");
+    p.innerHTML = "";
+
+    // pool só com ativos
+    state.pool = state.pool.filter(id => isActiveSeller(id) && !state.queue.includes(id));
+    // evita duplicados
+    state.pool = Array.from(new Set(state.pool));
+
+    if(state.pool.length === 0){
+      const empty = document.createElement("div");
+      empty.className = "hint";
+      empty.textContent = "Nenhum vendedor fora da fila.";
+      p.appendChild(empty);
+      return;
+    }
+
+    state.pool.forEach((sid) => {
+      const s = getSeller(sid);
+      if(!s || !s.active) return;
+
+      const item = document.createElement("div");
+      item.className = "item";
+      item.style.cursor = "pointer";
+      item.innerHTML = `
+        <div class="leftItem">
+          <div class="avatar">${s.photo ? `<img src="${s.photo}">` : `<span style="color:var(--muted);font-weight:900">${(s.name||"?")[0].toUpperCase()}</span>`}</div>
+          <div class="nameBlock">
+            <div class="name">${s.name}</div>
+            <div class="meta">${s.paused ? "Clique para retomar e voltar para a fila" : "Clique para entrar na fila"}</div>
+          </div>
+        </div>
+        <span class="tag ${s.paused ? "warn":""}">${s.paused ? "Pausado" : "Fora"}</span>
+      `;
+
+      item.addEventListener("click", ()=>{
+        // ✅ Correção pedida: pausado não trava mais.
+        // Ao clicar: retoma e entra na fila.
+        if(s.paused) s.paused = false;
+
+        state.pool = state.pool.filter(x => x !== sid);
+        if(!state.queue.includes(sid)) state.queue.push(sid);
+
+        save(state);
+        renderAll();
+      });
+
+      p.appendChild(item);
+    });
+  }
+
+  function renderCurrent(){
+    const panel = $("attendPanel");
+    const tag = $("attendTag");
+
+    const currents = (state.currents || []).filter(c => c && isActiveSeller(c.sellerId));
+    state.currents = currents;
+
+    if(currents.length === 0){
+      tag.textContent = "Nenhum";
+      tag.className = "tag";
+      panel.innerHTML = `<div class="hint">Chame o próximo para iniciar um atendimento.</div>`;
+      return;
+    }
+
+    tag.textContent = `${currents.length} atendendo`;
+    tag.className = "tag good";
+
+    const tk = todayKey();
+    panel.innerHTML = "";
+
+    for(const c of currents){
+      const s = getSeller(c.sellerId);
+      if(!s) continue;
+      const st = sellerStatsDay(s.id, tk);
+      const elapsedSec = Math.floor((nowTs() - (c.startTs||nowTs()))/1000);
+      const cid = c.id;
+
+      const wrap = document.createElement('div');
+      wrap.className = 'attCard';
+            wrap.innerHTML = `
+        <div class="leftItem">
+          <div class="avatar attAvatar">
+            ${s.photo ? `<img src="${s.photo}">` : `<span style="color:var(--muted);font-weight:900;font-size:18px">${(s.name||"?")[0].toUpperCase()}</span>`}
+          </div>
+          <div class="nameBlock">
+            <div class="name" style="font-size:16px">${s.name}</div>
+            <div class="meta">Atendendo agora · <b id="timer_${cid}">${elapsedSec}s</b></div>
+            <div class="meta">${st.atend} atend · ${st.sales} vendas · ${st.conv.toFixed(1)}% conv · PA(venda) ${st.paPerSale.toFixed(2)}</div>
+          </div>
+        </div>
+        <div class="actions" style="gap:8px; align-items:center">
+          <span class="tag good">Em atendimento</span>
+          <button class="btn warn" data-act="cancelAttend" data-cid="${cid}" title="Cancelar este atendimento e voltar o vendedor para a vez">↩ Cancelar atendimento</button>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="big">
+          <button class="btn good" data-act="sold" data-cid="${cid}">✅ Vendeu</button>
+          <button class="btn bad" data-act="nosold" data-cid="${cid}">❌ Não vendeu</button>
+        </div>
+
+        <div class="divider"></div>
+
+        <div id="finalizeForm_${cid}" style="display:none">
+          <div id="soldFields_${cid}" style="display:none">
+            <div class="row">
+              <div class="field" style="min-width:220px; display:${state.options.askValue ? "flex":"none"}">
+                <label>Valor (R$)</label>
+                <input id="saleValue_${cid}" inputmode="decimal" placeholder="Ex: 399,90" />
+              </div>
+              <div class="field" style="min-width:220px; display:${state.options.askPieces ? "flex":"none"}">
+                <label>Peças (P.A.)</label>
+                <input id="salePieces_${cid}" inputmode="numeric" placeholder="Ex: 3" />
+              </div>
+            </div>
+          </div>
+
+          <div id="nosoldFields_${cid}" style="display:none">
+            <div class="row">
+              <div class="field" style="min-width:240px">
+                <label>Motivo</label>
+                <select id="nsReason_${cid}">
+                  ${NOSOLD_REASONS.map(r=>`<option value="${r}">${r}</option>`).join("")}
+                </select>
+              </div>
+
+              <div class="field" style="min-width:220px">
+                <label>Gênero</label>
+                <select id="nsGender_${cid}">
+                  <option value="Masculino">Masculino</option>
+                  <option value="Feminino">Feminino</option>
+                </select>
+              </div>
+
+              <div class="field" style="min-width:260px">
+                <label>Tipo de peça</label>
+                <select id="nsItemType_${cid}">
+                  ${ITEM_TYPES.map(i=>`<option value="${i}">${i}</option>`).join("")}
+                </select>
+              </div>
+
+              <div class="field" style="min-width:220px">
+                <label>Numeração (se aplicável)</label>
+                <input id="nsSize_${cid}" placeholder="Ex: 42, G, 38, 44" />
+              </div>
+            </div>
+          </div>
+
+          <div class="field" style="min-width:100%">
+            <label>Observação (opcional)</label>
+            <input id="saleObs_${cid}" placeholder="Ex: cliente só pesquisando / voltou depois / etc" />
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="actions">
+            <button class="btn good" data-act="finalize" data-cid="${cid}">Finalizar</button>
+            <button class="btn" data-act="cancel" data-cid="${cid}">Cancelar</button>
+          </div>
+        </div>
+      `;
+
+      panel.appendChild(wrap);
+    }
+
+    // delegation within panel
+    panel.querySelectorAll('button[data-act]').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        const act = e.currentTarget.dataset.act;
+        const cid = e.currentTarget.dataset.cid;
+        if(act === 'sold') showFinalize(cid, 'sold');
+        if(act === 'nosold') showFinalize(cid, 'nosold');
+        if(act === 'cancel') hideFinalize(cid);
+        if(act === 'cancelAttend') cancelAttendance(cid);
+        if(act === 'finalize'){
+          const out = e.currentTarget.dataset.outcome || null;
+          // store outcome on form
+          finalizeCurrent(cid);
+        }
+      });
+    });
+
+    function cancelAttendance(cid){
+      const c = getCurrentById(cid);
+      if(!c) return;
+      const s = getSeller(c.sellerId);
+      if(!s || !s.active){
+        // apenas remove do atendimento
+        state.currents = (state.currents||[]).filter(x=>x && x.id!==cid);
+        save(state);
+        renderAll();
+        return;
+      }
+
+      if(!confirm(`Cancelar o atendimento de "${s.name}" e voltar ele para a vez?`)) return;
+
+      // remove do atendimento
+      state.currents = (state.currents||[]).filter(x=>x && x.id!==cid);
+
+      // volta para a fila (fim da vez)
+      state.pool = (state.pool||[]).filter(x=>x!==s.id);
+      if(!state.queue.includes(s.id)) state.queue.push(s.id);
+
+      save(state);
+      renderAll();
+    }
+
+    function showFinalize(cid, outcome){
+      const form = $("finalizeForm_"+cid);
+      if(!form) return;
+      const parent = form.closest('.attCard') || form.closest('.item') || null;
+
+      form.dataset.outcome = outcome;
+      form.style.display = 'block';
+
+      const soldF = $("soldFields_"+cid);
+      const noF = $("nosoldFields_"+cid);
+      if(soldF) soldF.style.display = (outcome==='sold') ? 'block':'none';
+      if(noF) noF.style.display = (outcome==='nosold') ? 'block':'none';
+
+      if(parent){
+        const soldBtn = parent.querySelector('button[data-act="sold"]');
+        const noBtn = parent.querySelector('button[data-act="nosold"]');
+        if(soldBtn) soldBtn.classList.toggle('activeSelected', outcome==='sold');
+        if(noBtn) noBtn.classList.toggle('activeSelected', outcome==='nosold');
+
+        // trava escolha após selecionar
+        parent.querySelectorAll('button[data-act="sold"],button[data-act="nosold"]').forEach(b=> b.disabled = true);
+      }
+    }
+    function hideFinalize(cid){
+      const form = $("finalizeForm_"+cid);
+      if(!form) return;
+      const parent = form.closest('.attCard') || form.closest('.item') || null;
+
+      form.style.display = 'none';
+      form.dataset.outcome = '';
+
+      if(parent){
+        parent.querySelectorAll('button[data-act="sold"],button[data-act="nosold"]').forEach(b=>{
+          b.disabled = false;
+          b.classList.remove('activeSelected');
+        });
+      }
+    }
+  }
+
+  // ======================
+  // PREFERÊNCIA
+  // ======================
+  function openModal(backEl){ backEl.style.display = "flex"; }
+  function closeModal(backEl){ backEl.style.display = "none"; }
+
+  function renderPreferenceModal(){
+    const list = $("prefList");
+    list.innerHTML = "";
+
+
+    const actives = state.sellers.filter(s=>s.active);
+    if(actives.length === 0){
+      list.innerHTML = `<div class="hint">Sem vendedores ativos.</div>`;
+      return;
+    }
+
+    actives.forEach((s)=>{
+      const item = document.createElement("div");
+      item.className = "item";
+      item.style.cursor = "pointer";
+      item.innerHTML = `
+        <div class="leftItem">
+          <div class="avatar">${s.photo ? `<img src="${s.photo}">` : `<span style="color:var(--muted);font-weight:900">${(s.name||"?")[0].toUpperCase()}</span>`}</div>
+          <div class="nameBlock">
+            <div class="name">${s.name}</div>
+            <div class="meta">${s.paused ? "Pausado — ao selecionar ele será retomado" : "Selecionar para atender agora"}</div>
+          </div>
+        </div>
+        <span class="tag">Preferência</span>
+      `;
+
+      item.addEventListener("click", ()=>{
+        startPreferenceAttendance(s.id);
+        closeModal($("prefBack"));
+      });
+
+      list.appendChild(item);
+    });
+  }
+
+  function startPreferenceAttendance(sid){
+    const s = getSeller(sid);
+    if(!s || !s.active){
+      alert("Vendedor inválido/inativo.");
+      return;
+    }
+
+    // retoma se estava pausado
+    if(s.paused) s.paused = false;
+
+    // remove de onde estiver
+    state.queue = state.queue.filter(x=>x!==sid);
+    state.pool  = state.pool.filter(x=>x!==sid);
+
+    // inicia atendimento (multi)
+    if(isSellerInAttendance(sid)){ alert("Esse vendedor já está em atendimento."); return; }
+    state.currents.push({ id: uid(), sellerId: sid, startTs: nowTs() });
+    state.current = null;
+    save(state);
+    renderAll();
+  }
+
+  // ======================
+  // DESATIVAR VENDEDOR
+  // ======================
+  function renderDeactivateModal(){
+    const list = $("deactList");
+    list.innerHTML = "";
+
+    const actives = state.sellers.filter(s=>s.active);
+    if(actives.length === 0){
+      list.innerHTML = `<div class="hint">Sem vendedores ativos para desativar.</div>`;
+      return;
+    }
+
+    actives.forEach((s)=>{
+      const item = document.createElement("div");
+      item.className = "item";
+      item.innerHTML = `
+        <div class="leftItem">
+          <div class="avatar">${s.photo ? `<img src="${s.photo}">` : `<span style="color:var(--muted);font-weight:900">${(s.name||"?")[0].toUpperCase()}</span>`}</div>
+          <div class="nameBlock">
+            <div class="name">${s.name}</div>
+            <div class="meta">Remover da operação (fila/pool/preferência)</div>
+          </div>
+        </div>
+        <button class="btn bad" data-deact="${s.id}">Desativar</button>
+      `;
+      list.appendChild(item);
+    });
+
+    list.querySelectorAll("button[data-deact]").forEach(btn=>{
+      btn.addEventListener("click", (e)=>{
+        const sid = e.currentTarget.dataset.deact;
+        deactivateSeller(sid);
+      });
+    });
+  }
+
+  function deactivateSeller(sid){
+    const s = getSeller(sid);
+    if(!s || !s.active) return;
+
+    if(!confirm(`Desativar "${s.name}"? Ele vai sumir da operação.`)) return;
+
+    s.active = false;
+    s.paused = true;
+
+    // remove de filas
+    state.queue = state.queue.filter(x=>x!==sid);
+    state.pool  = state.pool.filter(x=>x!==sid);
+
+    // se estiver em atendimento, encerra atendimentos (sem registro)
+    state.currents = (state.currents||[]).filter(c=>c && c.sellerId!==sid);
+    if(state.current && state.current.sellerId === sid){ state.current = null; }
+
+    save(state);
+    renderAll();
+    closeModal($("deactBack"));
+    alert("Vendedor desativado ✅");
+  }
+
+  // ======================
+  // RANKING MODAL (dia)
+  // ======================
+  function renderRankingModal(){
+    const list = $("rankingList");
+    list.innerHTML = "";
+
+    const tk = todayKey();
+    const recsToday = state.records.filter(r => r.dateKey === tk);
+    const rows = aggBySeller(recsToday);
+
+    if(rows.length === 0){
+      list.innerHTML = `<div class="hint">Sem dados ainda. Finalize atendimentos para aparecer no ranking.</div>`;
+      return;
+    }
+
+    rows.sort((a,b)=>{
+      if(b.conv !== a.conv) return b.conv - a.conv;
+      if(b.sales !== a.sales) return b.sales - a.sales;
+      return b.revenue - a.revenue;
+    });
+
+    rows.forEach((r, i)=>{
+      const s = getSeller(r.sellerId);
+      const item = document.createElement("div");
+      item.className = "item";
+      item.innerHTML = `
+        <div class="leftItem">
+          <div class="pos">${i+1}</div>
+          <div class="avatar">${s?.photo ? `<img src="${s.photo}">` : `<span style="color:var(--muted);font-weight:900">${(s?.name||"?")[0].toUpperCase()}</span>`}</div>
+          <div class="nameBlock">
+            <div class="name">${s?.name || "Vendedor"}</div>
+            <div class="meta">${r.atend} atend · ${r.sales} vendas · PA(venda) ${r.paPerSale.toFixed(2)} · ${formatMoney(r.revenue)}</div>
+          </div>
+        </div>
+        <span class="tag good">${r.conv.toFixed(1)}%</span>
+      `;
+      list.appendChild(item);
+    });
+  }
+
+  // ======================
+  // DADOS
+  // ======================
+  function makeTable(headers, rows){
+    const table = document.createElement("table");
+    const thead = document.createElement("thead");
+    const trh = document.createElement("tr");
+    headers.forEach(h=>{
+      const th = document.createElement("th");
+      th.textContent = h;
+      trh.appendChild(th);
+    });
+    thead.appendChild(trh);
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+    rows.forEach(r=>{
+      const tr = document.createElement("tr");
+      r.forEach(cell=>{
+        const td = document.createElement("td");
+        td.textContent = cell;
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    return table;
+  }
+
+  function renderData(){
+    const view = $("dataView").value;
+    const { chosenDate, chosenMonth } = filterRecordsForDataView();
+
+    const recsDay = state.records.filter(r => r.dateKey === chosenDate);
+    const recsMonth = state.records.filter(r => r.monthKey === chosenMonth);
+
+    const a = agg(recsMonth);
+
+    const kpis = [
+      { t:"Atendimentos (mês)", v: formatNum(a.atend) },
+      { t:"Vendas (mês)", v: formatNum(a.sales) },
+      { t:"Conversão (mês)", v: a.conv.toFixed(1) + "%", cls:"good" },
+      { t:"P.A. (por venda)", v: a.paPerSale.toFixed(2) },
+    ];
+    const el = $("kpisData");
+    el.innerHTML = "";
+    for(const k of kpis){
+      const div = document.createElement("div");
+      div.className = "kpi";
+      div.innerHTML = `<div class="t">${k.t}</div><div class="v ${k.cls||""}">${k.v}</div>`;
+      el.appendChild(div);
+    }
+
+    const wrap = $("dataTableWrap");
+    wrap.innerHTML = "";
+
+    if(view === "dayRank"){
+      const rows = aggBySeller(recsDay);
+      if(rows.length === 0){
+        wrap.innerHTML = `<div class="hint">Sem registros em ${chosenDate}.</div>`;
+        return;
+      }
+      rows.sort((a,b)=>{
+        if(b.conv !== a.conv) return b.conv - a.conv;
+        if(b.sales !== a.sales) return b.sales - a.sales;
+        return b.revenue - a.revenue;
+      });
+      const body = rows.map((r, idx)=>{
+        const s = getSeller(r.sellerId);
+        return [String(idx+1), s?.name || "Vendedor", formatNum(r.atend), formatNum(r.sales), r.conv.toFixed(1)+"%", r.paPerSale.toFixed(2), formatMoney(r.revenue)];
+      });
+      wrap.appendChild(makeTable(["#","Vendedor","Atend.","Vendas","Conv.","P.A.(venda)","Fat."], body));
+      return;
+    }
+
+    if(view === "daily"){
+      const rows = groupByDate(recsMonth);
+      if(rows.length === 0){
+        wrap.innerHTML = `<div class="hint">Sem registros no mês ${chosenMonth}.</div>`;
+        return;
+      }
+      wrap.appendChild(makeTable(
+        ["Dia","Atend.","Vendas","Conv.","P.A.(venda)","P.A.(atend.)","Fat."],
+        rows.map(r=>[r.dateKey, formatNum(r.atend), formatNum(r.sales), r.conv.toFixed(1)+"%", r.paPerSale.toFixed(2), r.paPerAttend.toFixed(2), formatMoney(r.revenue)])
+      ));
+      return;
+    }
+
+    if(view === "sellerDaily"){
+      const byDate = new Map();
+      for(const r of recsMonth){
+        const k = r.dateKey;
+        if(!byDate.has(k)) byDate.set(k, []);
+        byDate.get(k).push(r);
+      }
+      const dates = Array.from(byDate.keys()).sort((a,b)=>a.localeCompare(b));
+      if(dates.length === 0){
+        wrap.innerHTML = `<div class="hint">Sem registros no mês ${chosenMonth}.</div>`;
+        return;
+      }
+      const sellers = state.sellers.map(s=>s.id);
+      const header = ["Vendedor", ...dates];
+      const body = sellers.map(sid=>{
+        const s = getSeller(sid);
+        const row = [s?.name || "Vendedor"];
+        for(const d of dates){
+          const rr = (byDate.get(d)||[]).filter(x=>x.sellerId===sid);
+          const aa = agg(rr);
+          row.push(aa.atend ? `${aa.conv.toFixed(0)}% (${aa.sales}/${aa.atend})` : "-");
+        }
+        return row;
+      }).filter(r=> r.slice(1).some(x=>x!=="-"));
+      wrap.appendChild(makeTable(header, body));
+      return;
+    }
+
+    if(view === "monthRank"){
+      const rows = aggBySeller(recsMonth);
+      if(rows.length === 0){
+        wrap.innerHTML = `<div class="hint">Sem registros no mês ${chosenMonth}.</div>`;
+        return;
+      }
+      rows.sort((a,b)=>{
+        if(b.conv !== a.conv) return b.conv - a.conv;
+        if(b.sales !== a.sales) return b.sales - a.sales;
+        return b.revenue - a.revenue;
+      });
+      const body = rows.map((r, idx)=>{
+        const s = getSeller(r.sellerId);
+        return [String(idx+1), s?.name || "Vendedor", formatNum(r.atend), formatNum(r.sales), r.conv.toFixed(1)+"%", r.paPerSale.toFixed(2), formatMoney(r.revenue)];
+      });
+      wrap.appendChild(makeTable(["#","Vendedor","Atend.","Vendas","Conv.","P.A.(venda)","Fat."], body));
+      return;
+    }
+
+    if(view === "raw"){
+      if(recsMonth.length === 0){
+        wrap.innerHTML = `<div class="hint">Sem registros no mês ${chosenMonth}.</div>`;
+        return;
+      }
+      const body = recsMonth
+        .slice()
+        .sort((a,b)=> (b.tsEnd||b.tsStart) - (a.tsEnd||a.tsStart))
+        .map(r=>{
+          const s = getSeller(r.sellerId);
+          const dt = new Date(r.tsStart);
+          const hh = String(dt.getHours()).padStart(2,"0");
+          const mm = String(dt.getMinutes()).padStart(2,"0");
+          const res = r.outcome === "sold" ? "Vendeu" : "Não vendeu";
+          return [r.dateKey, `${hh}:${mm}`, s?.name || "Vendedor", res, formatMoney(r.value||0), formatNum(r.pieces||0), (r.obs || "").slice(0,40)];
+        });
+      wrap.appendChild(makeTable(["Dia","Hora","Vendedor","Resultado","Valor","Peças","Obs"], body));
+      return;
+    }
+  }
+
+  // ======================
+  // GOALS (mantido igual ao seu)
+  // ======================
+  function getGoalsForMonth(mk){
+    if(!state.goalsByMonth) state.goalsByMonth = {};
+    if(!state.goalsByMonth[mk]){
+      state.goalsByMonth[mk] = {
+        monthly: 0,
+        basePercents: [25,25,25,25],
+        weekTargets: [0,0,0,0],
+        closedWeeks: {}
+      };
+    }
+    const g = state.goalsByMonth[mk];
+    if(!g.basePercents) g.basePercents = [25,25,25,25];
+    if(!g.weekTargets) g.weekTargets = [0,0,0,0];
+    if(!g.closedWeeks) g.closedWeeks = {};
+    return g;
+  }
+  function sum(arr){ return arr.reduce((a,b)=>a+Number(b||0),0); }
+  function getMonthRevenueSold(mk){
+    const soldMonth = state.records.filter(r => r.monthKey === mk && r.outcome==="sold");
+    return soldMonth.reduce((s,r)=> s + Number(r.value||0), 0);
+  }
+  function autoRedistributeGoals(mk){
+    const g = getGoalsForMonth(mk);
+    const monthly = Number(g.monthly||0);
+    const done = getMonthRevenueSold(mk);
+    const remaining = Math.max(0, monthly - done);
+
+    const openWeeks = [1,2,3,4].filter(w => !g.closedWeeks[String(w)]);
+    const base = g.basePercents.map(p=> Number(p||0));
+    const sumOpenBase = sum(openWeeks.map(w=> base[w-1]));
+
+    const normalized = [0,0,0,0];
+    if(openWeeks.length === 0){
+      // tudo fechado
+    } else if(sumOpenBase <= 0){
+      openWeeks.forEach(w => normalized[w-1] = 100/openWeeks.length);
+    } else {
+      openWeeks.forEach(w => normalized[w-1] = (base[w-1]/sumOpenBase)*100);
+    }
+
+    const targets = [...g.weekTargets];
+    openWeeks.forEach(w=>{
+      targets[w-1] = remaining * (normalized[w-1]/100);
+    });
+    g.weekTargets = targets;
+
+    const daysRemain = remainingDaysInMonthFromToday(mk);
+    const daily = (remaining / Math.max(1, daysRemain));
+
+    return { g, normalizedPercents: normalized, remaining, daily };
+  }
+
+  function renderGoals(){
+    const mk = $("goalMonth").value || monthKey();
+    const g = getGoalsForMonth(mk);
+
+    $("goalMonth").value = mk;
+    $("goalMonthly").value = g.monthly ? String(g.monthly).replace(".", ",") : "";
+
+    $("pW1").value = String(g.basePercents?.[0] ?? 25).replace(".", ",");
+    $("pW2").value = String(g.basePercents?.[1] ?? 25).replace(".", ",");
+    $("pW3").value = String(g.basePercents?.[2] ?? 25).replace(".", ",");
+    $("pW4").value = String(g.basePercents?.[3] ?? 25).replace(".", ",");
+
+    const { normalizedPercents, daily } = autoRedistributeGoals(mk);
+
+    $("goalDaily").value = String((daily||0).toFixed(2)).replace(".", ",");
+
+    $("goalW1").value = formatMoney(g.weekTargets[0]||0);
+    $("goalW2").value = formatMoney(g.weekTargets[1]||0);
+    $("goalW3").value = formatMoney(g.weekTargets[2]||0);
+    $("goalW4").value = formatMoney(g.weekTargets[3]||0);
+
+    [1,2,3,4].forEach(w=>{
+      const closed = !!g.closedWeeks[String(w)];
+      const v = closed ? "Fechada" : (normalizedPercents[w-1]||0).toFixed(1) + "%";
+      $("rpW"+w).value = v;
+    });
+
+    const today = todayKey();
+    const cw = weekOfMonth(today);
+    $("goalCurrentWeek").value = "Semana " + cw;
+    $("goalWeekClosed").value = g.closedWeeks[String(cw)] ? "Sim" : "Não";
+
+    save(state);
+    renderGoalsProgress();
+    try{ renderVendorGoals(); }catch{}
+  }
+
+  function renderGoalsProgress(){
+    const mk = $("goalMonth").value || monthKey();
+    const g = getGoalsForMonth(mk);
+
+    const today = todayKey();
+    const currentWeek = weekOfMonth(today);
+
+    const monthSold = state.records.filter(r => r.monthKey === mk && r.outcome==="sold");
+    const monthRevenue = monthSold.reduce((s,r)=> s + Number(r.value||0), 0);
+
+    const daySold = state.records.filter(r => r.dateKey === today && r.outcome==="sold");
+    const dayRevenue = daySold.reduce((s,r)=> s + Number(r.value||0), 0);
+
+    const weekSold = state.records.filter(r => r.monthKey === mk && r.outcome==="sold" && weekOfMonth(r.dateKey) === currentWeek);
+    const weekRevenue = weekSold.reduce((s,r)=> s + Number(r.value||0), 0);
+
+    const monthlyTarget = Number(g.monthly||0);
+    const weeklyTarget = Number(g.weekTargets?.[currentWeek-1] || 0);
+
+    const { remaining, daily } = autoRedistributeGoals(mk);
+    const dailyTarget = Number(daily||0);
+
+    const monthlyPct = monthlyTarget>0 ? clamp((monthRevenue/monthlyTarget)*100, 0, 100) : 0;
+    const dailyPct = dailyTarget>0 ? clamp((dayRevenue/dailyTarget)*100, 0, 100) : 0;
+    const weeklyPct = weeklyTarget>0 ? clamp((weekRevenue/weeklyTarget)*100, 0, 100) : 0;
+
+    $("goalDailyText").textContent = `${formatMoney(dayRevenue)} / ${formatMoney(dailyTarget)}`;
+    $("goalWeeklyText").textContent = `${formatMoney(weekRevenue)} / ${formatMoney(weeklyTarget)} (S${currentWeek})`;
+    $("goalMonthlyText").textContent = `${formatMoney(monthRevenue)} / ${formatMoney(monthlyTarget)}`;
+
+    $("goalDailyLeft").textContent = formatMoney(Math.max(0, dailyTarget - dayRevenue));
+    $("goalWeeklyLeft").textContent = formatMoney(Math.max(0, weeklyTarget - weekRevenue));
+    $("goalMonthlyLeft").textContent = formatMoney(Math.max(0, monthlyTarget - monthRevenue));
+
+    $("barDaily").style.width = (dailyPct || 0) + "%";
+    $("barWeekly").style.width = (weeklyPct || 0) + "%";
+    $("barMonthly").style.width = (monthlyPct || 0) + "%";
+
+    const el = $("kpisGoals");
+    el.innerHTML = "";
+    const cards = [
+      { t: "Hoje (R$)", v: formatMoney(dayRevenue), cls: dailyPct>=100 ? "good":"" },
+      { t: "Semana atual (R$)", v: formatMoney(weekRevenue), cls: weeklyPct>=100 ? "good":"" },
+      { t: "Mês (R$)", v: formatMoney(monthRevenue), cls: monthlyPct>=100 ? "good":"" },
+      { t: "Restante do mês (R$)", v: formatMoney(remaining) },
+    ];
+    for(const k of cards){
+      const div = document.createElement("div");
+      div.className = "kpi";
+      div.innerHTML = `<div class="t">${k.t}</div><div class="v ${k.cls||""}">${k.v}</div>`;
+      el.appendChild(div);
+    }
+
+    const cw = weekOfMonth(todayKey());
+    $("goalCurrentWeek").value = "Semana " + cw;
+    $("goalWeekClosed").value = g.closedWeeks[String(cw)] ? "Sim" : "Não";
+  }
+
+
+  // ======================
+  // META VENDEDOR (ref + override)
+  // ======================
+  function getVendorDivisor(){
+    let d = Number(state.options.vendorDivisor||0);
+    if(!d || d<=0){
+      d = (state.sellers||[]).filter(s=>s.active).length || 1;
+    }
+    return d;
+  }
+
+  function getVendorOverride(mk, sid){
+    const byMonth = state.vendorGoalsByMonth||{};
+    const m = byMonth[mk]||{};
+    const v = Number(m[sid]||0);
+    return v>0 ? v : 0;
+  }
+
+  function setVendorOverride(mk, sid, v){
+    state.vendorGoalsByMonth = state.vendorGoalsByMonth || {};
+    state.vendorGoalsByMonth[mk] = state.vendorGoalsByMonth[mk] || {};
+    if(v>0) state.vendorGoalsByMonth[mk][sid] = v;
+    else delete state.vendorGoalsByMonth[mk][sid];
+  }
+
+  function getVendorMonthlyTarget(mk, sid){
+    const store = getGoalsForMonth(mk);
+    const storeMonthly = Number(store.monthly||0);
+    if(storeMonthly<=0) return 0;
+    const ov = getVendorOverride(mk, sid);
+    if(ov>0) return ov;
+    const d = getVendorDivisor();
+    return storeMonthly / d;
+  }
+
+  function ratioVendorToStore(mk, sid){
+    const store = getGoalsForMonth(mk);
+    const storeMonthly = Number(store.monthly||0);
+    if(storeMonthly<=0) return 0;
+    const vm = getVendorMonthlyTarget(mk, sid);
+    return vm>0 ? (vm/storeMonthly) : 0;
+  }
+
+  function renderVendorGoals(){
+    const mk = $("goalMonth").value || monthKey();
+    const d = getVendorDivisor();
+    $("goalVendorDivisor").value = String(d).replace(".",",");
+
+    const sel = $("goalVendorSelect");
+    sel.innerHTML = "";
+    const act = (state.sellers||[]).filter(s=>s.active);
+    for(const s of act){
+      const opt = document.createElement('option');
+      opt.value = s.id;
+      opt.textContent = s.name;
+      sel.appendChild(opt);
+    }
+    if(!sel.value && act[0]) sel.value = act[0].id;
+
+    const sid = sel.value;
+    const ov = getVendorOverride(mk, sid);
+    $("goalVendorMonthlyOverride").value = ov>0 ? String(ov).replace(".",",") : "";
+
+    const kpis = $("kpisVendorGoals");
+    kpis.innerHTML = "";
+
+    const g = getGoalsForMonth(mk);
+    const today = todayKey();
+    const cw = weekOfMonth(today);
+
+    const soldMonth = state.records.filter(r=>r.monthKey===mk && r.sellerId===sid && r.outcome==='sold');
+    const revMonth = soldMonth.reduce((s,r)=>s+Number(r.value||0),0);
+
+    const soldDay = state.records.filter(r=>r.dateKey===today && r.sellerId===sid && r.outcome==='sold');
+    const revDay = soldDay.reduce((s,r)=>s+Number(r.value||0),0);
+
+    const soldWeek = state.records.filter(r=>r.monthKey===mk && weekOfMonth(r.dateKey)===cw && r.sellerId===sid && r.outcome==='sold');
+    const revWeek = soldWeek.reduce((s,r)=>s+Number(r.value||0),0);
+
+    const vm = getVendorMonthlyTarget(mk, sid);
+    const ratio = ratioVendorToStore(mk, sid);
+    const storeWeekly = Number(g.weekTargets?.[cw-1]||0);
+    const storeDaily = parseBRNumber($("goalDaily").value||"0");
+
+    const vw = storeWeekly * ratio;
+    const vd = storeDaily * ratio;
+
+    const cards=[
+      {t:'Hoje (vend.)', v:`${formatMoney(revDay)} / ${formatMoney(vd)}`},
+      {t:`Semana ${cw} (vend.)`, v:`${formatMoney(revWeek)} / ${formatMoney(vw)}`},
+      {t:'Mês (vend.)', v:`${formatMoney(revMonth)} / ${formatMoney(vm)}`},
+    ];
+    for(const c of cards){
+      const div = document.createElement('div');
+      div.className='kpi';
+      div.innerHTML = `<div class="t">${c.t}</div><div class="v">${c.v}</div>`;
+      kpis.appendChild(div);
+    }
+  }
+
+  function saveVendorGoal(){
+    const mk = $("goalMonth").value || monthKey();
+    const d = parseBRNumber($("goalVendorDivisor").value||"");
+    if(d>0) state.options.vendorDivisor = d;
+
+    const sid = $("goalVendorSelect").value;
+    const ov = parseBRNumber($("goalVendorMonthlyOverride").value||"");
+    setVendorOverride(mk, sid, ov);
+
+    save(state);
+    renderGoals();
+    alert('Meta do vendedor salva ✅');
+  }
+
+  function saveGoals(){
+    const mk = $("goalMonth").value || monthKey();
+    const g = getGoalsForMonth(mk);
+
+    g.monthly = parseBRNumber($("goalMonthly").value);
+    g.basePercents = [
+      parseBRNumber($("pW1").value),
+      parseBRNumber($("pW2").value),
+      parseBRNumber($("pW3").value),
+      parseBRNumber($("pW4").value),
+    ];
+
+    autoRedistributeGoals(mk);
+    state.goalsByMonth[mk] = g;
+    save(state);
+
+    renderGoals();
+    renderMetaRank();
+    renderNoConv();
+
+    alert("Metas salvas e redistribuídas ✅");
+  }
+
+  function closeCurrentWeek(){
+    const mk = $("goalMonth").value || monthKey();
+    const g = getGoalsForMonth(mk);
+    const cw = weekOfMonth(todayKey());
+
+    if(g.closedWeeks[String(cw)]){ alert("Essa semana já está fechada."); return; }
+    if(!confirm(`Fechar Semana ${cw}? O OMNIA vai redistribuir a meta restante.`)) return;
+
+    g.closedWeeks[String(cw)] = true;
+    autoRedistributeGoals(mk);
+    state.goalsByMonth[mk] = g;
+    save(state);
+
+    renderGoals();
+    alert(`Semana ${cw} fechada ✅ Meta redistribuída.`);
+  }
+
+  function reopenWeeks(){
+    const mk = $("goalMonth").value || monthKey();
+    const g = getGoalsForMonth(mk);
+    if(!confirm("Reabrir todas as semanas?")) return;
+    g.closedWeeks = {};
+    autoRedistributeGoals(mk);
+    save(state);
+    renderGoals();
+  }
+
+  // ======================
+  // META RANK (mantido igual ao seu)
+  // ======================
+  function renderMetaRank(){
+    const mk = $("metaRankMonth").value || monthKey();
+    $("metaRankMonth").value = mk;
+
+    const saved = getGoalsForMonth(mk);
+    const inputMeta = parseBRNumber($("metaRankMonthly").value);
+    const monthlyTarget = inputMeta || Number(saved.monthly||0);
+    if(!inputMeta && monthlyTarget){
+      $("metaRankMonthly").value = String(monthlyTarget).replace(".", ",");
+    }
+
+    const mode = $("metaRankMode").value;
+
+    const soldMonth = state.records.filter(r => r.monthKey === mk && r.outcome==="sold");
+    const monthRevenue = soldMonth.reduce((s,r)=> s + Number(r.value||0), 0);
+
+    const kpis = $("metaRankKpis");
+    kpis.innerHTML = "";
+    const pctStore = monthlyTarget>0 ? clamp((monthRevenue/monthlyTarget)*100,0,200) : 0;
+    const lack = Math.max(0, monthlyTarget - monthRevenue);
+
+    const k = [
+      { t:"Faturamento (mês)", v: formatMoney(monthRevenue), cls: "" },
+      { t:"Meta mensal", v: formatMoney(monthlyTarget), cls: "" },
+      { t:"Progresso", v: monthlyTarget>0 ? pctStore.toFixed(1)+"%" : "—", cls: (pctStore>=100)?"good":"" },
+      { t:"Falta", v: formatMoney(lack), cls: "" },
+    ];
+    for(const it of k){
+      const div = document.createElement("div");
+      div.className = "kpi";
+      div.innerHTML = `<div class="t">${it.t}</div><div class="v ${it.cls||""}">${it.v}</div>`;
+      kpis.appendChild(div);
+    }
+
+    const rows = aggBySeller(soldMonth);
+    rows.sort((a,b)=> b.revenue - a.revenue);
+
+    const tableWrap = $("metaRankTable");
+    tableWrap.innerHTML = "";
+
+    if(rows.length === 0){
+      tableWrap.innerHTML = `<div class="hint">Sem vendas registradas nesse mês ainda.</div>`;
+    } else {
+      const body = rows.map((r, idx)=>{
+        const s = getSeller(r.sellerId);
+        const pct = monthRevenue>0 ? (r.revenue/monthRevenue)*100 : 0;
+        return [String(idx+1), s?.name || "Vendedor", formatMoney(r.revenue), pct.toFixed(1)+"%", formatNum(r.sales), (r.paPerSale||0).toFixed(2)];
+      });
+      tableWrap.appendChild(makeTable(["#","Vendedor","Fat. mês","% da loja","Vendas","P.A."], body));
+    }
+
+    renderMoonRace(mk, monthlyTarget, mode, rows, monthRevenue);
+  }
+
+  function renderMoonRace(mk, monthlyTarget, mode, rows, storeRevenue){
+    const race = $("race");
+    race.querySelectorAll(".rocket").forEach(el=>el.remove());
+    $("moonBoom").style.display = "none";
+
+    const left = 12;
+    const rightPadding = 120;
+    const width = race.clientWidth - rightPadding - left;
+
+    const target = Number(monthlyTarget||0);
+    const storePct = target>0 ? clamp(storeRevenue/target, 0, 1.2) : 0;
+
+    if(target>0 && storeRevenue >= target){
+      $("moonBoom").style.display = "grid";
+      const rect = race.getBoundingClientRect();
+      burstFx(rect.right - 80, rect.top + 60);
+      setTimeout(()=>burstFx(rect.right - 110, rect.top + 40), 140);
+    }
+
+    const maxRockets = (mode==="store") ? 3 : 5;
+    const list = rows.slice(0, maxRockets);
+
+    list.forEach((r, i)=>{
+      const s = getSeller(r.sellerId);
+      const sellerTarget = (mode==='seller') ? sellerGoalMonthly(r.sellerId, mk) : target;
+      const pct = sellerTarget>0 ? clamp(r.revenue/sellerTarget, 0, 1.2) : 0;
+      const x = left + width * pct;
+
+      const rocket = document.createElement("div");
+      rocket.className = "rocket";
+      rocket.style.left = x + "px";
+      rocket.style.top = (22 + i*24) + "px";
+
+      const pic = document.createElement("div");
+      pic.className = "pic";
+      if(s?.photo){
+        const img = document.createElement("img");
+        img.src = s.photo;
+        pic.appendChild(img);
+      } else {
+        pic.textContent = (s?.name||"?")[0].toUpperCase();
+      }
+
+      const ship = document.createElement("div");
+      ship.className = "ship";
+      ship.textContent = "🚀";
+
+      const lbl = document.createElement("div");
+      lbl.className = "lbl";
+      lbl.innerHTML = `<b>${s?.name || "Vendedor"}</b> · ${formatMoney(r.revenue)}${(mode==='seller' && sellerTarget>0) ? ` / ${formatMoney(sellerTarget)}` : ""} · ${sellerTarget>0 ? (pct*100).toFixed(1)+"%" : "—"}`;
+
+      rocket.appendChild(pic);
+      rocket.appendChild(ship);
+      rocket.appendChild(lbl);
+      race.appendChild(rocket);
+    });
+
+    if(mode==="store"){
+      const xStore = left + width * storePct;
+      const rocket = document.createElement("div");
+      rocket.className = "rocket";
+      rocket.style.left = xStore + "px";
+      rocket.style.top = "110px";
+      rocket.style.opacity = "0.95";
+
+      const pic = document.createElement("div");
+      pic.className = "pic";
+      pic.textContent = "🏬";
+
+      const ship = document.createElement("div");
+      ship.className = "ship";
+      ship.textContent = "🚀";
+
+      const lbl = document.createElement("div");
+      lbl.className = "lbl";
+      lbl.innerHTML = `<b>LOJA</b> · ${formatMoney(storeRevenue)} · ${target? (storePct*100).toFixed(1)+"%": "—"}`;
+
+      rocket.appendChild(pic);
+      rocket.appendChild(ship);
+      rocket.appendChild(lbl);
+      race.appendChild(rocket);
+    }
+  }
+
+  // ======================
+  // NÃO CONVERTIDOS (mantido igual ao seu)
+  // ======================
+  function getNoConvSelection(){
+    const d = $("ncDate").value || todayKey();
+    const m = $("ncMonth").value || monthKey();
+    const v = $("ncView").value || "day";
+    return { d, m, v };
+  }
+
+  function countBy(records, keyFn){
+    const map = new Map();
+    for(const r of records){
+      const k = keyFn(r) || "(vazio)";
+      map.set(k, (map.get(k)||0) + 1);
+    }
+    const arr = Array.from(map.entries()).map(([k,v])=>({k,v}));
+    arr.sort((a,b)=> b.v - a.v);
+    return arr;
+  }
+
+  function renderNoConv(){
+    const { d, m, v } = getNoConvSelection();
+
+    const scope = (v==="day")
+      ? state.records.filter(r=> r.dateKey === d)
+      : state.records.filter(r=> r.monthKey === m);
+
+    const sold = scope.filter(r=> r.outcome==="sold");
+    const nos = scope.filter(r=> r.outcome==="nosold");
+
+    const soldCount = sold.length;
+    const nosCount = nos.length;
+    const total = soldCount + nosCount;
+
+    $("convCount").textContent = String(soldCount);
+    $("noConvCount").textContent = String(nosCount);
+
+    const soldPct = total>0 ? (soldCount/total)*100 : 0;
+    const nosPct  = total>0 ? (nosCount/total)*100 : 0;
+
+    $("convBar").style.width = soldPct.toFixed(1) + "%";
+    $("noConvBar").style.width = nosPct.toFixed(1) + "%";
+
+    $("convHint").textContent = total>0 ? `Convertidos: ${soldPct.toFixed(1)}%` : "—";
+    $("noConvHint").textContent = total>0 ? `Não convertidos: ${nosPct.toFixed(1)}%` : "—";
+
+    const rev = sold.reduce((s,r)=> s+Number(r.value||0), 0);
+    const kpis = $("ncKpis");
+    kpis.innerHTML = "";
+    const cards = [
+      { t:"Atendimentos", v: formatNum(total) },
+      { t:"Vendas", v: formatNum(soldCount), cls:"good" },
+      { t:"Não vendidos", v: formatNum(nosCount) },
+      { t:"Faturamento (R$)", v: formatMoney(rev) },
+    ];
+    for(const k of cards){
+      const div = document.createElement("div");
+      div.className = "kpi";
+      div.innerHTML = `<div class="t">${k.t}</div><div class="v ${k.cls||""}">${k.v}</div>`;
+      kpis.appendChild(div);
+    }
+
+    const reasons = countBy(nos, r=> r.noSale?.reason || "(sem motivo)");
+    const items   = countBy(nos, r=> r.noSale?.itemType || "(sem peça)");
+    const gender  = countBy(nos, r=> r.noSale?.gender || "(sem gênero)");
+    const sizes   = countBy(nos, r=> r.noSale?.size ? String(r.noSale.size).trim() : "(sem numeração)");
+
+    const rWrap = $("ncReasonsWrap");
+    const iWrap = $("ncItemsWrap");
+    const gWrap = $("ncGenderWrap");
+    const sWrap = $("ncSizesWrap");
+
+    rWrap.innerHTML = "";
+    iWrap.innerHTML = "";
+    gWrap.innerHTML = "";
+    sWrap.innerHTML = "";
+
+    if(nos.length === 0){
+      rWrap.innerHTML = `<div class="hint">Sem “não convertidos” nesse período. 👏</div>`;
+      return;
+    }
+
+    rWrap.appendChild(makeTable(["Motivo","Qtd"], reasons.map(x=>[x.k, String(x.v)])));
+    iWrap.appendChild(makeTable(["Peça","Qtd"], items.map(x=>[x.k, String(x.v)])));
+    gWrap.appendChild(makeTable(["Gênero","Qtd"], gender.map(x=>[x.k, String(x.v)])));
+    sWrap.appendChild(makeTable(["Numeração","Qtd"], sizes.map(x=>[x.k, String(x.v)])));
+  }
+
+  // ======================
+  // EXPORT (mantido)
+  // ======================
+  function downloadBlob(content, filename, mime){
+    const blob = new Blob([content], {type: mime});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function exportJSON(){
+    const { chosenDate, chosenMonth } = filterRecordsForDataView();
+    const view = $("dataView").value;
+
+    const recsDay = state.records.filter(r => r.dateKey === chosenDate);
+    const recsMonth = state.records.filter(r => r.monthKey === chosenMonth);
+
+    const payload = {
+      exportedAt: new Date().toISOString(),
+      store: state.store,
+      options: state.options,
+      ui: state.ui,
+      goalsByMonth: state.goalsByMonth,
+      selection: { view, chosenDate, chosenMonth },
+      sellers: state.sellers,
+      records: (view === "dayRank") ? recsDay : recsMonth
+    };
+
+    downloadBlob(
+      JSON.stringify(payload, null, 2),
+      `nexxt_${(state.store.name||"loja").replaceAll(" ","_")}_${view}_${view==="dayRank"?chosenDate:chosenMonth}.json`,
+      "application/json"
+    );
+  }
+
+  function csvEscape(v){
+    const s = String(v ?? "");
+    if(/[,"\n]/.test(s)) return `"${s.replace(/"/g,'""')}"`;
+    return s;
+  }
+
+  function exportCSV(){
+    const { chosenDate, chosenMonth } = filterRecordsForDataView();
+    const view = $("dataView").value;
+
+    const recsDay = state.records.filter(r => r.dateKey === chosenDate);
+    const recsMonth = state.records.filter(r => r.monthKey === chosenMonth);
+    const recs = (view === "dayRank") ? recsDay : recsMonth;
+
+    const header = ["id","date","time","seller","result","value","pieces","reason","gender","itemType","size","obs","tsStart","tsEnd"];
+    const lines = [header.join(",")];
+
+    const sorted = recs.slice().sort((a,b)=> (a.tsStart||0) - (b.tsStart||0));
+    for(const r of sorted){
+      const s = getSeller(r.sellerId);
+      const dt = new Date(r.tsStart);
+      const hh = String(dt.getHours()).padStart(2,"0");
+      const mm = String(dt.getMinutes()).padStart(2,"0");
+
+      const reason = r.noSale?.reason || "";
+      const gender = r.noSale?.gender || "";
+      const itemType = r.noSale?.itemType || "";
+      const size = r.noSale?.size || "";
+
+      const row = [
+        r.id,
+        r.dateKey,
+        `${hh}:${mm}`,
+        s?.name || "",
+        r.outcome === "sold" ? "sold" : "nosold",
+        Number(r.value||0).toFixed(2),
+        Number(r.pieces||0),
+        reason, gender, itemType, size,
+        r.obs || "",
+        r.tsStart || "",
+        r.tsEnd || ""
+      ].map(csvEscape);
+      lines.push(row.join(","));
+    }
+
+    const suffix = (view === "dayRank") ? chosenDate : chosenMonth;
+    downloadBlob(
+      lines.join("\n"),
+      `nexxt_${(state.store.name||"loja").replaceAll(" ","_")}_registros_${suffix}.csv`,
+      "text/csv;charset=utf-8"
+    );
+  }
+
+  // ======================
+  // FILA + FLUXO
+  // ======================
+  function handleQueueAction(act, sid){
+    if(isSellerInAttendance(sid)){
+      alert("Esse vendedor está em atendimento. Finalize antes de mover/remover.");
+      return;
+    }
+    const idx = state.queue.indexOf(sid);
+    if(idx === -1) return;
+
+    if(act === "up" && idx > 0) [state.queue[idx-1], state.queue[idx]] = [state.queue[idx], state.queue[idx-1]];
+    if(act === "down" && idx < state.queue.length-1) [state.queue[idx+1], state.queue[idx]] = [state.queue[idx], state.queue[idx+1]];
+
+    if(act === "pause"){
+      const s = getSeller(sid);
+      if(!s) return;
+      s.paused = !s.paused;
+
+      // se pausou: tira da fila e joga no pool
+      if(s.paused){
+        state.queue = state.queue.filter(x=>x!==sid);
+        if(!state.pool.includes(sid)) state.pool.push(sid);
+      } else {
+        // se retomou: manda pro pool (e ele clica pra voltar) ou já volta pra fila?
+        // preferi deixar no pool para controle do gestor; mas agora o clique no pool resolve.
+        if(!state.pool.includes(sid)) state.pool.push(sid);
+        state.queue = state.queue.filter(x=>x!==sid);
+      }
+    }
+
+    if(act === "remove"){
+      state.queue = state.queue.filter(x=>x!==sid);
+      if(!state.pool.includes(sid)) state.pool.push(sid);
+    }
+
+    save(state);
+    renderAll();
+  }
+
+  function callNext(){
+    // permite múltiplos atendimentos em paralelo
+
+    // pular inativos/pausados
+    while(state.queue.length > 0){
+      const sid = state.queue[0];
+      const s = getSeller(sid);
+
+      if(!s || !s.active){
+        state.queue.shift();
+        continue;
+      }
+
+      if(s.paused){
+        state.queue.shift();
+        if(!state.pool.includes(sid)) state.pool.push(sid);
+        continue;
+      }
+
+      if(isSellerInAttendance(sid)){
+        // já está em atendimento; remove da fila para não duplicar
+        state.queue.shift();
+        continue;
+      }
+
+      state.currents.push({ id: uid(), sellerId: sid, startTs: nowTs() });
+      state.current = null;
+      state.queue.shift();
+      save(state);
+      renderAll();
+      return;
+    }
+
+    alert("Fila vazia. Adicione vendedores no rodapé.");
+  }
+
+  function finalizeCurrent(cid){
+    const c = getCurrentById(cid);
+    if(!c){ return; }
+
+    const form = $("finalizeForm_"+cid);
+    const outcome = form ? (form.dataset.outcome||"") : "";
+
+    if(outcome !== "sold" && outcome !== "nosold"){
+      alert("Selecione 'Vendeu' ou 'Não vendeu'.");
+      return;
+    }
+
+    const sid = c.sellerId;
+    const s = getSeller(sid);
+    if(!s || !s.active){
+      state.currents = (state.currents||[]).filter(x=>x.id!==cid);
+      save(state);
+      renderAll();
+      return;
+    }
+
+    const endTs = nowTs();
+    const tk = todayKey(new Date(c.startTs));
+    const mk = monthKey(new Date(c.startTs));
+
+    let value = 0, pieces = 0, noSale = null;
+
+    if(outcome==="sold"){
+      value = state.options.askValue ? parseBRNumber($("saleValue_"+cid)?.value || "") : 0;
+      pieces = state.options.askPieces ? (parseInt(($("salePieces_"+cid)?.value||"0"),10) || 0) : 0;
+    } else {
+      const reason = $("nsReason_"+cid)?.value || "Outro";
+      const gender = $("nsGender_"+cid)?.value || "";
+      const itemType = $("nsItemType_"+cid)?.value || "";
+      const size = ($("nsSize_"+cid)?.value || "").trim();
+      noSale = { reason, gender, itemType, size };
+    }
+
+    const obs = $("saleObs_"+cid)?.value || "";
+
+    const newRec = {
+      id: uid(),
+      tsStart: c.startTs,
+      tsEnd: endTs,
+      dateKey: tk,
+      monthKey: mk,
+      sellerId: sid,
+      outcome,
+      value,
+      pieces,
+      noSale,
+      obs
+    };
+    state.records.push(newRec);
+
+    try{ evaluateSellerBadgesAfterRecord(newRec); }catch(e){}
+
+    if(outcome==="sold"){
+      burstFx(window.innerWidth*0.72, window.innerHeight*0.30);
+    }
+
+    // remove deste atendimento
+    state.currents = (state.currents||[]).filter(x=>x.id!==cid);
+
+    // volta pra fila se estiver ativo e não pausado
+    if(s.active && !s.paused){
+      state.queue.push(sid);
+    } else if(s.active && !state.pool.includes(sid)){
+      state.pool.push(sid);
+    }
+
+    save(state);
+    renderAll();
+
+    if($("viewMetas").style.display !== "none") renderGoals();
+    if($("viewMetasRank").style.display !== "none") renderMetaRank();
+    if($("viewNoConv").style.display !== "none") renderNoConv();
+  }
+
+  
+
+  // ======================
+  // BADGES / CONQUISTAS (Vendedor)
+  // ======================
+  const BADGE_DEFS = {
+    DAY_GOAL: { icon:"✅", title:"Meta do Dia Batida", desc:"Bateu a meta diária do dia." },
+    WEEK_GOAL: { icon:"🏁", title:"Meta da Semana Batida", desc:"Bateu a meta da semana." },
+    MONTH_GOAL: { icon:"🌙", title:"Meta do Mês Batida", desc:"Chegou na meta do mês." },
+    TOP_CONV: { icon:"👑", title:"Rei da Conversão", desc:"Fechou o mês com conversão acima de 85%." },
+
+    BIG_SALE: { icon:"💎", title:"Venda Suprema", desc:"Fez uma venda acima de R$ 5.000." },
+    SALE_TOP: { icon:"🚀", title:"Venda Top", desc:"Venda entre R$ 1.500 e R$ 2.000." },
+    SALE_RESPECT: { icon:"🫡", title:"Venda de Respeito", desc:"Venda entre R$ 2.500 e R$ 3.500." },
+    BIGGEST_SALE: { icon:"🏆", title:"Maior Venda do Mês", desc:"Maior venda do mês." },
+
+    TVA_COMBO: { icon:"🔥", title:"Combo Master", desc:"TVA ≥ 95% (quase todas as vendas com 2+ itens no mês)." },
+
+    PA_BRONZE: { icon:"🥉", title:"P.A Bronze", desc:"P.A do mês ≥ 2,40." },
+    PA_SILVER: { icon:"🥈", title:"P.A Prata", desc:"P.A do mês ≥ 2,60." },
+    PA_GOLD: { icon:"🥇", title:"P.A Ouro", desc:"P.A do mês ≥ 2,70." },
+
+    TM_SILVER: { icon:"🧳", title:"T.M Mala de Prata", desc:"Ticket médio do mês entre R$ 600,00 e R$ 699,99." },
+    TM_GOLD: { icon:"💼", title:"T.M Mala de Ouro", desc:"Ticket médio do mês entre R$ 800,00 e R$ 899,99." },
+    TM_SUPREME: { icon:"🎒", title:"T.M Mala Suprema", desc:"Ticket médio do mês acima de R$ 950,00." },
+
+    MAGIC_5: { icon:"✨", title:"Selo Mágico", desc:"Surpresa: bateu 5 metas mensais no total." },
+    SUPREME_12: { icon:"🌌", title:"Selo Supremo", desc:"Surpresa: bateu 12 metas mensais no total." },
+  };
+
+  function ensureBadges(){
+    if(!state.badges) state.badges = { earned: [] };
+    if(!Array.isArray(state.badges.earned)) state.badges.earned = [];
+
+    // Migração defensiva: versões antigas salvavam badges sem o campo `def`.
+    // Aqui tentamos inferir para manter a galeria (ATIVADO/BLOQUEADO) funcionando.
+    const titleToDef = {
+      "Meta do Dia Batida":"DAY_GOAL",
+      "Meta da Semana Batida":"WEEK_GOAL",
+      "Meta do Mês Batida":"MONTH_GOAL",
+      "Rei da Conversão":"TOP_CONV",
+      "Venda Suprema":"BIG_SALE",
+      "Venda Top":"SALE_TOP",
+      "Venda de Respeito":"SALE_RESPECT",
+      "Maior Venda do Mês":"BIGGEST_SALE",
+      "P.A Bronze":"PA_BRONZE",
+      "P.A Prata":"PA_SILVER",
+      "P.A Ouro":"PA_GOLD",
+      "T.M Mala de Prata":"TM_SILVER",
+      "T.M Mala de Ouro":"TM_GOLD",
+      "T.M Mala Suprema":"TM_SUPREME",
+      "Combo Master":"TVA_COMBO",
+      "Selo Mágico":"MAGIC_5",
+      "Selo Supremo":"SUPREME_12"
+    };
+    try{
+      for(const e of state.badges.earned){
+        if(!e || e.def) continue;
+        const t = String(e.title||'');
+        if(titleToDef[t]) e.def = titleToDef[t];
+      }
+    }catch{}
+  }
+
+  function awardBadge(entry){
+    ensureBadges();
+    if(state.badges.earned.some(e=> e.key === entry.key)) return;
+    state.badges.earned.push(entry);
+  }
+
+  function sellerGoalMonthly(sid, mk){
+    const ov = (state.vendorGoalsByMonth?.[mk]||{})[sid];
+    if(Number(ov||0) > 0) return Number(ov);
+    const g = getGoalsForMonth(mk);
+    const divisor = Number(state.options.vendorDivisor||0) || ((state.sellers||[]).filter(s=>s.active).length || 1);
+    return (Number(g.monthly||0) / Math.max(1, divisor));
+  }
+
+  function sellerGoalWeek(sid, mk, week){
+    const g = getGoalsForMonth(mk);
+    const divisor = Number(state.options.vendorDivisor||0) || ((state.sellers||[]).filter(s=>s.active).length || 1);
+    const ovM = (state.vendorGoalsByMonth?.[mk]||{})[sid];
+    if(Number(ovM||0) > 0){
+      const base = (g.basePercents||[25,25,25,25]).map(x=>Number(x||0));
+      const s = base.reduce((a,b)=>a+b,0) || 100;
+      const pct = (base[week-1]||0) / s;
+      return Number(ovM) * pct;
+    }
+    return (Number(g.weekTargets?.[week-1]||0) / Math.max(1, divisor));
+  }
+
+  function sellerGoalDay(sid, mk){
+    const m = sellerGoalMonthly(sid, mk);
+    const days = daysInMonth(mk);
+    return m / Math.max(1, days);
+  }
+
+  function sellerRecsInMonth(sid, mk){
+    return state.records.filter(r=> r.sellerId===sid && r.monthKey===mk);
+  }
+  function sellerSoldInMonth(sid, mk){
+    return state.records.filter(r=> r.sellerId===sid && r.monthKey===mk && r.outcome==='sold');
+  }
+  function sellerRevenueDay(sid, tk){
+    return state.records.filter(r=> r.sellerId===sid && r.dateKey===tk && r.outcome==='sold').reduce((s,r)=>s+Number(r.value||0),0);
+  }
+  function sellerRevenueWeek(sid, mk, week){
+    return state.records.filter(r=> r.sellerId===sid && r.monthKey===mk && r.outcome==='sold' && weekOfMonth(r.dateKey)===week).reduce((s,r)=>s+Number(r.value||0),0);
+  }
+
+  function evaluateSellerBadgesAfterRecord(rec){
+    if(rec.outcome !== 'sold') return;
+    const sid = rec.sellerId;
+    const mk = rec.monthKey;
+    const tk = rec.dateKey;
+    const week = weekOfMonth(tk);
+
+    // Sale-based instant badges
+    const v = Number(rec.value||0);
+    if(v > 5000) awardBadge({ key:`SELLER_${sid}_${rec.id}_BIG_SALE`, scope:'seller', sellerId:sid, monthKey:mk, def:'BIG_SALE', title:BADGE_DEFS.BIG_SALE.title, desc:BADGE_DEFS.BIG_SALE.desc, icon:BADGE_DEFS.BIG_SALE.icon, ts: nowTs() });
+    if(v >= 1500 && v <= 2000) awardBadge({ key:`SELLER_${sid}_${rec.id}_SALE_TOP`, scope:'seller', sellerId:sid, monthKey:mk, def:'SALE_TOP', title:BADGE_DEFS.SALE_TOP.title, desc:BADGE_DEFS.SALE_TOP.desc, icon:BADGE_DEFS.SALE_TOP.icon, ts: nowTs() });
+    if(v >= 2500 && v <= 3500) awardBadge({ key:`SELLER_${sid}_${rec.id}_SALE_RESPECT`, scope:'seller', sellerId:sid, monthKey:mk, def:'SALE_RESPECT', title:BADGE_DEFS.SALE_RESPECT.title, desc:BADGE_DEFS.SALE_RESPECT.desc, icon:BADGE_DEFS.SALE_RESPECT.icon, ts: nowTs() });
+
+    // Day goal
+    const dayGoal = sellerGoalDay(sid, mk);
+    const dayRev = sellerRevenueDay(sid, tk);
+    if(dayGoal>0 && dayRev >= dayGoal){
+      awardBadge({ key:`SELLER_${sid}_${tk}_DAY_GOAL`, scope:'seller', sellerId:sid, monthKey:mk, dateKey:tk, def:'DAY_GOAL', title:BADGE_DEFS.DAY_GOAL.title, desc:BADGE_DEFS.DAY_GOAL.desc, icon:BADGE_DEFS.DAY_GOAL.icon, ts: nowTs() });
+    }
+
+    // Week goal
+    const wGoal = sellerGoalWeek(sid, mk, week);
+    const wRev = sellerRevenueWeek(sid, mk, week);
+    if(wGoal>0 && wRev >= wGoal){
+      awardBadge({ key:`SELLER_${sid}_${mk}_W${week}_WEEK_GOAL`, scope:'seller', sellerId:sid, monthKey:mk, week, def:'WEEK_GOAL', title:BADGE_DEFS.WEEK_GOAL.title, desc:BADGE_DEFS.WEEK_GOAL.desc, icon:BADGE_DEFS.WEEK_GOAL.icon, ts: nowTs() });
+    }
+
+    // Month goal
+    const mGoal = sellerGoalMonthly(sid, mk);
+    const mRev = sellerSoldInMonth(sid, mk).reduce((s,r)=>s+Number(r.value||0),0);
+    if(mGoal>0 && mRev >= mGoal){
+      awardBadge({ key:`SELLER_${sid}_${mk}_MONTH_GOAL`, scope:'seller', sellerId:sid, monthKey:mk, def:'MONTH_GOAL', title:BADGE_DEFS.MONTH_GOAL.title, desc:BADGE_DEFS.MONTH_GOAL.desc, icon:BADGE_DEFS.MONTH_GOAL.icon, ts: nowTs() });
+    }
+
+    // Biggest sale of month (re-evaluate each sale)
+    const sold = sellerSoldInMonth(sid, mk);
+    if(sold.length){
+      const max = sold.reduce((a,b)=> (Number(b.value||0)>Number(a.value||0) ? b : a), sold[0]);
+      awardBadge({ key:`SELLER_${sid}_${mk}_BIGGEST_${max.id}`, scope:'seller', sellerId:sid, monthKey:mk, def:'BIGGEST_SALE', title:BADGE_DEFS.BIGGEST_SALE.title, desc:BADGE_DEFS.BIGGEST_SALE.desc+` (${formatMoney(max.value)})`, icon:BADGE_DEFS.BIGGEST_SALE.icon, ts: nowTs() });
+    }
+
+    // End-of-month style badges: P.A, TVA e Conversão (avaliado a qualquer venda do mês)
+    const all = sellerRecsInMonth(sid, mk);
+    const a = agg(all);
+
+    // P.A (peças por venda)
+    if(a.paPerSale >= 2.40) awardBadge({ key:`SELLER_${sid}_${mk}_PA_BRONZE`, def:'PA_BRONZE', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.PA_BRONZE.title, desc:BADGE_DEFS.PA_BRONZE.desc, icon:BADGE_DEFS.PA_BRONZE.icon, ts: nowTs() });
+    if(a.paPerSale >= 2.60) awardBadge({ key:`SELLER_${sid}_${mk}_PA_SILVER`, def:'PA_SILVER', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.PA_SILVER.title, desc:BADGE_DEFS.PA_SILVER.desc, icon:BADGE_DEFS.PA_SILVER.icon, ts: nowTs() });
+    if(a.paPerSale >= 2.70) awardBadge({ key:`SELLER_${sid}_${mk}_PA_GOLD`, def:'PA_GOLD', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.PA_GOLD.title, desc:BADGE_DEFS.PA_GOLD.desc, icon:BADGE_DEFS.PA_GOLD.icon, ts: nowTs() });
+
+    // TVA (taxa de venda agrupada) = % de vendas com 2+ itens no mês
+    const soldOnly = (all||[]).filter(r=>r.outcome==='sold');
+    const grouped = soldOnly.filter(r=>Number(r.pieces||0) >= 2).length;
+    const tva = soldOnly.length ? (grouped/soldOnly.length)*100 : 0;
+    if(tva >= 95) awardBadge({ key:`SELLER_${sid}_${mk}_TVA_COMBO`, def:'TVA_COMBO', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.TVA_COMBO.title, desc:`TVA do mês: ${tva.toFixed(1)}%`, icon:BADGE_DEFS.TVA_COMBO.icon, ts: nowTs() });
+
+    // Ticket médio
+    const tm = a.sales>0 ? (a.revenue/a.sales) : 0;
+    if(tm >= 600 && tm <= 699.99) awardBadge({ key:`SELLER_${sid}_${mk}_TM_SILVER`, def:'TM_SILVER', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.TM_SILVER.title, desc:BADGE_DEFS.TM_SILVER.desc, icon:BADGE_DEFS.TM_SILVER.icon, ts: nowTs() });
+    if(tm >= 800 && tm <= 899.99) awardBadge({ key:`SELLER_${sid}_${mk}_TM_GOLD`, def:'TM_GOLD', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.TM_GOLD.title, desc:BADGE_DEFS.TM_GOLD.desc, icon:BADGE_DEFS.TM_GOLD.icon, ts: nowTs() });
+    if(tm >= 950) awardBadge({ key:`SELLER_${sid}_${mk}_TM_SUPREME`, def:'TM_SUPREME', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.TM_SUPREME.title, desc:BADGE_DEFS.TM_SUPREME.desc, icon:BADGE_DEFS.TM_SUPREME.icon, ts: nowTs() });
+
+    // Conversão alta no mês
+    if(a.conv >= 85) awardBadge({ key:`SELLER_${sid}_${mk}_TOP_CONV`, def:'TOP_CONV', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.TOP_CONV.title, desc:BADGE_DEFS.TOP_CONV.desc, icon:BADGE_DEFS.TOP_CONV.icon, ts: nowTs() });
+
+    // Selos surpresa por quantidade de metas mensais batidas (acumulado)
+    const monthWins = (state.badges?.earned||[]).filter(e=>e.scope==='seller' && e.sellerId===sid && e.def==='MONTH_GOAL').length;
+    if(monthWins >= 5) awardBadge({ key:`SELLER_${sid}_MAGIC_5`, def:'MAGIC_5', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.MAGIC_5.title, desc:BADGE_DEFS.MAGIC_5.desc, icon:BADGE_DEFS.MAGIC_5.icon, ts: nowTs() });
+    if(monthWins >= 12) awardBadge({ key:`SELLER_${sid}_SUPREME_12`, def:'SUPREME_12', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.SUPREME_12.title, desc:BADGE_DEFS.SUPREME_12.desc, icon:BADGE_DEFS.SUPREME_12.icon, ts: nowTs() });
+
+  }
+
+  // Render completo do painel do vendedor (sempre mostra algo; nunca deixa a tela vazia)
+  
+  // Arena de Resultados (vendedor) — painel mensal + intervalo de datas + conquistas
+  function renderSellerView(){
+    // migração defensiva (evita "tela em branco" em estados antigos no localStorage)
+    try{
+      state.options = state.options || { askValue:true, askPieces:true, vendorDivisor: 0 };
+      state.sellers = Array.isArray(state.sellers) ? state.sellers : [];
+      state.records = Array.isArray(state.records) ? state.records : [];
+      state.badges = state.badges || { earned: [] };
+      if(!Array.isArray(state.badges.earned)) state.badges.earned = [];
+    }catch{}
+
+    try{ ensureBadges(); }catch(e){ console.error(e); try{ if(!state.badges) state.badges={earned:[]}; }catch{} }
+
+    const view = document.getElementById('viewSeller');
+    if(!view) return;
+
+    // Sempre injetar markup (nunca deixa tela em branco)
+    view.innerHTML = `
+      <section class="card arenaCard">
+        <div class="cardHeader">
+          <div class="arenaTitle">
+            <h2>Arena de Resultados</h2>
+            <div class="rowRight">
+              <button class="btn" id="btnSellerDownloadBadges">Baixar selos</button>
+            </div>
+          </div>
+        </div>
+        <div class="cardBody">
+          <div class="arenaFilters">
+            <div class="field flex">
+              <label>Vendedor</label>
+              <select id="sellerViewSelect"></select>
+            </div>
+            <div class="field">
+              <label>Mês (referência)</label>
+              <input id="sellerViewMonth" type="month" />
+            </div>
+            <div class="field">
+              <label>De</label>
+              <input id="arenaFrom" type="date" />
+            </div>
+            <div class="field">
+              <label>Até</label>
+              <input id="arenaTo" type="date" />
+            </div>
+          </div>
+
+          <div class="divider"></div>
+          <div class="kpis" id="arenaKpis"></div>
+
+          <div class="divider"></div>
+          <div class="arenaSplit">
+            <div class="arenaBox" id="arenaMetaBox"></div>
+            <div class="arenaBox" id="arenaYearBox"></div>
+          </div>
+
+          <div class="divider"></div>
+          <div class="arenaGrid2">
+            <div>
+              <h3 class="arenaSectionTitle">Painel gráfico de meta</h3>
+              <div class="arenaBox" id="arenaChartBox"></div>
+            </div>
+            <div>
+              <h3 class="arenaSectionTitle">XP do vendedor</h3>
+              <div class="arenaBox" id="arenaXpBox"></div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+          <div class="arenaBadgesHead">
+            <h3 class="arenaSectionTitle" style="margin:0">Conquistas do mês</h3>
+            <div class="tag">Colecione e troque por prêmios</div>
+          </div>
+          <div class="badgeGrid" id="sellerBadges"></div>
+          <div class="hint arenaHint">Selos destravam automaticamente. No fim do mês, baixe e troque por prêmios. ⭐</div>
+        </div>
+      </section>
+`;
+
+    const mkInput = document.getElementById('sellerViewMonth');
+    const sel = document.getElementById('sellerViewSelect');
+    const fromEl = document.getElementById('arenaFrom');
+    const toEl = document.getElementById('arenaTo');
+    const kpisEl = document.getElementById('arenaKpis');
+    const metaEl = document.getElementById('arenaMetaBox');
+    const yearEl = document.getElementById('arenaYearBox');
+    const chartEl = document.getElementById('arenaChartBox');
+    const xpEl = document.getElementById('arenaXpBox');
+    const badgesEl = document.getElementById('sellerBadges');
+
+    const mk = mkInput.value || monthKey();
+    mkInput.value = mk;
+    const sellersList = Array.isArray(state.sellers) ? state.sellers : [];
+    const active = sellersList.filter(s=>s && (s.active !== false));
+    const any = sellersList.filter(s=>s);
+
+    if(active.length === 0){
+      if(any.length === 0){
+        sel.innerHTML = '<option value="" selected>Nenhum vendedor cadastrado</option>';
+        kpisEl.innerHTML = '<div class="hint">Cadastre um vendedor em <b>+ Vendedor</b> para usar a Arena.</div>';
+        metaEl.innerHTML = '<div class="hint">—</div>';
+        yearEl.innerHTML = '<div class="hint">—</div>';
+        chartEl.innerHTML = '<div class="hint">—</div>';
+        xpEl.innerHTML = '<div class="hint">—</div>';
+        badgesEl.innerHTML = '';
+        const btn = document.getElementById('btnSellerDownloadBadges');
+        if(btn) btn.onclick = ()=> alert('Cadastre um vendedor primeiro.');
+        return;
+      }
+
+      // fallback: existe vendedor, mas todos estão inativos
+      kpisEl.innerHTML = `<div class="hint">Nenhum vendedor está marcado como <b>ativo</b>. Vou mostrar mesmo assim para você visualizar a Arena.<br><br>Dica: ative o vendedor em <b>+ Vendedor</b>.</div>`;
+      metaEl.innerHTML = '<div class="hint">—</div>';
+      yearEl.innerHTML = '<div class="hint">—</div>';
+      chartEl.innerHTML = '<div class="hint">—</div>';
+      xpEl.innerHTML = '<div class="hint">—</div>';
+      badgesEl.innerHTML = '';
+      const btn = document.getElementById('btnSellerDownloadBadges');
+      if(btn) btn.onclick = ()=> alert('Ative um vendedor (ou cadastre) para liberar tudo.');
+      // Não retorna: permite visualizar e selecionar mesmo inativos
+    }
+
+    sel.innerHTML = (active.length?active:any).map(s=>`<option value="${s.id}">${s.name || 'Vendedor'}${(s.active===false?' (inativo)':'')}</option>`).join('');
+
+    // restore last seller
+
+    // restore last seller
+    state.ui = state.ui || {};
+    const wanted = state.ui?.sellerViewId || '';
+    const listForPick = (active.length?active:any);
+    sel.value = (wanted && listForPick.some(s=>s.id===wanted)) ? wanted : (listForPick[0] ? listForPick[0].id : '');
+    state.ui.sellerViewId = sel.value || '';
+
+    // default date range to full month
+    const mkRef = mkInput.value || monthKey();
+    const first = mkRef + '-01';
+    const last = mkRef + '-' + String(daysInMonth(mkRef)).padStart(2,'0');
+    if(!fromEl.value) fromEl.value = first;
+    if(!toEl.value) toEl.value = last;
+
+    function dateKeyFromDateInput(v){
+      if(!v) return '';
+      // input date is YYYY-MM-DD already
+      return v;
+    }
+
+    const update = ()=>{
+      try{
+      const sid = sel.value;
+      state.ui.sellerViewId = sid;
+      save(state);
+
+      const mk2 = mkInput.value || monthKey();
+      const fromKey = dateKeyFromDateInput(fromEl.value || (mk2+'-01'));
+      const toKey = dateKeyFromDateInput(toEl.value || (mk2+'-'+String(daysInMonth(mk2)).padStart(2,'0')));
+
+      // Records for seller in selected month (for monthly seals)
+      const recMonth = sellerRecsInMonth(sid, mk2);
+      const soldMonth = sellerSoldInMonth(sid, mk2);
+      const aMonth = agg(recMonth);
+      const tmMonth = aMonth.sales>0 ? (aMonth.revenue/aMonth.sales) : 0;
+
+      // Records for seller in chosen date range (for KPIs && chart)
+      const recRange = state.records.filter(r=> r.sellerId===sid && r.dateKey>=fromKey && r.dateKey<=toKey);
+      const soldRange = recRange.filter(r=> r.outcome==='sold');
+      const aRange = agg(recRange);
+      const tmRange = aRange.sales>0 ? (aRange.revenue/aRange.sales) : 0;
+
+      // Venda record (mês)
+      let best = 0;
+      for(const r of soldMonth){ best = Math.max(best, Number(r.value||0)); }
+
+      kpisEl.innerHTML = `
+        
+        <div class="kpi"><div class="t">Período</div><div class="v" style="font-size:14px">${fromKey} → ${toKey}</div></div>
+        <div class="kpi"><div class="t">Atendimentos</div><div class="v">${aRange.atend}</div></div>
+        <div class="kpi"><div class="t">Vendas</div><div class="v">${aRange.sales}</div></div>
+        <div class="kpi"><div class="t">Conversão</div><div class="v">${aRange.conv.toFixed(1)}%</div></div>
+        <div class="kpi"><div class="t">Faturamento</div><div class="v">${formatMoney(aRange.revenue)}</div></div>
+        <div class="kpi"><div class="t">T.M</div><div class="v">${formatMoney(tmRange)}</div></div>
+        <div class="kpi"><div class="t">P.A</div><div class="v">${aRange.paPerSale.toFixed(2)}</div></div>
+        <div class="kpi"><div class="t">Venda record (mês)</div><div class="v">${formatMoney(best)}</div></div>
+`;
+
+      // Metas (semana + mês) — baseado no mês referência
+      const w = weekOfMonth(toKey);
+      const weekGoal = sellerGoalWeek(sid, mk2, w);
+      const monthGoal = sellerGoalMonthly(sid, mk2);
+      const weekRev = sellerRevenueWeek(sid, mk2, w);
+      const monthRev = soldMonth.reduce((s,r)=>s+Number(r.value||0),0);
+      const pctW = weekGoal>0 ? clamp((weekRev/weekGoal)*100,0,999) : 0;
+      const pctM = monthGoal>0 ? clamp((monthRev/monthGoal)*100,0,999) : 0;
+
+      metaEl.innerHTML = `
+        <div class="row" style="justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap">
+          <div><b>Meta do vendedor</b> — Semana ${w} e Mês</div>
+          <div class="tag" id="arenaBestSaleInline">Venda record (mês): <b>${formatMoney(best)}</b></div>
+        </div>
+        <div class="divider"></div>
+        <div style="margin-bottom:10px">
+          <div class="tiny">Meta da semana</div>
+          <div style="font-weight:900; font-size:16px">${formatMoney(weekRev)} <span class="tiny">/ ${formatMoney(weekGoal)}</span></div>
+          <div class="meter good"><i style="width:${clamp(pctW,0,100)}%"></i></div>
+        </div>
+        <div>
+          <div class="tiny">Meta do mês</div>
+          <div style="font-weight:900; font-size:16px">${formatMoney(monthRev)} <span class="tiny">/ ${formatMoney(monthGoal)}</span></div>
+          <div class="meter good"><i style="width:${clamp(pctM,0,100)}%"></i></div>
+        </div>
+      `;
+      const bestTag = document.getElementById('arenaBestSaleTag');
+      if(bestTag){ bestTag.style.display='inline-flex'; bestTag.innerHTML = 'Venda record do mês: <b>'+formatMoney(best)+'</b>'; }
+
+
+      // Acumulado do ano
+      const year = (mk2||monthKey()).slice(0,4);
+      const recYear = state.records.filter(r=> r.sellerId===sid && r.dateKey && r.dateKey.startsWith(year+'-') && r.outcome==='sold');
+      const revYear = recYear.reduce((s,r)=>s+Number(r.value||0),0);
+      const salesYear = recYear.length;
+      const tmYear = salesYear>0 ? (revYear/salesYear) : 0;
+      yearEl.innerHTML = `
+        <div class="row" style="justify-content:space-between; align-items:center">
+          <div><b>Acumulado do ano</b> (${year})</div>
+          <div class="tag">T.M ano: <b>${formatMoney(tmYear)}</b></div>
+        </div>
+        <div class="divider"></div>
+        <div class="row" style="gap:14px; flex-wrap:wrap">
+          <div style="flex:1; min-width:220px">
+            <div class="tiny">Faturamento (ano)</div>
+            <div style="font-weight:900; font-size:18px">${formatMoney(revYear)}</div>
+          </div>
+          <div style="flex:1; min-width:220px">
+            <div class="tiny">Vendas (ano)</div>
+            <div style="font-weight:900; font-size:18px">${salesYear}</div>
+          </div>
+        </div>
+      `;
+
+      // Chart — sparkline diária do mês (mês referência)
+      const days = daysInMonth(mk2);
+      const daily = Array.from({length:days}, (_,i)=>{
+        const dk = mk2 + '-' + String(i+1).padStart(2,'0');
+        const v = state.records.filter(r=> r.sellerId===sid && r.dateKey===dk && r.outcome==='sold').reduce((s,r)=>s+Number(r.value||0),0);
+        return v;
+      });
+      const maxV = Math.max(1, ...daily);
+      const wpx = 420, hpx = 120;
+      const pts = daily.map((v,i)=>{
+        const x = (i/(days-1||1))*wpx;
+        const y = hpx - (v/maxV)*hpx;
+        return [x,y];
+      });
+      const d = pts.map((p,i)=> (i===0?`M ${p[0].toFixed(1)} ${p[1].toFixed(1)}`:`L ${p[0].toFixed(1)} ${p[1].toFixed(1)}`)).join(' ');
+      chartEl.innerHTML = `
+        <div class="row" style="justify-content:space-between; gap:10px; flex-wrap:wrap">
+          <div class="tiny">${mk2} · evolução diária do faturamento</div>
+          <div class="tag">T.M mês: <b>${formatMoney(tmMonth)}</b></div>
+        </div>
+        <div style="margin-top:10px">
+          <svg viewBox="0 0 ${wpx} ${hpx}" width="100%" height="${hpx}" style="display:block; border-radius:12px; background: rgba(0,0,0,.12); border:1px solid var(--line)">
+            <path d="${d}" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="hint" style="margin-top:8px">Dica: foque em constância. Um dia bom por semana não bate meta — rotina bate. 🚀</div>
+      `;
+
+      // Badges do mês (sistema de selos: desbloqueados + bloqueados)
+      const earned = state.badges.earned.filter(e=> e.scope==='seller' && e.sellerId===sid && e.monthKey===mk2);
+      const earnedByDef = new Map();
+      for(const e of earned){
+        const d = e.def || '';
+        if(!d) continue;
+        if(!earnedByDef.has(d)) earnedByDef.set(d, []);
+        earnedByDef.get(d).push(e);
+      }
+
+      const badgeOrder = [
+        'DAY_GOAL','WEEK_GOAL','MONTH_GOAL',
+        'TVA_COMBO','PA_BRONZE','PA_SILVER','PA_GOLD',
+        'TM_SILVER','TM_GOLD','TM_SUPREME',
+        'SALE_TOP','SALE_RESPECT','BIG_SALE','BIGGEST_SALE',
+        'TOP_CONV','MAGIC_5','SUPREME_12'
+      ];
+
+      const cards = [];
+      for(const defKey of badgeOrder){
+        const def = BADGE_DEFS[defKey];
+        if(!def) continue;
+        const list = earnedByDef.get(defKey) || [];
+        const unlocked = list.length>0;
+        const latest = unlocked ? list.sort((a,b)=>(b.ts||0)-(a.ts||0))[0] : null;
+        const sub = latest?.dateKey ? ('Dia: <b>'+latest.dateKey+'</b>') : (latest?.week ? ('Semana: <b>'+latest.week+'</b>') : (latest?.monthKey ? ('Mês: <b>'+latest.monthKey+'</b>') : ''));
+        const desc = unlocked ? (latest.desc || def.desc || '') : (def.desc || '');
+        cards.push(`
+          <div class="badgeCard ${unlocked?'':'badgeLocked'}">
+            <div class="badgeTop">
+              <div class="badgeIcon">${def.icon||'🏅'}</div>
+              <div>
+                <div class="badgeTitle">${def.title}</div>
+                <div class="badgeDesc">${desc}</div>
+              </div>
+            </div>
+            <div class="badgeDesc" style="margin-top:8px">${unlocked ? ('<span class="tag">ATIVADO</span> '+sub) : '<span class="tag">BLOQUEADO</span>'}</div>
+          </div>`);
+      }
+
+      badgesEl.innerHTML = cards.length ? cards.join('') : '<div class="hint">Nenhum selo ainda. Finalize vendas e metas para destravar. ⭐</div>';
+
+      // XP + estrelas (metas semanais/mensais batidas no mês)
+      const stars = earned.filter(e=> (e.key||'').includes('_WEEK_GOAL') || (e.key||'').includes('_MONTH_GOAL')).length;
+      const target = 12; // 12 estrelas = barra cheia (ajustável)
+      const pctXP = clamp((stars/target)*100, 0, 100);
+      const starIcons = Array.from({length: Math.min(24, Math.max(0, stars))}, ()=> '⭐').join('');
+      xpEl.innerHTML = `
+        <div class="row" style="justify-content:space-between; align-items:center">
+          <div><b>XP</b> · evolui com metas batidas</div>
+          <div class="tag">Estrelas: <b>${stars}</b></div>
+        </div>
+        <div class="divider"></div>
+        <div class="meter good"><i style="width:${pctXP}%"></i></div>
+        <div class="hint" style="margin-top:8px">${stars>0 ? starIcons : 'Ganhe ⭐ batendo metas semanais e mensais.'}</div>
+      `;
+
+      const btn = document.getElementById('btnSellerDownloadBadges');
+      if(btn) btn.onclick = downloadSellerBadges;
+      }catch(e){ console.error('Arena update() error:', e); }
+    };
+
+    sel.onchange = update;
+    mkInput.onchange = ()=>{ fromEl.value=''; toEl.value=''; update(); };
+    fromEl.onchange = update;
+    toEl.onchange = update;
+    update();
+  }
+
+
+  // Expõe globalmente para o segundo script e para o PWA/cache
+  window.renderSellerView = renderSellerView;
+
+  function downloadSellerBadges(){
+    const sid = $("sellerViewSelect").value;
+    const mk = $("sellerViewMonth").value || monthKey();
+    const seller = getSeller(sid);
+    ensureBadges();
+    const earned = state.badges.earned.filter(e=> e.scope==='seller' && e.sellerId===sid && e.monthKey===mk);
+    const msg = pick([
+      'Bora pra cima! Consistência vence. 🔥',
+      'Você está construindo resultado. Um atendimento de cada vez. 🚀',
+      'Disciplina + foco = meta batida. Vamos! 💪',
+      'Quem faz o básico bem feito, domina o jogo. 👑'
+    ]);
+    earned.sort((a,b)=> (b.ts||0)-(a.ts||0));
+    const personal = `<div style="border:1px solid #e5e7eb;border-radius:14px;padding:12px;margin:10px 0;display:flex;gap:10px;align-items:center;background:#f8fafc">
+      <div style="font-size:26px">🏷️</div>
+      <div><div style="font-weight:900">Selo Personalizado</div><div style="color:#4b5563;font-size:13px">Vendedor: <b>${seller?.name||'Vendedor'}</b></div></div>
+    </div>`;
+    const cards = (personal + (earned.map(e=>`<div style="border:1px solid #e5e7eb;border-radius:14px;padding:12px;margin:10px 0;display:flex;gap:10px;align-items:center">
+      <div style="font-size:26px">${e.icon||'🏅'}</div>
+      <div><div style="font-weight:900">${e.title}</div><div style="color:#4b5563;font-size:13px">${e.desc||''}</div></div>
+    </div>`).join('')));
+    const cardsOrEmpty = earned.length ? cards : (personal + '<div style="color:#6b7280">Nenhum selo no período.</div>');
+    const html = `<!doctype html><html><head><meta charset="utf-8"><title>Selos - ${seller?.name||'Vendedor'} - ${mk}</title></head>
+    <body style="font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;padding:18px;background:#fff;color:#111">
+      <h1 style="margin:0 0 6px 0">Selos do Vendedor: ${seller?.name||'Vendedor'}</h1>
+      <div style="color:#374151;margin-bottom:10px">Mês: <b>${mk}</b></div>
+      <div style="padding:12px;border:1px solid #e5e7eb;border-radius:14px;background:#f8fafc">Mensagem: <b>${msg}</b></div>
+      <h2 style="margin:16px 0 8px 0">Conquistas</h2>
+      ${cardsOrEmpty}
+      <div style="margin-top:18px;color:#6b7280;font-size:12px">Gerado pelo OMNIA — Painel de Conquistas</div>
+    </body></html>`;
+    const blob = new Blob([html], {type:'text/html'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    const safeName = (seller?.name||'vendedor').toLowerCase().replace(/\s+/g,'_');
+    a.download = `selos_${safeName}_${mk}.html`;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  }
+// ======================
+  // UI / NAV
+  // ======================
+  function renderAll(){
+    applyTheme();
+    renderHeader();
+    renderKpis();
+    renderQueue();
+    renderPool();
+    renderCurrent();
+    if($("viewDados").style.display !== "none") renderData();
+    if($("viewMetas").style.display !== "none") renderGoals();
+    if($("viewMetasRank").style.display !== "none") renderMetaRank();
+    if($("viewNoConv").style.display !== "none") renderNoConv();
+  }
+
+  $("btnCallNext").addEventListener("click", callNext);
+
+  // Tabs/views
+  function setTab(tab){
+    const viewIds = ["viewOps","viewDados","viewMetas","viewMetasRank","viewNoConv","viewSeller"];
+    const tabIds  = ["tabOps","tabDados","tabMetas","tabMetasRank","tabNoConv","tabSeller"];
+
+    // hide all views safely
+    for(const vid of viewIds){
+      const el = document.getElementById(vid);
+      if(el) el.style.display = "none";
+    }
+    // remove active from tabs safely
+    for(const tid of tabIds){
+      const el = document.getElementById(tid);
+      if(el) el.classList.remove("active");
+    }
+
+    const show = (vid, tid) => {
+      const v = document.getElementById(vid);
+      if(v) v.style.display = "block";
+      const t = document.getElementById(tid);
+      if(t) t.classList.add("active");
+    };
+
+    try{
+      if(tab === "ops"){ show("viewOps","tabOps"); }
+      else if(tab === "dados"){ show("viewDados","tabDados"); renderData(); }
+      else if(tab === "metas"){ show("viewMetas","tabMetas"); renderGoals(); }
+      else if(tab === "metasRank"){ show("viewMetasRank","tabMetasRank"); renderMetaRank(); }
+      else if(tab === "noConv"){ show("viewNoConv","tabNoConv"); renderNoConv(); }
+      else if(tab === "seller"){ show("viewSeller","tabSeller"); try{ renderSellerView(); }catch(err){ console.error("renderSellerView failed", err); try{ const v=document.getElementById("viewSeller"); if(v) v.style.display="block"; }catch{} } }
+      else { show("viewOps","tabOps"); }
+    }catch(err){
+      console.error("setTab failed", err);
+      // Never leave the user with a blank screen
+      show("viewOps","tabOps");
+    }
+  }
+
+  $("tabOps").addEventListener("click", ()=> setTab("ops"));
+  $("tabDados").addEventListener("click", ()=> setTab("dados"));
+  $("tabMetas").addEventListener("click", ()=> setTab("metas"));
+  $("tabMetasRank").addEventListener("click", ()=> setTab("metasRank"));
+  $("tabNoConv").addEventListener("click", ()=> setTab("noConv"));
+  $("tabSeller").addEventListener("click", ()=> setTab("seller"));
+
+  $("btnData").addEventListener("click", ()=> setTab("dados"));
+  $("btnGoals").addEventListener("click", ()=> setTab("metas"));
+  $("btnGoalRank").addEventListener("click", ()=> setTab("metasRank"));
+  $("btnNoConv").addEventListener("click", ()=> setTab("noConv"));
+  $("btnSeller").addEventListener("click", ()=> setTab("seller"));
+
+  // Data inputs
+  $("dataView").addEventListener("change", renderData);
+  $("dataDate").addEventListener("change", renderData);
+  $("dataMonth").addEventListener("change", renderData);
+  $("btnExportCSV").addEventListener("click", exportCSV);
+  $("btnExportJSON").addEventListener("click", exportJSON);
+
+  // Goals inputs
+  $("goalMonth").addEventListener("change", renderGoals);
+  $("goalMonthly").addEventListener("input", ()=> { saveGoalsDraftAndAuto(); });
+  ["pW1","pW2","pW3","pW4"].forEach(id=>{
+    $(id).addEventListener("input", ()=> { saveGoalsDraftAndAuto(); });
+  });
+
+  // Vendor goals
+  $("goalVendorDivisor").addEventListener("input", ()=>{
+    const d = parseBRNumber($("goalVendorDivisor").value||"");
+    if(d>0) state.options.vendorDivisor = d;
+    save(state);
+    try{ renderVendorGoals(); }catch{}
+  });
+  $("goalVendorSelect").addEventListener("change", ()=>{ try{ renderVendorGoals(); }catch{} });
+  $("goalVendorMonthlyOverride").addEventListener("input", ()=>{ /* visual only */ });
+  $("btnSaveVendorGoal").addEventListener("click", saveVendorGoal);
+  function saveGoalsDraftAndAuto(){
+    const mk = $("goalMonth").value || monthKey();
+    const g = getGoalsForMonth(mk);
+    g.monthly = parseBRNumber($("goalMonthly").value);
+    g.basePercents = [
+      parseBRNumber($("pW1").value),
+      parseBRNumber($("pW2").value),
+      parseBRNumber($("pW3").value),
+      parseBRNumber($("pW4").value),
+    ];
+    autoRedistributeGoals(mk);
+    save(state);
+    renderGoals();
+  }
+
+  $("btnSaveGoals").addEventListener("click", saveGoals);
+  $("btnAutoRedistribute").addEventListener("click", ()=>{
+    renderGoals();
+    alert("Redistribuição automática aplicada ✅");
+  });
+  $("btnCloseWeek").addEventListener("click", closeCurrentWeek);
+  $("btnReopenWeeks").addEventListener("click", reopenWeeks);
+
+  // Seller View (dinamico: criado dentro de renderSellerView)
+  // Delegacao segura: evita quebrar o app caso a Arena ainda nao tenha sido renderizada.
+  document.addEventListener("change", (e)=>{
+    const t = e.target;
+    if(!(t instanceof HTMLElement)) return;
+    if(t.id === "sellerViewSelect"){
+      try{ state.ui = state.ui || {}; state.ui.sellerViewId = t.value; save(state); }catch{}
+      try{ renderSellerView(); }catch{}
+    }
+    if(t.id === "sellerViewMonth"){
+      try{ renderSellerView(); }catch{}
+    }
+  });
+
+  document.addEventListener("click", (e)=>{
+    const t = e.target;
+    if(!(t instanceof HTMLElement)) return;
+    if(t.id === "btnSellerDownloadBadges"){
+      try{ downloadSellerBadges(); }catch(err){ console.error(err); }
+    }
+  });
+
+
+  // Meta Rank
+  $("btnRefreshMetaRank").addEventListener("click", renderMetaRank);
+  $("metaRankMonth").addEventListener("change", renderMetaRank);
+  $("metaRankMode").addEventListener("change", renderMetaRank);
+
+  // Não convertidos
+  $("btnNoConvRefresh").addEventListener("click", renderNoConv);
+  $("ncView").addEventListener("change", renderNoConv);
+  $("ncDate").addEventListener("change", renderNoConv);
+  $("ncMonth").addEventListener("change", renderNoConv);
+
+  // Theme buttons
+  $("themeDefault").addEventListener("click", ()=>{ state.ui.theme = "default"; save(state); renderAll(); });
+  $("themeNeon").addEventListener("click", ()=>{ state.ui.theme = "neon"; save(state); renderAll(); });
+  $("themeOcean").addEventListener("click", ()=>{ state.ui.theme = "ocean"; save(state); renderAll(); });
+  $("themeSunset").addEventListener("click", ()=>{ state.ui.theme = "sunset"; save(state); renderAll(); });
+  $("themeSpaceWhite").addEventListener("click", ()=>{ state.ui.theme = "spacewhite"; save(state); renderAll(); });
+  $("themePurple").addEventListener("click", ()=>{ state.ui.theme = "purple"; save(state); renderAll(); });
+  $("themeTextured").addEventListener("click", ()=>{ state.ui.theme = "textured"; save(state); renderAll(); });
+
+  // Settings modal
+  function fileToDataUrl(file){
+    return new Promise((resolve, reject)=>{
+      const reader = new FileReader();
+      reader.onload = ()=> resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  $("btnSettings").addEventListener("click", ()=>{
+    $("storeName").value = state.store.name || "";
+    $("storeStatus").value = state.store.status || "Online";
+    $("optValue").value = state.options.askValue ? "yes" : "no";
+    $("optPieces").value = state.options.askPieces ? "yes" : "no";
+    openModal($("settingsBack"));
+  });
+  $("closeSettings").addEventListener("click", ()=> closeModal($("settingsBack")));
+  $("settingsBack").addEventListener("click", (e)=>{ if(e.target === $("settingsBack")) closeModal($("settingsBack")); });
+
+  $("storeName").addEventListener("input", (e)=>{ state.store.name = e.target.value; save(state); renderHeader(); });
+  $("storeStatus").addEventListener("change", (e)=>{ state.store.status = e.target.value; save(state); renderHeader(); });
+  $("optValue").addEventListener("change", (e)=>{ state.options.askValue = e.target.value==="yes"; save(state); renderAll(); });
+  $("optPieces").addEventListener("change", (e)=>{ state.options.askPieces = e.target.value==="yes"; save(state); renderAll(); });
+
+  $("logoInput").addEventListener("change", async (e)=>{
+    const file = e.target.files?.[0];
+    if(!file) return;
+    state.store.logoDataUrl = await fileToDataUrl(file);
+    save(state);
+    renderHeader();
+  });
+
+  $("btnResetDay").addEventListener("click", ()=>{
+    if(!confirm("Zerar dia? Isso apaga os registros de HOJE.")) return;
+    const tk = todayKey();
+    state.records = state.records.filter(r => r.dateKey !== tk);
+    save(state);
+    renderAll();
+    alert("Registros de hoje zerados.");
+  });
+
+  // Limpar cache do PWA + dados locais (para resolver telas que não abrem por cache antigo)
+  $("btnHardRefresh").addEventListener("click", async ()=>{
+    if(!confirm("Limpar cache e recarregar? (Isso mantém seus dados, mas limpa cache do app/PWA).")) return;
+    try{
+      // tenta limpar caches do service worker
+      if("caches" in window){
+        const keys = await caches.keys();
+        await Promise.all(keys.map(k=>caches.delete(k)));
+      }
+    }catch(e){ console.warn(e); }
+    try{
+      // tenta desregistrar SW
+      if("serviceWorker" in navigator){
+        const regs = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(regs.map(r=>r.unregister()));
+      }
+    }catch(e){ console.warn(e); }
+    try{
+      // força reload sem cache
+      location.reload(true);
+    }catch{
+      location.reload();
+    }
+  });
+
+  $("btnResetAll").addEventListener("click", ()=>{
+    if(!confirm("Reset total? Apaga tudo.")) return;
+    localStorage.removeItem(KEY);
+    state = JSON.parse(JSON.stringify(defaultState));
+    state.sellers = [];
+    state.queue = [];
+    state.pool = [];
+    state.current = null;
+    state.records = [];
+    state.goalsByMonth = {};
+    state.ui = { theme: "default" };
+    save(state);
+    renderAll();
+    closeModal($("settingsBack"));
+    alert("Reset total concluído.");
+  });
+
+  // Desativar vendedor modal
+  $("btnDeactivateSeller").addEventListener("click", ()=>{
+    renderDeactivateModal();
+    openModal($("deactBack"));
+  });
+  $("closeDeact").addEventListener("click", ()=> closeModal($("deactBack")));
+  $("deactBack").addEventListener("click", (e)=>{ if(e.target === $("deactBack")) closeModal($("deactBack")); });
+
+  // Add seller modal
+  $("btnAddSeller").addEventListener("click", ()=>{
+    $("sellerName").value = "";
+    $("sellerPhoto").value = "";
+    openModal($("sellerBack"));
+  });
+  $("closeSeller").addEventListener("click", ()=> closeModal($("sellerBack")));
+  $("sellerBack").addEventListener("click", (e)=>{ if(e.target === $("sellerBack")) closeModal($("sellerBack")); });
+
+  window.__createSellerOriginal = async ()=>{
+    const name = $("sellerName").value.trim();
+    if(!name){ alert("Digite o nome do vendedor."); return; }
+    let photo = "";
+    const file = $("sellerPhoto").files?.[0];
+    if(file) photo = await fileToDataUrl(file);
+    const id = uid();
+    state.sellers.push({ id, name, photo, paused:false, active:true });
+    state.pool.push(id);
+    save(state);
+    renderAll();
+    closeModal($("sellerBack"));
+  };
+  $("btnCreateSeller").addEventListener("click", ()=> window.__createSellerOriginal());
+
+  // Ranking modal
+  $("btnRanking").addEventListener("click", ()=>{
+    renderRankingModal();
+    openModal($("rankingBack"));
+  });
+  $("closeRanking").addEventListener("click", ()=> closeModal($("rankingBack")));
+  $("rankingBack").addEventListener("click", (e)=>{ if(e.target === $("rankingBack")) closeModal($("rankingBack")); });
+
+  // Preferência modal
+  $("btnPreference").addEventListener("click", ()=>{
+    renderPreferenceModal();
+    openModal($("prefBack"));
+  });
+  $("closePref").addEventListener("click", ()=> closeModal($("prefBack")));
+  $("prefBack").addEventListener("click", (e)=>{ if(e.target === $("prefBack")) closeModal($("prefBack")); });
+
+  // Timer (múltiplos atendimentos)
+  setInterval(()=>{
+    const currents = (state.currents||[]);
+    for(const c of currents){
+      const t = document.getElementById("timer_" + c.id);
+      if(!t) continue;
+      const sec = Math.floor((nowTs() - (c.startTs||nowTs()))/1000);
+      t.textContent = sec + "s";
+    }
+  }, 1000);
+
+  
+
+  // ======================
+  // HARDENING: garantias de clique (PWA/cache/listeners)
+  // ======================
+  function bindSafeClick(el, fn){
+    if(!el) return;
+    // remove inline (avoid duplicates)
+    el.onclick = null;
+    el.addEventListener('click', (ev)=>{
+      try{ fn(ev); }catch(err){
+        console.error(err);
+        alert('Erro: '+ (err?.message||err));
+      }
+    });
+  }
+
+  // Força binds críticos mesmo se algo falhar acima
+  document.addEventListener('DOMContentLoaded', ()=>{
+    // Config
+    bindSafeClick(document.getElementById('btnSettings'), ()=>{
+      try{
+        document.getElementById('storeName').value = state.store.name || '';
+        document.getElementById('storeStatus').value = state.store.status || 'Online';
+        document.getElementById('optValue').value = state.options.askValue ? 'yes':'no';
+        document.getElementById('optPieces').value = state.options.askPieces ? 'yes':'no';
+      }catch{}
+      openModal(document.getElementById('settingsBack'));
+    });
+
+    // Abrir modal vendedor
+    bindSafeClick(document.getElementById('btnAddSeller'), ()=>{
+      const n=document.getElementById('sellerName');
+      const f=document.getElementById('sellerPhoto');
+      if(n) n.value='';
+      if(f) f.value='';
+      openModal(document.getElementById('sellerBack'));
+    });
+
+    // Criar vendedor
+    bindSafeClick(document.getElementById('btnCreateSeller'), async ()=>{
+      const name=(document.getElementById('sellerName')?.value||'').trim();
+      if(!name){ alert('Digite o nome do vendedor.'); return; }
+      let photo='';
+      const file=document.getElementById('sellerPhoto')?.files?.[0];
+      if(file){
+        try{ photo = await fileToDataUrl(file); }catch{}
+      }
+      const id = uid();
+      state.sellers.push({ id, name, photo, paused:false, active:true });
+      state.pool.push(id);
+      save(state);
+      renderAll();
+      closeModal(document.getElementById('sellerBack'));
+      alert('Vendedor criado ✅');
+    });
+
+
+    // Aba Vendedor (fallback seguro)
+    bindSafeClick(document.getElementById('btnSeller'), ()=>{
+      try{ setTab('seller'); }catch(err){ console.error(err); try{ document.getElementById('viewSeller').style.display=''; }catch{} }
+    });
+    bindSafeClick(document.getElementById('tabSeller'), ()=>{
+      try{ setTab('seller'); }catch(err){ console.error(err); try{ document.getElementById('viewSeller').style.display=''; }catch{} }
+    });
+  });
+
+  // Captura erros não tratados (para não “morrer” sem aviso)
+  window.addEventListener('error', (e)=>{
+    console.error('Erro JS', e.error||e.message);
+  });
+  window.addEventListener('unhandledrejection', (e)=>{
+    console.error('Promise rejeitada', e.reason);
+  });
+
+  // ======================
+  // HARDENING (anti-cache / anti-listener-fail)
+  // Mantém Config e Criar vendedor funcionando mesmo se algum trecho quebrar
+  window.addEventListener('error', (e)=>{
+    try{ console.error('NexxtOne error:', e?.error || e?.message || e); }catch{}
+  });
+
+  function safeOpenById(backId){
+    const el = document.getElementById(backId);
+    if(!el) return;
+    try{ openModal(el); }catch{ el.style.display='flex'; }
+  }
+
+  // Fallback por delegação de clique
+  document.addEventListener('click', (ev)=>{
+    const target = ev.target;
+    if(!(target instanceof HTMLElement)) return;
+    const id = target.id;
+
+    // Config
+    if(id==='btnSettings'){
+      ev.preventDefault();
+      try{
+        if(document.getElementById('storeName')) document.getElementById('storeName').value = state?.store?.name || '';
+        if(document.getElementById('storeStatus')) document.getElementById('storeStatus').value = state?.store?.status || 'Online';
+      }catch{}
+      safeOpenById('settingsBack');
+      return;
+    }
+
+    // Aba vendedor
+    if(id==='btnSeller' || id==='tabSeller'){
+      ev.preventDefault();
+      try{ setTab('seller'); }
+      catch(err){ console.error(err); try{ document.getElementById('viewSeller').style.display=''; }catch{} }
+      return;
+    }
+
+    // Abrir modal vendedor
+    if(id==='btnAddSeller'){
+      ev.preventDefault();
+      try{
+        const n=document.getElementById('sellerName'); if(n) n.value='';
+        const p=document.getElementById('sellerPhoto'); if(p) p.value='';
+      }catch{}
+      safeOpenById('sellerBack');
+      return;
+    }
+
+    // Criar vendedor
+    if(id==='btnCreateSeller'){
+      ev.preventDefault();
+      try{
+        const name=(document.getElementById('sellerName')?.value||'').trim();
+        if(!name){ alert('Digite o nome do vendedor.'); return; }
+
+        // usa a função original se existir
+        if(typeof window.__createSellerOriginal==='function'){
+          window.__createSellerOriginal();
+          return;
+        }
+
+        const idNew = uid();
+        state.sellers.push({ id: idNew, name, photo:'', paused:false, active:true });
+        state.pool.push(idNew);
+        save(state);
+        renderAll();
+        try{ closeModal(document.getElementById('sellerBack')); }catch{ document.getElementById('sellerBack').style.display='none'; }
+        alert('Vendedor criado ✅');
+      }catch(err){
+        console.error(err);
+        alert('Erro ao criar vendedor.');
+      }
+      return;
+    }
+  }, true);
+// Init inputs
+  try{
+    $("dataDate").value = todayKey();
+    $("dataMonth").value = monthKey();
+    $("goalMonth").value = monthKey();
+    $("metaRankMonth").value = monthKey();
+    $("ncDate").value = todayKey();
+    $("ncMonth").value = monthKey();
+  }catch{}
+
+
+  // ======================
+  // PWA INSTALL BUTTON
+  // ======================
+  let deferredInstallPrompt = null;
+  const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isStandalone = () =>
+    (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+    (navigator.standalone === true);
+
+  function openInstallHelp(){
+    const back = document.getElementById("installBack");
+    if(back) back.style.display = "flex";
+  }
+  function closeInstallHelp(){
+    const back = document.getElementById("installBack");
+    if(back) back.style.display = "none";
+  }
+
+  function showInstallButton(){
+    const b = document.getElementById("btnInstall");
+    if(!b) return;
+    if(isStandalone()){ b.style.display = "none"; return; }
+    if(isIOS()){ b.style.display = "inline-block"; return; }
+    b.style.display = deferredInstallPrompt ? "inline-block" : "none";
+  }
+
+  window.addEventListener("beforeinstallprompt", (e)=>{
+    e.preventDefault();
+    deferredInstallPrompt = e;
+    showInstallButton();
+  });
+
+  window.addEventListener("appinstalled", ()=>{
+    deferredInstallPrompt = null;
+    showInstallButton();
+  });
+
+  document.getElementById("btnInstall")?.addEventListener("click", async ()=>{
+    if(isStandalone()) return;
+
+    // iOS: não existe prompt, mostramos instruções
+    if(isIOS()){
+      openInstallHelp();
+      return;
+    }
+
+    if(!deferredInstallPrompt){
+      openInstallHelp();
+      return;
+    }
+
+    deferredInstallPrompt.prompt();
+    try{ await deferredInstallPrompt.userChoice; }catch{}
+    deferredInstallPrompt = null;
+    showInstallButton();
+  });
+
+  document.getElementById("closeInstall")?.addEventListener("click", closeInstallHelp);
+  document.getElementById("installBack")?.addEventListener("click", (e)=>{
+    const back = document.getElementById("installBack");
+    if(e.target === back) closeInstallHelp();
+  });
+
+  // mostra botão no carregamento (iOS/Android compatível)
+  try{ showInstallButton(); }catch{}
+
+  // Init
+  renderAll();
+  // Pre-render Arena para evitar tela em branco caso a navegação falhe (PWA/cache)
+  try{ renderSellerView(); }catch(e){ console.error('pre-render arena failed', e); }
+  // Deep-link: #arena ou #seller abre Arena diretamente (útil para testes e para links)
+  try{
+    const h = (location.hash||"").toLowerCase();
+    if(h==="#arena" || h==="#seller"){
+      setTimeout(()=>{ try{ setTab('seller'); }catch{} }, 0);
+    }
+  }catch{}
+</script>
+<script>
+// HARDEN_CRITICAL_BUTTONS
+(function(){
+  function $(id){return document.getElementById(id);} 
+  function safe(fn){try{fn();}catch(e){console.error(e);alert('Erro: '+(e?.message||e));}}
+  function openBack(id){const el=$(id); if(!el) return; el.style.display='flex';}
+  function closeBack(id){const el=$(id); if(!el) return; el.style.display='none';}
+  // fallback openers
+  window.openSettingsFallback=function(){openBack('settingsBack');};
+  window.openSellerFallback=function(){openBack('sellerBack');};
+  // ensure create seller always works
+  window.createSellerFallback=async function(){
+    safe(async ()=>{
+      const name=($('sellerName')?.value||'').trim();
+      if(!name){alert('Digite o nome do vendedor.');return;}
+      // use app helpers if present
+      const KEY=window.KEY||'nexxt_state_v4';
+      const state=window.state;
+      if(!state||!Array.isArray(state.sellers)) throw new Error('Estado não carregou. Recarregue a página.');
+      let photo='';
+      const file=$('sellerPhoto')?.files?.[0];
+      if(file && window.fileToDataUrl){photo=await window.fileToDataUrl(file);}
+      const uid=(window.uid?window.uid():('id_'+Math.random().toString(16).slice(2)));
+      state.sellers.push({id:uid,name,photo,paused:false,active:true});
+      state.pool.push(uid);
+      if(window.save) window.save(state); else localStorage.setItem(KEY, JSON.stringify(state));
+      if(window.renderAll) window.renderAll();
+      closeBack('sellerBack');
+    });
+  };
+  // bind after DOM ready
+  function bind(){
+    const bs=$('btnSettings'); if(bs){ bs.onclick=()=>safe(()=>{ if(window.openModal){
+        // sync fields if possible
+        try{ $('storeName').value=(window.state?.store?.name||''); $('storeStatus').value=(window.state?.store?.status||'Online'); $('optValue').value=(window.state?.options?.askValue?'yes':'no'); $('optPieces').value=(window.state?.options?.askPieces?'yes':'no'); }catch{}
+        window.openModal($('settingsBack'));
+      } else openBack('settingsBack');}); }
+    const ba=$('btnAddSeller'); if(ba){ ba.onclick=()=>safe(()=>{ try{ $('sellerName').value=''; $('sellerPhoto').value=''; }catch{}; if(window.openModal) window.openModal($('sellerBack')); else openBack('sellerBack');}); }
+    const bc=$('btnCreateSeller'); if(bc){ bc.onclick=()=>window.createSellerFallback(); }
+    const cs=$('closeSettings'); if(cs){ cs.onclick=()=>{ if(window.closeModal) window.closeModal($('settingsBack')); else closeBack('settingsBack'); }; }
+    const cl=$('closeSeller'); if(cl){ cl.onclick=()=>{ if(window.closeModal) window.closeModal($('sellerBack')); else closeBack('sellerBack'); }; }
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded', bind);} else bind();
+})();
+
+
+  // --- HARDEN: botões críticos sempre funcionam (PWA/cache/listeners) ---
+  (function hardenCriticalButtons(){
+    const byId=(id)=>document.getElementById(id);
+    function safe(fn){return function(e){try{fn(e)}catch(err){console.error(err); alert("Erro: "+(err?.message||err));}}}
+    // Settings
+    const bSet=byId("btnSettings");
+    if(bSet){ bSet.onclick = safe(()=>{
+      try{
+        byId("storeName").value = state?.store?.name || "";
+        byId("storeStatus").value = state?.store?.status || "Online";
+        byId("optValue").value = state?.options?.askValue ? "yes" : "no";
+        byId("optPieces").value = state?.options?.askPieces ? "yes" : "no";
+      }catch{}
+      openModal(byId("settingsBack"));
+    }); }
+    // Add seller
+    const bAdd=byId("btnAddSeller");
+    if(bAdd){ bAdd.onclick = safe(()=>{
+      byId("sellerName").value = "";
+      try{ byId("sellerPhoto").value = ""; }catch{}
+      openModal(byId("sellerBack"));
+    }); }
+    // Create seller
+    const bCreate=byId("btnCreateSeller");
+    if(bCreate){ bCreate.onclick = safe(async()=>{
+      const name = (byId("sellerName").value||"").trim();
+      if(!name){ alert("Digite o nome do vendedor."); return; }
+      let photo="";
+      const file = byId("sellerPhoto")?.files?.[0];
+      if(file){ photo = await fileToDataUrl(file); }
+      const id = uid();
+      state.sellers.push({ id, name, photo, paused:false, active:true });
+      state.pool.push(id);
+      save(state);
+      renderAll();
+      closeModal(byId("sellerBack"));
+    }); }
+  })();
+
+  window.addEventListener("error", (e)=>{
+    console.error(e.error||e.message);
+  });
+  window.addEventListener("unhandledrejection", (e)=>{
+    console.error(e.reason);
+  });
+
+  // --- HARDEN: abrir Arena (tab seller) sempre renderiza ---
+  (function hardenArena(){
+    function openArena(){
+      try{
+        // Esconde todas as views
+        ['viewOps','viewDados','viewMetas','viewMetasRank','viewNoConv','viewSeller'].forEach(id=>{
+          const el=document.getElementById(id); if(el) el.style.display='none';
+        });
+        // Mostra a Arena
+        const v=document.getElementById('viewSeller');
+        if(v) v.style.display='block';
+        // Remove active de todas as tabs
+        ['tabOps','tabDados','tabMetas','tabMetasRank','tabNoConv','tabSeller'].forEach(id=>{
+          const el=document.getElementById(id); if(el) el.classList.remove('active');
+        });
+        const t=document.getElementById('tabSeller'); if(t) t.classList.add('active');
+        // Renderiza
+        const fn = window.renderSellerView || (typeof renderSellerView!=='undefined' ? renderSellerView : null);
+        if(fn) fn();
+        else if(v && !v.innerHTML.trim()){
+          v.innerHTML='<section class="card"><div class="cardHeader"><h2>Arena de Resultados</h2></div><div class="cardBody"><div class="hint">Recarregue o app para ver a Arena.</div></div></section>';
+        }
+      }catch(err){
+        console.error('openArena failed', err);
+      }
+    }
+    ['btnSeller','tabSeller','btnArena','tabArena'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el){ el.onclick=openArena; }
+    });
+    document.addEventListener('click', (e)=>{
+      const t=e.target;
+      const id=(t&&t.id)||'';
+      const label=((t&&t.textContent)||'').trim().toLowerCase();
+      if(id==='btnSeller'||id==='tabSeller'||id==='btnArena'||id==='tabArena'||label.includes('arena de resultados')){
+        openArena();
+      }
+    }, true);
+  })();
+</script>
 </body>
 </html>
