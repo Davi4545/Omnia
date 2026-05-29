@@ -1182,67 +1182,33 @@
 </section>
 <!-- VENDEDOR -->
 <div id="viewSeller" style="display:none">
-<section class="card arenaCard">
+<section class="card">
 <div class="cardHeader">
-<div class="arenaTitle">
-<h2>Arena de Resultados</h2>
+<h2>Painel do Vendedor</h2>
 <div class="rowRight">
 <button class="btn" id="btnSellerDownloadBadges">Baixar selos</button>
 </div>
 </div>
-</div>
 <div class="cardBody">
-
-<div class="arenaFilters">
-<div class="field flex">
+<div class="row">
+<div class="field" style="min-width:260px">
 <label>Vendedor</label>
 <select id="sellerViewSelect"></select>
 </div>
-<div class="field">
+<div class="field" style="min-width:220px">
 <label>Mês</label>
 <input id="sellerViewMonth" type="month"/>
 </div>
-<div class="field">
-<label>De</label>
-<input id="arenaFrom" type="date"/>
 </div>
-<div class="field">
-<label>Até</label>
-<input id="arenaTo" type="date"/>
-</div>
-</div>
-
 <div class="divider"></div>
-
-<div class="kpis" id="arenaKpis"></div>
-
+<div class="kpis" id="sellerKpis"></div>
 <div class="divider"></div>
-
-<div class="arenaBox" id="arenaMetaBox"></div>
-
+<div class="noteBox" id="sellerGoalsBox"></div>
 <div class="divider"></div>
-
-<div class="arenaBox" id="arenaYearBox"></div>
-
-<div class="divider"></div>
-
-<div class="arenaBox" id="arenaChartBox"></div>
-
-<div class="divider"></div>
-
-<div id="arenaResultsRanking"></div>
-
-<div class="divider"></div>
-
-<div class="arenaBadgesHead">
-<h3 class="arenaSectionTitle">Conquistas do mês</h3>
-</div>
+<h3 style="margin:0 0 8px 0; font-size:14px; letter-spacing:.06em; text-transform:uppercase; color:#cfe0ff">Galeria de Selos</h3>
 <div class="badgeGrid" id="sellerBadges"></div>
-
 <div class="divider"></div>
-
-<div class="arenaBox" id="arenaXpBox"></div>
-
+<div class="hint">No fim do mês, o vendedor pode baixar os selos e trocar por prêmios. 🔥</div>
 </div>
 </section>
 </div>
@@ -3437,9 +3403,6 @@
           </div>
 
           <div class="divider"></div>
-          <div id="arenaResultsRanking"></div>
-
-          <div class="divider"></div>
           <div class="arenaBadgesHead">
             <h3 class="arenaSectionTitle" style="margin:0">Conquistas do mês</h3>
             <div class="tag">Colecione e troque por prêmios</div>
@@ -3518,6 +3481,7 @@
     }
 
     const update = ()=>{
+      try{
       const sid = sel.value;
       state.ui.sellerViewId = sid;
       save(state);
@@ -3693,52 +3657,9 @@
         <div class="hint" style="margin-top:8px">${stars>0 ? starIcons : 'Ganhe ⭐ batendo metas semanais e mensais.'}</div>
       `;
 
-      // Ranking da Arena — todos os vendedores no mês
-      const rankEl = document.getElementById('arenaResultsRanking');
-      if(rankEl){
-        const ARENA_SEALS = [
-          { name:"Bronze",    icon:"🥉", min:0     },
-          { name:"Prata",     icon:"🥈", min:800   },
-          { name:"Ouro",      icon:"🏅", min:1500  },
-          { name:"Esmeralda", icon:"🟢", min:2500  },
-          { name:"Diamante",  icon:"💎", min:40000 }
-        ];
-        function getSeal(score){
-          let cur = ARENA_SEALS[0];
-          for(const s of ARENA_SEALS){ if(score >= s.min) cur = s; }
-          return cur;
-        }
-        const allSellers = Array.isArray(state.sellers) ? state.sellers.filter(s=>s) : [];
-        const rankRows = allSellers.map(s=>{
-          const recs = state.records.filter(r=> r.sellerId===s.id && r.monthKey===mk2 && r.outcome==='sold');
-          const val   = recs.reduce((a,r)=>a+Number(r.value||0),0);
-          const pcs   = recs.reduce((a,r)=>a+Number(r.pieces||0),0);
-          const sales = recs.length;
-          const score = Math.round(val + sales*50 + pcs*25);
-          return { name:s.name||'Vendedor', val, pcs, sales, score, seal:getSeal(score) };
-        }).sort((a,b)=>b.score-a.score);
-
-        rankEl.innerHTML = `
-          <h3 class="arenaSectionTitle" style="margin:0 0 10px 0">Ranking da Arena — ${mk2}</h3>
-          <table>
-            <thead><tr><th>#</th><th>Vendedor</th><th>Faturamento</th><th>Peças</th><th>Pontos</th><th>Selo</th></tr></thead>
-            <tbody>
-              ${rankRows.map((r,i)=>`
-                <tr>
-                  <td>${i+1}</td>
-                  <td>${r.name}</td>
-                  <td>${formatMoney(r.val)}</td>
-                  <td>${formatNum(r.pcs)}</td>
-                  <td>${formatNum(r.score)}</td>
-                  <td>${r.seal.icon} ${r.seal.name}</td>
-                </tr>`).join('')}
-            </tbody>
-          </table>
-        `;
-      }
-
       const btn = document.getElementById('btnSellerDownloadBadges');
       if(btn) btn.onclick = downloadSellerBadges;
+      }catch(e){ console.error('Arena update() error:', e); }
     };
 
     sel.onchange = update;
@@ -3748,6 +3669,9 @@
     update();
   }
 
+
+  // Expõe globalmente para o segundo script e para o PWA/cache
+  window.renderSellerView = renderSellerView;
 
   function downloadSellerBadges(){
     const sid = $("sellerViewSelect").value;
@@ -4427,41 +4351,37 @@
   (function hardenArena(){
     function openArena(){
       try{
-        setTab('seller');
-        // Força re-render após troca de aba (garante que o HTML seja injetado)
-        try{ setTimeout(()=>{ try{ renderSellerView(); }catch{} }, 0); }catch{}
-      }
-      catch(err){
+        // Esconde todas as views
+        ['viewOps','viewDados','viewMetas','viewMetasRank','viewNoConv','viewSeller'].forEach(id=>{
+          const el=document.getElementById(id); if(el) el.style.display='none';
+        });
+        // Mostra a Arena
+        const v=document.getElementById('viewSeller');
+        if(v) v.style.display='block';
+        // Remove active de todas as tabs
+        ['tabOps','tabDados','tabMetas','tabMetasRank','tabNoConv','tabSeller'].forEach(id=>{
+          const el=document.getElementById(id); if(el) el.classList.remove('active');
+        });
+        const t=document.getElementById('tabSeller'); if(t) t.classList.add('active');
+        // Renderiza
+        const fn = window.renderSellerView || (typeof renderSellerView!=='undefined' ? renderSellerView : null);
+        if(fn) fn();
+        else if(v && !v.innerHTML.trim()){
+          v.innerHTML='<section class="card"><div class="cardHeader"><h2>Arena de Resultados</h2></div><div class="cardBody"><div class="hint">Recarregue o app para ver a Arena.</div></div></section>';
+        }
+      }catch(err){
         console.error('openArena failed', err);
-        try{
-          // fallback: show seller view and render minimal UI
-          const ids=['viewOps','viewDados','viewMetas','viewMetasRank','viewNoConv','viewSeller'];
-          for(const id of ids){ const el=document.getElementById(id); if(el) el.style.display='none'; }
-          const v=document.getElementById('viewSeller'); if(v) v.style.display='block';
-          if(v && !v.innerHTML.trim()){ v.innerHTML = '<section class="card"><div class="cardHeader"><h2>Arena de Resultados</h2></div><div class="cardBody"><div class="hint">Erro ao renderizar a Arena. Recarregue o app.</div></div></section>'; }
-        }catch{}
       }
     }
-    // Aceita aliases (caso o botão tenha outro id em versões diferentes)
-    ['btnSeller','tabSeller','btnArena','tabArena','btnArenaJogos','tabArenaJogos'].forEach(id=>{
+    ['btnSeller','tabSeller','btnArena','tabArena'].forEach(id=>{
       const el=document.getElementById(id);
-      if(el){
-        el.onclick = openArena;
-        el.addEventListener('click', openArena);
-      }
+      if(el){ el.onclick=openArena; }
     });
-    // Delegacao (caso os botoes sejam recriados)
     document.addEventListener('click', (e)=>{
       const t=e.target;
-      const btn = t && (t.closest ? t.closest('button') : null);
-      const id = (t && t.id) || (btn && btn.id) || '';
-      const label = (btn && (btn.textContent||'').trim().toLowerCase()) || '';
-      if(
-        id==='btnSeller' || id==='tabSeller' ||
-        id==='btnArena' || id==='tabArena' ||
-        id==='btnArenaJogos' || id==='tabArenaJogos' ||
-        label.includes('arena')
-      ){
+      const id=(t&&t.id)||'';
+      const label=((t&&t.textContent)||'').trim().toLowerCase();
+      if(id==='btnSeller'||id==='tabSeller'||id==='btnArena'||id==='tabArena'||label.includes('arena de resultados')){
         openArena();
       }
     }, true);
