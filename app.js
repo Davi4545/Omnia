@@ -2528,57 +2528,6 @@ setInterval(()=>{
   }
 }, 1000);
 
-// ======================
-// HARDENING — binds críticos via DOMContentLoaded
-// ======================
-function bindSafeClick(el, fn){
-  if(!el) return;
-  el.onclick = null;
-  el.addEventListener('click', (ev)=>{
-    try{ fn(ev); }catch(err){ console.error(err); alert('Erro: '+(err?.message||err)); }
-  });
-}
-
-document.addEventListener('DOMContentLoaded', ()=>{
-  bindSafeClick(document.getElementById('btnSettings'), ()=>{
-    try{
-      document.getElementById('storeName').value   = state.store.name   || '';
-      document.getElementById('storeStatus').value = state.store.status || 'Online';
-      document.getElementById('optValue').value    = state.options.askValue  ? 'yes':'no';
-      document.getElementById('optPieces').value   = state.options.askPieces ? 'yes':'no';
-    }catch(e){}
-    openModal(document.getElementById('settingsBack'));
-  });
-
-  bindSafeClick(document.getElementById('btnAddSeller'), ()=>{
-    const n=document.getElementById('sellerName');  if(n) n.value='';
-    const f=document.getElementById('sellerPhoto'); if(f) f.value='';
-    openModal(document.getElementById('sellerBack'));
-  });
-
-  bindSafeClick(document.getElementById('btnCreateSeller'), async ()=>{
-    const name=(document.getElementById('sellerName')?.value||'').trim();
-    if(!name){ alert('Digite o nome do vendedor.'); return; }
-    let photo='';
-    const file=document.getElementById('sellerPhoto')?.files?.[0];
-    if(file){ try{ photo = await fileToDataUrl(file); }catch(e){} }
-    const id=uid();
-    state.sellers.push({ id, name, photo, paused:false, active:true });
-    state.pool.push(id);
-    save(state);
-    renderAll();
-    closeModal(document.getElementById('sellerBack'));
-    alert('Vendedor criado ✅');
-  });
-
-  bindSafeClick(document.getElementById('btnSeller'), ()=>{
-    try{ setTab('seller'); }catch(err){ console.error(err); try{ document.getElementById('viewSeller').style.display=''; }catch(e){} }
-  });
-  bindSafeClick(document.getElementById('tabSeller'), ()=>{
-    try{ setTab('seller'); }catch(err){ console.error(err); try{ document.getElementById('viewSeller').style.display=''; }catch(e){} }
-  });
-});
-
 // Captura global de erros
 window.addEventListener('error', (e)=>{
   try{ console.error('NexxtOne error:', e?.error||e?.message||e); }catch(ex){}
@@ -2586,59 +2535,6 @@ window.addEventListener('error', (e)=>{
 window.addEventListener('unhandledrejection', (e)=>{
   console.error('Promise rejeitada', e.reason);
 });
-
-// Delegação de clique global (fallback anti-cache)
-function safeOpenById(backId){
-  const el=document.getElementById(backId);
-  if(!el) return;
-  try{ openModal(el); }catch(e){ el.style.display='flex'; }
-}
-
-document.addEventListener('click', (ev)=>{
-  const target=ev.target;
-  if(!(target instanceof HTMLElement)) return;
-  const id=target.id;
-
-  if(id==='btnSettings'){
-    ev.preventDefault();
-    try{
-      if(document.getElementById('storeName'))   document.getElementById('storeName').value   = state?.store?.name   || '';
-      if(document.getElementById('storeStatus')) document.getElementById('storeStatus').value = state?.store?.status || 'Online';
-    }catch(e){}
-    safeOpenById('settingsBack');
-    return;
-  }
-
-  if(id==='btnSeller'||id==='tabSeller'){
-    ev.preventDefault();
-    try{ setTab('seller'); }catch(err){ console.error(err); try{ document.getElementById('viewSeller').style.display=''; }catch(e){} }
-    return;
-  }
-
-  if(id==='btnAddSeller'){
-    ev.preventDefault();
-    try{ const n=document.getElementById('sellerName'); if(n) n.value=''; const p=document.getElementById('sellerPhoto'); if(p) p.value=''; }catch(e){}
-    safeOpenById('sellerBack');
-    return;
-  }
-
-  if(id==='btnCreateSeller'){
-    ev.preventDefault();
-    try{
-      const name=(document.getElementById('sellerName')?.value||'').trim();
-      if(!name){ alert('Digite o nome do vendedor.'); return; }
-      if(typeof window.__createSellerOriginal==='function'){ window.__createSellerOriginal(); return; }
-      const idNew=uid();
-      state.sellers.push({ id:idNew, name, photo:'', paused:false, active:true });
-      state.pool.push(idNew);
-      save(state);
-      renderAll();
-      try{ closeModal(document.getElementById('sellerBack')); }catch(e){ document.getElementById('sellerBack').style.display='none'; }
-      alert('Vendedor criado ✅');
-    }catch(err){ console.error(err); alert('Erro ao criar vendedor.'); }
-    return;
-  }
-}, true);
 
 // ======================
 // INIT
