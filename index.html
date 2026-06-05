@@ -4347,45 +4347,32 @@
     console.error(e.reason);
   });
 
-  // --- HARDEN: abrir Arena (tab seller) sempre renderiza ---
-  (function hardenArena(){
+  // --- HARDEN: abrir Arena sempre funciona ---
+  // setTimeout garante que este bind roda por ULTIMO, apos todos os outros
+  setTimeout(function(){
     function openArena(){
       try{
-        // Esconde todas as views
-        ['viewOps','viewDados','viewMetas','viewMetasRank','viewNoConv','viewSeller'].forEach(id=>{
-          const el=document.getElementById(id); if(el) el.style.display='none';
+        ['viewOps','viewDados','viewMetas','viewMetasRank','viewNoConv','viewSeller'].forEach(function(id){
+          var el=document.getElementById(id); if(el) el.style.display='none';
         });
-        // Mostra a Arena
-        const v=document.getElementById('viewSeller');
+        var v=document.getElementById('viewSeller');
         if(v) v.style.display='block';
-        // Remove active de todas as tabs
-        ['tabOps','tabDados','tabMetas','tabMetasRank','tabNoConv','tabSeller'].forEach(id=>{
-          const el=document.getElementById(id); if(el) el.classList.remove('active');
+        ['tabOps','tabDados','tabMetas','tabMetasRank','tabNoConv','tabSeller'].forEach(function(id){
+          var el=document.getElementById(id); if(el) el.classList.remove('active');
         });
-        const t=document.getElementById('tabSeller'); if(t) t.classList.add('active');
-        // Renderiza
-        const fn = window.renderSellerView || (typeof renderSellerView!=='undefined' ? renderSellerView : null);
-        if(fn) fn();
-        else if(v && !v.innerHTML.trim()){
-          v.innerHTML='<section class="card"><div class="cardHeader"><h2>Arena de Resultados</h2></div><div class="cardBody"><div class="hint">Recarregue o app para ver a Arena.</div></div></section>';
-        }
-      }catch(err){
-        console.error('openArena failed', err);
-      }
+        var t=document.getElementById('tabSeller'); if(t) t.classList.add('active');
+        if(window.renderSellerView) window.renderSellerView();
+      }catch(err){ console.error('openArena failed', err); }
     }
-    ['btnSeller','tabSeller','btnArena','tabArena'].forEach(id=>{
-      const el=document.getElementById(id);
-      if(el){ el.onclick=openArena; }
+    // Clona os botoes para remover listeners antigos e adiciona o novo
+    ['btnSeller','tabSeller'].forEach(function(id){
+      var el=document.getElementById(id);
+      if(!el) return;
+      var clone=el.cloneNode(true);
+      el.parentNode.replaceChild(clone, el);
+      clone.addEventListener('click', openArena);
     });
-    document.addEventListener('click', (e)=>{
-      const t=e.target;
-      const id=(t&&t.id)||'';
-      const label=((t&&t.textContent)||'').trim().toLowerCase();
-      if(id==='btnSeller'||id==='tabSeller'||id==='btnArena'||id==='tabArena'||label.includes('arena de resultados')){
-        openArena();
-      }
-    }, true);
-  })();
+  }, 0);
 </script>
 </body>
 </html>
