@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>OMNIA — Login</title>
+<meta content="#0b0f14" name="theme-color"/>
+<link href="./manifest.json" rel="manifest"/>
+<link href="./icon-192.png" rel="icon"/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+    background:
+      radial-gradient(900px 520px at 15% 5%, rgba(41,224,122,.12), transparent 60%),
+      radial-gradient(800px 520px at 85% 10%, rgba(98,168,255,.12), transparent 55%),
+      #0b0f14;
+    color:#e7eefc;
+    min-height:100vh;
+    display:grid;
+    place-items:center;
+    padding:20px;
+  }
+  .box{
+    width:100%;
+    max-width:420px;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:20px;
+    padding:36px 32px;
+    box-shadow:0 24px 60px rgba(0,0,0,.40);
+  }
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:28px;
+  }
+  .logoIcon{
+    width:48px;height:48px;
+    border-radius:14px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.12);
+    display:grid;place-items:center;
+    font-weight:900;font-size:20px;color:#62a8ff;
+  }
+  .logoText h1{font-size:22px;font-weight:900;letter-spacing:.04em;}
+  .logoText p{font-size:12px;color:#9db0d0;margin-top:2px;}
+
+  .tabs{
+    display:flex;
+    gap:4px;
+    background:rgba(0,0,0,.22);
+    border-radius:12px;
+    padding:4px;
+    margin-bottom:24px;
+  }
+  .tabs button{
+    flex:1;
+    padding:8px;
+    border:none;
+    border-radius:9px;
+    background:transparent;
+    color:#9db0d0;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    transition:all .2s;
+  }
+  .tabs button.active{
+    background:rgba(98,168,255,.18);
+    color:#e7eefc;
+    border:1px solid rgba(98,168,255,.30);
+  }
+
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+  .field label{font-size:12px;color:#9db0d0;font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
+  .field input, .field select{
+    padding:10px 14px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(255,255,255,.06);
+    color:#e7eefc;
+    font-size:15px;
+    outline:none;
+    transition:border-color .2s;
+  }
+  .field input:focus, .field select:focus{border-color:rgba(98,168,255,.50);}
+  .field input::placeholder{color:#9db0d0;}
+
+  .btn{
+    width:100%;
+    padding:12px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,.12);
+    background:linear-gradient(180deg,rgba(98,168,255,.22),rgba(98,168,255,.10));
+    color:#e7eefc;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+    margin-top:8px;
+    transition:all .2s;
+  }
+  .btn:hover{background:linear-gradient(180deg,rgba(98,168,255,.32),rgba(98,168,255,.18));}
+  .btn:disabled{opacity:.5;cursor:not-allowed;}
+  .btn.good{background:linear-gradient(180deg,rgba(41,224,122,.22),rgba(41,224,122,.10));border-color:rgba(41,224,122,.30);}
+  .btn.good:hover{background:linear-gradient(180deg,rgba(41,224,122,.32),rgba(41,224,122,.18));}
+
+  .msg{
+    margin-top:12px;
+    padding:10px 14px;
+    border-radius:10px;
+    font-size:13px;
+    display:none;
+  }
+  .msg.error{background:rgba(255,77,77,.12);border:1px solid rgba(255,77,77,.30);color:#ff9090;}
+  .msg.success{background:rgba(41,224,122,.10);border:1px solid rgba(41,224,122,.28);color:#7fffc0;}
+
+  .divider{height:1px;background:rgba(255,255,255,.08);margin:18px 0;}
+
+  .hint{font-size:12px;color:#9db0d0;text-align:center;margin-top:14px;line-height:1.5;}
+
+  .loading{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(11,15,20,.85);
+    place-items:center;
+    z-index:99;
+    font-size:18px;
+    color:#e7eefc;
+    gap:12px;
+    flex-direction:column;
+  }
+  .loading.show{display:flex;}
+  .spinner{
+    width:36px;height:36px;
+    border:3px solid rgba(255,255,255,.12);
+    border-top-color:#62a8ff;
+    border-radius:50%;
+    animation:spin .7s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<div class="loading" id="loadingScreen">
+  <div class="spinner"></div>
+  <div id="loadingMsg">Entrando...</div>
+</div>
+
+<div class="box">
+  <div class="logo">
+    <div class="logoIcon">O</div>
+    <div class="logoText">
+      <h1>OMNIA</h1>
+      <p>Sistema de vendas</p>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="active" id="tabLogin" onclick="switchTab('login')">Entrar</button>
+    <button id="tabCadastro" onclick="switchTab('cadastro')">Cadastrar</button>
+  </div>
+
+  <!-- LOGIN -->
+  <div id="formLogin">
+    <div class="field">
+      <label>E-mail</label>
+      <input id="loginEmail" type="email" placeholder="seu@email.com"/>
+    </div>
+    <div class="field">
+      <label>Senha</label>
+      <input id="loginSenha" type="password" placeholder="••••••••"/>
+    </div>
+    <button class="btn good" id="btnLogin" onclick="fazerLogin()">Entrar</button>
+    <div class="msg" id="loginMsg"></div>
+  </div>
+
+  <!-- CADASTRO -->
+  <div id="formCadastro" style="display:none">
+    <div class="field">
+      <label>Nome completo</label>
+      <input id="cadNome" type="text" placeholder="Ex: Camila Souza"/>
+    </div>
+    <div class="field">
+      <label>E-mail</label>
+      <input id="cadEmail" type="email" placeholder="seu@email.com"/>
+    </div>
+    <div class="field">
+      <label>Senha</label>
+      <input id="cadSenha" type="password" placeholder="Mínimo 6 caracteres"/>
+    </div>
+    <button class="btn" id="btnCadastro" onclick="fazerCadastro()">Criar conta</button>
+    <div class="msg" id="cadMsg"></div>
+    <div class="hint">Ao se cadastrar, você entra como <b>vendedor</b>.<br>O ADM pode promover sua conta depois.</div>
+  </div>
+</div>
+
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged }
+    from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  import { getFirestore, doc, setDoc, getDoc }
+    from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCTjYwOpMpwhGbrsUFPOgO2V-GXAwfcubA",
+    authDomain: "omnia-3b32b.firebaseapp.com",
+    projectId: "omnia-3b32b",
+    storageBucket: "omnia-3b32b.firebasestorage.app",
+    messagingSenderId: "858764463578",
+    appId: "1:858764463578:web:1fabf841013e2053bd44e3"
+  };
+
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+
+  // Se já logado, redireciona direto
+  onAuthStateChanged(auth, async (user) => {
+    if(user){
+      showLoading("Verificando acesso...");
+      const role = await getUserRole(user.uid);
+      redirect(role);
+    }
+  });
+
+  async function getUserRole(uid){
+    try{
+      const snap = await getDoc(doc(db, "users", uid));
+      if(snap.exists()) return snap.data().role || "seller";
+    }catch(e){}
+    return "seller";
+  }
+
+  function redirect(role){
+    if(role === "admin"){
+      window.location.href = "./index.html?role=admin";
+    } else {
+      window.location.href = "./index.html?role=seller";
+    }
+  }
+
+  function showLoading(msg){
+    document.getElementById("loadingScreen").classList.add("show");
+    document.getElementById("loadingMsg").textContent = msg || "Carregando...";
+  }
+  function hideLoading(){
+    document.getElementById("loadingScreen").classList.remove("show");
+  }
+
+  function showMsg(id, text, type){
+    const el = document.getElementById(id);
+    el.textContent = text;
+    el.className = "msg " + type;
+    el.style.display = "block";
+  }
+
+  // Login
+  window.fazerLogin = async function(){
+    const email = document.getElementById("loginEmail").value.trim();
+    const senha = document.getElementById("loginSenha").value;
+    if(!email || !senha){ showMsg("loginMsg","Preencha e-mail e senha.","error"); return; }
+
+    const btn = document.getElementById("btnLogin");
+    btn.disabled = true;
+    showLoading("Entrando...");
+
+    try{
+      const cred = await signInWithEmailAndPassword(auth, email, senha);
+      const role = await getUserRole(cred.user.uid);
+      redirect(role);
+    } catch(e){
+      hideLoading();
+      btn.disabled = false;
+      const msgs = {
+        "auth/user-not-found": "Usuário não encontrado.",
+        "auth/wrong-password": "Senha incorreta.",
+        "auth/invalid-email": "E-mail inválido.",
+        "auth/invalid-credential": "E-mail ou senha incorretos.",
+        "auth/too-many-requests": "Muitas tentativas. Tente mais tarde."
+      };
+      showMsg("loginMsg", msgs[e.code] || "Erro ao entrar. Tente novamente.", "error");
+    }
+  };
+
+  // Cadastro
+  window.fazerCadastro = async function(){
+    const nome  = document.getElementById("cadNome").value.trim();
+    const email = document.getElementById("cadEmail").value.trim();
+    const senha = document.getElementById("cadSenha").value;
+
+    if(!nome)          { showMsg("cadMsg","Digite seu nome.","error"); return; }
+    if(!email)         { showMsg("cadMsg","Digite seu e-mail.","error"); return; }
+    if(senha.length<6) { showMsg("cadMsg","Senha deve ter pelo menos 6 caracteres.","error"); return; }
+
+    const btn = document.getElementById("btnCadastro");
+    btn.disabled = true;
+    showLoading("Criando conta...");
+
+    try{
+      const cred = await createUserWithEmailAndPassword(auth, email, senha);
+
+      // Salva perfil no Firestore
+      await setDoc(doc(db, "users", cred.user.uid), {
+        uid:       cred.user.uid,
+        name:      nome,
+        email:     email,
+        role:      "seller",  // padrão: vendedor
+        active:    true,
+        createdAt: new Date().toISOString()
+      });
+
+      showMsg("cadMsg","Conta criada! Entrando...","success");
+      setTimeout(()=> redirect("seller"), 1000);
+    } catch(e){
+      hideLoading();
+      btn.disabled = false;
+      const msgs = {
+        "auth/email-already-in-use": "Este e-mail já está cadastrado.",
+        "auth/invalid-email":        "E-mail inválido.",
+        "auth/weak-password":        "Senha muito fraca."
+      };
+      showMsg("cadMsg", msgs[e.code] || "Erro ao cadastrar. Tente novamente.", "error");
+    }
+  };
+
+  // Tab switch
+  window.switchTab = function(tab){
+    const isLogin = tab === "login";
+    document.getElementById("formLogin").style.display    = isLogin ? "block":"none";
+    document.getElementById("formCadastro").style.display = isLogin ? "none":"block";
+    document.getElementById("tabLogin").classList.toggle("active", isLogin);
+    document.getElementById("tabCadastro").classList.toggle("active", !isLogin);
+  };
+
+  // Enter key
+  document.addEventListener("keydown", (e)=>{
+    if(e.key !== "Enter") return;
+    const loginVisible = document.getElementById("formLogin").style.display !== "none";
+    if(loginVisible) window.fazerLogin();
+    else window.fazerCadastro();
+  });
+</script>
+</body>
+</html>

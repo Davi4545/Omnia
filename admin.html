@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>OMNIA — Administração</title>
+<meta content="#0b0f14" name="theme-color"/>
+<link href="./icon-192.png" rel="icon"/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+    background:
+      radial-gradient(900px 520px at 15% 5%, rgba(41,224,122,.12), transparent 60%),
+      radial-gradient(800px 520px at 85% 10%, rgba(98,168,255,.12), transparent 55%),
+      #0b0f14;
+    color:#e7eefc;
+    min-height:100vh;
+  }
+  header{
+    position:sticky;top:0;z-index:10;
+    background:rgba(11,15,20,.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(255,255,255,.10);
+    padding:14px 20px;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  }
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand h1{font-size:18px;font-weight:900;}
+  .brand .sub{font-size:12px;color:#9db0d0;}
+  .chip{
+    padding:5px 12px;border-radius:999px;
+    background:rgba(255,209,102,.12);border:1px solid rgba(255,209,102,.30);
+    color:#ffd166;font-size:12px;font-weight:700;
+  }
+  .wrap{max-width:1100px;margin:0 auto;padding:24px 20px;}
+  .card{
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.09);
+    border-radius:18px;padding:20px;margin-bottom:18px;
+  }
+  .cardHead{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+    margin-bottom:16px;
+  }
+  .cardHead h2{font-size:16px;font-weight:800;}
+  .btn{
+    padding:8px 16px;border-radius:10px;
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(255,255,255,.07);
+    color:#e7eefc;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;
+  }
+  .btn:hover{background:rgba(255,255,255,.12);}
+  .btn.bad{background:rgba(255,77,77,.12);border-color:rgba(255,77,77,.30);color:#ff9090;}
+  .btn.bad:hover{background:rgba(255,77,77,.22);}
+  .btn.good{background:rgba(41,224,122,.12);border-color:rgba(41,224,122,.28);color:#7fffc0;}
+  .btn.warn{background:rgba(255,209,102,.12);border-color:rgba(255,209,102,.28);color:#ffd166;}
+
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th{text-align:left;padding:8px 10px;color:#9db0d0;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid rgba(255,255,255,.08);}
+  td{padding:10px;border-bottom:1px solid rgba(255,255,255,.05);}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:rgba(255,255,255,.03);}
+
+  .tag{
+    display:inline-flex;align-items:center;
+    padding:3px 9px;border-radius:999px;font-size:11px;font-weight:700;
+    background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  }
+  .tag.admin{background:rgba(255,209,102,.12);border-color:rgba(255,209,102,.28);color:#ffd166;}
+  .tag.seller{background:rgba(98,168,255,.10);border-color:rgba(98,168,255,.22);color:#a0c8ff;}
+  .tag.inactive{background:rgba(255,77,77,.10);border-color:rgba(255,77,77,.22);color:#ff9090;}
+
+  .hint{font-size:13px;color:#9db0d0;padding:16px 0;}
+
+  .loading{
+    display:none;position:fixed;inset:0;
+    background:rgba(11,15,20,.85);place-items:center;z-index:99;
+    font-size:16px;color:#e7eefc;gap:10px;flex-direction:column;
+  }
+  .loading.show{display:flex;}
+  .spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,.12);border-top-color:#62a8ff;border-radius:50%;animation:spin .7s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:18px;}
+  .kpi{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px;}
+  .kpi .t{font-size:11px;color:#9db0d0;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+  .kpi .v{font-size:20px;font-weight:900;}
+</style>
+</head>
+<body>
+
+<div class="loading" id="loadingScreen">
+  <div class="spinner"></div>
+  <div id="loadingMsg">Carregando...</div>
+</div>
+
+<header>
+  <div class="brand">
+    <div>
+      <h1>OMNIA <span style="color:#ffd166">ADM</span></h1>
+      <div class="sub" id="adminEmail">—</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+    <span class="chip">👑 Administrador</span>
+    <button class="btn" onclick="window.location.href='./index.html?role=admin'">Ir para o app</button>
+    <button class="btn bad" onclick="sair()">Sair</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- KPIs gerais -->
+  <div class="kpis" id="kpisGeral"></div>
+
+  <!-- Tabela de vendedores -->
+  <div class="card">
+    <div class="cardHead">
+      <h2>👥 Vendedores cadastrados</h2>
+      <button class="btn" onclick="carregarVendedores()">↻ Atualizar</button>
+    </div>
+    <div id="tabelaVendedores"><div class="hint">Carregando vendedores...</div></div>
+  </div>
+
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut }
+    from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, deleteDoc }
+    from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCTjYwOpMpwhGbrsUFPOgO2V-GXAwfcubA",
+    authDomain: "omnia-3b32b.firebaseapp.com",
+    projectId: "omnia-3b32b",
+    storageBucket: "omnia-3b32b.firebasestorage.app",
+    messagingSenderId: "858764463578",
+    appId: "1:858764463578:web:1fabf841013e2053bd44e3"
+  };
+
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+
+  function showLoading(msg){ document.getElementById("loadingScreen").classList.add("show"); document.getElementById("loadingMsg").textContent = msg||"Carregando..."; }
+  function hideLoading(){ document.getElementById("loadingScreen").classList.remove("show"); }
+  function formatMoney(v){ return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"}); }
+
+  // Verifica se é ADM
+  onAuthStateChanged(auth, async (user)=>{
+    if(!user){ window.location.href="./login.html"; return; }
+    const snap = await getDoc(doc(db,"users",user.uid));
+    const data = snap.exists() ? snap.data() : {};
+    if(data.role !== "admin"){
+      alert("Acesso negado. Apenas administradores.");
+      window.location.href="./login.html";
+      return;
+    }
+    document.getElementById("adminEmail").textContent = user.email;
+    carregarVendedores();
+  });
+
+  window.sair = async function(){
+    await signOut(auth);
+    window.location.href="./login.html";
+  };
+
+  window.carregarVendedores = async function(){
+    showLoading("Carregando vendedores...");
+    try{
+      const snap = await getDocs(collection(db,"users"));
+      const users = [];
+      snap.forEach(d=> users.push({...d.data(), uid:d.id}));
+
+      // KPIs gerais
+      const total   = users.length;
+      const admins  = users.filter(u=>u.role==="admin").length;
+      const sellers = users.filter(u=>u.role==="seller").length;
+      const ativos  = users.filter(u=>u.active!==false).length;
+
+      document.getElementById("kpisGeral").innerHTML = `
+        <div class="kpi"><div class="t">Total de usuários</div><div class="v">${total}</div></div>
+        <div class="kpi"><div class="t">Administradores</div><div class="v">${admins}</div></div>
+        <div class="kpi"><div class="t">Vendedores</div><div class="v">${sellers}</div></div>
+        <div class="kpi"><div class="t">Ativos</div><div class="v">${ativos}</div></div>
+      `;
+
+      if(users.length===0){
+        document.getElementById("tabelaVendedores").innerHTML = '<div class="hint">Nenhum usuário cadastrado ainda.</div>';
+        hideLoading(); return;
+      }
+
+      const rows = users.map(u=>`
+        <tr>
+          <td><b>${u.name||"—"}</b></td>
+          <td>${u.email||"—"}</td>
+          <td><span class="tag ${u.role==="admin"?"admin":"seller"}">${u.role==="admin"?"👑 ADM":"🧑 Vendedor"}</span></td>
+          <td><span class="tag ${u.active===false?"inactive":""}">${u.active===false?"Inativo":"Ativo"}</span></td>
+          <td>${u.createdAt ? new Date(u.createdAt).toLocaleDateString("pt-BR") : "—"}</td>
+          <td style="display:flex;gap:6px;flex-wrap:wrap;">
+            ${u.role!=="admin" ? `<button class="btn warn" onclick="promoverAdmin('${u.uid}','${u.name||""}')">Tornar ADM</button>` : `<button class="btn" onclick="rebaixarVendedor('${u.uid}','${u.name||""}')">Tornar vendedor</button>`}
+            ${u.active!==false ? `<button class="btn bad" onclick="desativarUser('${u.uid}','${u.name||""}')">Desativar</button>` : `<button class="btn good" onclick="ativarUser('${u.uid}','${u.name||""}')">Ativar</button>`}
+            <button class="btn bad" onclick="excluirUser('${u.uid}','${u.name||""}')">Excluir</button>
+          </td>
+        </tr>
+      `).join("");
+
+      document.getElementById("tabelaVendedores").innerHTML = `
+        <table>
+          <thead><tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Status</th><th>Cadastro</th><th>Ações</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+    }catch(e){
+      document.getElementById("tabelaVendedores").innerHTML = '<div class="hint">Erro ao carregar. Verifique as regras do Firestore.</div>';
+      console.error(e);
+    }
+    hideLoading();
+  };
+
+  window.promoverAdmin = async function(uid, nome){
+    if(!confirm(`Tornar "${nome}" administrador?`)) return;
+    await updateDoc(doc(db,"users",uid),{role:"admin"});
+    carregarVendedores();
+  };
+
+  window.rebaixarVendedor = async function(uid, nome){
+    if(!confirm(`Tornar "${nome}" vendedor?`)) return;
+    await updateDoc(doc(db,"users",uid),{role:"seller"});
+    carregarVendedores();
+  };
+
+  window.desativarUser = async function(uid, nome){
+    if(!confirm(`Desativar "${nome}"? Ele não conseguirá mais logar.`)) return;
+    await updateDoc(doc(db,"users",uid),{active:false});
+    carregarVendedores();
+  };
+
+  window.ativarUser = async function(uid, nome){
+    await updateDoc(doc(db,"users",uid),{active:true});
+    carregarVendedores();
+  };
+
+  window.excluirUser = async function(uid, nome){
+    if(!confirm(`Excluir "${nome}" permanentemente? Esta ação não pode ser desfeita.`)) return;
+    await deleteDoc(doc(db,"users",uid));
+    carregarVendedores();
+  };
+</script>
+</body>
+</html>
