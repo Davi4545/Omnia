@@ -1784,6 +1784,7 @@
           <button class="btn" data-act="down" data-id="${sid}">↓</button>
           <button class="btn warn" data-act="pause" data-id="${sid}">${s.paused ? "Retomar" : "Pausar"}</button>
           <button class="btn bad" data-act="remove" data-id="${sid}">Tirar</button>
+          ${(window.OMNIA_USER && window.OMNIA_USER.role==="admin") ? `<button class="btn bad" data-act="delete" data-id="${sid}" title="Excluir vendedor da operação">🗑</button>` : ""}
         </div>
       `;
       q.appendChild(item);
@@ -3078,6 +3079,18 @@
     if(act === "remove"){
       state.queue = state.queue.filter(x=>x!==sid);
       if(!state.pool.includes(sid)) state.pool.push(sid);
+    }
+
+    if(act === "delete"){
+      const s = getSeller(sid);
+      const nome = s ? s.name : "este vendedor";
+      if(!confirm(`Excluir "${nome}" da operação? Ele sai da fila e da lista de vendedores. Esta ação não pode ser desfeita.`)){
+        return;
+      }
+      // remove de tudo
+      state.queue = state.queue.filter(x=>x!==sid);
+      state.pool  = state.pool.filter(x=>x!==sid);
+      state.sellers = state.sellers.filter(x=>x.id!==sid);
     }
 
     save(state);
