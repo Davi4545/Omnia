@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>OMNIA — Super Admin</title>
+<meta content="#0b0f14" name="theme-color"/>
+<link href="./icon-192.png" rel="icon"/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:radial-gradient(900px 520px at 15% 5%, rgba(155,123,255,.14), transparent 60%),radial-gradient(800px 520px at 85% 10%, rgba(98,168,255,.12), transparent 55%),#0b0f14;color:#e7eefc;min-height:100vh;}
+  header{position:sticky;top:0;z-index:10;background:rgba(11,15,20,.85);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.10);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  .brand h1{font-size:18px;font-weight:900;}
+  .brand .sub{font-size:12px;color:#9db0d0;}
+  .chip{padding:5px 12px;border-radius:999px;background:rgba(155,123,255,.14);border:1px solid rgba(155,123,255,.30);color:#c9b6ff;font-size:12px;font-weight:700;}
+  .wrap{max-width:1100px;margin:0 auto;padding:24px 20px;}
+  .card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:20px;margin-bottom:18px;}
+  .cardHead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px;}
+  .cardHead h2{font-size:16px;font-weight:800;}
+  .btn{padding:8px 16px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#e7eefc;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;}
+  .btn:hover{background:rgba(255,255,255,.12);}
+  .btn.bad{background:rgba(255,77,77,.12);border-color:rgba(255,77,77,.30);color:#ff9090;}
+  .btn.good{background:rgba(41,224,122,.12);border-color:rgba(41,224,122,.28);color:#7fffc0;}
+  .btn.warn{background:rgba(255,209,102,.12);border-color:rgba(255,209,102,.28);color:#ffd166;}
+  .btn.purple{background:rgba(155,123,255,.16);border-color:rgba(155,123,255,.32);color:#c9b6ff;}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th{text-align:left;padding:8px 10px;color:#9db0d0;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid rgba(255,255,255,.08);}
+  td{padding:10px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:middle;}
+  tr:hover td{background:rgba(255,255,255,.03);}
+  .tag{display:inline-flex;align-items:center;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:700;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);}
+  .tag.admin{background:rgba(255,209,102,.12);border-color:rgba(255,209,102,.28);color:#ffd166;}
+  .tag.seller{background:rgba(98,168,255,.10);border-color:rgba(98,168,255,.22);color:#a0c8ff;}
+  .tag.super{background:rgba(155,123,255,.14);border-color:rgba(155,123,255,.30);color:#c9b6ff;}
+  .tag.code{background:rgba(41,224,122,.10);border-color:rgba(41,224,122,.26);color:#7fffc0;font-family:monospace;font-size:13px;letter-spacing:.05em;}
+  .hint{font-size:13px;color:#9db0d0;padding:16px 0;}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field label{font-size:11px;color:#9db0d0;text-transform:uppercase;letter-spacing:.05em;}
+  .field input,.field select{padding:9px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:14px;outline:none;}
+  .loading{display:none;position:fixed;inset:0;background:rgba(11,15,20,.85);place-items:center;z-index:99;font-size:16px;color:#e7eefc;gap:10px;flex-direction:column;}
+  .loading.show{display:flex;}
+  .spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,.12);border-top-color:#9b7bff;border-radius:50%;animation:spin .7s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:18px;}
+  .kpi{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px;}
+  .kpi .t{font-size:11px;color:#9db0d0;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+  .kpi .v{font-size:20px;font-weight:900;}
+  .storesChk{display:flex;flex-wrap:wrap;gap:6px;}
+  .storesChk label{display:inline-flex;align-items:center;gap:4px;font-size:12px;background:rgba(255,255,255,.05);padding:3px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.1);cursor:pointer;}
+</style>
+</head>
+<body>
+
+<div class="loading show" id="loadingScreen">
+  <div class="spinner"></div>
+  <div id="loadingMsg">Carregando...</div>
+</div>
+
+<header>
+  <div class="brand">
+    <h1>OMNIA <span style="color:#c9b6ff">SUPER ADMIN</span></h1>
+    <div class="sub" id="meEmail">—</div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+    <span class="chip">⚡ Super Admin</span>
+    <button class="btn bad" onclick="sair()">Sair</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="kpis" id="kpis"></div>
+
+  <!-- Criar loja -->
+  <div class="card">
+    <div class="cardHead"><h2>🏬 Lojas / Franquias</h2></div>
+    <div class="row" style="margin-bottom:16px">
+      <div class="field" style="flex:1;min-width:200px"><label>Nome da loja</label><input id="novaLojaNome" placeholder="Ex: TXC Araguaína"/></div>
+      <div class="field" style="min-width:160px"><label>Código (login dos vendedores)</label><input id="novaLojaCodigo" placeholder="Ex: TXC2024" style="text-transform:uppercase"/></div>
+      <button class="btn good" onclick="criarLoja()">+ Criar loja</button>
+    </div>
+    <div id="tabelaLojas"><div class="hint">Carregando lojas...</div></div>
+  </div>
+
+  <!-- Usuários -->
+  <div class="card">
+    <div class="cardHead"><h2>👥 Todos os usuários</h2><button class="btn" onclick="carregarTudo()">↻ Atualizar</button></div>
+    <div id="tabelaUsuarios"><div class="hint">Carregando usuários...</div></div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut }
+    from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  import { getFirestore, collection, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc, query, where, addDoc }
+    from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCTjYwOpMpwhGbrsUFPOgO2V-GXAwfcubA",
+    authDomain: "omnia-3b32b.firebaseapp.com",
+    projectId: "omnia-3b32b",
+    storageBucket: "omnia-3b32b.firebasestorage.app",
+    messagingSenderId: "858764463578",
+    appId: "1:858764463578:web:1fabf841013e2053bd44e3"
+  };
+
+  const SUPER_ADMIN_EMAIL = "davi.vieira.each@gmail.com";
+
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+
+  let LOJAS = [];
+  let USERS = [];
+
+  function showLoading(m){ document.getElementById("loadingScreen").classList.add("show"); document.getElementById("loadingMsg").textContent=m||"Carregando..."; }
+  function hideLoading(){ document.getElementById("loadingScreen").classList.remove("show"); }
+
+  onAuthStateChanged(auth, async (user)=>{
+    if(!user){ window.location.href="./login.html"; return; }
+    const isSuper = (user.email||"").toLowerCase() === SUPER_ADMIN_EMAIL;
+    let prof = null;
+    try{ const s=await getDoc(doc(db,"users",user.uid)); if(s.exists()) prof=s.data(); }catch(e){}
+    if(!isSuper && prof?.role!=="superadmin"){
+      alert("Acesso restrito ao Super Admin.");
+      window.location.href="./login.html"; return;
+    }
+    // Garante o registro de superadmin
+    if(isSuper && (!prof || prof.role!=="superadmin")){
+      try{ await setDoc(doc(db,"users",user.uid), { uid:user.uid, name:prof?.name||"Super Admin", email:user.email, role:"superadmin", active:true, createdAt:prof?.createdAt||new Date().toISOString() }, {merge:true}); }catch(e){}
+    }
+    document.getElementById("meEmail").textContent = user.email;
+    carregarTudo();
+  });
+
+  window.sair = async function(){ await signOut(auth); window.location.href="./login.html"; };
+
+  window.carregarTudo = async function(){
+    showLoading("Carregando dados...");
+    try{
+      const ls = await getDocs(collection(db,"stores"));
+      LOJAS = []; ls.forEach(d=> LOJAS.push({ id:d.id, ...d.data() }));
+      const us = await getDocs(collection(db,"users"));
+      USERS = []; us.forEach(d=> USERS.push({ uid:d.id, ...d.data() }));
+      renderKpis(); renderLojas(); renderUsuarios();
+    }catch(e){ console.error(e); alert("Erro ao carregar. Veja as regras do Firestore."); }
+    hideLoading();
+  };
+
+  function renderKpis(){
+    const nLojas = LOJAS.length;
+    const nAdmins = USERS.filter(u=>u.role==="admin").length;
+    const nSellers = USERS.filter(u=>u.role==="seller").length;
+    document.getElementById("kpis").innerHTML = `
+      <div class="kpi"><div class="t">Lojas</div><div class="v">${nLojas}</div></div>
+      <div class="kpi"><div class="t">Administradores</div><div class="v">${nAdmins}</div></div>
+      <div class="kpi"><div class="t">Vendedores</div><div class="v">${nSellers}</div></div>
+      <div class="kpi"><div class="t">Usuários totais</div><div class="v">${USERS.length}</div></div>`;
+  }
+
+  function nomeLoja(id){ const l=LOJAS.find(x=>x.id===id); return l?(l.name||l.code):"—"; }
+
+  function renderLojas(){
+    const wrap = document.getElementById("tabelaLojas");
+    if(LOJAS.length===0){ wrap.innerHTML='<div class="hint">Nenhuma loja criada ainda. Crie a primeira acima.</div>'; return; }
+    const rows = LOJAS.map(l=>{
+      const qtd = USERS.filter(u=> (u.storeIds||[]).includes(l.id) || u.storeId===l.id).length;
+      return `<tr>
+        <td><b>${l.name||"—"}</b></td>
+        <td><span class="tag code">${l.code||"—"}</span></td>
+        <td>${qtd} usuário(s)</td>
+        <td><button class="btn bad" onclick="excluirLoja('${l.id}','${(l.name||"").replace(/'/g,"")}')">Excluir loja</button></td>
+      </tr>`;
+    }).join("");
+    wrap.innerHTML = `<table><thead><tr><th>Loja</th><th>Código</th><th>Usuários</th><th>Ações</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }
+
+  function renderUsuarios(){
+    const wrap = document.getElementById("tabelaUsuarios");
+    if(USERS.length===0){ wrap.innerHTML='<div class="hint">Nenhum usuário ainda.</div>'; return; }
+    const rows = USERS.map(u=>{
+      const roleTag = u.role==="superadmin" ? '<span class="tag super">⚡ Super</span>'
+                    : u.role==="admin" ? '<span class="tag admin">👑 ADM</span>'
+                    : '<span class="tag seller">🧑 Vendedor</span>';
+      // checkboxes de lojas (para admin)
+      const lojasChk = LOJAS.map(l=>{
+        const checked = (u.storeIds||[]).includes(l.id) ? "checked":"";
+        return `<label><input type="checkbox" ${checked} onchange="toggleLoja('${u.uid}','${l.id}',this.checked)"> ${l.name||l.code}</label>`;
+      }).join("");
+
+      let acoes = "";
+      if(u.role!=="superadmin"){
+        acoes = u.role==="admin"
+          ? `<button class="btn" onclick="setRole('${u.uid}','seller')">Tornar vendedor</button>`
+          : `<button class="btn warn" onclick="setRole('${u.uid}','admin')">Tornar ADM</button>`;
+        acoes += ` <button class="btn bad" onclick="excluirUser('${u.uid}','${(u.name||"").replace(/'/g,"")}')">Excluir</button>`;
+      }
+
+      return `<tr>
+        <td><b>${u.name||"—"}</b><br><span style="font-size:11px;color:#9db0d0">${u.email||""}</span></td>
+        <td>${roleTag}</td>
+        <td>${ u.role==="admin" ? `<div class="storesChk">${lojasChk}</div>` : (u.role==="seller" ? nomeLoja(u.storeId) : "—") }</td>
+        <td>${acoes}</td>
+      </tr>`;
+    }).join("");
+    wrap.innerHTML = `<table><thead><tr><th>Usuário</th><th>Perfil</th><th>Loja(s)</th><th>Ações</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }
+
+  window.criarLoja = async function(){
+    const nome = document.getElementById("novaLojaNome").value.trim();
+    const code = document.getElementById("novaLojaCodigo").value.trim().toUpperCase();
+    if(!nome||!code){ alert("Preencha nome e código da loja."); return; }
+    // checa código duplicado
+    const dup = await getDocs(query(collection(db,"stores"), where("code","==",code)));
+    if(!dup.empty){ alert("Já existe uma loja com esse código."); return; }
+    showLoading("Criando loja...");
+    try{
+      await addDoc(collection(db,"stores"), { name:nome, code:code, createdAt:new Date().toISOString() });
+      document.getElementById("novaLojaNome").value="";
+      document.getElementById("novaLojaCodigo").value="";
+      await carregarTudo();
+    }catch(e){ console.error(e); alert("Erro ao criar loja."); hideLoading(); }
+  };
+
+  window.excluirLoja = async function(id, nome){
+    if(!confirm(`Excluir a loja "${nome}"? Os usuários dela ficam sem loja. Esta ação não pode ser desfeita.`)) return;
+    showLoading("Excluindo loja...");
+    try{ await deleteDoc(doc(db,"stores",id)); await carregarTudo(); }
+    catch(e){ console.error(e); alert("Erro ao excluir."); hideLoading(); }
+  };
+
+  window.setRole = async function(uid, role){
+    const txt = role==="admin" ? "tornar ADM" : "tornar vendedor";
+    if(!confirm(`Deseja ${txt} este usuário?`)) return;
+    showLoading("Atualizando...");
+    try{ await updateDoc(doc(db,"users",uid), { role }); await carregarTudo(); }
+    catch(e){ console.error(e); alert("Erro."); hideLoading(); }
+  };
+
+  window.toggleLoja = async function(uid, storeId, checked){
+    const u = USERS.find(x=>x.uid===uid); if(!u) return;
+    let ids = Array.isArray(u.storeIds) ? [...u.storeIds] : [];
+    if(checked){ if(!ids.includes(storeId)) ids.push(storeId); }
+    else { ids = ids.filter(x=>x!==storeId); }
+    try{
+      const patch = { storeIds: ids };
+      if(!u.storeId && ids.length) patch.storeId = ids[0];
+      await updateDoc(doc(db,"users",uid), patch);
+      u.storeIds = ids; // atualiza local
+    }catch(e){ console.error(e); alert("Erro ao vincular loja."); }
+  };
+
+  window.excluirUser = async function(uid, nome){
+    if(!confirm(`Excluir "${nome}" permanentemente?`)) return;
+    showLoading("Excluindo...");
+    try{ await deleteDoc(doc(db,"users",uid)); await carregarTudo(); }
+    catch(e){ console.error(e); alert("Erro."); hideLoading(); }
+  };
+</script>
+</body>
+</html>
