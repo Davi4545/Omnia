@@ -141,7 +141,7 @@
     lojaAtual = LOJAS[0].id;
     if(LOJAS.length>1){
       const sel=document.getElementById("lojaSelect");
-      sel.innerHTML = LOJAS.map(l=>`<option value="${l.id}">${l.name||l.code}</option>`).join("");
+      sel.innerHTML = LOJAS.map(l=>`<option value="${l.id}" style="background:#1a1f2b;color:#e7eefc">${l.name||l.code}</option>`).join("");
       document.getElementById("lojaSelectorCard").style.display="block";
     }
     carregarVendedores();
