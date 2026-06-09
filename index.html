@@ -798,11 +798,6 @@
 <div class="rightTop">
 <div class="chip">Status: <b id="statusChip">Online</b></div>
 <button class="btn" id="btnRanking">Ranking</button>
-<button class="btn" id="btnData">Dados</button>
-<button class="btn" id="btnGoals">Metas</button>
-<button class="btn" id="btnGoalRank">Ranking Metas</button>
-<button class="btn" id="btnNoConv">Não Convertidos</button>
-<button class="btn" id="btnSeller">Arena de Resultados</button>
 <button class="btn warn" id="btnEditSelosFixo" style="display:none" onclick="if(window.abrirEditorSelos)window.abrirEditorSelos()">⚙️ Editar selos</button>
 <button class="btn" id="btnSettings">Config</button>
 <button class="btn install" id="btnInstall" style="display:none">Instalar</button>
@@ -4000,11 +3995,11 @@
   $("tabNoConv").addEventListener("click", ()=> setTab("noConv"));
   $("tabSeller").addEventListener("click", ()=> setTab("seller"));
 
-  $("btnData").addEventListener("click", ()=> setTab("dados"));
-  $("btnGoals").addEventListener("click", ()=> setTab("metas"));
-  $("btnGoalRank").addEventListener("click", ()=> setTab("metasRank"));
-  $("btnNoConv").addEventListener("click", ()=> setTab("noConv"));
-  $("btnSeller").addEventListener("click", ()=> setTab("seller"));
+  $("btnData")?.addEventListener("click", ()=> setTab("dados"));
+  $("btnGoals")?.addEventListener("click", ()=> setTab("metas"));
+  $("btnGoalRank")?.addEventListener("click", ()=> setTab("metasRank"));
+  $("btnNoConv")?.addEventListener("click", ()=> setTab("noConv"));
+  $("btnSeller")?.addEventListener("click", ()=> setTab("seller"));
 
   // Data inputs
   $("dataView").addEventListener("change", renderData);
@@ -4626,5 +4621,4 @@
 </script>
 </body>
 </html>
- 
  
