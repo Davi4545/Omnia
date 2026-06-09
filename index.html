@@ -4621,6 +4621,19 @@
       }
     }
 
+    // Botão "Editar selos" no topo — só para admin
+    if(isAdmin && !document.getElementById("btnEditSelosTop")){
+      const ref = document.getElementById("btnSettings");
+      if(ref && ref.parentNode){
+        const b = document.createElement("button");
+        b.className = "btn warn";
+        b.id = "btnEditSelosTop";
+        b.textContent = "⚙️ Editar selos";
+        b.onclick = ()=>{ try{ window.abrirEditorSelos(); }catch(e){ alert("Não foi possível abrir o editor."); } };
+        ref.parentNode.insertBefore(b, ref);
+      }
+    }
+
     // Vendedor: esconde abas/botões de visão geral da loja
     if(!isAdmin){
       const esconder = ["btnData","btnGoals","btnGoalRank","btnNoConv","btnRanking",
