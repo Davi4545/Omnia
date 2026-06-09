@@ -814,7 +814,12 @@
   background: linear-gradient(135deg, #ffffff, #dbe7ff 45%, #c7d2fe);
   box-shadow: 0 0 0 1px rgba(11,16,32,.12) inset, 0 6px 18px rgba(59,130,246,.20);
 }
+  .dashGrid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:16px; }
+  .dashChartCard{ background: var(--card, rgba(255,255,255,.04)); border:1px solid var(--line, rgba(255,255,255,.08)); border-radius:14px; padding:14px 16px; }
+  .dashChartCard h3{ margin-bottom:10px; }
+  @media (max-width: 760px){ .dashGrid{ grid-template-columns:1fr; } }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
 <body>
 <header>
@@ -845,6 +850,7 @@
 <button class="tab" id="tabMetas">Metas</button>
 <button class="tab" id="tabMetasRank">Ranking Metas</button>
 <button class="tab" id="tabNoConv">Não Convertidos</button>
+<button class="tab" id="tabDashboard">📊 Dashboard</button>
 <button class="tab" id="tabSeller">Arena de Resultados</button>
 </div>
 </div>
@@ -1213,6 +1219,54 @@
 </div>
 </section>
 </div>
+<!-- DASHBOARD -->
+<div id="viewDashboard" style="display:none">
+<section class="card">
+<div class="cardHeader">
+<h2>📊 Dashboard</h2>
+<div class="rowRight">
+<div class="field" style="min-width:160px">
+<label>Mês</label>
+<input id="dashMonth" type="month"/>
+</div>
+</div>
+</div>
+<div class="cardBody">
+<div id="dashScopeHint" class="hint" style="margin-bottom:10px"></div>
+<div class="kpis" id="dashKpis"></div>
+
+<div class="divider"></div>
+
+<div class="dashGrid">
+  <div class="dashChartCard">
+    <h3 class="arenaSectionTitle">🏆 Ranking de vendedores (vendas no mês)</h3>
+    <div style="position:relative;height:260px"><canvas id="chartRanking"></canvas></div>
+  </div>
+  <div class="dashChartCard">
+    <h3 class="arenaSectionTitle">🎯 Conversão por vendedor (%)</h3>
+    <div style="position:relative;height:260px"><canvas id="chartConversao"></canvas></div>
+  </div>
+  <div class="dashChartCard">
+    <h3 class="arenaSectionTitle">💰 Faturamento por vendedor</h3>
+    <div style="position:relative;height:260px"><canvas id="chartFaturamento"></canvas></div>
+  </div>
+  <div class="dashChartCard">
+    <h3 class="arenaSectionTitle">🎟️ Ticket médio por vendedor</h3>
+    <div style="position:relative;height:260px"><canvas id="chartTicket"></canvas></div>
+  </div>
+  <div class="dashChartCard">
+    <h3 class="arenaSectionTitle">📅 Vendas por dia (mês selecionado)</h3>
+    <div style="position:relative;height:260px"><canvas id="chartDiario"></canvas></div>
+  </div>
+  <div class="dashChartCard">
+    <h3 class="arenaSectionTitle">📆 Vendas por mês (ano)</h3>
+    <div style="position:relative;height:260px"><canvas id="chartMensal"></canvas></div>
+  </div>
+</div>
+</div>
+</section>
+</div>
+
 <!-- VENDEDOR -->
 <div id="viewSeller" style="display:none">
 <section class="card">
@@ -2914,6 +2968,144 @@
     return arr;
   }
 
+  // ======================
+  // DASHBOARD (gráficos)
+  // ======================
+  let dashCharts = {};
+  function destroyDashCharts(){
+    Object.values(dashCharts).forEach(c=>{ try{ c.destroy(); }catch(e){} });
+    dashCharts = {};
+  }
+
+  function renderDashboard(){
+    if(typeof Chart === "undefined"){
+      const k=$("dashKpis"); if(k) k.innerHTML='<div class="hint">Carregando biblioteca de gráficos... recarregue a página se demorar.</div>';
+      return;
+    }
+
+    const mkInput = $("dashMonth");
+    if(mkInput && !mkInput.value) mkInput.value = monthKey();
+    const mk = (mkInput && mkInput.value) || monthKey();
+    const ano = mk.slice(0,4);
+
+    // Escopo: admin vê todos; vendedor vê só ele
+    const isAdmin = (window.OMNIA_USER && (window.OMNIA_USER.role==="admin" || window.OMNIA_USER.role==="superadmin"));
+    const meuNome = window.OMNIA_USER && window.OMNIA_USER.name;
+
+    // Descobre o sellerId do vendedor logado (casa pelo nome, já que o login é separado da operação)
+    let meuSellerId = null;
+    if(!isAdmin && meuNome){
+      const s = (state.sellers||[]).find(x=> (x.name||"").toLowerCase() === String(meuNome).toLowerCase());
+      if(s) meuSellerId = s.id;
+    }
+
+    const hint = $("dashScopeHint");
+    if(hint) hint.textContent = isAdmin ? "Visão geral da loja (todos os vendedores)." : `Seus resultados${meuSellerId? "" : " — (não encontramos seu cadastro na operação; peça ao gestor para te adicionar com o mesmo nome)"}.`;
+
+    // Filtra registros do mês conforme escopo
+    let recsMes = (state.records||[]).filter(r=> r.monthKey === mk);
+    if(!isAdmin){
+      recsMes = meuSellerId ? recsMes.filter(r=> r.sellerId===meuSellerId) : [];
+    }
+
+    // KPIs do topo
+    const a = agg(recsMes);
+    const tm = a.sales>0 ? (a.revenue/a.sales) : 0;
+    const kp = $("dashKpis");
+    if(kp){
+      kp.innerHTML = "";
+      const cards = [
+        { t:"Atendimentos", v: formatNum(a.atend) },
+        { t:"Vendas", v: formatNum(a.sales) },
+        { t:"Conversão", v: a.conv.toFixed(1)+"%", cls:"good" },
+        { t:"Faturamento", v: formatMoney(a.revenue) },
+        { t:"Ticket médio", v: formatMoney(tm) },
+      ];
+      for(const c of cards){
+        const d=document.createElement("div"); d.className="kpi";
+        d.innerHTML=`<div class="t">${c.t}</div><div class="v ${c.cls||""}">${c.v}</div>`;
+        kp.appendChild(d);
+      }
+    }
+
+    destroyDashCharts();
+
+    // cores do tema
+    const css = getComputedStyle(document.documentElement);
+    const corTexto = (css.getPropertyValue('--text')||'#e7eefc').trim();
+    const corLinha = 'rgba(128,128,128,.18)';
+    const paleta = ['#3b82f6','#22c55e','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#ec4899','#84cc16','#f97316','#14b8a6'];
+    Chart.defaults.color = corTexto;
+    Chart.defaults.font.family = "system-ui,-apple-system,Segoe UI,Roboto,Arial";
+
+    // por vendedor (só admin tem vários; vendedor terá 1)
+    const porVendedor = aggBySeller(recsMes).map(row=>({
+      nome: (getSeller(row.sellerId)?.name)||"Vendedor",
+      ...row,
+      tm: row.sales>0 ? (row.revenue/row.sales) : 0
+    }));
+
+    // 1. Ranking por vendas
+    const rk = [...porVendedor].sort((x,y)=>y.sales-x.sales);
+    if($("chartRanking")) dashCharts.ranking = new Chart($("chartRanking"), {
+      type:'bar',
+      data:{ labels: rk.map(r=>r.nome), datasets:[{ label:'Vendas', data: rk.map(r=>r.sales), backgroundColor: paleta[0], borderRadius:6 }] },
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{grid:{color:corLinha},ticks:{precision:0}}, x:{grid:{display:false}} } }
+    });
+
+    // 2. Faturamento por vendedor
+    const fat = [...porVendedor].sort((x,y)=>y.revenue-x.revenue);
+    if($("chartFaturamento")) dashCharts.fat = new Chart($("chartFaturamento"), {
+      type:'bar',
+      data:{ labels: fat.map(r=>r.nome), datasets:[{ label:'Faturamento', data: fat.map(r=>r.revenue), backgroundColor: paleta[1], borderRadius:6 }] },
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:(c)=>formatMoney(c.raw)}}}, scales:{ y:{grid:{color:corLinha},ticks:{callback:(v)=>'R$ '+formatNum(v)}}, x:{grid:{display:false}} } }
+    });
+
+    // 3. Vendas por dia do mês
+    const dias = daysInMonth(mk);
+    const labelsDias = Array.from({length:dias},(_,i)=>String(i+1));
+    const vendasDia = Array.from({length:dias},(_,i)=>{
+      const dk = mk+'-'+String(i+1).padStart(2,'0');
+      return recsMes.filter(r=> r.dateKey===dk && r.outcome==='sold').length;
+    });
+    if($("chartDiario")) dashCharts.dia = new Chart($("chartDiario"), {
+      type:'line',
+      data:{ labels: labelsDias, datasets:[{ label:'Vendas', data: vendasDia, borderColor: paleta[0], backgroundColor:'rgba(59,130,246,.15)', fill:true, tension:.3, pointRadius:2 }] },
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{grid:{color:corLinha},ticks:{precision:0}}, x:{grid:{display:false}} } }
+    });
+
+    // 4. Vendas por mês (ano todo)
+    const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+    const vendasMes = Array.from({length:12},(_,i)=>{
+      const mmk = ano+'-'+String(i+1).padStart(2,'0');
+      let rs = (state.records||[]).filter(r=> r.monthKey===mmk && r.outcome==='sold');
+      if(!isAdmin) rs = meuSellerId ? rs.filter(r=>r.sellerId===meuSellerId) : [];
+      return rs.length;
+    });
+    if($("chartMensal")) dashCharts.mes = new Chart($("chartMensal"), {
+      type:'bar',
+      data:{ labels: meses, datasets:[{ label:'Vendas', data: vendasMes, backgroundColor: paleta[4], borderRadius:6 }] },
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{grid:{color:corLinha},ticks:{precision:0}}, x:{grid:{display:false}} } }
+    });
+
+    // 5. Ticket médio por vendedor
+    const tk2 = [...porVendedor].sort((x,y)=>y.tm-x.tm);
+    if($("chartTicket")) dashCharts.ticket = new Chart($("chartTicket"), {
+      type:'bar',
+      data:{ labels: tk2.map(r=>r.nome), datasets:[{ label:'Ticket médio', data: tk2.map(r=>r.tm), backgroundColor: paleta[2], borderRadius:6 }] },
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:(c)=>formatMoney(c.raw)}}}, scales:{ y:{grid:{color:corLinha},ticks:{callback:(v)=>'R$ '+formatNum(v)}}, x:{grid:{display:false}} } }
+    });
+
+    // 6. Conversão por vendedor
+    const cv = [...porVendedor].sort((x,y)=>y.conv-x.conv);
+    if($("chartConversao")) dashCharts.conv = new Chart($("chartConversao"), {
+      type:'bar',
+      data:{ labels: cv.map(r=>r.nome), datasets:[{ label:'Conversão %', data: cv.map(r=>Number(r.conv.toFixed(1))), backgroundColor: paleta[3], borderRadius:6 }] },
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:(c)=>c.raw+'%'}}}, scales:{ y:{grid:{color:corLinha},max:100,ticks:{callback:(v)=>v+'%'}}, x:{grid:{display:false}} } }
+    });
+  }
+  window.renderDashboard = renderDashboard;
+
   function renderNoConv(){
     const { d, m, v } = getNoConvSelection();
 
@@ -3986,8 +4178,8 @@
 
   // Tabs/views
   function setTab(tab){
-    const viewIds = ["viewOps","viewDados","viewMetas","viewMetasRank","viewNoConv","viewSeller"];
-    const tabIds  = ["tabOps","tabDados","tabMetas","tabMetasRank","tabNoConv","tabSeller"];
+    const viewIds = ["viewOps","viewDados","viewMetas","viewMetasRank","viewNoConv","viewDashboard","viewSeller"];
+    const tabIds  = ["tabOps","tabDados","tabMetas","tabMetasRank","tabNoConv","tabDashboard","tabSeller"];
 
     // hide all views safely
     for(const vid of viewIds){
@@ -4013,6 +4205,7 @@
       else if(tab === "metas"){ show("viewMetas","tabMetas"); renderGoals(); }
       else if(tab === "metasRank"){ show("viewMetasRank","tabMetasRank"); renderMetaRank(); }
       else if(tab === "noConv"){ show("viewNoConv","tabNoConv"); renderNoConv(); }
+      else if(tab === "dashboard"){ show("viewDashboard","tabDashboard"); try{ renderDashboard(); }catch(err){ console.error("renderDashboard failed", err); } }
       else if(tab === "seller"){ show("viewSeller","tabSeller"); try{ renderSellerView(); }catch(err){ console.error("renderSellerView failed", err); try{ const v=document.getElementById("viewSeller"); if(v) v.style.display="block"; }catch{} } }
       else { show("viewOps","tabOps"); }
     }catch(err){
@@ -4027,6 +4220,8 @@
   $("tabMetas").addEventListener("click", ()=> setTab("metas"));
   $("tabMetasRank").addEventListener("click", ()=> setTab("metasRank"));
   $("tabNoConv").addEventListener("click", ()=> setTab("noConv"));
+  $("tabDashboard")?.addEventListener("click", ()=> setTab("dashboard"));
+  $("dashMonth")?.addEventListener("change", ()=>{ try{ renderDashboard(); }catch(e){} });
   $("tabSeller").addEventListener("click", ()=> setTab("seller"));
 
   $("btnData")?.addEventListener("click", ()=> setTab("dados"));
