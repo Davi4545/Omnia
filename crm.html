@@ -69,6 +69,12 @@
   .interItem{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px;margin-bottom:8px;font-size:13px;}
   .interItem .quando{font-size:11px;color:#9db0d0;}
   .fichaCol{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .acaoItem{display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px 14px;margin-bottom:8px;flex-wrap:wrap;}
+  .acaoItem .ai-info{font-size:13px;}
+  .acaoItem .ai-nome{font-weight:700;}
+  .acaoItem .ai-motivo{font-size:11px;color:#9db0d0;margin-top:2px;}
+  .secTitle{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:#9db0d0;font-weight:700;margin:18px 0 10px;}
+  .compraItem{display:flex;justify-content:space-between;gap:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px 12px;margin-bottom:6px;font-size:13px;}
   @media(max-width:720px){ .grid2{grid-template-columns:1fr;} .funil{grid-template-columns:1fr;} .fichaCol{grid-template-columns:1fr;} }
 </style>
 </head>
@@ -90,12 +96,23 @@
 
 <div class="wrap">
   <div class="tabs">
-    <button class="tab active" id="tabClientes" onclick="showTab('clientes')">👥 Clientes</button>
+    <button class="tab active" id="tabHoje" onclick="showTab('hoje')">⚡ Hoje</button>
+    <button class="tab" id="tabClientes" onclick="showTab('clientes')">👥 Clientes</button>
     <button class="tab" id="tabFunil" onclick="showTab('funil')">📊 Funil</button>
     <button class="tab" id="tabLembretes" onclick="showTab('lembretes')">🔔 Lembretes</button>
   </div>
 
-  <div id="viewClientes">
+  <!-- HOJE (ações do dia) -->
+  <div id="viewHoje">
+    <div class="kpis" id="hojeKpis"></div>
+    <div class="card">
+      <div class="cardHead"><h2>⚡ Ações de hoje</h2><button class="btn sm" onclick="renderHoje()">↻ Atualizar</button></div>
+      <div id="hojeConteudo"><div class="hint">Carregando...</div></div>
+    </div>
+  </div>
+
+  <!-- CLIENTES -->
+  <div id="viewClientes" style="display:none">
     <div class="kpis" id="clientesKpis"></div>
     <div class="card">
       <div class="cardHead">
@@ -109,6 +126,7 @@
     </div>
   </div>
 
+  <!-- FUNIL -->
   <div id="viewFunil" style="display:none">
     <div class="card">
       <div class="cardHead"><h2>📊 Funil de vendas</h2><span class="hint" style="padding:0">Arraste os cards entre as colunas</span></div>
@@ -120,6 +138,7 @@
     </div>
   </div>
 
+  <!-- LEMBRETES -->
   <div id="viewLembretes" style="display:none">
     <div class="card">
       <div class="cardHead"><h2>🎂 Aniversariantes do mês</h2></div>
@@ -154,12 +173,15 @@
         <select id="cliEtapa"><option value="lead">🔵 Lead</option><option value="negociacao">🟡 Negociação</option><option value="fechado">🟢 Fechado</option></select>
       </div>
     </div>
-    <div class="field"><label>Tags</label>
-      <div class="tagPicker">
-        <label><input type="checkbox" class="tagChk" value="vip"/> ⭐ VIP</label>
-        <label><input type="checkbox" class="tagChk" value="novo"/> 🆕 Novo</label>
-        <label><input type="checkbox" class="tagChk" value="fiel"/> 💚 Fiel</label>
-        <label><input type="checkbox" class="tagChk" value="inativo"/> 💤 Inativo</label>
+    <div class="grid2">
+      <div class="field"><label>Próximo contato (agendar)</label><input id="cliProx" type="date"/></div>
+      <div class="field"><label>Tags</label>
+        <div class="tagPicker">
+          <label><input type="checkbox" class="tagChk" value="vip"/> ⭐ VIP</label>
+          <label><input type="checkbox" class="tagChk" value="novo"/> 🆕 Novo</label>
+          <label><input type="checkbox" class="tagChk" value="fiel"/> 💚 Fiel</label>
+          <label><input type="checkbox" class="tagChk" value="inativo"/> 💤 Inativo</label>
+        </div>
       </div>
     </div>
     <div class="field"><label>Observações</label><textarea id="cliObs" rows="2" placeholder="Anotações..."></textarea></div>
@@ -172,7 +194,7 @@
 
 <!-- MODAL FICHA -->
 <div class="modalBack" id="modalFicha">
-  <div class="modal" style="max-width:680px">
+  <div class="modal" style="max-width:720px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
       <h2 id="fichaNome" style="font-size:20px;font-weight:900">—</h2>
       <button class="btn" onclick="fecharFicha()">✕</button>
@@ -180,15 +202,24 @@
     <div id="fichaTags" style="margin-bottom:16px"></div>
     <div class="fichaCol">
       <div>
-        <h3 class="hint" style="text-align:left;padding:4px 0;font-weight:700">DADOS</h3>
+        <h3 class="secTitle" style="margin-top:0">DADOS</h3>
         <div id="fichaDados" style="font-size:14px;line-height:1.9"></div>
         <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
           <button class="btn wa" id="fichaWhats">💬 WhatsApp</button>
           <button class="btn warn" id="fichaEditar">✏️ Editar</button>
+          <button class="btn bad sm" id="fichaExcluir">🗑 Excluir</button>
+        </div>
+
+        <h3 class="secTitle">💰 COMPRAS</h3>
+        <div id="fichaCompras"></div>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <input id="compraValor" placeholder="Valor (ex: 250,00)" style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:13px"/>
+          <input id="compraDesc" placeholder="O que comprou" style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:13px"/>
+          <button class="btn good sm" onclick="addCompra()">+</button>
         </div>
       </div>
       <div>
-        <h3 class="hint" style="text-align:left;padding:4px 0;font-weight:700">HISTÓRICO DE INTERAÇÕES</h3>
+        <h3 class="secTitle" style="margin-top:0">📋 INTERAÇÕES</h3>
         <div style="display:flex;gap:6px;margin-bottom:10px">
           <select id="interTipo" style="flex:0 0 auto;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:13px">
             <option value="📞 Ligação">📞 Ligação</option>
@@ -200,8 +231,33 @@
           <input id="interTexto" placeholder="O que rolou?" style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:13px"/>
           <button class="btn good sm" onclick="addInteracao()">+</button>
         </div>
-        <div id="fichaInteracoes" style="max-height:280px;overflow:auto"></div>
+        <div id="fichaInteracoes" style="max-height:340px;overflow:auto"></div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL WHATSAPP TEMPLATES -->
+<div class="modalBack" id="modalZap">
+  <div class="modal" style="max-width:480px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <h2 style="font-size:18px;font-weight:900">💬 Enviar WhatsApp</h2>
+      <button class="btn" onclick="fecharZap()">✕</button>
+    </div>
+    <p class="hint" style="text-align:left;padding:0 0 12px" id="zapPara">—</p>
+    <div class="field"><label>Modelo de mensagem</label>
+      <select id="zapModelo" onchange="preencherZap()">
+        <option value="oi">👋 Saudação simples</option>
+        <option value="aniversario">🎂 Aniversário</option>
+        <option value="posvenda">📦 Pós-venda</option>
+        <option value="reativacao">🔄 Reativação (sumiu)</option>
+        <option value="novidade">✨ Novidade / promoção</option>
+      </select>
+    </div>
+    <div class="field"><label>Mensagem (pode editar)</label><textarea id="zapTexto" rows="4"></textarea></div>
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button class="btn" onclick="fecharZap()">Cancelar</button>
+      <button class="btn wa" onclick="enviarZap()">💬 Abrir WhatsApp</button>
     </div>
   </div>
 </div>
@@ -227,10 +283,12 @@
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  let MY=null, STORE_ID=null, CLIENTES=[], clientesRef=null, fichaAtualId=null;
+  let MY=null, STORE_ID=null, LOJA_NOME="", CLIENTES=[], clientesRef=null, fichaAtualId=null, zapClienteId=null;
 
   function showLoading(m){ document.getElementById("loadingScreen").classList.add("show"); document.getElementById("loadingMsg").textContent=m||"Carregando..."; }
   function hideLoading(){ document.getElementById("loadingScreen").classList.remove("show"); }
+  function money(v){ return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"}); }
+  function brNum(s){ if(typeof s==="number") return s; s=(s||"").toString().trim().replace(/\./g,"").replace(",","."); const n=parseFloat(s); return isNaN(n)?0:n; }
 
   onAuthStateChanged(auth, async (user)=>{
     if(!user){ window.location.href="./login.html"; return; }
@@ -242,12 +300,12 @@
 
     if(!STORE_ID){
       hideLoading();
-      document.getElementById("tabelaClientes").innerHTML='<div class="hint">Nenhuma loja vinculada. Acesse o OMNIA e selecione a loja primeiro.</div>';
+      document.getElementById("hojeConteudo").innerHTML='<div class="hint">Nenhuma loja vinculada. Acesse o OMNIA e selecione a loja primeiro.</div>';
       document.getElementById("roleChip").textContent=prof.role; return;
     }
-    let lojaNome=STORE_ID;
-    try{ const ls=await getDoc(doc(db,"stores",STORE_ID)); if(ls.exists()) lojaNome=ls.data().name||ls.data().code||STORE_ID; }catch(e){}
-    document.getElementById("ctxInfo").textContent="Loja: "+lojaNome+" · "+(prof.name||prof.email);
+    LOJA_NOME=STORE_ID;
+    try{ const ls=await getDoc(doc(db,"stores",STORE_ID)); if(ls.exists()) LOJA_NOME=ls.data().name||ls.data().code||STORE_ID; }catch(e){}
+    document.getElementById("ctxInfo").textContent="Loja: "+LOJA_NOME+" · "+(prof.name||prof.email);
     document.getElementById("roleChip").textContent=prof.role==="admin"?"👑 Admin":(prof.role==="superadmin"?"⚡ Super":"🧑 Vendedor");
 
     clientesRef = collection(db,"stores",STORE_ID,"clientes");
@@ -256,7 +314,7 @@
       renderTudo();
       if(fichaAtualId) atualizarFichaAberta();
       hideLoading();
-    },(err)=>{ console.error(err); hideLoading(); document.getElementById("tabelaClientes").innerHTML='<div class="hint">Erro ao carregar. Verifique as regras do Firestore.</div>'; });
+    },(err)=>{ console.error(err); hideLoading(); document.getElementById("hojeConteudo").innerHTML='<div class="hint">Erro ao carregar. Verifique as regras do Firestore.</div>'; });
   });
 
   window.sair=async function(){ await signOut(auth); window.location.href="./login.html"; };
@@ -267,19 +325,66 @@
   }
 
   window.showTab=function(t){
-    ["clientes","funil","lembretes"].forEach(x=>{
+    ["hoje","clientes","funil","lembretes"].forEach(x=>{
       document.getElementById("view"+x.charAt(0).toUpperCase()+x.slice(1)).style.display=(x===t)?"block":"none";
       document.getElementById("tab"+x.charAt(0).toUpperCase()+x.slice(1)).classList.toggle("active",x===t);
     });
   };
 
-  function renderTudo(){ renderClientes(); renderFunil(); renderLembretes(); }
+  function renderTudo(){ renderHoje(); renderClientes(); renderFunil(); renderLembretes(); }
 
   const TAG_LABEL = { vip:'⭐ VIP', novo:'🆕 Novo', fiel:'💚 Fiel', inativo:'💤 Inativo' };
   function tagsHtml(tags){ return (tags||[]).map(t=>`<span class="tag ${t}">${TAG_LABEL[t]||t}</span>`).join(" "); }
-
-  // limpa telefone para link do whatsapp
   function zap(tel){ const n=(tel||"").replace(/\D/g,""); return n.length>=10 ? ("55"+n) : n; }
+  function totalGasto(c){ return (c.compras||[]).reduce((s,x)=>s+Number(x.valor||0),0); }
+  function primeiroNome(nome){ return (nome||"").trim().split(" ")[0] || "tudo bem"; }
+  function diasSem(c){ const at=c.atualizadoEm?new Date(c.atualizadoEm).getTime():0; return at? Math.floor((Date.now()-at)/(24*60*60*1000)) : 999; }
+
+  // ===== HOJE =====
+  window.renderHoje=function(){
+    const lista=clientesVisiveis();
+    const hoje=new Date();
+    const hojeStr=hoje.toISOString().slice(0,10);
+    const diaMes=hoje.getDate(), mes=hoje.getMonth()+1;
+
+    // aniversariantes de hoje
+    const aniversHoje=lista.filter(c=>{ if(!c.nascimento) return false; const p=c.nascimento.split("-"); return Number(p[1])===mes && Number(p[2])===diaMes; });
+    // contatos agendados para hoje ou atrasados
+    const agendados=lista.filter(c=> c.proximoContato && c.proximoContato<=hojeStr);
+    // negociações paradas (em negociação há 7+ dias sem update)
+    const paradas=lista.filter(c=> c.etapa==="negociacao" && diasSem(c)>=7);
+    // sumidos (fechados há 45+ dias)
+    const sumidos=lista.filter(c=> c.etapa==="fechado" && diasSem(c)>=45);
+
+    document.getElementById("hojeKpis").innerHTML=`
+      <div class="kpi"><div class="t">🎂 Aniversário hoje</div><div class="v">${aniversHoje.length}</div></div>
+      <div class="kpi"><div class="t">📅 Contatos agendados</div><div class="v">${agendados.length}</div></div>
+      <div class="kpi"><div class="t">⏳ Negociações paradas</div><div class="v">${paradas.length}</div></div>
+      <div class="kpi"><div class="t">🔄 Clientes sumidos</div><div class="v">${sumidos.length}</div></div>`;
+
+    const bloco=(titulo, arr, motivoFn, modelo)=>{
+      if(arr.length===0) return "";
+      return `<h3 class="secTitle">${titulo} (${arr.length})</h3>` + arr.map(c=>`
+        <div class="acaoItem">
+          <div class="ai-info">
+            <div class="ai-nome">${c.nome||"—"} ${tagsHtml(c.tags)}</div>
+            <div class="ai-motivo">${motivoFn(c)}</div>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button class="btn sm" onclick="abrirFicha('${c.id}')">Ver ficha</button>
+            <button class="btn wa sm" onclick="abrirZap('${c.id}','${modelo}')">💬 Chamar</button>
+          </div>
+        </div>`).join("");
+    };
+
+    let html="";
+    html+=bloco("🎂 Aniversariantes de hoje", aniversHoje, ()=>"Mande os parabéns!", "aniversario");
+    html+=bloco("📅 Contatos agendados", agendados, (c)=>"Agendado para "+(c.proximoContato? c.proximoContato.split("-").reverse().join("/"):""), "oi");
+    html+=bloco("⏳ Negociações paradas", paradas, (c)=>`Sem contato há ${diasSem(c)} dias`, "oi");
+    html+=bloco("🔄 Clientes que sumiram", sumidos, (c)=>`Última interação há ${diasSem(c)} dias`, "reativacao");
+
+    document.getElementById("hojeConteudo").innerHTML = html || '<div class="hint">🎉 Nada pendente para hoje! Tudo em dia.</div>';
+  };
 
   // ===== CLIENTES =====
   window.renderClientes=function(){
@@ -290,7 +395,7 @@
       <div class="kpi"><div class="t">Total</div><div class="v">${lista.length}</div></div>
       <div class="kpi"><div class="t">Leads</div><div class="v">${lista.filter(c=>c.etapa==="lead").length}</div></div>
       <div class="kpi"><div class="t">Negociação</div><div class="v">${lista.filter(c=>c.etapa==="negociacao").length}</div></div>
-      <div class="kpi"><div class="t">Fechados</div><div class="v">${lista.filter(c=>c.etapa==="fechado").length}</div></div>`;
+      <div class="kpi"><div class="t">Faturado (clientes)</div><div class="v" style="font-size:16px">${money(lista.reduce((s,c)=>s+totalGasto(c),0))}</div></div>`;
     if(filtrados.length===0){ document.getElementById("tabelaClientes").innerHTML='<div class="hint">Nenhum cliente. Clique em "+ Novo cliente".</div>'; return; }
     const etapaTag={ lead:'🔵 Lead', negociacao:'🟡 Negociação', fechado:'🟢 Fechado' };
     const rows=filtrados.sort((a,b)=>(a.nome||"").localeCompare(b.nome||"")).map(c=>`
@@ -298,24 +403,22 @@
         <td><b>${c.nome||"—"}</b> ${tagsHtml(c.tags)}</td>
         <td>${c.telefone||"—"}</td>
         <td><span class="tag">${etapaTag[c.etapa]||"—"}</span></td>
+        <td>${money(totalGasto(c))}</td>
         <td onclick="event.stopPropagation()">
-          <button class="btn wa sm" onclick="abrirWhats('${zap(c.telefone)}')">💬</button>
+          <button class="btn wa sm" onclick="abrirZap('${c.id}','oi')">💬</button>
         </td>
       </tr>`).join("");
-    document.getElementById("tabelaClientes").innerHTML=`<table><thead><tr><th>Nome</th><th>Telefone</th><th>Etapa</th><th>Zap</th></tr></thead><tbody>${rows}</tbody></table>`;
+    document.getElementById("tabelaClientes").innerHTML=`<table><thead><tr><th>Nome</th><th>Telefone</th><th>Etapa</th><th>Total gasto</th><th>Zap</th></tr></thead><tbody>${rows}</tbody></table>`;
   };
-
-  window.abrirWhats=function(num){ if(!num){ alert("Cliente sem telefone válido."); return; } window.open("https://wa.me/"+num,"_blank"); };
 
   window.abrirNovoCliente=function(){
     document.getElementById("modalTitulo").textContent="Novo cliente";
     document.getElementById("cliId").value="";
-    ["cliNome","cliTel","cliEmail","cliCpf","cliNasc","cliObs"].forEach(id=>document.getElementById(id).value="");
+    ["cliNome","cliTel","cliEmail","cliCpf","cliNasc","cliObs","cliProx"].forEach(id=>document.getElementById(id).value="");
     document.getElementById("cliEtapa").value="lead";
     document.querySelectorAll(".tagChk").forEach(ch=>ch.checked=false);
     document.getElementById("modalCliente").classList.add("show");
   };
-
   window.abrirEditarCliente=function(id){
     const c=CLIENTES.find(x=>x.id===id); if(!c) return;
     document.getElementById("modalTitulo").textContent="Editar cliente";
@@ -326,11 +429,11 @@
     document.getElementById("cliCpf").value=c.cpf||"";
     document.getElementById("cliNasc").value=c.nascimento||"";
     document.getElementById("cliEtapa").value=c.etapa||"lead";
+    document.getElementById("cliProx").value=c.proximoContato||"";
     document.getElementById("cliObs").value=c.obs||"";
     document.querySelectorAll(".tagChk").forEach(ch=> ch.checked=(c.tags||[]).includes(ch.value));
     document.getElementById("modalCliente").classList.add("show");
   };
-
   window.fecharModal=function(){ document.getElementById("modalCliente").classList.remove("show"); };
 
   window.salvarCliente=async function(){
@@ -347,9 +450,11 @@
       cpf:document.getElementById("cliCpf").value.trim(),
       nascimento:document.getElementById("cliNasc").value,
       etapa:document.getElementById("cliEtapa").value,
+      proximoContato:document.getElementById("cliProx").value,
       obs:document.getElementById("cliObs").value.trim(),
       tags,
       interacoes: existente?.interacoes || [],
+      compras: existente?.compras || [],
       ownerUid: existente?.ownerUid || MY.uid,
       ownerNome: existente?.ownerNome || MY.name || MY.email,
       criadoEm: existente?.criadoEm || new Date().toISOString(),
@@ -369,11 +474,7 @@
   };
 
   // ===== FICHA =====
-  window.abrirFicha=function(id){
-    fichaAtualId=id;
-    renderFicha();
-    document.getElementById("modalFicha").classList.add("show");
-  };
+  window.abrirFicha=function(id){ fichaAtualId=id; renderFicha(); document.getElementById("modalFicha").classList.add("show"); };
   window.fecharFicha=function(){ fichaAtualId=null; document.getElementById("modalFicha").classList.remove("show"); };
   function atualizarFichaAberta(){ if(fichaAtualId && document.getElementById("modalFicha").classList.contains("show")) renderFicha(); }
 
@@ -382,16 +483,29 @@
     document.getElementById("fichaNome").textContent=c.nome||"—";
     document.getElementById("fichaTags").innerHTML=tagsHtml(c.tags) || '<span class="hint" style="padding:0">Sem tags</span>';
     const etapaTxt={ lead:'🔵 Lead', negociacao:'🟡 Negociação', fechado:'🟢 Fechado' }[c.etapa]||"—";
+    const compras=c.compras||[];
+    const total=totalGasto(c);
+    const ticket=compras.length? total/compras.length : 0;
     document.getElementById("fichaDados").innerHTML=`
       📱 <b>${c.telefone||"—"}</b><br>
       📧 ${c.email||"—"}<br>
       🪪 ${c.cpf||"—"}<br>
       🎂 ${c.nascimento? c.nascimento.split("-").reverse().join("/") : "—"}<br>
       📊 ${etapaTxt}<br>
+      ${c.proximoContato? "📅 Próximo contato: <b>"+c.proximoContato.split("-").reverse().join("/")+"</b><br>":""}
       👤 Responsável: ${c.ownerNome||"—"}<br>
       ${c.obs? "📝 "+c.obs : ""}`;
-    document.getElementById("fichaWhats").onclick=()=> abrirWhats(zap(c.telefone));
+    document.getElementById("fichaWhats").onclick=()=> abrirZap(c.id,'oi');
     document.getElementById("fichaEditar").onclick=()=>{ fecharFicha(); abrirEditarCliente(c.id); };
+    document.getElementById("fichaExcluir").onclick=()=> excluirCliente(c.id, c.nome||"");
+
+    // compras
+    const compHtml = compras.length? `
+      <div style="font-size:12px;color:#9db0d0;margin-bottom:6px">Total: <b style="color:#7fffc0">${money(total)}</b> · ${compras.length} compra(s) · Ticket médio ${money(ticket)}</div>` +
+      compras.slice().sort((a,b)=>(b.ts||0)-(a.ts||0)).map(x=>`
+        <div class="compraItem"><span>${x.desc||"Compra"} <span style="color:#9db0d0;font-size:11px">${x.ts? "· "+new Date(x.ts).toLocaleDateString("pt-BR"):""}</span></span><b>${money(x.valor)}</b></div>`).join("")
+      : '<div class="hint" style="padding:6px 0">Nenhuma compra registrada.</div>';
+    document.getElementById("fichaCompras").innerHTML=compHtml;
 
     const inter=(c.interacoes||[]).slice().sort((a,b)=>(b.ts||0)-(a.ts||0));
     document.getElementById("fichaInteracoes").innerHTML = inter.length? inter.map(i=>`
@@ -406,14 +520,58 @@
     const tipo=document.getElementById("interTipo").value;
     const texto=document.getElementById("interTexto").value.trim();
     if(!texto){ alert("Escreva o que aconteceu."); return; }
-    const nova={ tipo, texto, quem:MY.name||MY.email, ts:Date.now() };
-    const interacoes=[...(c.interacoes||[]), nova];
+    const interacoes=[...(c.interacoes||[]), { tipo, texto, quem:MY.name||MY.email, ts:Date.now() }];
     showLoading("Salvando...");
-    try{
-      await setDoc(doc(clientesRef,c.id),{ ...c, interacoes, atualizadoEm:new Date().toISOString() });
-      document.getElementById("interTexto").value="";
-    }catch(e){ console.error(e); alert("Erro ao registrar."); }
+    try{ await setDoc(doc(clientesRef,c.id),{ ...c, interacoes, atualizadoEm:new Date().toISOString() }); document.getElementById("interTexto").value=""; }
+    catch(e){ console.error(e); alert("Erro."); }
     hideLoading();
+  };
+
+  window.addCompra=async function(){
+    const c=CLIENTES.find(x=>x.id===fichaAtualId); if(!c) return;
+    const valor=brNum(document.getElementById("compraValor").value);
+    const desc=document.getElementById("compraDesc").value.trim();
+    if(valor<=0){ alert("Digite um valor válido."); return; }
+    const compras=[...(c.compras||[]), { valor, desc:desc||"Compra", ts:Date.now() }];
+    showLoading("Salvando...");
+    try{ await setDoc(doc(clientesRef,c.id),{ ...c, compras, atualizadoEm:new Date().toISOString() }); document.getElementById("compraValor").value=""; document.getElementById("compraDesc").value=""; }
+    catch(e){ console.error(e); alert("Erro."); }
+    hideLoading();
+  };
+
+  // ===== WHATSAPP COM MODELOS =====
+  const MODELOS = {
+    oi: (c)=>`Oi ${primeiroNome(c.nome)}! Tudo bem? Aqui é da ${LOJA_NOME}. 😊`,
+    aniversario: (c)=>`Feliz aniversário, ${primeiroNome(c.nome)}! 🎂🎉 A equipe da ${LOJA_NOME} deseja um dia incrível pra você! Passa aqui pra gente comemorar com um mimo especial. 🎁`,
+    posvenda: (c)=>`Oi ${primeiroNome(c.nome)}! Aqui é da ${LOJA_NOME}. Tudo certo com sua última compra? Qualquer coisa que precisar, estamos à disposição! 😊`,
+    reativacao: (c)=>`Oi ${primeiroNome(c.nome)}! Sentimos sua falta aqui na ${LOJA_NOME}. 💚 Chegaram novidades que têm tudo a ver com você — quer dar uma olhada?`,
+    novidade: (c)=>`Oi ${primeiroNome(c.nome)}! Acabou de chegar novidade na ${LOJA_NOME} e lembramos de você. ✨ Quer que eu separe algo especial?`
+  };
+
+  window.abrirZap=function(id, modelo){
+    const c=CLIENTES.find(x=>x.id===id); if(!c){ return; }
+    if(!zap(c.telefone)){ alert("Cliente sem telefone válido."); return; }
+    zapClienteId=id;
+    document.getElementById("zapPara").textContent="Para: "+(c.nome||"")+" · "+(c.telefone||"");
+    document.getElementById("zapModelo").value=modelo||"oi";
+    preencherZap();
+    document.getElementById("modalZap").classList.add("show");
+  };
+  window.preencherZap=function(){
+    const c=CLIENTES.find(x=>x.id===zapClienteId); if(!c) return;
+    const m=document.getElementById("zapModelo").value;
+    document.getElementById("zapTexto").value=(MODELOS[m]||MODELOS.oi)(c);
+  };
+  window.fecharZap=function(){ zapClienteId=null; document.getElementById("modalZap").classList.remove("show"); };
+  window.enviarZap=async function(){
+    const c=CLIENTES.find(x=>x.id===zapClienteId); if(!c) return;
+    const texto=document.getElementById("zapTexto").value.trim();
+    const url="https://wa.me/"+zap(c.telefone)+"?text="+encodeURIComponent(texto);
+    window.open(url,"_blank");
+    // registra como interação automaticamente
+    const interacoes=[...(c.interacoes||[]), { tipo:"💬 WhatsApp", texto:"Mensagem enviada: "+texto.slice(0,60)+(texto.length>60?"...":""), quem:MY.name||MY.email, ts:Date.now() }];
+    try{ await setDoc(doc(clientesRef,c.id),{ ...c, interacoes, atualizadoEm:new Date().toISOString() }); }catch(e){}
+    fecharZap();
   };
 
   // ===== FUNIL (drag & drop) =====
@@ -421,15 +579,13 @@
   window.permitirDrop=function(ev){ ev.preventDefault(); ev.currentTarget.classList.add("dragover"); };
   window.sairDrop=function(ev){ ev.currentTarget.classList.remove("dragover"); };
   window.soltarCard=async function(ev,etapa){
-    ev.preventDefault();
-    ev.currentTarget.classList.remove("dragover");
+    ev.preventDefault(); ev.currentTarget.classList.remove("dragover");
     if(!dragId) return;
     const c=CLIENTES.find(x=>x.id===dragId); if(!c||c.etapa===etapa){ dragId=null; return; }
     showLoading("Movendo...");
     try{ await setDoc(doc(clientesRef,dragId),{ ...c, etapa, atualizadoEm:new Date().toISOString() }); }catch(e){ console.error(e); }
     dragId=null; hideLoading();
   };
-
   function renderFunil(){
     const lista=clientesVisiveis();
     const cols={ lead:[], negociacao:[], fechado:[] };
@@ -440,7 +596,7 @@
     const card=(c)=>`
       <div class="leadCard" draggable="true" data-id="${c.id}" ondragstart="iniciarDrag(event,'${c.id}')" ondragend="fimDrag(event)" onclick="abrirFicha('${c.id}')">
         <div class="nm">${c.nome||"—"} ${tagsHtml(c.tags)}</div>
-        <div class="meta">${c.telefone||""}</div>
+        <div class="meta">${c.telefone||""} ${totalGasto(c)>0? "· "+money(totalGasto(c)):""}</div>
       </div>`;
     document.getElementById("colLead").innerHTML=cols.lead.map(card).join("")||'<div class="hint">Vazio</div>';
     document.getElementById("colNeg").innerHTML=cols.negociacao.map(card).join("")||'<div class="hint">Vazio</div>';
@@ -456,13 +612,12 @@
     const aniv=lista.filter(c=>{ if(!c.nascimento) return false; return Number((c.nascimento.split("-")[1])||0)===mesAtual; })
                     .sort((a,b)=>Number(a.nascimento.split("-")[2])-Number(b.nascimento.split("-")[2]));
     document.getElementById("aniversariantes").innerHTML = aniv.length? `<table><thead><tr><th>Dia</th><th>Nome</th><th>Telefone</th><th>Zap</th></tr></thead><tbody>${
-      aniv.map(c=>`<tr><td><b>${c.nascimento.split("-")[2]}</b></td><td>${c.nome}</td><td>${c.telefone||"—"}</td><td><button class="btn wa sm" onclick="abrirWhats('${zap(c.telefone)}')">💬</button></td></tr>`).join("")
+      aniv.map(c=>`<tr><td><b>${c.nascimento.split("-")[2]}</b></td><td>${c.nome}</td><td>${c.telefone||"—"}</td><td><button class="btn wa sm" onclick="abrirZap('${c.id}','aniversario')">💬</button></td></tr>`).join("")
     }</tbody></table>` : '<div class="hint">Nenhum aniversariante este mês.</div>';
-
     const agora=Date.now();
     const pos=lista.filter(c=>{ if(c.etapa!=="fechado") return false; const at=c.atualizadoEm?new Date(c.atualizadoEm).getTime():0; return (agora-at)>30*24*60*60*1000; });
     document.getElementById("posVenda").innerHTML = pos.length? `<table><thead><tr><th>Nome</th><th>Telefone</th><th>Última atualização</th><th>Zap</th></tr></thead><tbody>${
-      pos.map(c=>`<tr><td><b>${c.nome}</b></td><td>${c.telefone||"—"}</td><td>${c.atualizadoEm?new Date(c.atualizadoEm).toLocaleDateString("pt-BR"):"—"}</td><td><button class="btn wa sm" onclick="abrirWhats('${zap(c.telefone)}')">💬</button></td></tr>`).join("")
+      pos.map(c=>`<tr><td><b>${c.nome}</b></td><td>${c.telefone||"—"}</td><td>${c.atualizadoEm?new Date(c.atualizadoEm).toLocaleDateString("pt-BR"):"—"}</td><td><button class="btn wa sm" onclick="abrirZap('${c.id}','posvenda')">💬</button></td></tr>`).join("")
     }</tbody></table>` : '<div class="hint">Nenhum cliente para pós-venda agora.</div>';
   }
 </script>
