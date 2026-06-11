@@ -2693,9 +2693,12 @@
   }
 
   function renderVendorGoals(){
-    const mk = $("goalMonth").value || monthKey();
     const d = getVendorDivisor();
-    $("goalVendorDivisor").value = String(d).replace(".",",");
+    // só reescreve o campo se ele NÃO estiver focado (pessoa digitando)
+    const inp = $("goalVendorDivisor");
+    if(inp && document.activeElement !== inp){
+      inp.value = String(d).replace(".",",");
+    }
 
     const sel = $("goalVendorSelect");
     sel.innerHTML = "";
@@ -2708,11 +2711,25 @@
     }
     if(!sel.value && act[0]) sel.value = act[0].id;
 
+    const mk = $("goalMonth").value || monthKey();
     const sid = sel.value;
     const ov = getVendorOverride(mk, sid);
-    $("goalVendorMonthlyOverride").value = ov>0 ? String(ov).replace(".",",") : "";
+    const ovInp = $("goalVendorMonthlyOverride");
+    if(ovInp && document.activeElement !== ovInp){
+      ovInp.value = ov>0 ? String(ov).replace(".",",") : "";
+    }
+
+    renderVendorGoalsKpisOnly();
+  }
+
+  // Recalcula só os KPIs do vendedor, sem tocar nos inputs (usado enquanto digita)
+  function renderVendorGoalsKpisOnly(){
+    const mk = $("goalMonth").value || monthKey();
+    const sel = $("goalVendorSelect");
+    const sid = sel ? sel.value : "";
 
     const kpis = $("kpisVendorGoals");
+    if(!kpis) return;
     kpis.innerHTML = "";
 
     const g = getGoalsForMonth(mk);
@@ -4273,10 +4290,14 @@
 
   // Vendor goals
   $("goalVendorDivisor").addEventListener("input", ()=>{
-    const d = parseBRNumber($("goalVendorDivisor").value||"");
-    if(d>0) state.options.vendorDivisor = d;
+    const raw = ($("goalVendorDivisor").value||"").trim();
+    const d = parseBRNumber(raw);
+    // Campo vazio = volta ao automático (0). Valor válido = usa ele.
+    state.options.vendorDivisor = (raw==="" ? 0 : (d>0 ? d : 0));
     save(state);
-    try{ renderVendorGoals(); }catch{}
+    // NÃO re-renderiza o campo aqui (senão reescreve o que a pessoa está digitando).
+    // Atualiza só os KPIs dependentes, sem mexer no input.
+    try{ renderVendorGoalsKpisOnly(); }catch{}
   });
   $("goalVendorSelect").addEventListener("change", ()=>{ try{ renderVendorGoals(); }catch{} });
   $("goalVendorMonthlyOverride").addEventListener("input", ()=>{ /* visual only */ });
