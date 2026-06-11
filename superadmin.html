@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="pt-br">
 <head>
 <meta charset="utf-8"/>
@@ -41,6 +41,8 @@
   .loading.show{display:flex;}
   .spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,.12);border-top-color:#9b7bff;border-radius:50%;animation:spin .7s linear infinite;}
   @keyframes spin{to{transform:rotate(360deg)}}
+  select{color-scheme:dark;}
+  select option{background:#1a1f2b !important;color:#e7eefc !important;}
   .kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:18px;}
   .kpi{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px;}
   .kpi .t{font-size:11px;color:#9db0d0;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
@@ -63,6 +65,8 @@
   </div>
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
     <span class="chip">⚡ Super Admin</span>
+    <button class="btn" onclick="window.location.href='./crm.html'">📇 CRM</button>
+    <button class="btn" onclick="window.location.href='./index.html'">OMNIA</button>
     <button class="btn bad" onclick="sair()">Sair</button>
   </div>
 </header>
@@ -163,7 +167,7 @@
   // Seletor de loja para vendedor (Super Admin pode trocar)
   function selectLojaVendedor(u){
     const opts = LOJAS.map(l=>`<option value="${l.id}" ${u.storeId===l.id?"selected":""} style="background:#1a1f2b;color:#e7eefc">${l.name||l.code}</option>`).join("");
-    return `<select onchange="trocarLojaVendedor('${u.uid}', this.value)" style="padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:13px;">
+    return `<select onchange="trocarLojaVendedor('${u.uid}', this.value)" style="padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:#1a1f2b;color:#e7eefc;font-size:13px;color-scheme:dark;">
       <option value="" style="background:#1a1f2b;color:#e7eefc">— sem loja —</option>
       ${opts}
     </select>`;
