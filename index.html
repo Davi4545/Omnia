@@ -4738,15 +4738,6 @@
       return;
     }
 
-    // BLOQUEIO: e-mail não verificado não acessa (super admin é isento)
-    const ehSuper = (user.email||"").toLowerCase() === SUPER_ADMIN_EMAIL;
-    if(!ehSuper && !user.emailVerified){
-      alert("Seu e-mail ainda não foi verificado. Verifique sua caixa de entrada (e o spam) e clique no link antes de acessar.");
-      await signOut(auth);
-      window.location.href = "./login.html";
-      return;
-    }
-
     // Busca o perfil no Firestore
     let profile = { role:"seller", name:user.email, email:user.email };
     try{
