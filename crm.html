@@ -102,6 +102,7 @@
     <button class="tab active" id="tabHoje" onclick="showTab('hoje')">⚡ Hoje</button>
     <button class="tab" id="tabClientes" onclick="showTab('clientes')">👥 Clientes</button>
     <button class="tab" id="tabFunil" onclick="showTab('funil')">📊 Funil</button>
+    <button class="tab" id="tabMetricas" onclick="showTab('metricas')">📈 Métricas</button>
     <button class="tab" id="tabLembretes" onclick="showTab('lembretes')">🔔 Lembretes</button>
   </div>
 
@@ -120,8 +121,20 @@
     <div class="card">
       <div class="cardHead">
         <h2>👥 Clientes</h2>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
           <input id="buscaCliente" placeholder="Buscar nome/telefone..." style="padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:13px;" oninput="renderClientes()"/>
+          <select id="filtroEtapa" onchange="renderClientes()" style="padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:13px">
+            <option value="">Todas etapas</option>
+            <option value="lead">🔵 Lead</option>
+            <option value="negociacao">🟡 Negociação</option>
+            <option value="fechado">🟢 Fechado</option>
+          </select>
+          <select id="ordenar" onchange="renderClientes()" style="padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:13px">
+            <option value="nome">Nome (A-Z)</option>
+            <option value="gasto">Maior gasto</option>
+            <option value="recente">Mais recente</option>
+          </select>
+          <button class="btn" onclick="exportarCSV()">⬇️ Excel</button>
           <button class="btn good" onclick="abrirNovoCliente()">+ Novo cliente</button>
         </div>
       </div>
@@ -137,6 +150,25 @@
         <div class="col" data-etapa="lead" ondragover="permitirDrop(event)" ondrop="soltarCard(event,'lead')" ondragleave="sairDrop(event)"><h3>🔵 Lead <span id="cntLead" class="tag">0</span></h3><div id="colLead"></div></div>
         <div class="col" data-etapa="negociacao" ondragover="permitirDrop(event)" ondrop="soltarCard(event,'negociacao')" ondragleave="sairDrop(event)"><h3>🟡 Negociação <span id="cntNeg" class="tag">0</span></h3><div id="colNeg"></div></div>
         <div class="col" data-etapa="fechado" ondragover="permitirDrop(event)" ondrop="soltarCard(event,'fechado')" ondragleave="sairDrop(event)"><h3>🟢 Fechado <span id="cntFec" class="tag">0</span></h3><div id="colFec"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- METRICAS -->
+  <div id="viewMetricas" style="display:none">
+    <div class="kpis" id="metricasKpis"></div>
+    <div class="card">
+      <div class="cardHead"><h2>📈 Saúde do funil</h2></div>
+      <div id="funilBarras"></div>
+    </div>
+    <div class="grid2" style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+      <div class="card">
+        <div class="cardHead"><h2>🏆 Top compradores</h2></div>
+        <div id="topCompradores"><div class="hint">—</div></div>
+      </div>
+      <div class="card">
+        <div class="cardHead"><h2>⚠️ Clientes em risco</h2></div>
+        <div id="clientesRisco"><div class="hint">—</div></div>
       </div>
     </div>
   </div>
@@ -328,16 +360,35 @@
   }
 
   window.showTab=function(t){
-    ["hoje","clientes","funil","lembretes"].forEach(x=>{
+    ["hoje","clientes","funil","metricas","lembretes"].forEach(x=>{
       document.getElementById("view"+x.charAt(0).toUpperCase()+x.slice(1)).style.display=(x===t)?"block":"none";
       document.getElementById("tab"+x.charAt(0).toUpperCase()+x.slice(1)).classList.toggle("active",x===t);
     });
   };
 
-  function renderTudo(){ renderHoje(); renderClientes(); renderFunil(); renderLembretes(); }
+  function renderTudo(){ renderHoje(); renderClientes(); renderFunil(); renderMetricas(); renderLembretes(); }
 
   const TAG_LABEL = { vip:'⭐ VIP', novo:'🆕 Novo', fiel:'💚 Fiel', inativo:'💤 Inativo' };
-  function tagsHtml(tags){ return (tags||[]).map(t=>`<span class="tag ${t}">${TAG_LABEL[t]||t}</span>`).join(" "); }
+
+  // Tags automáticas calculadas por comportamento (não salvas, só exibidas)
+  function tagsAuto(c){
+    const auto=[];
+    const total=totalGasto(c);
+    const nCompras=(c.compras||[]).length;
+    const dias=diasSem(c);
+    if(total>=1000 || nCompras>=5) auto.push("autovip");
+    if(c.etapa==="fechado" && dias>=60) auto.push("autoinativo");
+    if(nCompras>=3 && dias<60) auto.push("autofiel");
+    return auto;
+  }
+  const TAG_AUTO_LABEL = { autovip:'⭐ VIP (auto)', autoinativo:'💤 Inativo (auto)', autofiel:'💚 Fiel (auto)' };
+  const TAG_AUTO_CLASS = { autovip:'vip', autoinativo:'inativo', autofiel:'fiel' };
+
+  function tagsHtml(tags, c){
+    let html=(tags||[]).map(t=>`<span class="tag ${t}">${TAG_LABEL[t]||t}</span>`).join(" ");
+    if(c){ html += " " + tagsAuto(c).map(t=>`<span class="tag ${TAG_AUTO_CLASS[t]}" title="Automático">${TAG_AUTO_LABEL[t]}</span>`).join(" "); }
+    return html;
+  }
   function zap(tel){ const n=(tel||"").replace(/\D/g,""); return n.length>=10 ? ("55"+n) : n; }
   function totalGasto(c){ return (c.compras||[]).reduce((s,x)=>s+Number(x.valor||0),0); }
   function primeiroNome(nome){ return (nome||"").trim().split(" ")[0] || "tudo bem"; }
@@ -370,7 +421,7 @@
       return `<h3 class="secTitle">${titulo} (${arr.length})</h3>` + arr.map(c=>`
         <div class="acaoItem">
           <div class="ai-info">
-            <div class="ai-nome">${c.nome||"—"} ${tagsHtml(c.tags)}</div>
+            <div class="ai-nome">${c.nome||"—"} ${tagsHtml(c.tags, c)}</div>
             <div class="ai-motivo">${motivoFn(c)}</div>
           </div>
           <div style="display:flex;gap:6px;flex-wrap:wrap">
@@ -393,17 +444,28 @@
   window.renderClientes=function(){
     const lista=clientesVisiveis();
     const busca=(document.getElementById("buscaCliente").value||"").toLowerCase();
-    const filtrados=lista.filter(c=> !busca || (c.nome||"").toLowerCase().includes(busca) || (c.telefone||"").includes(busca));
+    const fEtapa=(document.getElementById("filtroEtapa")||{}).value||"";
+    const ord=(document.getElementById("ordenar")||{}).value||"nome";
+    let filtrados=lista.filter(c=>{
+      const okBusca = !busca || (c.nome||"").toLowerCase().includes(busca) || (c.telefone||"").includes(busca);
+      const okEtapa = !fEtapa || c.etapa===fEtapa;
+      return okBusca && okEtapa;
+    });
+    // ordenação
+    if(ord==="gasto") filtrados.sort((a,b)=> totalGasto(b)-totalGasto(a));
+    else if(ord==="recente") filtrados.sort((a,b)=> (new Date(b.atualizadoEm||0))-(new Date(a.atualizadoEm||0)));
+    else filtrados.sort((a,b)=>(a.nome||"").localeCompare(b.nome||""));
+
     document.getElementById("clientesKpis").innerHTML=`
       <div class="kpi"><div class="t">Total</div><div class="v">${lista.length}</div></div>
       <div class="kpi"><div class="t">Leads</div><div class="v">${lista.filter(c=>c.etapa==="lead").length}</div></div>
       <div class="kpi"><div class="t">Negociação</div><div class="v">${lista.filter(c=>c.etapa==="negociacao").length}</div></div>
       <div class="kpi"><div class="t">Faturado (clientes)</div><div class="v" style="font-size:16px">${money(lista.reduce((s,c)=>s+totalGasto(c),0))}</div></div>`;
-    if(filtrados.length===0){ document.getElementById("tabelaClientes").innerHTML='<div class="hint">Nenhum cliente. Clique em "+ Novo cliente".</div>'; return; }
+    if(filtrados.length===0){ document.getElementById("tabelaClientes").innerHTML='<div class="hint">Nenhum cliente encontrado.</div>'; return; }
     const etapaTag={ lead:'🔵 Lead', negociacao:'🟡 Negociação', fechado:'🟢 Fechado' };
-    const rows=filtrados.sort((a,b)=>(a.nome||"").localeCompare(b.nome||"")).map(c=>`
+    const rows=filtrados.map(c=>`
       <tr class="clickRow" onclick="abrirFicha('${c.id}')">
-        <td><b>${c.nome||"—"}</b> ${tagsHtml(c.tags)}</td>
+        <td><b>${c.nome||"—"}</b> ${tagsHtml(c.tags, c)}</td>
         <td>${c.telefone||"—"}</td>
         <td><span class="tag">${etapaTag[c.etapa]||"—"}</span></td>
         <td>${money(totalGasto(c))}</td>
@@ -412,6 +474,24 @@
         </td>
       </tr>`).join("");
     document.getElementById("tabelaClientes").innerHTML=`<table><thead><tr><th>Nome</th><th>Telefone</th><th>Etapa</th><th>Total gasto</th><th>Zap</th></tr></thead><tbody>${rows}</tbody></table>`;
+  };
+
+  // Exportar clientes visíveis para CSV (abre no Excel)
+  window.exportarCSV=function(){
+    const lista=clientesVisiveis();
+    if(lista.length===0){ alert("Nenhum cliente para exportar."); return; }
+    const cab=["Nome","Telefone","Email","CPF","Aniversario","Etapa","Tags","Total gasto","Num compras","Ultima atualizacao","Responsavel"];
+    const linhas=lista.map(c=>[
+      c.nome||"", c.telefone||"", c.email||"", c.cpf||"", c.nascimento||"",
+      c.etapa||"", (c.tags||[]).join("|"), totalGasto(c).toFixed(2).replace(".",","),
+      (c.compras||[]).length, c.atualizadoEm? new Date(c.atualizadoEm).toLocaleDateString("pt-BR"):"", c.ownerNome||""
+    ]);
+    const csv=[cab, ...linhas].map(l=> l.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(";")).join("\n");
+    const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"});
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download="clientes_"+LOJA_NOME.replace(/[^a-z0-9]/gi,"_")+"_"+new Date().toISOString().slice(0,10)+".csv";
+    a.click();
   };
 
   window.abrirNovoCliente=function(){
@@ -484,7 +564,7 @@
   function renderFicha(){
     const c=CLIENTES.find(x=>x.id===fichaAtualId); if(!c){ fecharFicha(); return; }
     document.getElementById("fichaNome").textContent=c.nome||"—";
-    document.getElementById("fichaTags").innerHTML=tagsHtml(c.tags) || '<span class="hint" style="padding:0">Sem tags</span>';
+    document.getElementById("fichaTags").innerHTML=tagsHtml(c.tags, c) || '<span class="hint" style="padding:0">Sem tags</span>';
     const etapaTxt={ lead:'🔵 Lead', negociacao:'🟡 Negociação', fechado:'🟢 Fechado' }[c.etapa]||"—";
     const compras=c.compras||[];
     const total=totalGasto(c);
@@ -598,7 +678,7 @@
     document.getElementById("cntFec").textContent=cols.fechado.length;
     const card=(c)=>`
       <div class="leadCard" draggable="true" data-id="${c.id}" ondragstart="iniciarDrag(event,'${c.id}')" ondragend="fimDrag(event)" onclick="abrirFicha('${c.id}')">
-        <div class="nm">${c.nome||"—"} ${tagsHtml(c.tags)}</div>
+        <div class="nm">${c.nome||"—"} ${tagsHtml(c.tags, c)}</div>
         <div class="meta">${c.telefone||""} ${totalGasto(c)>0? "· "+money(totalGasto(c)):""}</div>
       </div>`;
     document.getElementById("colLead").innerHTML=cols.lead.map(card).join("")||'<div class="hint">Vazio</div>';
@@ -607,6 +687,63 @@
   }
   window.iniciarDrag=function(ev,id){ dragId=id; ev.currentTarget.classList.add("dragging"); };
   window.fimDrag=function(ev){ ev.currentTarget.classList.remove("dragging"); };
+
+  // ===== MÉTRICAS =====
+  function renderMetricas(){
+    const lista=clientesVisiveis();
+    const nLead=lista.filter(c=>c.etapa==="lead").length;
+    const nNeg=lista.filter(c=>c.etapa==="negociacao").length;
+    const nFec=lista.filter(c=>c.etapa==="fechado").length;
+    const totalFunil=lista.length||1;
+
+    // taxa de conversão = fechados / total
+    const conv=(nFec/totalFunil*100);
+    // faturamento total e ticket médio geral
+    const fatTotal=lista.reduce((s,c)=>s+totalGasto(c),0);
+    const compradores=lista.filter(c=>(c.compras||[]).length>0);
+    const ticketMedio=compradores.length? fatTotal/compradores.reduce((s,c)=>s+(c.compras||[]).length,0) : 0;
+    // valor "parado" em negociação (clientes em negociação que já têm histórico de compra)
+    const ltvMedio=compradores.length? fatTotal/compradores.length : 0;
+
+    document.getElementById("metricasKpis").innerHTML=`
+      <div class="kpi"><div class="t">Taxa de conversão</div><div class="v">${conv.toFixed(0)}%</div></div>
+      <div class="kpi"><div class="t">Faturamento total</div><div class="v" style="font-size:17px">${money(fatTotal)}</div></div>
+      <div class="kpi"><div class="t">Ticket médio</div><div class="v" style="font-size:17px">${money(ticketMedio)}</div></div>
+      <div class="kpi"><div class="t">LTV médio / cliente</div><div class="v" style="font-size:17px">${money(ltvMedio)}</div></div>
+      <div class="kpi"><div class="t">Clientes compradores</div><div class="v">${compradores.length}</div></div>`;
+
+    // barras de saúde do funil
+    const maxF=Math.max(nLead,nNeg,nFec,1);
+    const barra=(label,n,cor)=>`
+      <div style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span>${label}</span><b>${n}</b></div>
+        <div style="background:rgba(255,255,255,.06);border-radius:8px;height:14px;overflow:hidden">
+          <div style="width:${(n/maxF*100)}%;height:100%;background:${cor};border-radius:8px"></div>
+        </div>
+      </div>`;
+    document.getElementById("funilBarras").innerHTML=
+      barra("🔵 Lead",nLead,"#62a8ff")+
+      barra("🟡 Negociação",nNeg,"#ffd166")+
+      barra("🟢 Fechado",nFec,"#29e07a")+
+      `<div class="hint" style="text-align:left;padding:8px 0 0">Conversão Lead→Fechado: <b style="color:#29e07a">${conv.toFixed(1)}%</b></div>`;
+
+    // top compradores
+    const top=compradores.slice().sort((a,b)=>totalGasto(b)-totalGasto(a)).slice(0,5);
+    document.getElementById("topCompradores").innerHTML = top.length? top.map((c,i)=>`
+      <div class="acaoItem">
+        <div class="ai-info"><div class="ai-nome">${i+1}º ${c.nome}</div><div class="ai-motivo">${(c.compras||[]).length} compra(s)</div></div>
+        <b style="color:#7fffc0">${money(totalGasto(c))}</b>
+      </div>`).join("") : '<div class="hint">Nenhuma compra registrada ainda.</div>';
+
+    // clientes em risco (fechados sumidos 45+ dias OU com tag auto inativo)
+    const risco=lista.filter(c=> (c.etapa==="fechado" && diasSem(c)>=45) || tagsAuto(c).includes("autoinativo"))
+                     .sort((a,b)=>diasSem(b)-diasSem(a)).slice(0,5);
+    document.getElementById("clientesRisco").innerHTML = risco.length? risco.map(c=>`
+      <div class="acaoItem">
+        <div class="ai-info"><div class="ai-nome">${c.nome}</div><div class="ai-motivo">Sem contato há ${diasSem(c)} dias</div></div>
+        <button class="btn wa sm" onclick="abrirZap('${c.id}','reativacao')">💬 Reativar</button>
+      </div>`).join("") : '<div class="hint">Nenhum cliente em risco. 🎉</div>';
+  }
 
   // ===== LEMBRETES =====
   function renderLembretes(){
