@@ -5047,8 +5047,8 @@
     const isAdmin = role === "admin";
     const isSuper = role === "superadmin";
 
-    // Botão CRM — só para super admin
-    if(isSuper && !document.getElementById("btnCRM")){
+    // Botão CRM — para todos (super, admin e vendedor)
+    if(!document.getElementById("btnCRM")){
       const ref = document.getElementById("btnSettings");
       if(ref && ref.parentNode){
         const b = document.createElement("button");
