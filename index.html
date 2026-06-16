@@ -3506,6 +3506,14 @@
       state.queue = state.queue.filter(x=>x!==sid);
       state.pool  = state.pool.filter(x=>x!==sid);
       state.sellers = state.sellers.filter(x=>x.id!==sid);
+
+      // Redistribui os clientes desse vendedor no CRM entre os vendedores restantes (round-robin)
+      try{
+        if(window.OMNIA_CRM_REASSIGN){
+          const restantes = (state.sellers||[]).map(v=>({ nome: v.name, uid: "" }));
+          window.OMNIA_CRM_REASSIGN(nome, restantes);
+        }
+      }catch(e){ console.error("reassign:", e); }
     }
 
     save(state);
@@ -5184,6 +5192,34 @@
           });
         }
       }catch(e){ console.error("OMNIA_CRM_UPSERT:", e); }
+    };
+
+    // Redistribui os clientes de um vendedor (por nome) entre os outros vendedores (round-robin)
+    // Usado ao excluir um vendedor. NÃO apaga clientes — só troca o responsável.
+    window.OMNIA_CRM_REASSIGN = async function(nomeVendedorSaindo, vendedoresRestantes){
+      try{
+        if(!nomeVendedorSaindo) return;
+        const snap = await getDocs(clientesRef);
+        const orfaos = [];
+        snap.forEach(d=>{
+          const c = { id:d.id, ...d.data() };
+          if((c.ownerNome||"").trim().toLowerCase() === nomeVendedorSaindo.trim().toLowerCase()) orfaos.push(c);
+        });
+        if(orfaos.length===0) return;
+
+        // lista de destinos (nome + uid). Se não houver ninguém, deixa sem dono.
+        const destinos = (vendedoresRestantes||[]).filter(v=> v && v.nome && v.nome.trim().toLowerCase() !== nomeVendedorSaindo.trim().toLowerCase());
+
+        for(let i=0;i<orfaos.length;i++){
+          const c = orfaos[i];
+          let novoUid = "", novoNome = "";
+          if(destinos.length>0){
+            const d = destinos[i % destinos.length]; // round-robin
+            novoUid = d.uid || ""; novoNome = d.nome || "";
+          }
+          await setDoc(doc(clientesRef, c.id), { ...c, ownerUid: novoUid, ownerNome: novoNome, atualizadoEm: new Date().toISOString() });
+        }
+      }catch(e){ console.error("OMNIA_CRM_REASSIGN:", e); }
     };
   }
 
