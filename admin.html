@@ -87,7 +87,7 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut }
     from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-  import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, deleteDoc }
+  import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, deleteDoc, setDoc }
     from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -210,7 +210,32 @@
   };
   window.excluirUser = async function(uid, nome){
     if(!confirm(`Excluir "${nome}" permanentemente? Esta ação não pode ser desfeita.`)) return;
-    await deleteDoc(doc(db,"users",uid)); carregarVendedores();
+    showLoading("Excluindo e redistribuindo clientes...");
+    try{
+      // 1. Redistribui os clientes desse vendedor (round-robin) entre os outros da loja
+      const outros = ALL_USERS.filter(u=>{
+        if(u.uid===uid) return false;
+        const ids = Array.isArray(u.storeIds)?u.storeIds:[];
+        return u.storeId===lojaAtual || ids.includes(lojaAtual);
+      }).map(u=>({ uid:u.uid, nome:u.name || u.email }));
+
+      const clientesRef = collection(db,"stores",lojaAtual,"clientes");
+      const snap = await getDocs(clientesRef);
+      const orfaos = [];
+      snap.forEach(d=>{ const c={ id:d.id, ...d.data() }; if(c.ownerUid===uid) orfaos.push(c); });
+
+      for(let i=0;i<orfaos.length;i++){
+        const c = orfaos[i];
+        let novoUid="", novoNome="";
+        if(outros.length>0){ const dst=outros[i % outros.length]; novoUid=dst.uid; novoNome=dst.nome; }
+        await setDoc(doc(clientesRef, c.id), { ...c, ownerUid:novoUid, ownerNome:novoNome, atualizadoEm:new Date().toISOString() });
+      }
+
+      // 2. Exclui o usuário
+      await deleteDoc(doc(db,"users",uid));
+    }catch(e){ console.error(e); alert("Erro ao excluir/redistribuir."); }
+    hideLoading();
+    carregarVendedores();
   };
 </script>
 </body>
