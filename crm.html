@@ -359,7 +359,11 @@
 
   function clientesVisiveis(){
     if(MY.role==="admin"||MY.role==="superadmin") return CLIENTES;
-    return CLIENTES.filter(c=> c.ownerUid===MY.uid);
+    const meuNome = (MY.name||MY.email||"").trim().toLowerCase();
+    return CLIENTES.filter(c=>
+      c.ownerUid===MY.uid ||
+      ((c.ownerNome||"").trim().toLowerCase() === meuNome && meuNome!=="")
+    );
   }
 
   window.showTab=function(t){
