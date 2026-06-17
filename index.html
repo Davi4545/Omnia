@@ -5243,6 +5243,19 @@
       }
     }
 
+    // Botão Ponto — para todos (cada um bate o próprio)
+    if(!document.getElementById("btnPonto")){
+      const ref = document.getElementById("btnSettings");
+      if(ref && ref.parentNode){
+        const b = document.createElement("button");
+        b.className = "btn";
+        b.id = "btnPonto";
+        b.textContent = "🕐 Ponto";
+        b.onclick = ()=> window.location.href = "./ponto.html";
+        ref.parentNode.insertBefore(b, ref);
+      }
+    }
+
     // Botão extra de Admin (gerenciar vendedores) — só para admin
     if(isAdmin && !document.getElementById("btnAdminPanel")){
       const ref = document.getElementById("btnSettings");
