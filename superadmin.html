@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
 <meta charset="utf-8"/>
@@ -49,6 +49,14 @@
   .kpi .v{font-size:20px;font-weight:900;}
   .storesChk{display:flex;flex-wrap:wrap;gap:6px;}
   .storesChk label{display:inline-flex;align-items:center;gap:4px;font-size:12px;background:rgba(255,255,255,.05);padding:3px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.1);cursor:pointer;}
+  .lojaLink{cursor:pointer;color:#e7eefc;border-bottom:1px dashed rgba(155,123,255,.55);transition:color .15s;}
+  .lojaLink:hover{color:#c9b6ff;border-bottom-color:#c9b6ff;}
+  .modalBack{display:none;position:fixed;inset:0;background:rgba(7,10,14,.72);backdrop-filter:blur(4px);z-index:120;padding:24px;overflow:auto;}
+  .modalBack.show{display:flex;align-items:flex-start;justify-content:center;}
+  .modal{width:100%;max-width:820px;margin:auto;background:#121723;border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:22px;box-shadow:0 24px 70px rgba(0,0,0,.55);}
+  .modalHead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;}
+  .modalHead h2{font-size:17px;font-weight:900;}
+  .modalHead .sub{font-size:12px;color:#9db0d0;margin-top:2px;}
 </style>
 </head>
 <body>
@@ -89,6 +97,20 @@
   <div class="card">
     <div class="cardHead"><h2>👥 Todos os usuários</h2><button class="btn" onclick="carregarTudo()">↻ Atualizar</button></div>
     <div id="tabelaUsuarios"><div class="hint">Carregando usuários...</div></div>
+  </div>
+</div>
+
+<!-- Modal: usuários de uma loja específica -->
+<div class="modalBack" id="modalUsuariosLoja">
+  <div class="modal">
+    <div class="modalHead">
+      <div>
+        <h2 id="modalLojaTitulo">Usuários da loja</h2>
+        <div class="sub" id="modalLojaSub">—</div>
+      </div>
+      <button class="btn" onclick="fecharModalUsuariosLoja()">✕ Fechar</button>
+    </div>
+    <div id="modalLojaConteudo"><div class="hint">Carregando...</div></div>
   </div>
 </div>
 
@@ -147,6 +169,7 @@
       const us = await getDocs(collection(db,"users"));
       USERS = []; us.forEach(d=> USERS.push({ uid:d.id, ...d.data() }));
       renderKpis(); renderLojas(); renderUsuarios();
+      if(modalLojaId) renderModalUsuariosLoja();
     }catch(e){ console.error(e); alert("Erro ao carregar. Veja as regras do Firestore."); }
     hideLoading();
   };
@@ -182,6 +205,7 @@
       await updateDoc(doc(db,"users",uid), patch);
       const u = USERS.find(x=>x.uid===uid);
       if(u){ u.storeId = storeId; u.storeIds = storeId?[storeId]:[]; }
+      renderLojas(); if(modalLojaId) renderModalUsuariosLoja();
       hideLoading();
     }catch(e){ console.error(e); alert("Erro ao trocar a loja."); hideLoading(); }
   };
@@ -192,43 +216,77 @@
     const rows = LOJAS.map(l=>{
       const qtd = USERS.filter(u=> (u.storeIds||[]).includes(l.id) || u.storeId===l.id).length;
       return `<tr>
-        <td><b>${l.name||"—"}</b></td>
+        <td><b class="lojaLink" onclick="abrirUsuariosLoja('${l.id}')">${l.name||"—"}</b></td>
         <td><span class="tag code">${l.code||"—"}</span></td>
-        <td>${qtd} usuário(s)</td>
+        <td><span class="lojaLink" onclick="abrirUsuariosLoja('${l.id}')">${qtd} usuário(s)</span></td>
         <td><button class="btn bad" onclick="excluirLoja('${l.id}','${(l.name||"").replace(/'/g,"")}')">Excluir loja</button></td>
       </tr>`;
     }).join("");
     wrap.innerHTML = `<table><thead><tr><th>Loja</th><th>Código</th><th>Usuários</th><th>Ações</th></tr></thead><tbody>${rows}</tbody></table>`;
   }
 
+  function rowUsuario(u){
+    const roleTag = u.role==="superadmin" ? '<span class="tag super">⚡ Super</span>'
+                  : u.role==="admin" ? '<span class="tag admin">👑 ADM</span>'
+                  : '<span class="tag seller">🧑 Vendedor</span>';
+    // checkboxes de lojas (para admin)
+    const lojasChk = LOJAS.map(l=>{
+      const checked = (u.storeIds||[]).includes(l.id) ? "checked":"";
+      return `<label><input type="checkbox" ${checked} onchange="toggleLoja('${u.uid}','${l.id}',this.checked)"> ${l.name||l.code}</label>`;
+    }).join("");
+
+    let acoes = "";
+    if(u.role!=="superadmin"){
+      acoes = u.role==="admin"
+        ? `<button class="btn" onclick="setRole('${u.uid}','seller')">Tornar vendedor</button>`
+        : `<button class="btn warn" onclick="setRole('${u.uid}','admin')">Tornar ADM</button>`;
+      acoes += ` <button class="btn bad" onclick="excluirUser('${u.uid}','${(u.name||"").replace(/'/g,"")}')">Excluir</button>`;
+    }
+
+    return `<tr>
+      <td><b>${u.name||"—"}</b><br><span style="font-size:11px;color:#9db0d0">${u.email||""}</span></td>
+      <td>${roleTag}</td>
+      <td>${ u.role==="admin" ? `<div class="storesChk">${lojasChk}</div>` : (u.role==="seller" ? selectLojaVendedor(u) : "—") }</td>
+      <td>${acoes}</td>
+    </tr>`;
+  }
+
   function renderUsuarios(){
     const wrap = document.getElementById("tabelaUsuarios");
     if(USERS.length===0){ wrap.innerHTML='<div class="hint">Nenhum usuário ainda.</div>'; return; }
-    const rows = USERS.map(u=>{
-      const roleTag = u.role==="superadmin" ? '<span class="tag super">⚡ Super</span>'
-                    : u.role==="admin" ? '<span class="tag admin">👑 ADM</span>'
-                    : '<span class="tag seller">🧑 Vendedor</span>';
-      // checkboxes de lojas (para admin)
-      const lojasChk = LOJAS.map(l=>{
-        const checked = (u.storeIds||[]).includes(l.id) ? "checked":"";
-        return `<label><input type="checkbox" ${checked} onchange="toggleLoja('${u.uid}','${l.id}',this.checked)"> ${l.name||l.code}</label>`;
-      }).join("");
+    const rows = USERS.map(rowUsuario).join("");
+    wrap.innerHTML = `<table><thead><tr><th>Usuário</th><th>Perfil</th><th>Loja(s)</th><th>Ações</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }
 
-      let acoes = "";
-      if(u.role!=="superadmin"){
-        acoes = u.role==="admin"
-          ? `<button class="btn" onclick="setRole('${u.uid}','seller')">Tornar vendedor</button>`
-          : `<button class="btn warn" onclick="setRole('${u.uid}','admin')">Tornar ADM</button>`;
-        acoes += ` <button class="btn bad" onclick="excluirUser('${u.uid}','${(u.name||"").replace(/'/g,"")}')">Excluir</button>`;
-      }
+  // ===== Modal: usuários de uma loja específica =====
+  let modalLojaId = null;
 
-      return `<tr>
-        <td><b>${u.name||"—"}</b><br><span style="font-size:11px;color:#9db0d0">${u.email||""}</span></td>
-        <td>${roleTag}</td>
-        <td>${ u.role==="admin" ? `<div class="storesChk">${lojasChk}</div>` : (u.role==="seller" ? selectLojaVendedor(u) : "—") }</td>
-        <td>${acoes}</td>
-      </tr>`;
-    }).join("");
+  function usuariosDaLoja(storeId){
+    return USERS.filter(u=> u.storeId===storeId || (Array.isArray(u.storeIds) && u.storeIds.includes(storeId)));
+  }
+
+  window.abrirUsuariosLoja = function(storeId){
+    modalLojaId = storeId;
+    renderModalUsuariosLoja();
+    document.getElementById("modalUsuariosLoja").classList.add("show");
+  };
+  window.fecharModalUsuariosLoja = function(){
+    modalLojaId = null;
+    document.getElementById("modalUsuariosLoja").classList.remove("show");
+  };
+
+  function renderModalUsuariosLoja(){
+    if(!modalLojaId) return;
+    const loja = LOJAS.find(l=>l.id===modalLojaId);
+    if(!loja){ fecharModalUsuariosLoja(); return; }
+    const users = usuariosDaLoja(modalLojaId);
+    document.getElementById("modalLojaTitulo").textContent = "👥 " + (loja.name || loja.code);
+    document.getElementById("modalLojaSub").innerHTML =
+      `Código <span class="tag code">${loja.code||"—"}</span> · ${users.length} usuário(s)`;
+
+    const wrap = document.getElementById("modalLojaConteudo");
+    if(users.length===0){ wrap.innerHTML='<div class="hint">Nenhum usuário vinculado a esta loja ainda.</div>'; return; }
+    const rows = users.map(rowUsuario).join("");
     wrap.innerHTML = `<table><thead><tr><th>Usuário</th><th>Perfil</th><th>Loja(s)</th><th>Ações</th></tr></thead><tbody>${rows}</tbody></table>`;
   }
 
@@ -273,6 +331,7 @@
       if(!u.storeId && ids.length) patch.storeId = ids[0];
       await updateDoc(doc(db,"users",uid), patch);
       u.storeIds = ids; // atualiza local
+      renderLojas(); if(modalLojaId) renderModalUsuariosLoja();
     }catch(e){ console.error(e); alert("Erro ao vincular loja."); }
   };
 
