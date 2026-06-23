@@ -116,7 +116,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut }
+  import { getAuth, onAuthStateChanged, signOut, sendPasswordResetEmail }
     from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
   import { getFirestore, collection, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc, query, where, addDoc }
     from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
@@ -242,6 +242,9 @@
         : `<button class="btn warn" onclick="setRole('${u.uid}','admin')">Tornar ADM</button>`;
       acoes += ` <button class="btn bad" onclick="excluirUser('${u.uid}','${(u.name||"").replace(/'/g,"")}')">Excluir</button>`;
     }
+    if(u.email){
+      acoes += ` <button class="btn" onclick="resetarSenha('${u.email.replace(/'/g,"")}','${(u.name||"").replace(/'/g,"")}')">🔑 Resetar senha</button>`;
+    }
 
     return `<tr>
       <td><b>${u.name||"—"}</b><br><span style="font-size:11px;color:#9db0d0">${u.email||""}</span></td>
@@ -319,6 +322,24 @@
     showLoading("Atualizando...");
     try{ await updateDoc(doc(db,"users",uid), { role }); await carregarTudo(); }
     catch(e){ console.error(e); alert("Erro."); hideLoading(); }
+  };
+
+  window.resetarSenha = async function(email, nome){
+    if(!email){ alert("Este usuário não tem e-mail cadastrado."); return; }
+    if(!confirm(`Enviar e-mail de redefinição de senha para ${nome||email}?\n\nUm link será enviado para:\n${email}\n\nA própria pessoa cria a nova senha pelo link.`)) return;
+    showLoading("Enviando e-mail...");
+    try{
+      await sendPasswordResetEmail(auth, email);
+      hideLoading();
+      alert(`✅ E-mail enviado para ${email}.\n\nPeça para a pessoa verificar a caixa de entrada (e o spam) e seguir o link para criar a nova senha.`);
+    }catch(e){
+      console.error(e);
+      hideLoading();
+      const msg = e.code==="auth/user-not-found" ? "Não existe conta com esse e-mail no login."
+                : e.code==="auth/invalid-email" ? "E-mail inválido."
+                : "Erro ao enviar. Tente novamente.";
+      alert("⚠️ " + msg);
+    }
   };
 
   window.toggleLoja = async function(uid, storeId, checked){
