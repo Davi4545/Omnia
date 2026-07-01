@@ -165,9 +165,12 @@
       <label>Disponibilidade</label>
       <select id="prodDisp"><option value="sim">✅ Disponível</option><option value="nao">❌ Esgotado</option></select>
     </div>
-    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
-      <button class="btn" onclick="fecharProduto()">Cancelar</button>
-      <button class="btn good" onclick="salvarProduto()">Salvar produto</button>
+    <div style="display:flex;gap:10px;justify-content:space-between;margin-top:8px;flex-wrap:wrap">
+      <button class="btn bad" id="btnExcluirProduto" onclick="excluirProdutoDoModal()" style="display:none">🗑 Excluir</button>
+      <div style="display:flex;gap:10px;margin-left:auto">
+        <button class="btn" onclick="fecharProduto()">Cancelar</button>
+        <button class="btn good" onclick="salvarProduto()">Salvar produto</button>
+      </div>
     </div>
   </div>
 </div>
@@ -220,6 +223,10 @@
   let MODO="cliente"; // "cliente" ou "funcionario"
   let VENDEDOR=null;   // dados do vendedor do link (nome + whats)
   let CART={};         // { produtoId: quantidade }
+  // chave do carrinho por loja (mantém ao recarregar)
+  function cartKey(){ return "omnia_cart_"+(STORE_ID||"x"); }
+  function salvarCart(){ try{ localStorage.setItem(cartKey(), JSON.stringify(CART)); }catch(e){} }
+  function carregarCart(){ try{ const s=localStorage.getItem(cartKey()); CART = s?JSON.parse(s):{}; }catch(e){ CART={}; } }
 
   function showLoading(m){ document.getElementById("loadingScreen").classList.add("show"); document.getElementById("loadingMsg").textContent=m||"Carregando..."; }
   function hideLoading(){ document.getElementById("loadingScreen").classList.remove("show"); }
@@ -278,6 +285,8 @@
     }
     document.getElementById("ctxInfo").textContent = VENDEDOR&&VENDEDOR.nome ? ("Atendimento: "+VENDEDOR.nome) : "Faça seu pedido";
     document.getElementById("cartFab").style.display="flex";
+    carregarCart();           // recupera o carrinho salvo (mantém ao recarregar)
+    atualizarCartFab();
     escutarProdutos();
   }
 
@@ -429,6 +438,7 @@
     document.getElementById("prodDisp").value="sim";
     fotoTemp="";
     const prev=document.getElementById("prodFotoPreview"); prev.src=""; prev.style.display="none";
+    document.getElementById("btnExcluirProduto").style.display="none";
     document.getElementById("modalProduto").classList.add("show");
   };
 
@@ -446,7 +456,20 @@
     fotoTemp=p.foto||"";
     const prev=document.getElementById("prodFotoPreview");
     if(fotoTemp){ prev.src=fotoTemp; prev.style.display="block"; } else { prev.src=""; prev.style.display="none"; }
+    document.getElementById("btnExcluirProduto").style.display="inline-block";
     document.getElementById("modalProduto").classList.add("show");
+  };
+
+  // Excluir o produto que está aberto no modal de edição
+  window.excluirProdutoDoModal=async function(){
+    const id=document.getElementById("prodId").value;
+    if(!id) return;
+    const p=PRODUTOS.find(x=>x.id===id);
+    if(!confirm(`Excluir o produto "${p?p.nome:""}"? Esta ação não pode ser desfeita.`)) return;
+    showLoading("Excluindo...");
+    try{ await deleteDoc(doc(produtosRef,id)); fecharProduto(); }
+    catch(e){ console.error(e); alert("Erro ao excluir."); }
+    hideLoading();
   };
 
   window.fecharProduto=function(){ document.getElementById("modalProduto").classList.remove("show"); };
@@ -507,6 +530,7 @@
   // ===== CARRINHO (cliente) =====
   window.addCart=function(id){
     CART[id]=(CART[id]||0)+1;
+    salvarCart();
     atualizarCartFab();
     const p=PRODUTOS.find(x=>x.id===id);
     // feedback rápido
@@ -550,6 +574,7 @@
   window.mudarQtd=function(id,delta){
     CART[id]=(CART[id]||0)+delta;
     if(CART[id]<=0) delete CART[id];
+    salvarCart();
     atualizarCartFab(); renderCarrinho();
   };
 
@@ -570,6 +595,10 @@
     msg+=`\n*Total: ${money(total)}*`;
     const url="https://wa.me/"+zap(VENDEDOR.whats)+"?text="+encodeURIComponent(msg);
     window.open(url,"_blank");
+    // limpa o carrinho após enviar
+    if(confirm("Pedido enviado! Deseja limpar o carrinho?")){
+      CART={}; salvarCart(); atualizarCartFab(); renderCarrinho(); fecharCarrinho();
+    }
   };
 </script>
 </body>
