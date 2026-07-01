@@ -92,9 +92,24 @@
 
   <!-- VITRINE (cliente e funcionário) -->
   <div id="viewVitrine">
+    <div id="barraVendedorTopo" style="display:none;margin-bottom:12px">
+      <button class="btn warn" id="btnModoSelecao" onclick="toggleModoSelecao()">🎯 Montar link p/ cliente</button>
+    </div>
+    <div id="barraSelecao" style="display:none;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:rgba(255,209,102,.1);border:1px solid rgba(255,209,102,.3);border-radius:12px;padding:12px 14px;margin-bottom:14px">
+      <span style="font-size:14px;font-weight:700;color:#ffd166">🎯 Selecionando peças para um cliente — <span id="selCount">0</span> escolhida(s)</span>
+      <button class="btn good" onclick="gerarLinkSelecao()">🔗 Gerar link personalizado</button>
+    </div>
     <div class="toolbar">
       <input id="busca" placeholder="Buscar produto..." oninput="renderVitrine()"/>
       <select id="filtroCategoria" onchange="renderVitrine()"><option value="">Todas categorias</option></select>
+      <select id="filtroGenero" onchange="renderVitrine()">
+        <option value="">Todos os gêneros</option>
+        <option value="feminino">Feminino</option>
+        <option value="masculino">Masculino</option>
+        <option value="unissex">Unissex</option>
+        <option value="infantil">Infantil</option>
+      </select>
+      <select id="filtroTamanho" onchange="renderVitrine()"><option value="">Todos os tamanhos</option></select>
       <select id="ordenar" onchange="renderVitrine()">
         <option value="nome">Nome (A-Z)</option>
         <option value="menor">Menor preço</option>
@@ -135,6 +150,21 @@
 <!-- FAB do carrinho (cliente) -->
 <button class="cartFab" id="cartFab" style="display:none" onclick="abrirCarrinho()">🛒 Carrinho <span class="cartCount" id="cartCount">0</span></button>
 
+<!-- MODAL LINK GERADO (vendedor) -->
+<div class="modalBack" id="modalLinkGerado">
+  <div class="modal" style="max-width:480px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <h2 style="font-size:18px;font-weight:900">🔗 Link personalizado</h2>
+      <button class="btn" onclick="fecharLinkGerado()">✕</button>
+    </div>
+    <p class="hint" style="text-align:left;padding:0 0 12px">Mande este link para seu cliente. Ao abrir, ele verá primeiro as peças que você separou — e depois pode explorar o catálogo completo.</p>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <input id="linkGeradoInput" readonly style="flex:1;min-width:200px;padding:9px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#7fffc0;font-size:12px"/>
+      <button class="btn good" onclick="copiarLinkGerado()">Copiar</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL PRODUTO (funcionário) -->
 <div class="modalBack" id="modalProduto">
   <div class="modal">
@@ -160,6 +190,18 @@
     <div class="grid2">
       <div class="field"><label>Preço (R$) *</label><input id="prodPreco" inputmode="decimal" placeholder="Ex: 199,90"/></div>
       <div class="field"><label>Preço promocional (opcional)</label><input id="prodPromo" inputmode="decimal" placeholder="Ex: 149,90"/></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>Gênero</label>
+        <select id="prodGenero">
+          <option value="">— não especificado —</option>
+          <option value="feminino">Feminino</option>
+          <option value="masculino">Masculino</option>
+          <option value="unissex">Unissex</option>
+          <option value="infantil">Infantil</option>
+        </select>
+      </div>
+      <div class="field"><label>Tamanhos (separe por vírgula)</label><input id="prodTamanhos" placeholder="Ex: 36, 38, 40, 42"/></div>
     </div>
     <div class="field">
       <label>Disponibilidade</label>
@@ -218,11 +260,14 @@
   const params = new URLSearchParams(location.search);
   const LOJA_PARAM = params.get("loja");
   const VEND_PARAM = params.get("vend");
+  const SEL_PARAM = (params.get("sel")||"").split(",").filter(Boolean); // peças selecionadas pelo vendedor
 
   let MY=null, STORE_ID=null, LOJA_NOME="", PRODUTOS=[], produtosRef=null;
   let MODO="cliente"; // "cliente" ou "funcionario"
   let VENDEDOR=null;   // dados do vendedor do link (nome + whats)
   let CART={};         // { produtoId: quantidade }
+  let SEL_MODE=false;  // vendedor no modo "selecionar peças para um cliente"
+  let SELECIONADAS={}; // { produtoId: true } peças que o vendedor escolheu
   // chave do carrinho por loja (mantém ao recarregar)
   function cartKey(){ return "omnia_cart_"+(STORE_ID||"x"); }
   function salvarCart(){ try{ localStorage.setItem(cartKey(), JSON.stringify(CART)); }catch(e){} }
@@ -296,6 +341,7 @@
     document.getElementById("abasFuncionario").style.display="flex";
     document.getElementById("btnVoltar").style.display="inline-block";
     document.getElementById("modoChip").style.display="inline-block";
+    document.getElementById("barraVendedorTopo").style.display="block";
     document.getElementById("modoChip").textContent = MY.role==="admin"?"👑 Admin":(MY.role==="superadmin"?"⚡ Super":"🧑 Vendedor");
     document.getElementById("ctxInfo").textContent = "Loja: "+LOJA_NOME+" · "+(MY.name||MY.email);
     // carrega meu whats + monta meu link
@@ -324,6 +370,15 @@
     sel.value=atual;
     const dl=document.getElementById("catList");
     if(dl) dl.innerHTML=cats.map(c=>`<option value="${c}">`).join("");
+
+    // popula tamanhos únicos de todos os produtos
+    const tams=[...new Set(PRODUTOS.flatMap(p=>p.tamanhos||[]).filter(Boolean))].sort((a,b)=>{
+      const na=parseFloat(a), nb=parseFloat(b);
+      if(!isNaN(na)&&!isNaN(nb)) return na-nb;
+      return String(a).localeCompare(String(b));
+    });
+    const selT=document.getElementById("filtroTamanho");
+    if(selT){ const at=selT.value; selT.innerHTML='<option value="">Todos os tamanhos</option>'+tams.map(t=>`<option value="${t}">${t}</option>`).join(""); selT.value=at; }
   }
 
   function precoFinal(p){ return (p.promo>0 && p.promo<p.preco) ? p.promo : p.preco; }
@@ -332,44 +387,107 @@
   window.renderVitrine=function(){
     const busca=(document.getElementById("busca").value||"").toLowerCase();
     const cat=document.getElementById("filtroCategoria").value||"";
+    const gen=(document.getElementById("filtroGenero")||{}).value||"";
+    const tam=(document.getElementById("filtroTamanho")||{}).value||"";
     const ord=document.getElementById("ordenar").value||"nome";
     let lista=PRODUTOS.filter(p=>{
       const okB=!busca||(p.nome||"").toLowerCase().includes(busca)||(p.ref||"").toLowerCase().includes(busca)||(p.descricao||"").toLowerCase().includes(busca);
       const okC=!cat||p.categoria===cat;
+      const okG=!gen||p.genero===gen;
+      const okT=!tam||(p.tamanhos||[]).includes(tam);
       const okPromo = ord!=="promo" || (p.promo>0 && p.promo<p.preco);
-      return okB && okC && okPromo;
+      return okB && okC && okG && okT && okPromo;
     });
     if(ord==="menor") lista.sort((a,b)=>precoFinal(a)-precoFinal(b));
     else if(ord==="maior") lista.sort((a,b)=>precoFinal(b)-precoFinal(a));
     else lista.sort((a,b)=>(a.nome||"").localeCompare(b.nome||""));
 
     const grid=document.getElementById("gridVitrine");
+
+    // CLIENTE com link personalizado: separa "selecionadas para você" das demais
+    const temSelecao = MODO==="cliente" && SEL_PARAM.length>0;
+    let html="";
+    if(temSelecao){
+      const selec = lista.filter(p=> SEL_PARAM.includes(p.id));
+      const resto = lista.filter(p=> !SEL_PARAM.includes(p.id));
+      // ordena as selecionadas na ordem do link
+      selec.sort((a,b)=> SEL_PARAM.indexOf(a.id) - SEL_PARAM.indexOf(b.id));
+      if(selec.length>0){
+        html += `<div style="grid-column:1/-1;margin:4px 0 2px"><h3 style="font-size:16px;font-weight:900;color:#ffd166">✨ Selecionadas para você${VENDEDOR&&VENDEDOR.nome?" por "+VENDEDOR.nome:""}</h3></div>`;
+        html += selec.map(cardProduto).join("");
+        html += `<div style="grid-column:1/-1;margin:16px 0 2px;padding-top:12px;border-top:1px solid rgba(255,255,255,.1)"><h3 style="font-size:15px;font-weight:800;color:#9db0d0">🛍️ Ver todo o catálogo</h3></div>`;
+      }
+      html += resto.map(cardProduto).join("");
+      grid.innerHTML = html || '<div class="hint">Nenhum produto encontrado.</div>';
+      return;
+    }
+
     if(lista.length===0){ grid.innerHTML='<div class="hint">Nenhum produto encontrado.</div>'; return; }
-    grid.innerHTML=lista.map(p=>{
-      const temPromo=p.promo>0 && p.promo<p.preco;
-      const esgotado=p.disponivel==="nao";
-      const foto=p.foto?`<img class="foto" src="${p.foto}" alt="${p.nome||""}"/>`:`<div class="semFoto">📦</div>`;
-      return `<div class="prod">
-        ${foto}
-        <div class="body">
-          <div style="display:flex;gap:6px;flex-wrap:wrap">${temPromo?'<span class="promoTag">PROMO</span>':''}${esgotado?'<span class="esgotado">ESGOTADO</span>':''}</div>
-          ${p.ref?`<div class="ref">${p.ref}</div>`:''}
-          <div class="nome">${p.nome||"—"}</div>
-          ${p.descricao?`<div class="desc">${p.descricao}</div>`:'<div class="desc"></div>'}
-          <div class="precos">
-            <span class="preco">${money(precoFinal(p))}</span>
-            ${temPromo?`<span class="precoAntigo">${money(p.preco)}</span>`:''}
-          </div>
-        </div>
-        <div class="acts">
-          ${MODO==="cliente"
-            ? (esgotado?'<button class="btn sm" disabled style="opacity:.5;flex:1">Esgotado</button>':`<button class="btn good sm" style="flex:1" onclick="addCart('${p.id}')">+ Adicionar</button>`)
-            : `<button class="btn sm" style="flex:1" onclick="abrirEditarProduto('${p.id}')">✏️ Editar</button>`
-          }
-        </div>
-      </div>`;
-    }).join("");
+    grid.innerHTML=lista.map(cardProduto).join("");
   };
+
+  // monta o card de um produto (usado na vitrine)
+  function cardProduto(p){
+    const temPromo=p.promo>0 && p.promo<p.preco;
+    const esgotado=p.disponivel==="nao";
+    const foto=p.foto?`<img class="foto" src="${p.foto}" alt="${p.nome||""}"/>`:`<div class="semFoto">📦</div>`;
+    const infoTam=(p.tamanhos&&p.tamanhos.length)?`<div class="ref">Tam: ${p.tamanhos.join(", ")}</div>`:'';
+    const genLabel={feminino:"♀ Feminino",masculino:"♂ Masculino",unissex:"Unissex",infantil:"Infantil"}[p.genero]||"";
+    let acao;
+    if(SEL_MODE){
+      const on=!!SELECIONADAS[p.id];
+      acao=`<button class="btn sm ${on?'good':''}" style="flex:1" onclick="toggleSelecao('${p.id}')">${on?'✅ Selecionada':'+ Selecionar'}</button>`;
+    } else if(MODO==="cliente"){
+      acao=esgotado?'<button class="btn sm" disabled style="opacity:.5;flex:1">Esgotado</button>':`<button class="btn good sm" style="flex:1" onclick="addCart('${p.id}')">+ Adicionar</button>`;
+    } else {
+      acao=`<button class="btn sm" style="flex:1" onclick="abrirEditarProduto('${p.id}')">✏️ Editar</button>`;
+    }
+    return `<div class="prod">
+      ${foto}
+      <div class="body">
+        <div style="display:flex;gap:6px;flex-wrap:wrap">${temPromo?'<span class="promoTag">PROMO</span>':''}${esgotado?'<span class="esgotado">ESGOTADO</span>':''}${genLabel?`<span class="ref">${genLabel}</span>`:''}</div>
+        ${p.ref?`<div class="ref">${p.ref}</div>`:''}
+        <div class="nome">${p.nome||"—"}</div>
+        ${p.descricao?`<div class="desc">${p.descricao}</div>`:'<div class="desc"></div>'}
+        ${infoTam}
+        <div class="precos">
+          <span class="preco">${money(precoFinal(p))}</span>
+          ${temPromo?`<span class="precoAntigo">${money(p.preco)}</span>`:''}
+        </div>
+      </div>
+      <div class="acts">${acao}</div>
+    </div>`;
+  }
+
+  // ===== MODO SELEÇÃO (vendedor monta link personalizado) =====
+  window.toggleModoSelecao=function(){
+    SEL_MODE=!SEL_MODE;
+    if(!SEL_MODE) SELECIONADAS={};
+    document.getElementById("btnModoSelecao").textContent = SEL_MODE ? "✖ Cancelar seleção" : "🎯 Montar link p/ cliente";
+    document.getElementById("btnModoSelecao").className = SEL_MODE ? "btn bad" : "btn warn";
+    document.getElementById("barraSelecao").style.display = SEL_MODE ? "flex" : "none";
+    renderVitrine();
+  };
+  window.toggleSelecao=function(id){
+    if(SELECIONADAS[id]) delete SELECIONADAS[id]; else SELECIONADAS[id]=true;
+    document.getElementById("selCount").textContent = Object.keys(SELECIONADAS).length;
+    renderVitrine();
+  };
+  window.gerarLinkSelecao=function(){
+    const ids=Object.keys(SELECIONADAS);
+    if(ids.length===0){ alert("Selecione pelo menos uma peça."); return; }
+    if(!MY.catalogoWhats){ if(!confirm("Você ainda não cadastrou seu WhatsApp (aba 'Meu WhatsApp'). O link vai funcionar, mas o pedido do cliente não terá pra onde ir. Gerar mesmo assim?")) return; }
+    const base=location.origin+location.pathname;
+    const link=`${base}?loja=${STORE_ID}&vend=${MY.uid}&sel=${ids.join(",")}`;
+    document.getElementById("linkGeradoInput").value=link;
+    document.getElementById("modalLinkGerado").classList.add("show");
+  };
+  window.copiarLinkGerado=function(){
+    const inp=document.getElementById("linkGeradoInput");
+    inp.select(); inp.setSelectionRange(0,99999);
+    try{ document.execCommand("copy"); alert("Link copiado! Mande para seu cliente."); }catch(e){ alert("Copie manualmente."); }
+  };
+  window.fecharLinkGerado=function(){ document.getElementById("modalLinkGerado").classList.remove("show"); };
 
   // ===== GERENCIAR (funcionário) =====
   function renderGerenciar(){
@@ -434,7 +552,8 @@
   window.abrirNovoProduto=function(){
     document.getElementById("prodTitulo").textContent="Novo produto";
     document.getElementById("prodId").value="";
-    ["prodRef","prodCat","prodNome","prodDesc","prodPreco","prodPromo"].forEach(id=>document.getElementById(id).value="");
+    ["prodRef","prodCat","prodNome","prodDesc","prodPreco","prodPromo","prodTamanhos"].forEach(id=>document.getElementById(id).value="");
+    document.getElementById("prodGenero").value="";
     document.getElementById("prodDisp").value="sim";
     fotoTemp="";
     const prev=document.getElementById("prodFotoPreview"); prev.src=""; prev.style.display="none";
@@ -448,6 +567,8 @@
     document.getElementById("prodId").value=p.id;
     document.getElementById("prodRef").value=p.ref||"";
     document.getElementById("prodCat").value=p.categoria||"";
+    document.getElementById("prodGenero").value=p.genero||"";
+    document.getElementById("prodTamanhos").value=(p.tamanhos||[]).join(", ");
     document.getElementById("prodNome").value=p.nome||"";
     document.getElementById("prodDesc").value=p.descricao||"";
     document.getElementById("prodPreco").value=p.preco?String(p.preco).replace(".",","):"";
@@ -485,6 +606,8 @@
       id, nome,
       ref:document.getElementById("prodRef").value.trim(),
       categoria:document.getElementById("prodCat").value.trim(),
+      genero:document.getElementById("prodGenero").value,
+      tamanhos:document.getElementById("prodTamanhos").value.split(",").map(t=>t.trim()).filter(Boolean),
       descricao:document.getElementById("prodDesc").value.trim(),
       preco,
       promo:brNum(document.getElementById("prodPromo").value),
