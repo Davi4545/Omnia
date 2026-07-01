@@ -5256,6 +5256,19 @@
       }
     }
 
+    // Botão Catálogo — SÓ super admin por enquanto (fase de testes)
+    if(isSuper && !document.getElementById("btnCatalogo")){
+      const ref = document.getElementById("btnSettings");
+      if(ref && ref.parentNode){
+        const b = document.createElement("button");
+        b.className = "btn";
+        b.id = "btnCatalogo";
+        b.textContent = "🛍️ Catálogo";
+        b.onclick = ()=> window.location.href = "./catalogo.html";
+        ref.parentNode.insertBefore(b, ref);
+      }
+    }
+
     // Botão extra de Admin (gerenciar vendedores) — só para admin
     if(isAdmin && !document.getElementById("btnAdminPanel")){
       const ref = document.getElementById("btnSettings");
@@ -5397,4 +5410,3 @@
 
 </body>
 </html>
- 
