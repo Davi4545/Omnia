@@ -98,7 +98,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut }
+  import { getAuth, onAuthStateChanged, signOut, sendPasswordResetEmail }
     from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
   import { getFirestore, collection, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc, query, where, addDoc }
     from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
@@ -228,6 +228,10 @@
           : `<button class="btn warn" onclick="setRole('${u.uid}','admin')">Tornar ADM</button>`;
         acoes += ` <button class="btn bad" onclick="excluirUser('${u.uid}','${(u.name||"").replace(/'/g,"")}')">Excluir</button>`;
       }
+      // Recuperar senha — disponível para TODOS, inclusive super admins (recuperar um do outro)
+      if(u.email){
+        acoes += ` <button class="btn" onclick="recuperarSenha('${(u.email||"").replace(/'/g,"")}','${(u.name||"").replace(/'/g,"")}')">📧 Recuperar senha</button>`;
+      }
 
       return `<tr>
         <td><b>${u.name||"—"}</b><br><span style="font-size:11px;color:#9db0d0">${u.email||""}</span></td>
@@ -319,6 +323,27 @@
     box.classList.add("show");
   };
   window.fecharUsuariosLoja = function(){ document.getElementById("modalUsuariosLoja").classList.remove("show"); };
+
+  // Envia e-mail de redefinição de senha para qualquer usuário (inclusive super admin)
+  window.recuperarSenha = async function(email, nome){
+    if(!email){ alert("Este usuário não tem e-mail cadastrado."); return; }
+    if(!confirm(`Enviar link de recuperação de senha para ${nome||email}?\n\nO e-mail vai para: ${email}`)) return;
+    showLoading("Enviando link de recuperação...");
+    try{
+      await sendPasswordResetEmail(auth, email);
+      hideLoading();
+      alert(`Link de recuperação enviado para ${email}.\n\nPeça para ${nome||"a pessoa"} conferir a caixa de entrada (e o spam).`);
+    }catch(e){
+      hideLoading();
+      console.error("recuperarSenha:", e.code, e.message);
+      const msgs={
+        "auth/user-not-found":"Não há conta de login com este e-mail (o usuário pode nunca ter feito o primeiro acesso).",
+        "auth/invalid-email":"E-mail inválido.",
+        "auth/too-many-requests":"Muitas tentativas. Aguarde alguns minutos."
+      };
+      alert(msgs[e.code] || ("Erro ao enviar: "+e.code));
+    }
+  };
 </script>
 <!-- MODAL USUÁRIOS DA LOJA -->
 <div class="modalBack" id="modalUsuariosLoja">
