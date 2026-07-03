@@ -183,7 +183,15 @@
 
   function showLoading(m){ document.getElementById("loadingScreen").classList.add("show"); document.getElementById("loadingMsg").textContent=m||"Carregando..."; }
   function hideLoading(){ document.getElementById("loadingScreen").classList.remove("show"); }
-  function hojeStr(){ return new Date().toISOString().slice(0,10); }
+  function hojeStr(){
+    // Data LOCAL (horário do dispositivo/Brasil), não UTC.
+    // Usar toISOString() causava bug: pontos batidos após 21h caíam no dia seguinte.
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,"0");
+    const dia = String(d.getDate()).padStart(2,"0");
+    return `${y}-${m}-${dia}`;
+  }
   function pad(n){ return String(n).padStart(2,"0"); }
   function hhmm(d){ return pad(d.getHours())+":"+pad(d.getMinutes()); }
 
