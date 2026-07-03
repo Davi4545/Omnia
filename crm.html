@@ -342,6 +342,20 @@
 
   function showLoading(m){ document.getElementById("loadingScreen").classList.add("show"); document.getElementById("loadingMsg").textContent=m||"Carregando..."; }
   function hideLoading(){ document.getElementById("loadingScreen").classList.remove("show"); }
+  // Traduz um erro técnico do Firebase em mensagem útil para a pessoa
+  function msgErro(e, oQueTentava){
+    const code = (e && (e.code||e.message||"")) + "";
+    const acao = oQueTentava ? (oQueTentava+" ") : "";
+    if(/permission|insufficient|PERMISSION/i.test(code))
+      return "Sem permissão para "+(oQueTentava||"esta ação")+". Faça login de novo ou fale com o administrador.";
+    if(/network|unavailable|offline|failed to get|deadline/i.test(code))
+      return "Parece que você está sem internet. Verifique a conexão e tente de novo.";
+    if(/not-found|no document/i.test(code))
+      return "Item não encontrado. Ele pode ter sido removido. Atualize a página.";
+    if(/quota|resource-exhausted/i.test(code))
+      return "O sistema está sobrecarregado no momento. Aguarde alguns instantes e tente de novo.";
+    return "Não foi possível "+(oQueTentava||"concluir")+". Verifique sua internet e tente de novo. Se continuar, avise o suporte.";
+  }
   function estadoVazio(ico, tit, txt){
     return `<div class="vazio"><div class="ico">${ico}</div><div class="tit">${tit}</div><div class="txt">${txt||""}</div></div>`;
   }
@@ -448,7 +462,7 @@
       fecharLiberar();
       alert(`${alvos.length} cliente(s) liberado(s)! Agora estão disponíveis para os vendedores da loja.`);
       renderClientes();
-    }catch(e){ console.error(e); hideLoading(); alert("Erro ao liberar clientes."); }
+    }catch(e){ console.error(e); hideLoading(); alert(msgErro(e,"liberar os clientes")); }
   };
 
   function renderTudo(){ renderHoje(); renderClientes(); renderFunil(); renderMetricas(); renderLembretes(); }
@@ -657,14 +671,14 @@
     };
     showLoading("Salvando...");
     try{ await setDoc(doc(clientesRef,id),dados); fecharModal(); }
-    catch(e){ console.error(e); alert("Erro ao salvar."); }
+    catch(e){ console.error(e); alert(msgErro(e,"salvar o cliente")); }
     hideLoading();
   };
 
   window.excluirCliente=async function(id,nome){
     if(!confirm(`Excluir "${nome}"? Esta ação não pode ser desfeita.`)) return;
     showLoading("Excluindo...");
-    try{ await deleteDoc(doc(clientesRef,id)); fecharFicha(); }catch(e){ console.error(e); alert("Erro."); }
+    try{ await deleteDoc(doc(clientesRef,id)); fecharFicha(); }catch(e){ console.error(e); alert(msgErro(e,"excluir o cliente")); }
     hideLoading();
   };
 
@@ -735,7 +749,7 @@
     const interacoes=[...(c.interacoes||[]), { tipo, texto, quem:MY.name||MY.email, ts:Date.now() }];
     showLoading("Salvando...");
     try{ await setDoc(doc(clientesRef,c.id),{ ...c, interacoes, atualizadoEm:new Date().toISOString() }); document.getElementById("interTexto").value=""; }
-    catch(e){ console.error(e); alert("Erro."); }
+    catch(e){ console.error(e); alert(msgErro(e,"salvar")); }
     hideLoading();
   };
 
@@ -747,7 +761,7 @@
     const compras=[...(c.compras||[]), { valor, desc:desc||"Compra", ts:Date.now() }];
     showLoading("Salvando...");
     try{ await setDoc(doc(clientesRef,c.id),{ ...c, compras, atualizadoEm:new Date().toISOString() }); document.getElementById("compraValor").value=""; document.getElementById("compraDesc").value=""; }
-    catch(e){ console.error(e); alert("Erro."); }
+    catch(e){ console.error(e); alert(msgErro(e,"salvar")); }
     hideLoading();
   };
 
