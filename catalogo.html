@@ -344,6 +344,10 @@
     document.getElementById("barraVendedorTopo").style.display="block";
     document.getElementById("modoChip").textContent = MY.role==="admin"?"👑 Admin":(MY.role==="superadmin"?"⚡ Super":"🧑 Vendedor");
     document.getElementById("ctxInfo").textContent = "Loja: "+LOJA_NOME+" · "+(MY.name||MY.email);
+    // Só admin/super cadastram produtos — vendedor não vê a aba "Gerenciar produtos"
+    const ehGestor = (MY.role==="admin" || MY.role==="superadmin");
+    const tabGer = document.getElementById("tabGerenciar");
+    if(tabGer) tabGer.style.display = ehGestor ? "inline-block" : "none";
     // carrega meu whats + monta meu link
     document.getElementById("meuWhats").value = MY.catalogoWhats || "";
     const base = location.origin + location.pathname;
@@ -434,13 +438,17 @@
     const infoTam=(p.tamanhos&&p.tamanhos.length)?`<div class="ref">Tam: ${p.tamanhos.join(", ")}</div>`:'';
     const genLabel={feminino:"♀ Feminino",masculino:"♂ Masculino",unissex:"Unissex",infantil:"Infantil"}[p.genero]||"";
     let acao;
+    const ehGestor = MY && (MY.role==="admin" || MY.role==="superadmin");
     if(SEL_MODE){
       const on=!!SELECIONADAS[p.id];
       acao=`<button class="btn sm ${on?'good':''}" style="flex:1" onclick="toggleSelecao('${p.id}')">${on?'✅ Selecionada':'+ Selecionar'}</button>`;
     } else if(MODO==="cliente"){
       acao=esgotado?'<button class="btn sm" disabled style="opacity:.5;flex:1">Esgotado</button>':`<button class="btn good sm" style="flex:1" onclick="addCart('${p.id}')">+ Adicionar</button>`;
-    } else {
+    } else if(ehGestor){
       acao=`<button class="btn sm" style="flex:1" onclick="abrirEditarProduto('${p.id}')">✏️ Editar</button>`;
+    } else {
+      // vendedor no modo funcionário: sem botão (usa "Montar link" para selecionar)
+      acao=`<div style="flex:1"></div>`;
     }
     return `<div class="prod">
       ${foto}
