@@ -2350,6 +2350,9 @@
   function abrirVendasVendedor(sid, monthKey){
     const s = getSeller(sid);
     const nome = s?.name || "Vendedor";
+    const podeEditar = window.OMNIA_USER && (window.OMNIA_USER.role==="admin" || window.OMNIA_USER.role==="superadmin");
+    // guarda contexto para adicionar/editar
+    VENDAS_CTX = { sid, monthKey, nome };
     // todas as vendas do vendedor no mês escolhido, só as que venderam, ordenadas por data desc
     const regs = state.records
       .filter(r=> r.sellerId===sid && r.monthKey===monthKey && r.outcome==="sold")
@@ -2358,20 +2361,23 @@
     const totalFat = regs.reduce((acc,r)=> acc + Number(r.value||0), 0);
     const totalPecas = regs.reduce((acc,r)=> acc + Number(r.pieces||0), 0);
 
+    const colspan = podeEditar ? 5 : 4;
     let linhas;
     if(regs.length===0){
-      linhas = `<tr><td colspan="4" style="text-align:center;color:#9db0d0;padding:20px">Nenhuma venda registrada neste mês.</td></tr>`;
+      linhas = `<tr><td colspan="${colspan}" style="text-align:center;color:#9db0d0;padding:20px">Nenhuma venda registrada neste mês.</td></tr>`;
     } else {
       linhas = regs.map(r=>{
         const dt = new Date(r.tsStart);
         const dia = r.dateKey.split("-").reverse().join("/");
         const hh = String(dt.getHours()).padStart(2,"0");
         const mm = String(dt.getMinutes()).padStart(2,"0");
+        const btnEditar = podeEditar ? `<td><button class="btn" style="padding:3px 9px;font-size:12px" onclick="abrirEditarVenda('${r.id}')">✏️</button></td>` : "";
         return `<tr>
           <td>${dia}</td>
           <td>${hh}:${mm}</td>
           <td><b>${formatMoney(r.value||0)}</b></td>
           <td>${formatNum(r.pieces||0)}</td>
+          ${btnEditar}
         </tr>`;
       }).join("");
     }
@@ -2381,9 +2387,107 @@
     box.querySelector(".vvResumo").innerHTML =
       `${regs.length} venda(s) · Faturamento ${formatMoney(totalFat)} · ${formatNum(totalPecas)} peça(s)`;
     box.querySelector(".vvBody").innerHTML = linhas;
+    // botão adicionar venda (só admin/super)
+    const addBtn = document.getElementById("vvAddBtn");
+    if(addBtn) addBtn.style.display = podeEditar ? "inline-block" : "none";
+    // cabeçalho da coluna de ação
+    const thAcao = document.getElementById("vvThAcao");
+    if(thAcao) thAcao.style.display = podeEditar ? "table-cell" : "none";
     openModal(box);
   }
   window.fecharVendasVendedor = function(){ closeModal(document.getElementById("vendasVendedorModal")); };
+
+  let VENDAS_CTX = null; // { sid, monthKey, nome }
+
+  // ===== ADICIONAR VENDA MANUAL (admin/super) =====
+  window.abrirAdicionarVenda = function(){
+    if(!VENDAS_CTX) return;
+    document.getElementById("evVendaId").value = ""; // vazio = nova
+    document.getElementById("evVendaTitulo").textContent = "Adicionar venda — " + VENDAS_CTX.nome;
+    document.getElementById("evVendaValor").value = "";
+    document.getElementById("evVendaPecas").value = "";
+    document.getElementById("evVendaData").value = todayKey();
+    document.getElementById("evVendaExcluir").style.display = "none";
+    openModal(document.getElementById("editVendaModal"));
+  };
+
+  // ===== EDITAR VENDA (admin/super) =====
+  window.abrirEditarVenda = function(recId){
+    const r = state.records.find(x=> x.id===recId);
+    if(!r) return;
+    document.getElementById("evVendaId").value = r.id;
+    document.getElementById("evVendaTitulo").textContent = "Editar venda";
+    document.getElementById("evVendaValor").value = r.value ? String(r.value).replace(".",",") : "";
+    document.getElementById("evVendaPecas").value = r.pieces || "";
+    document.getElementById("evVendaData").value = r.dateKey || todayKey();
+    document.getElementById("evVendaExcluir").style.display = "inline-block";
+    openModal(document.getElementById("editVendaModal"));
+  };
+
+  window.fecharEditarVenda = function(){ closeModal(document.getElementById("editVendaModal")); };
+
+  window.salvarEditarVenda = function(){
+    if(!VENDAS_CTX) return;
+    const recId = document.getElementById("evVendaId").value;
+    const valorStr = (document.getElementById("evVendaValor").value||"").trim();
+    const pecasStr = (document.getElementById("evVendaPecas").value||"").trim();
+    const dataStr = document.getElementById("evVendaData").value; // YYYY-MM-DD
+
+    const value = valorStr ? parseFloat(valorStr.replace(/\./g,"").replace(",",".")) : 0;
+    const pieces = pecasStr ? parseInt(pecasStr,10) : 0;
+
+    if(recId){
+      // EDITAR venda existente
+      const r = state.records.find(x=> x.id===recId);
+      if(!r) return;
+      r.value = isNaN(value)?0:value;
+      r.pieces = isNaN(pieces)?0:pieces;
+      if(dataStr){
+        const d = new Date(dataStr+"T12:00:00");
+        r.dateKey = todayKey(d);
+        r.monthKey = monthKey(d);
+        r.tsStart = d.getTime();
+        r.tsEnd = d.getTime();
+      }
+      try{ if(window.OMNIA_ADD_RECORD) window.OMNIA_ADD_RECORD(r); }catch(e){ console.error(e); }
+    } else {
+      // ADICIONAR venda nova
+      const d = dataStr ? new Date(dataStr+"T12:00:00") : new Date();
+      const novo = {
+        id: uid(),
+        tsStart: d.getTime(),
+        tsEnd: d.getTime(),
+        dateKey: todayKey(d),
+        monthKey: monthKey(d),
+        sellerId: VENDAS_CTX.sid,
+        outcome: "sold",
+        value: isNaN(value)?0:value,
+        pieces: isNaN(pieces)?0:pieces,
+        noSale: null,
+        obs: "Adicionada manualmente pelo gestor"
+      };
+      state.records.push(novo);
+      try{ if(window.OMNIA_ADD_RECORD) window.OMNIA_ADD_RECORD(novo); }catch(e){ console.error(e); }
+    }
+    save(state);
+    closeModal(document.getElementById("editVendaModal"));
+    // reabre o modal de vendas atualizado
+    abrirVendasVendedor(VENDAS_CTX.sid, VENDAS_CTX.monthKey);
+    try{ renderAll(); }catch(e){}
+  };
+
+  window.excluirVendaDoModal = function(){
+    const recId = document.getElementById("evVendaId").value;
+    if(!recId) return;
+    if(!confirm("Excluir esta venda? Esta ação não pode ser desfeita.")) return;
+    const idx = state.records.findIndex(x=> x.id===recId);
+    if(idx>=0) state.records.splice(idx,1);
+    try{ if(window.OMNIA_DEL_RECORD) window.OMNIA_DEL_RECORD(recId); }catch(e){ console.error(e); }
+    save(state);
+    closeModal(document.getElementById("editVendaModal"));
+    if(VENDAS_CTX) abrirVendasVendedor(VENDAS_CTX.sid, VENDAS_CTX.monthKey);
+    try{ renderAll(); }catch(e){}
+  };
 
   function renderData(){
     const view = $("dataView").value;
@@ -5403,13 +5507,50 @@
 <button class="close" onclick="fecharVendasVendedor()">Fechar</button>
 </div>
 <div class="modalBody">
-<div class="hint vvResumo" style="text-align:left"></div>
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+<div class="hint vvResumo" style="text-align:left;padding:0"></div>
+<button class="btn good" id="vvAddBtn" style="display:none" onclick="abrirAdicionarVenda()">+ Adicionar venda</button>
+</div>
 <div class="divider"></div>
 <div style="max-height:50vh;overflow:auto">
 <table style="width:100%">
-<thead><tr><th>Dia</th><th>Hora</th><th>Valor</th><th>Peças</th></tr></thead>
+<thead><tr><th>Dia</th><th>Hora</th><th>Valor</th><th>Peças</th><th id="vvThAcao" style="display:none">Ação</th></tr></thead>
 <tbody class="vvBody"></tbody>
 </table>
+</div>
+</div>
+</div>
+</div>
+
+<!-- MODAL EDITAR/ADICIONAR VENDA -->
+<div class="modalBack" id="editVendaModal">
+<div class="modal">
+<div class="modalHead">
+<h3 id="evVendaTitulo">Editar venda</h3>
+<button class="close" onclick="fecharEditarVenda()">Fechar</button>
+</div>
+<div class="modalBody">
+<input type="hidden" id="evVendaId"/>
+<div class="field">
+<label>Valor da venda (R$)</label>
+<input id="evVendaValor" inputmode="decimal" placeholder="Ex: 199,90" style="padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:14px;width:100%"/>
+</div>
+<div class="field" style="margin-top:10px">
+<label>Peças</label>
+<input id="evVendaPecas" inputmode="numeric" placeholder="Ex: 3" style="padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:14px;width:100%"/>
+</div>
+<div class="field" style="margin-top:10px">
+<label>Data da venda</label>
+<input id="evVendaData" type="date" style="padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:14px;width:100%"/>
+</div>
+<div class="hint" style="text-align:left;padding:8px 0 0">Os campos não são obrigatórios, mas o ideal é preencher todos. Alterações refletem no faturamento, conversão e metas.</div>
+<div class="divider"></div>
+<div style="display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap">
+<button class="btn bad" id="evVendaExcluir" onclick="excluirVendaDoModal()" style="display:none">🗑 Excluir venda</button>
+<div style="display:flex;gap:10px;margin-left:auto">
+<button class="btn" onclick="fecharEditarVenda()">Cancelar</button>
+<button class="btn good" onclick="salvarEditarVenda()">Salvar</button>
+</div>
 </div>
 </div>
 </div>
