@@ -34,6 +34,10 @@
   .field label{font-size:11px;color:#9db0d0;text-transform:uppercase;letter-spacing:.05em;font-weight:700;}
   .field input,.field select{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:14px;outline:none;}
   .hint{font-size:13px;color:#9db0d0;padding:16px 0;text-align:center;}
+  .vazio{display:flex;flex-direction:column;align-items:center;gap:8px;padding:40px 20px;text-align:center;}
+  .vazio .ico{font-size:44px;opacity:.85;margin-bottom:4px;}
+  .vazio .tit{font-size:16px;font-weight:800;color:#e7eefc;}
+  .vazio .txt{font-size:13px;color:#9db0d0;max-width:340px;line-height:1.5;}
   .tag{display:inline-flex;align-items:center;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:700;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);}
   .tag.ok{background:rgba(41,224,122,.14);border-color:rgba(41,224,122,.3);color:#7fffc0;}
   .tag.atraso{background:rgba(255,209,102,.14);border-color:rgba(255,209,102,.3);color:#ffd166;}
@@ -183,6 +187,9 @@
 
   function showLoading(m){ document.getElementById("loadingScreen").classList.add("show"); document.getElementById("loadingMsg").textContent=m||"Carregando..."; }
   function hideLoading(){ document.getElementById("loadingScreen").classList.remove("show"); }
+  function estadoVazio(ico, tit, txt){
+    return `<div class="vazio"><div class="ico">${ico}</div><div class="tit">${tit}</div><div class="txt">${txt||""}</div></div>`;
+  }
   function hojeStr(){
     // Data LOCAL (horário do dispositivo/Brasil), não UTC.
     // Usar toISOString() causava bug: pontos batidos após 21h caíam no dia seguinte.
@@ -367,7 +374,7 @@
       <div class="kpi"><div class="t">Horas no mês</div><div class="v" style="font-size:18px">${fmtMin(totMin)}</div></div>
       <div class="kpi"><div class="t">Atrasos</div><div class="v">${atrasos}</div></div>
       <div class="kpi"><div class="t">Hora extra</div><div class="v" style="font-size:18px">${fmtMin(extraMin)}</div></div>`;
-    if(meus.length===0){ document.getElementById("histTabela").innerHTML='<div class="hint">Nenhum registro neste mês.</div>'; return; }
+    if(meus.length===0){ document.getElementById("histTabela").innerHTML=estadoVazio("📅","Nenhum ponto neste mÃªs","Quando vocÃª bater o ponto (entrada, intervalo, retorno e saÃ­da), seus dias aparecem aqui com as horas trabalhadas."); return; }
     const rows=meus.map(r=>{
       const m=r.marcacoes||{}; const s=statusDoDia(r);
       return `<tr><td>${(r.data||"").split("-").reverse().join("/")}</td>
@@ -389,7 +396,7 @@
       <div class="kpi"><div class="t">Presentes</div><div class="v">${presentes}</div></div>
       <div class="kpi"><div class="t">Atrasados</div><div class="v">${atrasados}</div></div>
       <div class="kpi"><div class="t">Registros no dia</div><div class="v">${doDia.length}</div></div>`;
-    if(doDia.length===0){ document.getElementById("equipeTabela").innerHTML='<div class="hint">Nenhum registro neste dia.</div>'; return; }
+    if(doDia.length===0){ document.getElementById("equipeTabela").innerHTML=estadoVazio("👥","NinguÃ©m bateu ponto neste dia","Escolha outra data ou aguarde a equipe registrar o ponto. Os registros aparecem aqui em tempo real."); return; }
     const rows=doDia.sort((a,b)=>(a.nome||"").localeCompare(b.nome||"")).map(r=>{
       const m=r.marcacoes||{}; const s=statusDoDia(r);
       return `<tr><td><b>${r.nome||"—"}</b></td><td>${m.entrada?m.entrada.hora:"--"}</td>
@@ -429,7 +436,7 @@
       const ex=minutosTrabalhados(r)-CONFIG.carga*60; if(r.marcacoes&&r.marcacoes.saida&&ex>0) porPessoa[k].extra+=ex;
     });
     const arr=Object.values(porPessoa).sort((a,b)=>(a.nome||"").localeCompare(b.nome||""));
-    if(arr.length===0){ document.getElementById("relTabela").innerHTML='<div class="hint">Nenhum registro neste mês.</div>'; return; }
+    if(arr.length===0){ document.getElementById("relTabela").innerHTML=estadoVazio("📊","Sem dados neste mÃªs","Assim que a equipe registrar pontos, o resumo por colaborador (horas, atrasos, extras) aparece aqui."); return; }
     const rows=arr.map(p=>`<tr><td><b>${p.nome||"—"}</b></td><td>${p.dias}</td><td>${fmtMin(p.min)}</td><td>${p.atrasos}</td><td>${fmtMin(p.extra)}</td></tr>`).join("");
     document.getElementById("relTabela").innerHTML=`<table><thead><tr><th>Colaborador</th><th>Dias</th><th>Horas totais</th><th>Atrasos</th><th>Hora extra</th></tr></thead><tbody>${rows}</tbody></table>`;
   };
