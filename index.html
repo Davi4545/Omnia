@@ -5437,8 +5437,8 @@
       }
     }
 
-    // Botão Catálogo — SÓ super admin por enquanto (fase de testes)
-    if(isSuper && !document.getElementById("btnCatalogo")){
+    // Botão Catálogo — para todos (super, admin e vendedor); cada loja tem o seu
+    if(!document.getElementById("btnCatalogo")){
       const ref = document.getElementById("btnSettings");
       if(ref && ref.parentNode){
         const b = document.createElement("button");
