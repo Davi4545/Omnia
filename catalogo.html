@@ -46,6 +46,10 @@
   .field input,.field select,.field textarea{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:14px;outline:none;font-family:inherit;}
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
   .hint{font-size:13px;color:#9db0d0;padding:16px 0;text-align:center;}
+  .vazio{display:flex;flex-direction:column;align-items:center;gap:8px;padding:40px 20px;text-align:center;grid-column:1/-1;}
+  .vazio .ico{font-size:44px;opacity:.85;margin-bottom:4px;}
+  .vazio .tit{font-size:16px;font-weight:800;color:#e7eefc;}
+  .vazio .txt{font-size:13px;color:#9db0d0;max-width:360px;line-height:1.5;}
   .modalBack{display:none;position:fixed;inset:0;width:100%;height:100%;background:rgba(0,0,0,.7);z-index:9999;align-items:flex-start;justify-content:center;overflow-y:auto;overflow-x:hidden;padding:24px 14px;}
   .modalBack.show{display:flex;}
   .modal{background:#0f141c;border:1px solid rgba(255,255,255,.12);border-radius:18px;max-width:520px;width:100%;padding:22px;margin:auto;}
@@ -275,6 +279,9 @@
 
   function showLoading(m){ document.getElementById("loadingScreen").classList.add("show"); document.getElementById("loadingMsg").textContent=m||"Carregando..."; }
   function hideLoading(){ document.getElementById("loadingScreen").classList.remove("show"); }
+  function estadoVazio(ico, tit, txt){
+    return `<div class="vazio"><div class="ico">${ico}</div><div class="tit">${tit}</div><div class="txt">${txt||""}</div></div>`;
+  }
   function money(v){ return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"}); }
   function brNum(s){ if(typeof s==="number") return s; s=(s||"").toString().trim().replace(/\./g,"").replace(",","."); const n=parseFloat(s); return isNaN(n)?0:n; }
   function zap(tel){ const n=(tel||"").replace(/\D/g,""); return n.length>=10?("55"+n):n; }
@@ -426,7 +433,23 @@
       return;
     }
 
-    if(lista.length===0){ grid.innerHTML='<div class="hint">Nenhum produto encontrado.</div>'; return; }
+    if(lista.length===0){
+      if(PRODUTOS.length===0){
+        // catálogo realmente sem produtos
+        if(MODO==="cliente"){
+          grid.innerHTML = estadoVazio("🛍️","Catálogo em montagem","Esta loja ainda não publicou produtos. Volte em breve!");
+        } else {
+          const ehGestor = MY && (MY.role==="admin"||MY.role==="superadmin");
+          grid.innerHTML = ehGestor
+            ? estadoVazio("📦","Nenhum produto ainda","Vá na aba “Gerenciar produtos” e clique em “+ Novo produto” para começar a montar o catálogo da sua loja.")
+            : estadoVazio("🛍️","Catálogo em montagem","Os produtos ainda não foram cadastrados pela loja. Assim que aparecerem, você poderá montar links para seus clientes.");
+        }
+      } else {
+        // tem produtos, mas o filtro/busca não achou
+        grid.innerHTML = estadoVazio("🔎","Nenhum resultado","Nenhum produto corresponde à busca ou aos filtros. Tente limpar a busca ou trocar categoria, gênero, tamanho.");
+      }
+      return;
+    }
     grid.innerHTML=lista.map(cardProduto).join("");
   };
 
@@ -500,7 +523,7 @@
   // ===== GERENCIAR (funcionário) =====
   function renderGerenciar(){
     const grid=document.getElementById("gridGerenciar");
-    if(PRODUTOS.length===0){ grid.innerHTML='<div class="hint">Nenhum produto ainda. Clique em "+ Novo produto".</div>'; return; }
+    if(PRODUTOS.length===0){ grid.innerHTML=estadoVazio("📦","Nenhum produto cadastrado","Clique em “+ Novo produto” para adicionar a primeira peça: foto, referência, preço, tamanhos e gênero. Leva menos de um minuto."); return; }
     grid.innerHTML=PRODUTOS.slice().sort((a,b)=>(a.nome||"").localeCompare(b.nome||"")).map(p=>{
       const foto=p.foto?`<img class="foto" src="${p.foto}"/>`:`<div class="semFoto">📦</div>`;
       const temPromo=p.promo>0 && p.promo<p.preco;
@@ -678,7 +701,7 @@
   function renderCarrinho(){
     const ids=Object.keys(CART).filter(id=>CART[id]>0);
     const lista=document.getElementById("cartLista");
-    if(ids.length===0){ lista.innerHTML='<div class="hint">Seu carrinho está vazio.</div>'; document.getElementById("cartTotal").textContent=money(0); return; }
+    if(ids.length===0){ lista.innerHTML=estadoVazio("🛒","Carrinho vazio","Adicione peças pelo catálogo e elas aparecem aqui para você enviar o pedido no WhatsApp."); document.getElementById("cartTotal").textContent=money(0); return; }
     let total=0;
     lista.innerHTML=ids.map(id=>{
       const p=PRODUTOS.find(x=>x.id===id); if(!p) return "";
