@@ -187,6 +187,13 @@
 
   function showLoading(m){ document.getElementById("loadingScreen").classList.add("show"); document.getElementById("loadingMsg").textContent=m||"Carregando..."; }
   function hideLoading(){ document.getElementById("loadingScreen").classList.remove("show"); }
+  function msgErro(e, oQueTentava){
+    const code = (e && (e.code||e.message||"")) + "";
+    if(/permission|insufficient|PERMISSION/i.test(code)) return "Sem permissao para "+(oQueTentava||"esta acao")+". Faca login de novo ou fale com o administrador.";
+    if(/network|unavailable|offline|failed to get|deadline/i.test(code)) return "Parece que voce esta sem internet. Verifique a conexao e tente de novo.";
+    if(/quota|resource-exhausted/i.test(code)) return "O sistema esta sobrecarregado. Aguarde e tente de novo.";
+    return "Nao foi possivel "+(oQueTentava||"concluir")+". Verifique sua internet e tente de novo.";
+  }
   function estadoVazio(ico, tit, txt){
     return `<div class="vazio"><div class="ico">${ico}</div><div class="tit">${tit}</div><div class="txt">${txt||""}</div></div>`;
   }
@@ -299,7 +306,7 @@
 
     showLoading("Registrando "+tipo+"...");
     try{ await setDoc(doc(pontoRef, reg.id), reg); }
-    catch(e){ console.error(e); alert("Erro ao registrar ponto."); }
+    catch(e){ console.error(e); alert(msgErro(e,"registrar o ponto")); }
     hideLoading();
   };
 
@@ -415,7 +422,7 @@
     if(!confirm(`Excluir o ponto de "${nome}" do dia ${dataFmt}?\n\nIsso apaga TODAS as marcações desse dia (entrada, intervalo, retorno, saída). Esta ação não pode ser desfeita.`)) return;
     showLoading("Excluindo ponto...");
     try{ await deleteDoc(doc(pontoRef, id)); }
-    catch(e){ console.error(e); alert("Erro ao excluir."); }
+    catch(e){ console.error(e); alert(msgErro(e,"excluir o registro")); }
     hideLoading();
   };
 
@@ -469,7 +476,7 @@
     };
     showLoading("Salvando...");
     try{ await setDoc(doc(db,"stores",STORE_ID,"pontoConfig","jornada"), CONFIG); alert("Configuração salva!"); renderTudo(); }
-    catch(e){ console.error(e); alert("Erro ao salvar config."); }
+    catch(e){ console.error(e); alert(msgErro(e,"salvar a configuracao")); }
     hideLoading();
   };
 </script>
