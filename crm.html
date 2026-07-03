@@ -38,6 +38,10 @@
   .field input:focus,.field select:focus,.field textarea:focus{border-color:rgba(98,168,255,.5);}
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
   .hint{font-size:13px;color:#9db0d0;padding:16px 0;text-align:center;}
+  .vazio{display:flex;flex-direction:column;align-items:center;gap:8px;padding:40px 20px;text-align:center;}
+  .vazio .ico{font-size:44px;opacity:.85;margin-bottom:4px;}
+  .vazio .tit{font-size:16px;font-weight:800;color:#e7eefc;}
+  .vazio .txt{font-size:13px;color:#9db0d0;max-width:340px;line-height:1.5;}
   .tag{display:inline-flex;align-items:center;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:700;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);}
   .tag.vip{background:rgba(255,209,102,.16);border-color:rgba(255,209,102,.35);color:#ffd166;}
   .tag.novo{background:rgba(98,168,255,.16);border-color:rgba(98,168,255,.35);color:#a0c8ff;}
@@ -338,6 +342,9 @@
 
   function showLoading(m){ document.getElementById("loadingScreen").classList.add("show"); document.getElementById("loadingMsg").textContent=m||"Carregando..."; }
   function hideLoading(){ document.getElementById("loadingScreen").classList.remove("show"); }
+  function estadoVazio(ico, tit, txt){
+    return `<div class="vazio"><div class="ico">${ico}</div><div class="tit">${tit}</div><div class="txt">${txt||""}</div></div>`;
+  }
   function money(v){ return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"}); }
   function brNum(s){ if(typeof s==="number") return s; s=(s||"").toString().trim().replace(/\./g,"").replace(",","."); const n=parseFloat(s); return isNaN(n)?0:n; }
 
@@ -557,7 +564,16 @@
       <div class="kpi"><div class="t">Leads</div><div class="v">${lista.filter(c=>c.etapa==="lead").length}</div></div>
       <div class="kpi"><div class="t">Negociação</div><div class="v">${lista.filter(c=>c.etapa==="negociacao").length}</div></div>
       <div class="kpi"><div class="t">Faturado (clientes)</div><div class="v" style="font-size:16px">${money(lista.reduce((s,c)=>s+totalGasto(c),0))}</div></div>`;
-    if(filtrados.length===0){ document.getElementById("tabelaClientes").innerHTML='<div class="hint">Nenhum cliente encontrado.</div>'; return; }
+    if(filtrados.length===0){
+      if(lista.length===0){
+        // loja nova, nenhum cliente ainda
+        document.getElementById("tabelaClientes").innerHTML = estadoVazio("👥","Nenhum cliente ainda","Os clientes entram aqui automaticamente quando você registra uma venda no OMNIA (informando nome e telefone). Você também pode cadastrar manualmente no botão “+ Novo cliente”.");
+      } else {
+        // tem clientes, mas o filtro não achou
+        document.getElementById("tabelaClientes").innerHTML = estadoVazio("🔎","Nenhum resultado","Nenhum cliente corresponde à busca ou aos filtros. Tente limpar a busca ou trocar os filtros.");
+      }
+      return;
+    }
     const etapaTag={ lead:'🔵 Lead', negociacao:'🟡 Negociação', fechado:'🟢 Fechado' };
     const rows=filtrados.map(c=>`
       <tr class="clickRow" onclick="abrirFicha('${c.id}')">
