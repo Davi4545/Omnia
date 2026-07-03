@@ -451,6 +451,8 @@
     .close{background:transparent; border:1px solid var(--line); color:var(--text); border-radius:12px; padding:8px 10px; cursor:pointer}
     .modalBody{padding:12px; max-height: calc(100vh - 140px); overflow:auto}
     .hint{font-size:12px; color:var(--muted)}
+    .vazioDados{padding:34px 20px;text-align:center;font-size:16px;font-weight:800;color:var(--ink);line-height:1.6}
+    .vazioDados span{display:inline-block;margin-top:4px;font-size:13px;font-weight:400;color:var(--muted)}
     .dangerZone{
       padding:12px; border-radius:14px; border:1px dashed rgba(255,77,77,.4);
       background: rgba(255,77,77,.08);
@@ -1871,8 +1873,10 @@
 
     if(state.queue.length === 0){
       const empty = document.createElement("div");
-      empty.className = "hint";
-      empty.textContent = "Fila vazia. Adicione vendedores do rodapé para começar.";
+      empty.style.cssText = "display:flex;flex-direction:column;align-items:center;gap:8px;padding:36px 20px;text-align:center;";
+      empty.innerHTML = '<div style="font-size:42px;opacity:.85">🎯</div>'
+        + '<div style="font-size:16px;font-weight:800">Fila vazia</div>'
+        + '<div style="font-size:13px;color:var(--muted);max-width:320px;line-height:1.5">Adicione os vendedores no botão “+ Vendedor” (no rodapé) para começar a organizar os atendimentos do dia.</div>';
       q.appendChild(empty);
       return;
     }
@@ -2546,7 +2550,7 @@
     if(view === "dayRank"){
       const rows = aggBySeller(recsDay);
       if(rows.length === 0){
-        wrap.innerHTML = `<div class="hint">Sem registros em ${chosenDate}.</div>`;
+        wrap.innerHTML = `<div class="vazioDados">📊 Nenhuma venda registrada em ${chosenDate}.<br><span>Escolha outra data ou registre atendimentos na aba Operação.</span></div>`;
         return;
       }
       rows.sort((a,b)=>{
@@ -2579,7 +2583,7 @@
     if(view === "daily"){
       const rows = groupByDate(recsMonth);
       if(rows.length === 0){
-        wrap.innerHTML = `<div class="hint">Sem registros no mês ${chosenMonth}.</div>`;
+        wrap.innerHTML = `<div class="vazioDados">📊 Nenhuma venda neste mês.<br><span>Os dados aparecem aqui conforme a equipe registra os atendimentos.</span></div>`;
         return;
       }
       wrap.appendChild(makeTable(
@@ -2598,7 +2602,7 @@
       }
       const dates = Array.from(byDate.keys()).sort((a,b)=>a.localeCompare(b));
       if(dates.length === 0){
-        wrap.innerHTML = `<div class="hint">Sem registros no mês ${chosenMonth}.</div>`;
+        wrap.innerHTML = `<div class="vazioDados">📊 Nenhuma venda neste mês.<br><span>Os dados aparecem aqui conforme a equipe registra os atendimentos.</span></div>`;
         return;
       }
       const sellers = state.sellers.map(s=>s.id);
@@ -2620,7 +2624,7 @@
     if(view === "monthRank"){
       const rows = aggBySeller(recsMonth);
       if(rows.length === 0){
-        wrap.innerHTML = `<div class="hint">Sem registros no mês ${chosenMonth}.</div>`;
+        wrap.innerHTML = `<div class="vazioDados">📊 Nenhuma venda neste mês.<br><span>Os dados aparecem aqui conforme a equipe registra os atendimentos.</span></div>`;
         return;
       }
       rows.sort((a,b)=>{
@@ -2655,7 +2659,7 @@
 
     if(view === "raw"){
       if(recsMonth.length === 0){
-        wrap.innerHTML = `<div class="hint">Sem registros no mês ${chosenMonth}.</div>`;
+        wrap.innerHTML = `<div class="vazioDados">📊 Nenhuma venda neste mês.<br><span>Os dados aparecem aqui conforme a equipe registra os atendimentos.</span></div>`;
         return;
       }
 
