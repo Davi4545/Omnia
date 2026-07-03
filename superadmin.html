@@ -94,6 +94,20 @@
     <div class="cardHead"><h2>👥 Todos os usuários</h2><button class="btn" onclick="carregarTudo()">↻ Atualizar</button></div>
     <div id="tabelaUsuarios"><div class="hint">Carregando usuários...</div></div>
   </div>
+
+  <!-- Backup -->
+  <div class="card">
+    <div class="cardHead"><h2>💾 Backup dos dados</h2></div>
+    <p class="hint" style="text-align:left;padding:0 0 14px">Baixe uma cópia de segurança de TODOS os dados de TODAS as lojas (vendas, clientes, ponto, produtos, configurações). Guarde em local seguro. Recomendado fazer semanalmente.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn good" onclick="backupJSON()">⬇️ Backup completo (JSON)</button>
+      <button class="btn" onclick="backupCSV()">📊 Backup em planilhas (CSV)</button>
+    </div>
+    <p class="hint" style="text-align:left;padding:12px 0 0">
+      <b>JSON</b>: arquivo completo para restaurar tudo se precisar.<br>
+      <b>CSV</b>: planilhas separadas (vendas, clientes, ponto) para abrir no Excel.
+    </p>
+  </div>
 </div>
 
 <script type="module">
@@ -343,6 +357,96 @@
       };
       alert(msgs[e.code] || ("Erro ao enviar: "+e.code));
     }
+  };
+
+  // ===== BACKUP =====
+  const COLECOES = ["app","records","clientes","ponto","pontoConfig","produtos","vendedores"];
+
+  async function coletarTudo(){
+    const dump = { geradoEm:new Date().toISOString(), lojas:{}, users:[] };
+    try{
+      const us = await getDocs(collection(db,"users"));
+      us.forEach(d=> dump.users.push({ id:d.id, ...d.data() }));
+    }catch(e){ console.error("users:",e); }
+    for(const l of LOJAS){
+      const lojaDump = { info:l, colecoes:{} };
+      for(const col of COLECOES){
+        try{
+          const snap = await getDocs(collection(db,"stores",l.id,col));
+          const arr = [];
+          snap.forEach(d=> arr.push({ id:d.id, ...d.data() }));
+          lojaDump.colecoes[col] = arr;
+        }catch(e){ console.error(l.id,col,e); lojaDump.colecoes[col]=[]; }
+      }
+      dump.lojas[l.id] = lojaDump;
+    }
+    return dump;
+  }
+
+  function baixarArquivo(nome, conteudo, tipo){
+    const blob = new Blob([conteudo], { type: tipo });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = nome;
+    a.click();
+    setTimeout(()=> URL.revokeObjectURL(a.href), 2000);
+  }
+
+  window.backupJSON = async function(){
+    showLoading("Coletando dados de todas as lojas...");
+    try{
+      const dump = await coletarTudo();
+      const data = new Date().toISOString().slice(0,10);
+      baixarArquivo(`omnia_backup_completo_${data}.json`, JSON.stringify(dump,null,2), "application/json");
+      hideLoading();
+      alert("Backup JSON baixado! Guarde este arquivo em local seguro (Google Drive, pen drive, etc.).");
+    }catch(e){ console.error(e); hideLoading(); alert("Erro ao gerar backup."); }
+  };
+
+  function toCSV(linhas){
+    return linhas.map(l=> l.map(v=>{
+      const s = (v===null||v===undefined) ? "" : (typeof v==="object" ? JSON.stringify(v) : String(v));
+      return `"${s.replace(/"/g,'""')}"`;
+    }).join(";")).join("\n");
+  }
+
+  window.backupCSV = async function(){
+    showLoading("Gerando planilhas de todas as lojas...");
+    try{
+      const dump = await coletarTudo();
+      const data = new Date().toISOString().slice(0,10);
+      const nomeLoja = {};
+      LOJAS.forEach(l=> nomeLoja[l.id]=l.name||l.code||l.id);
+
+      const vendas = [["Loja","Data","Vendedor","Resultado","Valor","Pecas","Obs"]];
+      const clientes = [["Loja","Nome","Telefone","Etapa","Dono","Gasto total","Compras","Aniversario","Criado em"]];
+      const ponto = [["Loja","Colaborador","Data","Entrada","Intervalo","Retorno","Saida"]];
+
+      for(const lojaId in dump.lojas){
+        const ln = nomeLoja[lojaId]||lojaId;
+        const cols = dump.lojas[lojaId].colecoes;
+
+        (cols.records||[]).forEach(r=>{
+          const dt = r.dateKey || (r.tsStart? new Date(r.tsStart).toISOString().slice(0,10):"");
+          vendas.push([ln, dt, r.sellerId||"", r.outcome==="sold"?"Vendeu":"Nao vendeu", r.value||0, r.pieces||0, r.obs||""]);
+        });
+        (cols.clientes||[]).forEach(c=>{
+          const gasto = (c.compras||[]).reduce((s,x)=> s+Number(x.valor||0),0);
+          clientes.push([ln, c.nome||"", c.telefone||"", c.etapa||"", c.ownerNome||"", gasto, (c.compras||[]).length, c.nascimento||"", c.criadoEm||""]);
+        });
+        (cols.ponto||[]).forEach(p=>{
+          const m = p.marcacoes||{};
+          ponto.push([ln, p.nome||"", p.data||"", m.entrada?.hora||"", m.intervalo?.hora||"", m.retorno?.hora||"", m.saida?.hora||""]);
+        });
+      }
+
+      baixarArquivo(`omnia_vendas_${data}.csv`, "\ufeff"+toCSV(vendas), "text/csv;charset=utf-8;");
+      setTimeout(()=> baixarArquivo(`omnia_clientes_${data}.csv`, "\ufeff"+toCSV(clientes), "text/csv;charset=utf-8;"), 400);
+      setTimeout(()=> baixarArquivo(`omnia_ponto_${data}.csv`, "\ufeff"+toCSV(ponto), "text/csv;charset=utf-8;"), 800);
+
+      hideLoading();
+      alert("3 planilhas baixadas: vendas, clientes e ponto (de todas as lojas).");
+    }catch(e){ console.error(e); hideLoading(); alert("Erro ao gerar planilhas."); }
   };
 </script>
 <!-- MODAL USUÁRIOS DA LOJA -->
