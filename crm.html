@@ -138,6 +138,7 @@
             <option value="recente">Mais recente</option>
           </select>
           <button class="btn" onclick="exportarCSV()">⬇️ Excel</button>
+          <button class="btn warn" id="btnLiberarOrfaos" onclick="abrirLiberarOrfaos()" style="display:none">🔓 Liberar clientes</button>
           <button class="btn good" onclick="abrirNovoCliente()">+ Novo cliente</button>
         </div>
       </div>
@@ -186,6 +187,18 @@
       <div class="cardHead"><h2>📞 Pós-venda (fechados há 30+ dias)</h2></div>
       <div id="posVenda"><div class="hint">Carregando...</div></div>
     </div>
+  </div>
+</div>
+
+<!-- MODAL LIBERAR CLIENTES (admin) -->
+<div class="modalBack" id="modalLiberar">
+  <div class="modal">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <h2 style="font-size:18px;font-weight:900">🔓 Liberar clientes</h2>
+      <button class="btn" onclick="fecharLiberar()">✕</button>
+    </div>
+    <p class="hint" style="text-align:left;padding:0 0 14px">Escolha um vendedor para liberar todos os clientes dele. Eles ficam <b>sem dono</b> e disponíveis para todos os vendedores da loja — o primeiro que abrir a ficha de cada cliente vira o dono. Útil para corrigir clientes atribuídos ao vendedor errado.</p>
+    <div class="libBody" style="max-height:55vh;overflow:auto"></div>
   </div>
 </div>
 
@@ -304,7 +317,7 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut }
     from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-  import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, onSnapshot }
+  import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, onSnapshot }
     from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -357,12 +370,18 @@
 
   window.sair=async function(){ await signOut(auth); window.location.href="./login.html"; };
 
+  // Um cliente é "órfão" (sem dono) quando não tem ownerUid nem ownerNome
+  function ehOrfao(c){
+    return !(c.ownerUid) && !((c.ownerNome||"").trim());
+  }
+
   function clientesVisiveis(){
     if(MY.role==="admin"||MY.role==="superadmin") return CLIENTES;
     const meuNome = (MY.name||MY.email||"").trim().toLowerCase();
     return CLIENTES.filter(c=>
       c.ownerUid===MY.uid ||
-      ((c.ownerNome||"").trim().toLowerCase() === meuNome && meuNome!=="")
+      ((c.ownerNome||"").trim().toLowerCase() === meuNome && meuNome!=="") ||
+      ehOrfao(c)  // clientes sem dono aparecem para todos os vendedores da loja
     );
   }
 
@@ -371,6 +390,58 @@
       document.getElementById("view"+x.charAt(0).toUpperCase()+x.slice(1)).style.display=(x===t)?"block":"none";
       document.getElementById("tab"+x.charAt(0).toUpperCase()+x.slice(1)).classList.toggle("active",x===t);
     });
+  };
+
+  // ===== LIBERAR CLIENTES (admin/super) — transforma clientes de um vendedor em órfãos =====
+  window.abrirLiberarOrfaos=function(){
+    if(!(MY.role==="admin"||MY.role==="superadmin")) return;
+    // conta clientes por dono
+    const porDono = {};
+    CLIENTES.forEach(c=>{
+      if(c.ownerUid || (c.ownerNome||"").trim()){
+        const chave = c.ownerUid || ("nome:"+(c.ownerNome||"").trim());
+        if(!porDono[chave]) porDono[chave] = { uid:c.ownerUid||"", nome:c.ownerNome||"(sem nome)", qtd:0 };
+        porDono[chave].qtd++;
+      }
+    });
+    const donos = Object.values(porDono).sort((a,b)=>(a.nome||"").localeCompare(b.nome||""));
+    const box = document.getElementById("modalLiberar");
+    if(donos.length===0){
+      box.querySelector(".libBody").innerHTML = '<div class="hint">Não há clientes com dono para liberar.</div>';
+    } else {
+      box.querySelector(".libBody").innerHTML = donos.map(d=>`
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);margin-bottom:8px">
+          <div><b>${d.nome}</b><br><span style="font-size:12px;color:#9db0d0">${d.qtd} cliente(s)</span></div>
+          <button class="btn warn" onclick="liberarDoVendedor('${d.uid}','${(d.nome||'').replace(/'/g,"")}')">🔓 Liberar todos</button>
+        </div>`).join("");
+    }
+    box.classList.add("show");
+  };
+  window.fecharLiberar=function(){ document.getElementById("modalLiberar").classList.remove("show"); };
+
+  window.liberarDoVendedor=async function(uid, nome){
+    // encontra os clientes desse dono (por uid, ou por nome se uid vazio)
+    const alvos = CLIENTES.filter(c=>{
+      if(uid) return c.ownerUid===uid;
+      return (c.ownerNome||"").trim()===nome;
+    });
+    if(alvos.length===0){ alert("Nenhum cliente encontrado."); return; }
+    if(!confirm(`Liberar ${alvos.length} cliente(s) de "${nome}"?\n\nEles ficarão SEM DONO e visíveis para todos os vendedores da loja. O primeiro vendedor que abrir a ficha de cada cliente vira o dono dele.`)) return;
+    showLoading("Liberando clientes...");
+    try{
+      for(const c of alvos){
+        await updateDoc(doc(db,"stores",STORE_ID,"clientes",c.id), {
+          ownerUid: "",
+          ownerNome: "",
+          atualizadoEm: new Date().toISOString()
+        });
+        c.ownerUid=""; c.ownerNome="";
+      }
+      hideLoading();
+      fecharLiberar();
+      alert(`${alvos.length} cliente(s) liberado(s)! Agora estão disponíveis para os vendedores da loja.`);
+      renderClientes();
+    }catch(e){ console.error(e); hideLoading(); alert("Erro ao liberar clientes."); }
   };
 
   function renderTudo(){ renderHoje(); renderClientes(); renderFunil(); renderMetricas(); renderLembretes(); }
@@ -459,6 +530,8 @@
     const selVend = document.getElementById("filtroVendedor");
     if(selVend && (MY.role==="admin"||MY.role==="superadmin")){
       selVend.style.display = "inline-block";
+      const btnLib = document.getElementById("btnLiberarOrfaos");
+      if(btnLib) btnLib.style.display = "inline-block";
       const donos = {};
       lista.forEach(c=>{ if(c.ownerUid) donos[c.ownerUid] = c.ownerNome || c.ownerUid; });
       const atual = selVend.value;
@@ -488,7 +561,7 @@
     const etapaTag={ lead:'🔵 Lead', negociacao:'🟡 Negociação', fechado:'🟢 Fechado' };
     const rows=filtrados.map(c=>`
       <tr class="clickRow" onclick="abrirFicha('${c.id}')">
-        <td><b>${c.nome||"—"}</b> ${tagsHtml(c.tags, c)}</td>
+        <td><b>${c.nome||"—"}</b> ${tagsHtml(c.tags, c)} ${ehOrfao(c)?'<span class="tag" style="background:rgba(255,209,102,.16);border-color:rgba(255,209,102,.35);color:#ffd166">🔓 sem dono</span>':''}</td>
         <td>${c.telefone||"—"}</td>
         <td><span class="tag">${etapaTag[c.etapa]||"—"}</span></td>
         <td>${money(totalGasto(c))}</td>
@@ -580,7 +653,24 @@
   };
 
   // ===== FICHA =====
-  window.abrirFicha=function(id){ fichaAtualId=id; renderFicha(); document.getElementById("modalFicha").classList.add("show"); };
+  window.abrirFicha=async function(id){
+    fichaAtualId=id;
+    // Adoção automática: se é vendedor e o cliente é órfão, ele vira o dono
+    const c = CLIENTES.find(x=>x.id===id);
+    if(c && MY.role==="seller" && ehOrfao(c)){
+      try{
+        await updateDoc(doc(db,"stores",STORE_ID,"clientes",id), {
+          ownerUid: MY.uid,
+          ownerNome: MY.name || MY.email || "",
+          atualizadoEm: new Date().toISOString()
+        });
+        c.ownerUid = MY.uid;
+        c.ownerNome = MY.name || MY.email || "";
+      }catch(e){ console.error("adotar cliente:", e); }
+    }
+    renderFicha();
+    document.getElementById("modalFicha").classList.add("show");
+  };
   window.fecharFicha=function(){ fichaAtualId=null; document.getElementById("modalFicha").classList.remove("show"); };
   function atualizarFichaAberta(){ if(fichaAtualId && document.getElementById("modalFicha").classList.contains("show")) renderFicha(); }
 
