@@ -476,6 +476,27 @@
       gap:10px;
       z-index: 60;
     }
+    .themeOpts{
+      display:flex;
+      flex-direction: column;
+      gap:10px;
+      transition: opacity .2s ease, transform .2s ease, max-height .25s ease;
+      transform-origin: bottom center;
+      order: 1;
+    }
+    /* estado recolhido: esconde os botões de cor, mantém só o pincel */
+    .themeDock.collapsed .themeOpts{
+      opacity:0;
+      transform: scale(.6) translateY(10px);
+      max-height:0;
+      pointer-events:none;
+      overflow:hidden;
+    }
+    .themeBtn.toggleTheme{
+      background: rgba(255,255,255,.10);
+      order: 2; /* o pincel fica embaixo, os temas sobem a partir dele */
+    }
+    .themeDock{ }
     .themeBtn{
       width: 34px;
       height: 34px;
@@ -1304,7 +1325,12 @@
 <!-- FX Layer -->
 <div id="fxLayer"></div>
 <!-- THEME DOCK -->
-<div class="themeDock">
+<div class="themeDock" id="themeDock">
+<button class="themeBtn toggleTheme" id="themeToggle" title="Mostrar/ocultar temas">
+<span class="themeTip">Temas</span>
+<span style="font-size:16px">🎨</span>
+</button>
+<div class="themeOpts" id="themeOpts">
 <button class="themeBtn default" id="themeDefault" title="Tema padrão">
 <span class="themeTip">Padrão</span>
 <span class="dot"></span>
@@ -1333,6 +1359,7 @@
 <span class="themeTip">Purple</span>
 <span class="dot"></span>
 </button>
+</div>
 </div>
 <!-- MODAL SETTINGS -->
 <div class="modalBack" id="settingsBack">
@@ -4650,6 +4677,22 @@
   $("themeSpaceWhite").addEventListener("click", ()=>{ state.ui.theme = "spacewhite"; save(state); renderAll(); });
   $("themePurple").addEventListener("click", ()=>{ state.ui.theme = "purple"; save(state); renderAll(); });
   $("themeTextured").addEventListener("click", ()=>{ state.ui.theme = "textured"; save(state); renderAll(); });
+
+  // Minimizar / expandir o dock de temas (lembra a preferência)
+  (function(){
+    const dock = document.getElementById("themeDock");
+    const toggle = document.getElementById("themeToggle");
+    if(!dock || !toggle) return;
+    // começa recolhido por padrão (a menos que a pessoa já tenha expandido antes)
+    let aberto = false;
+    try{ aberto = localStorage.getItem("omnia_temas_aberto") === "1"; }catch(e){}
+    if(!aberto) dock.classList.add("collapsed");
+    toggle.addEventListener("click", ()=>{
+      dock.classList.toggle("collapsed");
+      const agoraAberto = !dock.classList.contains("collapsed");
+      try{ localStorage.setItem("omnia_temas_aberto", agoraAberto ? "1" : "0"); }catch(e){}
+    });
+  })();
 
   // Settings modal
   function fileToDataUrl(file){
