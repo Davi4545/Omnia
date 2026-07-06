@@ -132,7 +132,10 @@
     <div class="card">
       <div class="cardHead">
         <h2>👥 Equipe — situação do dia</h2>
-        <input id="equipeData" type="date" style="padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:13px" onchange="renderEquipe()"/>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <button class="btn good" onclick="abrirAddPonto()">+ Adicionar ponto</button>
+          <input id="equipeData" type="date" style="padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:13px" onchange="renderEquipe()"/>
+        </div>
       </div>
       <div class="kpis" id="equipeKpis"></div>
       <div id="equipeTabela"></div>
@@ -166,7 +169,7 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut }
     from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-  import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, onSnapshot }
+  import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, onSnapshot }
     from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -410,7 +413,10 @@
         <td>${m.intervalo?m.intervalo.hora:"--"}</td><td>${m.retorno?m.retorno.hora:"--"}</td>
         <td>${m.saida?m.saida.hora:"--"}</td><td><b>${fmtMin(minutosTrabalhados(r))}</b></td>
         <td><span class="tag ${s.tag}">${s.label}</span></td>
-        <td><button class="btn bad sm" onclick="excluirPonto('${r.id}','${(r.nome||"").replace(/'/g,"")}','${r.data}')">🗑</button></td></tr>`;
+        <td>
+          <button class="btn sm" style="padding:3px 8px" onclick="abrirEditarPonto('${r.id}')">✏️</button>
+          <button class="btn bad sm" onclick="excluirPonto('${r.id}','${(r.nome||"").replace(/'/g,"")}','${r.data}')">🗑</button>
+        </td></tr>`;
     }).join("");
     document.getElementById("equipeTabela").innerHTML=`<table><thead><tr><th>Colaborador</th><th>Entrada</th><th>Interv.</th><th>Retorno</th><th>Saída</th><th>Horas</th><th>Status</th><th>Ação</th></tr></thead><tbody>${rows}</tbody></table>`;
   };
@@ -423,6 +429,102 @@
     showLoading("Excluindo ponto...");
     try{ await deleteDoc(doc(pontoRef, id)); }
     catch(e){ console.error(e); alert(msgErro(e,"excluir o registro")); }
+    hideLoading();
+  };
+
+  // ===== EDITAR / ADICIONAR PONTO (admin/super) =====
+  let pontoEditId = null; // id do registro sendo editado (null = novo)
+
+  window.abrirEditarPonto=function(id){
+    if(!(MY.role==="admin"||MY.role==="superadmin")){ alert("Sem permissão."); return; }
+    const reg = PONTOS.find(p=>p.id===id);
+    if(!reg){ alert("Registro não encontrado."); return; }
+    pontoEditId = id;
+    const m = reg.marcacoes||{};
+    document.getElementById("epTitulo").textContent = "Editar ponto — " + (reg.nome||"");
+    document.getElementById("epNomeWrap").style.display = "none"; // nome fixo ao editar
+    document.getElementById("epData").value = reg.data || hojeStr();
+    document.getElementById("epData").disabled = true; // não muda a data ao editar
+    document.getElementById("epEntrada").value = m.entrada?.hora || "";
+    document.getElementById("epIntervalo").value = m.intervalo?.hora || "";
+    document.getElementById("epRetorno").value = m.retorno?.hora || "";
+    document.getElementById("epSaida").value = m.saida?.hora || "";
+    document.getElementById("modalPonto").classList.add("show");
+  };
+
+  window.abrirAddPonto=function(){
+    if(!(MY.role==="admin"||MY.role==="superadmin")){ alert("Sem permissão."); return; }
+    pontoEditId = null;
+    document.getElementById("epTitulo").textContent = "Adicionar ponto";
+    document.getElementById("epNomeWrap").style.display = "block";
+    // popula o select de colaboradores (pessoas que já têm algum registro na loja)
+    const nomes = {};
+    PONTOS.forEach(p=>{ if(p.uid) nomes[p.uid] = p.nome || p.uid; });
+    const sel = document.getElementById("epColaborador");
+    sel.innerHTML = '<option value="">— selecione —</option>' +
+      Object.entries(nomes).sort((a,b)=>(a[1]||"").localeCompare(b[1]||"")).map(([uid,nome])=>`<option value="${uid}">${nome}</option>`).join("");
+    document.getElementById("epData").value = document.getElementById("equipeData").value || hojeStr();
+    document.getElementById("epData").disabled = false;
+    document.getElementById("epEntrada").value = "";
+    document.getElementById("epIntervalo").value = "";
+    document.getElementById("epRetorno").value = "";
+    document.getElementById("epSaida").value = "";
+    document.getElementById("modalPonto").classList.add("show");
+  };
+
+  window.fecharPonto=function(){ document.getElementById("modalPonto").classList.remove("show"); };
+
+  // converte "HH:MM" + data "YYYY-MM-DD" em objeto de marcação { hora, ts, loc }
+  function marcacaoDe(horaStr, dataStr, antiga){
+    if(!horaStr) return null;
+    const [h,mi] = horaStr.split(":").map(Number);
+    const d = new Date(dataStr+"T00:00:00");
+    d.setHours(h||0, mi||0, 0, 0);
+    return { hora: horaStr, ts: d.getTime(), loc: (antiga&&antiga.loc)||null, editado:true };
+  }
+
+  window.salvarPonto=async function(){
+    if(!(MY.role==="admin"||MY.role==="superadmin")){ alert("Sem permissão."); return; }
+    const dataStr = document.getElementById("epData").value;
+    if(!dataStr){ alert("Escolha a data."); return; }
+    const ent = document.getElementById("epEntrada").value;
+    const inter = document.getElementById("epIntervalo").value;
+    const ret = document.getElementById("epRetorno").value;
+    const sai = document.getElementById("epSaida").value;
+
+    let reg, id;
+    if(pontoEditId){
+      reg = PONTOS.find(p=>p.id===pontoEditId);
+      if(!reg){ alert("Registro não encontrado."); return; }
+      id = pontoEditId;
+    } else {
+      // novo: precisa do colaborador
+      const sel = document.getElementById("epColaborador");
+      const uid = sel.value;
+      const nome = sel.options[sel.selectedIndex]?.text || "";
+      if(!uid){ alert("Selecione o colaborador."); return; }
+      id = uid + "_" + dataStr;
+      if(PONTOS.find(p=>p.id===id)){ alert("Já existe ponto desse colaborador nesse dia. Edite o registro existente."); return; }
+      reg = { id, uid, nome, data: dataStr, storeId: STORE_ID, marcacoes:{} };
+    }
+
+    const m = reg.marcacoes || {};
+    reg.marcacoes = {
+      entrada: marcacaoDe(ent, reg.data, m.entrada),
+      intervalo: marcacaoDe(inter, reg.data, m.intervalo),
+      retorno: marcacaoDe(ret, reg.data, m.retorno),
+      saida: marcacaoDe(sai, reg.data, m.saida)
+    };
+    // remove marcações vazias (null)
+    Object.keys(reg.marcacoes).forEach(k=>{ if(!reg.marcacoes[k]) delete reg.marcacoes[k]; });
+    reg.atualizadoEm = new Date().toISOString();
+    reg.editadoPor = MY.name || MY.email || "";
+
+    showLoading("Salvando ponto...");
+    try{
+      await setDoc(doc(pontoRef, id), reg);
+      fecharPonto();
+    }catch(e){ console.error(e); alert(msgErro(e,"salvar o ponto")); }
     hideLoading();
   };
 
@@ -480,5 +582,35 @@
     hideLoading();
   };
 </script>
+
+<!-- MODAL EDITAR / ADICIONAR PONTO -->
+<div class="modalBack" id="modalPonto">
+  <div class="modal" style="max-width:440px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2 id="epTitulo" style="font-size:18px;font-weight:900">Editar ponto</h2>
+      <button class="btn" onclick="fecharPonto()">✕</button>
+    </div>
+    <div class="field" id="epNomeWrap" style="display:none">
+      <label>Colaborador</label>
+      <select id="epColaborador"></select>
+    </div>
+    <div class="field">
+      <label>Data</label>
+      <input id="epData" type="date"/>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="field"><label>🟢 Entrada</label><input id="epEntrada" type="time"/></div>
+      <div class="field"><label>☕ Intervalo</label><input id="epIntervalo" type="time"/></div>
+      <div class="field"><label>🔄 Retorno</label><input id="epRetorno" type="time"/></div>
+      <div class="field"><label>🔴 Saída</label><input id="epSaida" type="time"/></div>
+    </div>
+    <p class="hint" style="text-align:left;padding:6px 0 0">Deixe um horário em branco se não houver marcação. Ex: se a pessoa não fez intervalo, deixe intervalo e retorno vazios.</p>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px">
+      <button class="btn" onclick="fecharPonto()">Cancelar</button>
+      <button class="btn good" onclick="salvarPonto()">Salvar</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
