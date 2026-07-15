@@ -206,10 +206,18 @@
   function sellersDoState(){ return Array.isArray(STATE.sellers)? STATE.sellers.filter(s=>s.active!==false) : []; }
 
   function metaDoVendedor(sid, mk){
+    // Mesma lógica do OMNIA (sellerGoalMonthly):
+    // 1) meta individual do vendedor, se houver
     const byMonth = STATE.vendorGoalsByMonth || {};
-    const m = byMonth[mk] || {};
-    const v = Number(m[sid]||0);
-    return v>0 ? v : 0;
+    const ov = Number((byMonth[mk]||{})[sid] || 0);
+    if(ov > 0) return ov;
+    // 2) senão, meta mensal da loja dividida pelo divisor (ou nº de vendedores ativos)
+    const g = (STATE.goalsByMonth||{})[mk] || {};
+    const metaLoja = Number(g.monthly || 0);
+    if(metaLoja <= 0) return 0;
+    const ativos = (STATE.sellers||[]).filter(s=>s.active!==false).length || 1;
+    const divisor = Number((STATE.options||{}).vendorDivisor || 0) || ativos;
+    return metaLoja / Math.max(1, divisor);
   }
 
   function montarVendedores(){
@@ -244,7 +252,7 @@
     if(meta>0){
       info.innerHTML=`🎯 Meta deste mês: <b style="color:#e7eefc">${money(meta)}</b>`;
     } else {
-      info.innerHTML=`⚠️ Este vendedor não tem meta definida para ${mk} no OMNIA. Peça ao gerente para cadastrar a meta.`;
+      info.innerHTML=`⚠️ Não há meta definida para ${mk} no OMNIA (nem individual, nem meta da loja). Peça ao gerente para cadastrar a meta do mês.`;
     }
   };
 
@@ -266,7 +274,7 @@
     if(venda<=0){ alert("Digite quanto pretende vender."); return; }
     const mk=monthKey();
     const meta=metaDoVendedor(sid, mk);
-    if(meta<=0){ alert("Este vendedor não tem meta definida no OMNIA para este mês. O gerente precisa cadastrar a meta primeiro."); return; }
+    if(meta<=0){ alert("Não há meta definida no OMNIA para este mês (nem do vendedor, nem da loja). O gerente precisa cadastrar a meta do mês primeiro."); return; }
     if(FAIXAS.length===0){ alert("As faixas de comissão ainda não foram cadastradas. Peça ao gerente."); return; }
 
     const ating = (venda/meta)*100;
