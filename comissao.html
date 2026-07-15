@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>OMNIA — Comissão</title>
+<meta content="#0b0f14" name="theme-color"/>
+<link href="./icon-192.png" rel="icon"/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:radial-gradient(900px 520px at 15% 5%, rgba(41,224,122,.12), transparent 60%),radial-gradient(800px 520px at 85% 10%, rgba(255,209,102,.10), transparent 55%),#0b0f14;color:#e7eefc;min-height:100vh;}
+  header{position:sticky;top:0;z-index:10;background:rgba(11,15,20,.85);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.10);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  .brand h1{font-size:18px;font-weight:900;}
+  .brand .sub{font-size:12px;color:#9db0d0;}
+  .chip{padding:5px 12px;border-radius:999px;background:rgba(41,224,122,.14);border:1px solid rgba(41,224,122,.30);color:#7fffc0;font-size:12px;font-weight:700;}
+  .wrap{max-width:900px;margin:0 auto;padding:20px;}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+  .tab{padding:9px 16px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:#9db0d0;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;}
+  .tab.active{background:rgba(41,224,122,.18);color:#e7eefc;border-color:rgba(41,224,122,.35);}
+  .card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:22px;margin-bottom:18px;}
+  .cardHead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px;}
+  .cardHead h2{font-size:16px;font-weight:800;}
+  .btn{padding:9px 16px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#e7eefc;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;}
+  .btn:hover{background:rgba(255,255,255,.12);}
+  .btn.good{background:rgba(41,224,122,.16);border-color:rgba(41,224,122,.35);color:#7fffc0;}
+  .btn.bad{background:rgba(255,77,77,.12);border-color:rgba(255,77,77,.3);color:#ff9090;}
+  .btn.big{padding:15px 22px;font-size:16px;font-weight:800;}
+  .btn.sm{padding:5px 10px;font-size:12px;}
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+  .field label{font-size:11px;color:#9db0d0;text-transform:uppercase;letter-spacing:.05em;font-weight:700;}
+  .field input,.field select{padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:16px;outline:none;}
+  table{width:100%;border-collapse:collapse;font-size:14px;}
+  th{text-align:left;padding:10px;color:#9db0d0;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid rgba(255,255,255,.08);}
+  td{padding:12px 10px;border-bottom:1px solid rgba(255,255,255,.05);}
+  .hint{font-size:13px;color:#9db0d0;padding:16px 0;text-align:center;}
+  .loading{display:none;position:fixed;inset:0;background:rgba(11,15,20,.85);place-items:center;z-index:99999;flex-direction:column;gap:10px;}
+  .loading.show{display:flex;}
+  .spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,.12);border-top-color:#7fffc0;border-radius:50%;animation:spin .7s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .resultado{background:linear-gradient(135deg, rgba(41,224,122,.14), rgba(255,209,102,.08));border:1px solid rgba(41,224,122,.3);border-radius:16px;padding:24px;text-align:center;margin-top:16px;display:none;}
+  .resultado.show{display:block;}
+  .resultado .comissao{font-size:44px;font-weight:900;color:#7fffc0;line-height:1.1;margin:6px 0;}
+  .resultado .det{font-size:13px;color:#9db0d0;margin-top:6px;line-height:1.6;}
+  .faixaRow{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:center;margin-bottom:8px;}
+  .faixaRow input{padding:10px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:14px;}
+  select option{background:#1a1f2b;color:#e7eefc;}
+  .vazio{display:flex;flex-direction:column;align-items:center;gap:8px;padding:36px 20px;text-align:center;}
+  .vazio .ico{font-size:42px;opacity:.85;}
+  .vazio .tit{font-size:16px;font-weight:800;}
+  .vazio .txt{font-size:13px;color:#9db0d0;max-width:340px;line-height:1.5;}
+  @media(max-width:600px){ .faixaRow{grid-template-columns:1fr 1fr;} }
+</style>
+</head>
+<body>
+
+<div class="loading show" id="loadingScreen"><div class="spinner"></div><div id="loadingMsg">Carregando...</div></div>
+
+<header>
+  <div class="brand">
+    <h1>OMNIA <span style="color:#7fffc0">COMISSÃO</span></h1>
+    <div class="sub" id="ctxInfo">—</div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+    <span class="chip" id="roleChip">—</span>
+    <button class="btn" onclick="window.location.href='./index.html'">← OMNIA</button>
+    <button class="btn bad" onclick="sair()">Sair</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="tabs">
+    <button class="tab active" id="tabSimular" onclick="showTab('simular')">🧮 Simular comissão</button>
+    <button class="tab" id="tabRegras" onclick="showTab('regras')" style="display:none">⚙️ Regras (gerente)</button>
+  </div>
+
+  <!-- SIMULAR (vendedor) -->
+  <div id="viewSimular">
+    <div class="card">
+      <div class="cardHead"><h2>🧮 Simule sua comissão</h2></div>
+      <p class="hint" style="text-align:left;padding:0 0 16px">Digite quanto você pretende vender no mês e veja quanto receberia de comissão, de acordo com o seu atingimento de meta.</p>
+
+      <div class="field">
+        <label>Vendedor</label>
+        <select id="selVendedor" onchange="aoTrocarVendedor()"></select>
+      </div>
+
+      <div id="metaInfo" class="hint" style="text-align:left;padding:0 0 14px"></div>
+
+      <div class="field">
+        <label>Se eu vender (R$)</label>
+        <input id="valorVenda" inputmode="decimal" placeholder="Ex: 30.000" oninput="limparResultado()"/>
+      </div>
+
+      <button class="btn good big" style="width:100%;justify-content:center" onclick="simular()">🧮 Simular comissão</button>
+
+      <div class="resultado" id="resultado">
+        <div style="font-size:13px;color:#9db0d0">Sua comissão seria</div>
+        <div class="comissao" id="resComissao">R$ 0,00</div>
+        <div class="det" id="resDetalhe"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGRAS (gerente) -->
+  <div id="viewRegras" style="display:none">
+    <div class="card">
+      <div class="cardHead"><h2>⚙️ Faixas de comissão da loja</h2></div>
+      <p class="hint" style="text-align:left;padding:0 0 16px">Cadastre as faixas de atingimento de meta e o percentual de comissão de cada uma. Ex: de 100% a 104% da meta = 3% de comissão sobre o valor vendido.</p>
+
+      <div style="margin-bottom:10px">
+        <div class="faixaRow" style="font-size:11px;color:#9db0d0;text-transform:uppercase;font-weight:700">
+          <div>Atingimento de (%)</div>
+          <div>Até (%)</div>
+          <div>Comissão (%)</div>
+          <div></div>
+        </div>
+        <div id="faixasLista"></div>
+      </div>
+
+      <button class="btn" onclick="addFaixa()">+ Adicionar faixa</button>
+      <div style="margin-top:18px;display:flex;gap:10px;justify-content:flex-end">
+        <button class="btn good" onclick="salvarRegras()">Salvar faixas</button>
+      </div>
+      <p class="hint" style="text-align:left;padding:14px 0 0">💡 Dica: cubra todas as situações. Ex: 0–79%, 80–99%, 100–104%, 105–200%. O que ficar fora das faixas recebe 0% de comissão.</p>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut }
+    from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc }
+    from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCTjYwOpMpwhGbrsUFPOgO2V-GXAwfcubA",
+    authDomain: "omnia-3b32b.firebaseapp.com",
+    projectId: "omnia-3b32b",
+    storageBucket: "omnia-3b32b.firebasestorage.app",
+    messagingSenderId: "858764463578",
+    appId: "1:858764463578:web:1fabf841013e2053bd44e3"
+  };
+  const SUPER_ADMIN_EMAIL = "davi.vieira.each@gmail.com";
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  let MY=null, STORE_ID=null, LOJA_NOME="", STATE={}, FAIXAS=[];
+
+  function showLoading(m){ document.getElementById("loadingScreen").classList.add("show"); document.getElementById("loadingMsg").textContent=m||"Carregando..."; }
+  function hideLoading(){ document.getElementById("loadingScreen").classList.remove("show"); }
+  function money(v){ return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"}); }
+  function brNum(s){ if(typeof s==="number") return s; s=(s||"").toString().trim().replace(/\./g,"").replace(",","."); const n=parseFloat(s); return isNaN(n)?0:n; }
+  function monthKey(d=new Date()){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"); }
+  function msgErro(e, o){ const c=(e&&(e.code||e.message||""))+""; if(/permission/i.test(c)) return "Sem permissão para "+(o||"isso")+"."; if(/network|unavailable|offline/i.test(c)) return "Sem internet. Verifique a conexão e tente de novo."; return "Não foi possível "+(o||"concluir")+". Tente de novo."; }
+
+  onAuthStateChanged(auth, async (user)=>{
+    if(!user){ window.location.href="./login.html"; return; }
+    let prof={ role:"seller", name:user.email, email:user.email };
+    try{ const s=await getDoc(doc(db,"users",user.uid)); if(s.exists()) prof={...prof, ...s.data()}; }catch(e){}
+    if((user.email||"").toLowerCase()===SUPER_ADMIN_EMAIL) prof.role="superadmin";
+    MY={ uid:user.uid, ...prof };
+    STORE_ID = sessionStorage.getItem("omnia_loja_ativa") || prof.storeId || (Array.isArray(prof.storeIds)&&prof.storeIds[0]) || null;
+
+    const ehGestor = (MY.role==="admin"||MY.role==="superadmin");
+    if(ehGestor) document.getElementById("tabRegras").style.display="inline-block";
+
+    if(!STORE_ID){ hideLoading(); document.getElementById("ctxInfo").textContent="Nenhuma loja"; return; }
+
+    LOJA_NOME=STORE_ID;
+    try{ const ls=await getDoc(doc(db,"stores",STORE_ID)); if(ls.exists()) LOJA_NOME=ls.data().name||ls.data().code||STORE_ID; }catch(e){}
+    document.getElementById("ctxInfo").textContent="Loja: "+LOJA_NOME+" · "+(prof.name||prof.email);
+    document.getElementById("roleChip").textContent=prof.role==="admin"?"👑 Admin":(prof.role==="superadmin"?"⚡ Super":"🧑 Vendedor");
+
+    // carrega o state do OMNIA (metas + vendedores)
+    try{
+      const st=await getDoc(doc(db,"stores",STORE_ID,"app","state"));
+      if(st.exists()){ try{ STATE=JSON.parse(st.data().json||"{}"); }catch(e){ STATE={}; } }
+    }catch(e){ console.error(e); }
+
+    // carrega as faixas de comissão da loja
+    try{
+      const cf=await getDoc(doc(db,"stores",STORE_ID,"comissaoConfig","faixas"));
+      if(cf.exists()) FAIXAS = cf.data().faixas || [];
+    }catch(e){ console.error(e); }
+
+    montarVendedores();
+    renderFaixas();
+    hideLoading();
+  });
+
+  window.sair=async function(){ await signOut(auth); window.location.href="./login.html"; };
+
+  window.showTab=function(t){
+    ["simular","regras"].forEach(x=>{
+      const v=document.getElementById("view"+x.charAt(0).toUpperCase()+x.slice(1));
+      const b=document.getElementById("tab"+x.charAt(0).toUpperCase()+x.slice(1));
+      if(v) v.style.display=(x===t)?"block":"none";
+      if(b) b.classList.toggle("active",x===t);
+    });
+  };
+
+  // ===== SIMULAR =====
+  function sellersDoState(){ return Array.isArray(STATE.sellers)? STATE.sellers.filter(s=>s.active!==false) : []; }
+
+  function metaDoVendedor(sid, mk){
+    const byMonth = STATE.vendorGoalsByMonth || {};
+    const m = byMonth[mk] || {};
+    const v = Number(m[sid]||0);
+    return v>0 ? v : 0;
+  }
+
+  function montarVendedores(){
+    const sel=document.getElementById("selVendedor");
+    const sellers=sellersDoState();
+    const ehGestor=(MY.role==="admin"||MY.role==="superadmin");
+    let lista=sellers;
+    // vendedor comum: tenta pré-selecionar o próprio nome
+    if(!ehGestor){
+      const meuNome=(MY.name||"").trim().toLowerCase();
+      // mostra todos, mas seleciona o dele se achar
+      sel.innerHTML = sellers.map(s=>`<option value="${s.id}">${s.name}</option>`).join("");
+      const meu=sellers.find(s=>(s.name||"").trim().toLowerCase()===meuNome);
+      if(meu) sel.value=meu.id;
+    } else {
+      sel.innerHTML = '<option value="">— selecione o vendedor —</option>' + sellers.map(s=>`<option value="${s.id}">${s.name}</option>`).join("");
+    }
+    if(sellers.length===0){
+      document.getElementById("metaInfo").innerHTML='⚠️ Nenhum vendedor encontrado. Cadastre vendedores e metas no OMNIA primeiro.';
+    } else {
+      aoTrocarVendedor();
+    }
+  }
+
+  window.aoTrocarVendedor=function(){
+    limparResultado();
+    const sid=document.getElementById("selVendedor").value;
+    const mk=monthKey();
+    const meta=metaDoVendedor(sid, mk);
+    const info=document.getElementById("metaInfo");
+    if(!sid){ info.innerHTML=""; return; }
+    if(meta>0){
+      info.innerHTML=`🎯 Meta deste mês: <b style="color:#e7eefc">${money(meta)}</b>`;
+    } else {
+      info.innerHTML=`⚠️ Este vendedor não tem meta definida para ${mk} no OMNIA. Peça ao gerente para cadastrar a meta.`;
+    }
+  };
+
+  window.limparResultado=function(){ document.getElementById("resultado").classList.remove("show"); };
+
+  function comissaoPara(atingPct){
+    // acha a faixa que contém o atingimento (%). Retorna % de comissão ou 0.
+    for(const f of FAIXAS){
+      const de=Number(f.de||0), ate=Number(f.ate||0);
+      if(atingPct >= de && atingPct <= ate) return Number(f.pct||0);
+    }
+    return 0;
+  }
+
+  window.simular=function(){
+    const sid=document.getElementById("selVendedor").value;
+    if(!sid){ alert("Selecione o vendedor."); return; }
+    const venda=brNum(document.getElementById("valorVenda").value);
+    if(venda<=0){ alert("Digite quanto pretende vender."); return; }
+    const mk=monthKey();
+    const meta=metaDoVendedor(sid, mk);
+    if(meta<=0){ alert("Este vendedor não tem meta definida no OMNIA para este mês. O gerente precisa cadastrar a meta primeiro."); return; }
+    if(FAIXAS.length===0){ alert("As faixas de comissão ainda não foram cadastradas. Peça ao gerente."); return; }
+
+    const ating = (venda/meta)*100;
+    const pct = comissaoPara(ating);
+    const comissao = venda * (pct/100);
+
+    document.getElementById("resComissao").textContent = money(comissao);
+    document.getElementById("resDetalhe").innerHTML =
+      `Vendendo <b>${money(venda)}</b> você atinge <b>${ating.toFixed(1)}%</b> da meta (${money(meta)}).<br>`+
+      (pct>0
+        ? `Isso cai na faixa de <b>${pct}%</b> de comissão.`
+        : `⚠️ Esse atingimento não está em nenhuma faixa cadastrada — comissão de 0%. Fale com o gerente.`);
+    document.getElementById("resultado").classList.add("show");
+  };
+
+  // ===== REGRAS (gerente) =====
+  function renderFaixas(){
+    const box=document.getElementById("faixasLista");
+    if(!box) return;
+    if(FAIXAS.length===0){
+      box.innerHTML='<div class="hint" style="text-align:left">Nenhuma faixa cadastrada ainda. Clique em "+ Adicionar faixa".</div>';
+      return;
+    }
+    box.innerHTML = FAIXAS.map((f,i)=>`
+      <div class="faixaRow">
+        <input type="number" step="1" value="${f.de}" placeholder="de %" oninput="editarFaixa(${i},'de',this.value)"/>
+        <input type="number" step="1" value="${f.ate}" placeholder="até %" oninput="editarFaixa(${i},'ate',this.value)"/>
+        <input type="number" step="0.1" value="${f.pct}" placeholder="comissão %" oninput="editarFaixa(${i},'pct',this.value)"/>
+        <button class="btn bad sm" onclick="removerFaixa(${i})">✕</button>
+      </div>`).join("");
+  }
+  window.addFaixa=function(){ FAIXAS.push({de:0,ate:0,pct:0}); renderFaixas(); };
+  window.editarFaixa=function(i,campo,val){ if(FAIXAS[i]) FAIXAS[i][campo]=Number(val||0); };
+  window.removerFaixa=function(i){ FAIXAS.splice(i,1); renderFaixas(); };
+
+  window.salvarRegras=async function(){
+    if(!(MY.role==="admin"||MY.role==="superadmin")){ alert("Sem permissão."); return; }
+    // ordena por 'de' e valida
+    const limpa = FAIXAS.filter(f=> !(f.de===0 && f.ate===0 && f.pct===0));
+    limpa.sort((a,b)=> Number(a.de)-Number(b.de));
+    showLoading("Salvando faixas...");
+    try{
+      await setDoc(doc(db,"stores",STORE_ID,"comissaoConfig","faixas"), { faixas: limpa, atualizadoEm:new Date().toISOString() });
+      FAIXAS=limpa; renderFaixas();
+      hideLoading();
+      alert("Faixas de comissão salvas! Os vendedores já podem simular.");
+    }catch(e){ hideLoading(); console.error(e); alert(msgErro(e,"salvar as faixas")); }
+  };
+</script>
+</body>
+</html>
