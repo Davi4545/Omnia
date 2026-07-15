@@ -5454,6 +5454,19 @@
       }
     }
 
+    // Botão Comissão — para todos (vendedor simula, gerente cadastra faixas)
+    if(!document.getElementById("btnComissao")){
+      const ref = document.getElementById("btnSettings");
+      if(ref && ref.parentNode){
+        const b = document.createElement("button");
+        b.className = "btn";
+        b.id = "btnComissao";
+        b.textContent = "💰 Comissão";
+        b.onclick = ()=> window.location.href = "./comissao.html";
+        ref.parentNode.insertBefore(b, ref);
+      }
+    }
+
     // Botão extra de Admin (gerenciar vendedores) — só para admin
     if(isAdmin && !document.getElementById("btnAdminPanel")){
       const ref = document.getElementById("btnSettings");
