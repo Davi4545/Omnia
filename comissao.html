@@ -40,6 +40,8 @@
   .resultado{background:linear-gradient(135deg, rgba(41,224,122,.14), rgba(255,209,102,.08));border:1px solid rgba(41,224,122,.3);border-radius:16px;padding:24px;text-align:center;margin-top:16px;display:none;}
   .resultado.show{display:block;}
   .resultado .comissao{font-size:44px;font-weight:900;color:#7fffc0;line-height:1.1;margin:6px 0;}
+  .fraseMotiv{font-size:16px;font-weight:800;color:#ffd166;line-height:1.4;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.1);animation:pop .4s ease;}
+  @keyframes pop{0%{transform:scale(.8);opacity:0}100%{transform:scale(1);opacity:1}}
   .resultado .det{font-size:13px;color:#9db0d0;margin-top:6px;line-height:1.6;}
   .faixaRow{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:center;margin-bottom:8px;}
   .faixaRow input{padding:10px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:14px;}
@@ -94,6 +96,7 @@
       <button class="btn good big" style="width:100%;justify-content:center" onclick="simular()">🧮 Simular comissão</button>
 
       <div class="resultado" id="resultado">
+        <div class="fraseMotiv" id="resFrase"></div>
         <div style="font-size:13px;color:#9db0d0">Sua comissão seria</div>
         <div class="comissao" id="resComissao">R$ 0,00</div>
         <div class="det" id="resDetalhe"></div>
@@ -267,6 +270,18 @@
     return 0;
   }
 
+  // Frase motivacional conforme o atingimento da meta
+  function fraseMotivacional(ating){
+    if(ating >= 150) return { emoji:"🚀🔥", txt:"LENDÁRIO! Você quebrou tudo esse mês, monstro(a) das vendas!" };
+    if(ating >= 130) return { emoji:"🏆", txt:"Fenômeno! Você passou MUITO da meta. Tá voando!" };
+    if(ating >= 110) return { emoji:"🤩", txt:"Sensacional! Bateu e ainda sobrou. Que talento!" };
+    if(ating >= 100) return { emoji:"🎯", txt:"Parabéns! Meta batida! Você tirou onda esse mês!" };
+    if(ating >= 90)  return { emoji:"💪", txt:"Quase lá! Falta pouquinho pra cravar a meta. Bora!" };
+    if(ating >= 70)  return { emoji:"📈", txt:"Bom ritmo! Um empurrãozinho e você chega na meta." };
+    if(ating >= 40)  return { emoji:"👊", txt:"Tá no caminho! Dá pra acelerar e subir de faixa." };
+    return { emoji:"🌱", txt:"Começando! Cada venda te leva mais perto da meta." };
+  }
+
   window.simular=function(){
     const sid=document.getElementById("selVendedor").value;
     if(!sid){ alert("Selecione o vendedor."); return; }
@@ -281,6 +296,8 @@
     const pct = comissaoPara(ating);
     const comissao = venda * (pct/100);
 
+    const frase = fraseMotivacional(ating);
+    document.getElementById("resFrase").innerHTML = `<span style="font-size:26px">${frase.emoji}</span><br>${frase.txt}`;
     document.getElementById("resComissao").textContent = money(comissao);
     document.getElementById("resDetalhe").innerHTML =
       `Vendendo <b>${money(venda)}</b> você atinge <b>${ating.toFixed(1)}%</b> da meta (${money(meta)}).<br>`+
