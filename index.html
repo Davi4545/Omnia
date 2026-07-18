@@ -1553,12 +1553,16 @@
   // STORAGE + STATE
   // ======================
   const KEY = "nexxt_v3_preference_deactivate_themes";
-  const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch { return null; } };
+  // SEGURANÇA: os dados do negócio (metas, vendedores, faturamento) NÃO ficam mais
+  // guardados no navegador. Tudo vem do Firebase em tempo real.
+  // Isso evita que alguém veja dados da loja pelo DevTools ou que sobrem dados após o logout.
+  const load = () => null;
   const save = (s) => {
-    localStorage.setItem(KEY, JSON.stringify(s));
-    // Sincroniza com o Firebase (definido no modulo abaixo). Nao quebra se ainda nao carregou.
+    // Sincroniza somente com o Firebase (fonte única da verdade).
     try{ if(window.OMNIA_SYNC_SAVE) window.OMNIA_SYNC_SAVE(s); }catch(e){}
   };
+  // Limpa resíduos de versões anteriores que ainda estejam no navegador
+  try{ localStorage.removeItem(KEY); }catch(e){}
   function uid(){ return Math.random().toString(16).slice(2) + Date.now().toString(16); }
 
   function todayKey(d = new Date()){
@@ -1593,11 +1597,7 @@
     store: { name:"Sua loja", status:"Online", logoDataUrl:"" },
     options: { askValue:true, askPieces:true, vendorDivisor: 0 },
     ui: { theme: "default" }, // default | neon | ocean | sunset | purple
-    sellers: [
-      { id: uid(), name:"Erick", photo:"", paused:false, active:true },
-      { id: uid(), name:"Camila", photo:"", paused:false, active:true },
-      { id: uid(), name:"Mariana", photo:"", paused:false, active:true },
-    ],
+    sellers: [],   // começa vazio; os dados reais vêm do Firebase
     queue: [],
     pool: [],
     currents: [], // [{ id, sellerId, startTs }]
@@ -5554,6 +5554,13 @@
 
   document.getElementById("btnLogout")?.addEventListener("click", async ()=>{
     if(!confirm("Deseja sair da sua conta?")) return;
+    // Limpa qualquer dado da loja guardado neste computador antes de sair
+    try{
+      localStorage.removeItem("nexxt_v3_preference_deactivate_themes");
+      sessionStorage.removeItem("omnia_loja_ativa");
+      // remove também carrinhos do catálogo salvos neste navegador
+      Object.keys(localStorage).forEach(k=>{ if(k.indexOf("omnia_cart_")===0) localStorage.removeItem(k); });
+    }catch(e){}
     await signOut(auth);
     window.location.href = "./login.html";
   });
