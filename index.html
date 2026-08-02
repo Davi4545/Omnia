@@ -287,6 +287,41 @@
       border-color: rgba(0,255,154,.35);
     }
 
+    /* Navegação organizada por seções */
+    .tabs{align-items:center;}
+    .tabGroup{display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
+    .tabGroupLabel{
+      font-size:10px; letter-spacing:.12em; text-transform:uppercase;
+      color:var(--muted); opacity:.7; font-weight:800; margin-right:2px;
+    }
+    .tabDivider{
+      width:1px; align-self:stretch; min-height:24px;
+      background:var(--line); margin:0 4px;
+    }
+    @media (max-width:720px){
+      .tabDivider{ display:none; }
+      .tabGroup{ width:100%; }
+    }
+
+    /* Menu de conta (dropdown) */
+    .accountMenu{position:relative;}
+    .accountDrop{
+      display:none; position:absolute; right:0; top:calc(100% + 6px);
+      min-width:190px; background:var(--panel, #0f141c);
+      border:1px solid var(--line); border-radius:14px;
+      box-shadow:0 18px 40px rgba(0,0,0,.4); padding:6px; z-index:200;
+      flex-direction:column; gap:2px;
+    }
+    .accountDrop.show{display:flex;}
+    .accItem{
+      text-align:left; background:transparent; border:none; color:var(--text);
+      padding:10px 12px; border-radius:9px; cursor:pointer; font-size:13px;
+      transition:background .12s ease;
+    }
+    .accItem:hover{background:rgba(255,255,255,.07);}
+    .accItem.bad{color:#ff9090;}
+    .accItem.bad:hover{background:rgba(255,77,77,.12);}
+
     .grid{
       display:grid;
       grid-template-columns: 1.1fr .9fr;
@@ -881,22 +916,35 @@
 </div>
 <div class="rightTop">
 <div class="chip">Status: <b id="statusChip">Online</b></div>
-<button class="btn" id="btnRanking">Ranking</button>
-<button class="btn warn" id="btnEditSelosFixo" style="display:none" onclick="if(window.abrirEditorSelos)window.abrirEditorSelos()">⚙️ Editar selos</button>
-<button class="btn" id="btnSettings">Config</button>
-<button class="btn install" id="btnInstall" style="display:none">Instalar</button>
-<span id="userInfo" style="font-size:12px;color:var(--muted);margin-left:4px;display:none"></span>
-<button class="btn bad" id="btnLogout" style="display:none">Sair</button>
+<div class="accountMenu" id="accountMenu">
+<button class="btn" id="btnAccount" onclick="toggleAccountMenu()">⚙️ <span style="margin-left:2px">Conta</span></button>
+<div class="accountDrop" id="accountDrop">
+<span id="userInfo" style="font-size:12px;color:var(--muted);padding:8px 12px;display:none"></span>
+<button class="accItem" id="btnEditSelosFixo" style="display:none" onclick="closeAccountMenu();if(window.abrirEditorSelos)window.abrirEditorSelos()">⚙️ Editar selos</button>
+<button class="accItem" id="btnSettings">🛠️ Configurações</button>
+<button class="accItem install" id="btnInstall" style="display:none">📲 Instalar app</button>
+<button class="accItem bad" id="btnLogout" style="display:none">🚪 Sair</button>
+</div>
+</div>
 </div>
 </div>
 <div class="tabs">
+<div class="tabGroup">
+<span class="tabGroupLabel">OMNIA</span>
 <button class="tab active" id="tabOps">Operação</button>
 <button class="tab" id="tabDados">Dados</button>
 <button class="tab" id="tabMetas">Metas</button>
-<button class="tab" id="tabMetasRank">Ranking Metas</button>
+<button class="tab" id="tabMetasRank">Ranking de Metas</button>
 <button class="tab" id="tabNoConv">Não Convertidos</button>
 <button class="tab" id="tabDashboard">📊 Dashboard</button>
-<button class="tab" id="tabSeller">Arena de Resultados</button>
+<button class="tab" id="tabSeller">🚀 Arena</button>
+<button class="tab" id="btnRanking">🏆 Ranking</button>
+</div>
+<div class="tabDivider"></div>
+<div class="tabGroup" id="modulosGroup">
+<span class="tabGroupLabel">Módulos</span>
+<!-- botões de módulos (CRM, Ponto, Catálogo, Comissão) injetados aqui via JS -->
+</div>
 </div>
 </div>
 </header>
@@ -1585,6 +1633,21 @@
   // Limpa resíduos de versões anteriores que ainda estejam no navegador
   try{ localStorage.removeItem(KEY); }catch(e){}
   function uid(){ return Math.random().toString(16).slice(2) + Date.now().toString(16); }
+
+  // Menu de conta (dropdown de engrenagem)
+  window.toggleAccountMenu = function(){
+    const d = document.getElementById("accountDrop");
+    if(d) d.classList.toggle("show");
+  };
+  window.closeAccountMenu = function(){
+    const d = document.getElementById("accountDrop");
+    if(d) d.classList.remove("show");
+  };
+  // fecha o menu ao clicar fora
+  document.addEventListener("click", (e)=>{
+    const menu = document.getElementById("accountMenu");
+    if(menu && !menu.contains(e.target)) closeAccountMenu();
+  });
 
   function todayKey(d = new Date()){
     const y = d.getFullYear();
@@ -5437,87 +5500,42 @@
     const isSuper = role === "superadmin";
     const isAdmin = (role === "admin") || isSuper; // super admin tem todos os poderes de admin
 
-    // Botão CRM — para todos (super, admin e vendedor)
-    if(!document.getElementById("btnCRM")){
-      const ref = document.getElementById("btnSettings");
-      if(ref && ref.parentNode){
-        const b = document.createElement("button");
-        b.className = "btn";
-        b.id = "btnCRM";
-        b.textContent = "📇 CRM";
-        b.onclick = ()=> window.location.href = "./crm.html";
-        ref.parentNode.insertBefore(b, ref);
-      }
+    // ===== MÓDULOS (vão para a seção "Módulos" da navegação) =====
+    const grupoModulos = document.getElementById("modulosGroup");
+    function addModulo(id, label, destino, extraClass){
+      if(document.getElementById(id) || !grupoModulos) return;
+      const b = document.createElement("button");
+      b.className = "tab" + (extraClass?(" "+extraClass):"");
+      b.id = id;
+      b.textContent = label;
+      if(typeof destino === "function") b.onclick = destino;
+      else b.onclick = ()=> window.location.href = destino;
+      grupoModulos.appendChild(b);
     }
 
-    // Botão Ponto — para todos (cada um bate o próprio)
-    if(!document.getElementById("btnPonto")){
-      const ref = document.getElementById("btnSettings");
-      if(ref && ref.parentNode){
-        const b = document.createElement("button");
-        b.className = "btn";
-        b.id = "btnPonto";
-        b.textContent = "🕐 Ponto";
-        b.onclick = ()=> window.location.href = "./ponto.html";
-        ref.parentNode.insertBefore(b, ref);
-      }
-    }
+    addModulo("btnCRM", "📇 CRM", "./crm.html");
+    addModulo("btnPonto", "🕐 Ponto", "./ponto.html");
+    addModulo("btnCatalogo", "🛍️ Catálogo", "./catalogo.html");
+    addModulo("btnComissao", "💰 Comissão", "./comissao.html");
+    if(isAdmin) addModulo("btnAdminPanel", "👑 Gerenciar", "./admin.html", "modAdmin");
 
-    // Botão Catálogo — para todos (super, admin e vendedor); cada loja tem o seu
-    if(!document.getElementById("btnCatalogo")){
-      const ref = document.getElementById("btnSettings");
-      if(ref && ref.parentNode){
-        const b = document.createElement("button");
-        b.className = "btn";
-        b.id = "btnCatalogo";
-        b.textContent = "🛍️ Catálogo";
-        b.onclick = ()=> window.location.href = "./catalogo.html";
-        ref.parentNode.insertBefore(b, ref);
-      }
-    }
-
-    // Botão Comissão — para todos (vendedor simula, gerente cadastra faixas)
-    if(!document.getElementById("btnComissao")){
-      const ref = document.getElementById("btnSettings");
-      if(ref && ref.parentNode){
-        const b = document.createElement("button");
-        b.className = "btn";
-        b.id = "btnComissao";
-        b.textContent = "💰 Comissão";
-        b.onclick = ()=> window.location.href = "./comissao.html";
-        ref.parentNode.insertBefore(b, ref);
-      }
-    }
-
-    // Botão extra de Admin (gerenciar vendedores) — só para admin
-    if(isAdmin && !document.getElementById("btnAdminPanel")){
-      const ref = document.getElementById("btnSettings");
-      if(ref && ref.parentNode){
-        const b = document.createElement("button");
-        b.className = "btn warn";
-        b.id = "btnAdminPanel";
-        b.textContent = "👑 Gerenciar";
-        b.onclick = ()=> window.location.href = "./admin.html";
-        ref.parentNode.insertBefore(b, ref);
-      }
-    }
-
-    // Botão "Editar selos" no topo — só para admin (já existe no HTML, só mostra)
+    // Botão "Editar selos" (dentro do menu de conta) — só para admin
     const btnSelos = document.getElementById("btnEditSelosFixo");
-    if(btnSelos) btnSelos.style.display = isAdmin ? "inline-block" : "none";
+    if(btnSelos) btnSelos.style.display = isAdmin ? "block" : "none";
 
-    // Botão "Trocar loja" — admin com 2+ lojas, ou super admin (que acessa todas)
+    // Botão "Trocar loja" (dentro do menu de conta) — admin com 2+ lojas, ou super admin
     const idsLojas = Array.isArray(window.OMNIA_USER?.storeIds) ? window.OMNIA_USER.storeIds.filter(Boolean) : [];
     const podeTrocar = isSuper || (role==="admin" && idsLojas.length > 1);
     if(podeTrocar && !document.getElementById("btnTrocarLoja")){
-      const ref = document.getElementById("btnSettings");
-      if(ref && ref.parentNode){
+      const drop = document.getElementById("accountDrop");
+      const settings = document.getElementById("btnSettings");
+      if(drop && settings){
         const b = document.createElement("button");
-        b.className = "btn";
+        b.className = "accItem";
         b.id = "btnTrocarLoja";
         b.textContent = "🏬 Trocar loja";
-        b.onclick = ()=>{ if(window.OMNIA_TROCAR_LOJA) window.OMNIA_TROCAR_LOJA(); };
-        ref.parentNode.insertBefore(b, ref);
+        b.onclick = ()=>{ closeAccountMenu(); if(window.OMNIA_TROCAR_LOJA) window.OMNIA_TROCAR_LOJA(); };
+        drop.insertBefore(b, settings.nextSibling);
       }
     }
 
