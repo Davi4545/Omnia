@@ -379,6 +379,25 @@
     .kpi .t{font-size:12px; color:var(--muted)}
     .kpi .v{font-size:18px; font-weight:800; margin-top:4px}
     .kpi .v.good{color: var(--good)}
+    /* KPIs polidos: ícone + cor por métrica */
+    .kpiTop{display:flex; align-items:center; gap:7px;}
+    .kpiIco{
+      width:26px; height:26px; border-radius:8px;
+      display:inline-flex; align-items:center; justify-content:center;
+      font-size:14px; flex:0 0 auto;
+      background: rgba(255,255,255,.06);
+    }
+    .kpi{ transition: transform .12s ease, box-shadow .12s ease; position:relative; overflow:hidden; }
+    .kpi:hover{ transform: translateY(-2px); box-shadow: 0 12px 26px rgba(0,0,0,.28); }
+    .kpi::before{ content:""; position:absolute; left:0; top:0; bottom:0; width:3px; opacity:.85; }
+    .kpi-blue::before{ background: var(--brand, #62a8ff); }
+    .kpi-blue .kpiIco{ background: rgba(98,168,255,.16); }
+    .kpi-green::before{ background: var(--good, #29e07a); }
+    .kpi-green .kpiIco{ background: rgba(41,224,122,.16); }
+    .kpi-green .v{ color: var(--good, #29e07a); }
+    .kpi-gold::before{ background: #ffd166; }
+    .kpi-gold .kpiIco{ background: rgba(255,209,102,.16); }
+    .kpi-gold .v{ color: #ffd166; }
 
     /* ARENA */
     .arenaCard .cardHeader{padding:12px 14px;}
@@ -400,6 +419,8 @@
     /* Compact KPIs */
     .kpi .t{font-size:11px; letter-spacing:.08em; text-transform:uppercase;}
     .kpi .v{font-size:16px;}
+    /* KPIs da operação (com ícone) ganham número maior */
+    .kpi-blue .v, .kpi-green .v, .kpi-gold .v{ font-size:22px; margin-top:8px; }
 
     table{
       width:100%;
@@ -1847,19 +1868,20 @@
     const tk = todayKey();
     const recsToday = state.records.filter(r => r.dateKey === tk);
     const a = agg(recsToday);
+    const tm = a.sales>0 ? a.revenue/a.sales : 0;
 
     const kpis = [
-      { t:"Atendimentos", v: formatNum(a.atend) },
-      { t:"Vendas", v: formatNum(a.sales) },
-      { t:"Conversão", v: a.conv.toFixed(1) + "%", cls:"good" },
-      { t:"Faturamento", v: formatMoney(a.revenue) },
+      { t:"Atendimentos", v: formatNum(a.atend), ico:"👋", cor:"blue" },
+      { t:"Vendas", v: formatNum(a.sales), ico:"🛍️", cor:"blue" },
+      { t:"Conversão", v: a.conv.toFixed(1) + "%", ico:"🎯", cor:"green" },
+      { t:"Faturamento", v: formatMoney(a.revenue), ico:"💰", cor:"gold" },
     ];
     const el = $("kpis");
     el.innerHTML = "";
     for(const k of kpis){
       const div = document.createElement("div");
-      div.className = "kpi";
-      div.innerHTML = `<div class="t">${k.t}</div><div class="v ${k.cls||""}">${k.v}</div>`;
+      div.className = "kpi kpi-"+(k.cor||"blue");
+      div.innerHTML = `<div class="kpiTop"><span class="kpiIco">${k.ico||""}</span><span class="t">${k.t}</span></div><div class="v">${k.v}</div>`;
       el.appendChild(div);
     }
   }
