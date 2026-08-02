@@ -108,6 +108,7 @@
     <button class="tab" id="tabFunil" onclick="showTab('funil')">📊 Funil</button>
     <button class="tab" id="tabMetricas" onclick="showTab('metricas')">📈 Métricas</button>
     <button class="tab" id="tabLembretes" onclick="showTab('lembretes')">🔔 Lembretes</button>
+    <button class="tab" id="tabCampanhas" onclick="showTab('campanhas')">📣 Campanhas</button>
   </div>
 
   <!-- HOJE (ações do dia) -->
@@ -191,6 +192,63 @@
       <div class="cardHead"><h2>📞 Pós-venda (fechados há 30+ dias)</h2></div>
       <div id="posVenda"><div class="hint">Carregando...</div></div>
     </div>
+  </div>
+
+  <div id="viewCampanhas" style="display:none">
+    <div class="card">
+      <div class="cardHead"><h2>📣 Nova campanha</h2></div>
+      <p class="hint" style="text-align:left;padding:0 0 14px">Crie uma mensagem e dispare para um grupo de clientes de uma vez. Use <b style="color:#7fffc0">{nome}</b> na mensagem para inserir o nome de cada cliente automaticamente.</p>
+
+      <div class="field">
+        <label>Título da campanha (só para você identificar)</label>
+        <input id="campTitulo" placeholder="Ex: Promoção de inverno"/>
+      </div>
+
+      <div class="field">
+        <label>Enviar para</label>
+        <select id="campPublico" onchange="renderCampanhaPublico()">
+          <option value="todos">Todos os clientes</option>
+          <option value="lead">Só Leads</option>
+          <option value="negociacao">Só em Negociação</option>
+          <option value="fechado">Só clientes Fechados</option>
+          <option value="vip">Só VIPs (tag)</option>
+          <option value="inativo">Só Inativos (60+ dias)</option>
+          <option value="aniversariantes">Aniversariantes do mês</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Mensagem</label>
+        <textarea id="campMensagem" rows="4" placeholder="Oi {nome}! Chegaram novidades na loja que combinam com você. Passa aqui pra ver! 😊" oninput="renderCampanhaPreview()" style="padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:14px;font-family:inherit;resize:vertical"></textarea>
+      </div>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px">
+        <button class="btn sm" onclick="inserirModelo('promo')">💸 Promoção</button>
+        <button class="btn sm" onclick="inserirModelo('novidade')">✨ Novidade</button>
+        <button class="btn sm" onclick="inserirModelo('volta')">💚 Sentimos falta</button>
+        <button class="btn sm" onclick="inserirModelo('vip')">👑 Exclusivo VIP</button>
+      </div>
+
+      <div id="campPreview" class="hint" style="text-align:left;background:rgba(255,255,255,.04);border-radius:10px;padding:12px;margin-top:8px"></div>
+
+      <button class="btn good" style="width:100%;justify-content:center;margin-top:14px" onclick="iniciarDisparo()">🚀 Preparar disparo (<span id="campQtd">0</span> clientes)</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DISPARO DE CAMPANHA -->
+<div class="modalBack" id="modalDisparo">
+  <div class="modal">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <h2 style="font-size:18px;font-weight:900">🚀 Disparar campanha</h2>
+      <button class="btn" onclick="fecharDisparo()">✕</button>
+    </div>
+    <p class="hint" style="text-align:left;padding:0 0 10px">Clique em cada cliente para abrir o WhatsApp com a mensagem pronta. Conforme envia, marque como enviado. Vá de cima para baixo.</p>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:13px">
+      <span style="color:#9db0d0">Enviados: <b id="dispEnviados" style="color:#7fffc0">0</b> de <b id="dispTotal">0</b></span>
+      <button class="btn sm" onclick="marcarTodosVistos()">Limpar marcações</button>
+    </div>
+    <div id="dispLista" style="max-height:55vh;overflow:auto"></div>
   </div>
 </div>
 
@@ -407,10 +465,11 @@
   }
 
   window.showTab=function(t){
-    ["hoje","clientes","funil","metricas","lembretes"].forEach(x=>{
+    ["hoje","clientes","funil","metricas","lembretes","campanhas"].forEach(x=>{
       document.getElementById("view"+x.charAt(0).toUpperCase()+x.slice(1)).style.display=(x===t)?"block":"none";
       document.getElementById("tab"+x.charAt(0).toUpperCase()+x.slice(1)).classList.toggle("active",x===t);
     });
+    if(t==="campanhas") renderCampanhaPublico();
   };
 
   // ===== LIBERAR CLIENTES (admin/super) — transforma clientes de um vendedor em órfãos =====
@@ -764,6 +823,98 @@
     catch(e){ console.error(e); alert(msgErro(e,"salvar")); }
     hideLoading();
   };
+
+  // ===== CAMPANHAS =====
+  const MODELOS_CAMPANHA = {
+    promo: "Oi {nome}! 🔥 Começou nossa promoção na "+"LOJA"+"! Descontos especiais esperando por você. Corre que é por tempo limitado! 🛍️",
+    novidade: "Oi {nome}! ✨ Chegaram novidades que têm tudo a ver com você. Quer que eu separe algumas peças pra você ver?",
+    volta: "Oi {nome}! 💚 Faz um tempinho que você não aparece e sentimos sua falta! Temos novidades que você vai amar. Passa aqui!",
+    vip: "Oi {nome}! 👑 Você é cliente VIP e por isso tem acesso antecipado às nossas novidades. Quer dar uma espiada antes de todo mundo?"
+  };
+  window.inserirModelo=function(tipo){
+    let txt = MODELOS_CAMPANHA[tipo]||"";
+    txt = txt.replace(/LOJA/g, LOJA_NOME);
+    document.getElementById("campMensagem").value = txt;
+    renderCampanhaPreview();
+  };
+
+  function publicoCampanha(){
+    const tipo=document.getElementById("campPublico").value;
+    let base=clientesVisiveis();
+    const agora=Date.now(), d60=60*24*3600*1000;
+    const mesAtual=new Date().getMonth();
+    switch(tipo){
+      case "lead": return base.filter(c=>c.etapa==="lead");
+      case "negociacao": return base.filter(c=>c.etapa==="negociacao");
+      case "fechado": return base.filter(c=>c.etapa==="fechado");
+      case "vip": return base.filter(c=> (c.tags||[]).includes("vip") || (c.tags||[]).includes("autovip"));
+      case "inativo": return base.filter(c=> c.atualizadoEm && (agora-new Date(c.atualizadoEm).getTime())>d60);
+      case "aniversariantes": return base.filter(c=> c.nascimento && Number(c.nascimento.split("-")[1])-1===mesAtual);
+      default: return base;
+    }
+  }
+
+  window.renderCampanhaPublico=function(){
+    const pub=publicoCampanha().filter(c=> zap(c.telefone));
+    document.getElementById("campQtd").textContent=pub.length;
+    renderCampanhaPreview();
+  };
+
+  window.renderCampanhaPreview=function(){
+    const msg=document.getElementById("campMensagem").value||"";
+    const pub=publicoCampanha().filter(c=> zap(c.telefone));
+    const box=document.getElementById("campPreview");
+    document.getElementById("campQtd").textContent=pub.length;
+    if(!msg.trim()){ box.innerHTML="✍️ Escreva a mensagem para ver a prévia."; return; }
+    if(pub.length===0){ box.innerHTML="⚠️ Nenhum cliente com telefone válido nesse grupo."; return; }
+    const exemplo=pub[0];
+    box.innerHTML=`<b style="color:#9db0d0">Prévia (${exemplo.nome||"cliente"}):</b><br>`+
+      msg.replace(/\{nome\}/g, primeiroNome(exemplo.nome)).replace(/\n/g,"<br>");
+  };
+
+  let CAMPANHA_ATUAL=null; // { msg, clientes:[], enviados:Set }
+  window.iniciarDisparo=function(){
+    const msg=document.getElementById("campMensagem").value.trim();
+    if(!msg){ alert("Escreva a mensagem da campanha."); return; }
+    const pub=publicoCampanha().filter(c=> zap(c.telefone));
+    if(pub.length===0){ alert("Nenhum cliente com telefone válido nesse grupo."); return; }
+    CAMPANHA_ATUAL={ msg, clientes:pub, enviados:new Set() };
+    document.getElementById("dispTotal").textContent=pub.length;
+    document.getElementById("dispEnviados").textContent=0;
+    renderDisparoLista();
+    document.getElementById("modalDisparo").classList.add("show");
+  };
+
+  function renderDisparoLista(){
+    const box=document.getElementById("dispLista");
+    box.innerHTML=CAMPANHA_ATUAL.clientes.map((c,i)=>{
+      const enviado=CAMPANHA_ATUAL.enviados.has(c.id);
+      return `<div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:${enviado?'rgba(41,224,122,.10)':'rgba(255,255,255,.04)'};border:1px solid ${enviado?'rgba(41,224,122,.3)':'rgba(255,255,255,.08)'};margin-bottom:8px">
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:700;font-size:13px">${enviado?'✅ ':''}${c.nome||"—"}</div>
+          <div style="font-size:12px;color:#9db0d0">${c.telefone||""}</div>
+        </div>
+        <button class="btn wa sm" onclick="dispararUm('${c.id}')">${enviado?'Enviar de novo':'💬 Enviar'}</button>
+      </div>`;
+    }).join("");
+  }
+
+  window.dispararUm=async function(id){
+    const c=CAMPANHA_ATUAL.clientes.find(x=>x.id===id); if(!c) return;
+    const texto=CAMPANHA_ATUAL.msg.replace(/\{nome\}/g, primeiroNome(c.nome));
+    window.open("https://wa.me/"+zap(c.telefone)+"?text="+encodeURIComponent(texto), "_blank");
+    CAMPANHA_ATUAL.enviados.add(id);
+    document.getElementById("dispEnviados").textContent=CAMPANHA_ATUAL.enviados.size;
+    // registra interação no cliente
+    const cli=CLIENTES.find(x=>x.id===id);
+    if(cli){
+      const interacoes=[...(cli.interacoes||[]), { tipo:"📣 Campanha", texto:"Campanha enviada: "+texto.slice(0,50)+(texto.length>50?"...":""), quem:MY.name||MY.email, ts:Date.now() }];
+      try{ await setDoc(doc(clientesRef,cli.id),{ ...cli, interacoes, atualizadoEm:new Date().toISOString() }); }catch(e){}
+    }
+    renderDisparoLista();
+  };
+  window.marcarTodosVistos=function(){ if(CAMPANHA_ATUAL){ CAMPANHA_ATUAL.enviados.clear(); document.getElementById("dispEnviados").textContent=0; renderDisparoLista(); } };
+  window.fecharDisparo=function(){ document.getElementById("modalDisparo").classList.remove("show"); };
 
   // ===== WHATSAPP COM MODELOS =====
   const MODELOS = {
