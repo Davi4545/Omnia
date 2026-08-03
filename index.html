@@ -4418,10 +4418,10 @@
       const btn = document.getElementById('btnSellerDownloadBadges');
       if(btn) btn.onclick = downloadSellerBadges;
 
-      // Botão editar selos: só para admin
+      // Botão editar selos: para admin e super admin
       const btnEd = document.getElementById('btnEditarSelos');
       if(btnEd){
-        if(window.OMNIA_USER && window.OMNIA_USER.role==="admin"){
+        if(window.OMNIA_USER && (window.OMNIA_USER.role==="admin" || window.OMNIA_USER.role==="superadmin")){
           btnEd.style.display = "inline-block";
           btnEd.onclick = abrirEditorSelos;
         } else {
@@ -4446,7 +4446,7 @@
   // EDITOR DE SELOS (ADM)
   // ======================
   function abrirEditorSelos(){
-    if(!(window.OMNIA_USER && window.OMNIA_USER.role==="admin")){
+    if(!(window.OMNIA_USER && (window.OMNIA_USER.role==="admin" || window.OMNIA_USER.role==="superadmin"))){
       alert("Apenas administradores podem editar os selos."); return;
     }
     state.badgeConfig = state.badgeConfig || {};
