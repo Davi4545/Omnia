@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>OMNIA CRM</title>
+<title>ONDIS CRM</title>
 <meta content="#0b0f14" name="theme-color"/>
 <link href="./icon-192.png" rel="icon"/>
 <style>
@@ -91,12 +91,12 @@
 
 <header>
   <div class="brand">
-    <h1>OMNIA <span style="color:#a0c8ff">CRM</span></h1>
+    <h1>ONDIS <span style="color:#a0c8ff">CRM</span></h1>
     <div class="sub" id="ctxInfo">—</div>
   </div>
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
     <span class="chip" id="roleChip">—</span>
-    <button class="btn" onclick="window.location.href='./index.html'">← OMNIA</button>
+    <button class="btn" onclick="window.location.href='./index.html'">← ONDIS</button>
     <button class="btn bad" onclick="sair()">Sair</button>
   </div>
 </header>
@@ -430,7 +430,7 @@
 
     if(!STORE_ID){
       hideLoading();
-      document.getElementById("hojeConteudo").innerHTML='<div class="hint">Nenhuma loja vinculada. Acesse o OMNIA e selecione a loja primeiro.</div>';
+      document.getElementById("hojeConteudo").innerHTML='<div class="hint">Nenhuma loja vinculada. Acesse o ONDIS e selecione a loja primeiro.</div>';
       document.getElementById("roleChip").textContent=prof.role; return;
     }
     LOJA_NOME=STORE_ID;
@@ -640,7 +640,7 @@
     if(filtrados.length===0){
       if(lista.length===0){
         // loja nova, nenhum cliente ainda
-        document.getElementById("tabelaClientes").innerHTML = estadoVazio("👥","Nenhum cliente ainda","Os clientes entram aqui automaticamente quando você registra uma venda no OMNIA (informando nome e telefone). Você também pode cadastrar manualmente no botão “+ Novo cliente”.");
+        document.getElementById("tabelaClientes").innerHTML = estadoVazio("👥","Nenhum cliente ainda","Os clientes entram aqui automaticamente quando você registra uma venda no ONDIS (informando nome e telefone). Você também pode cadastrar manualmente no botão “+ Novo cliente”.");
       } else {
         // tem clientes, mas o filtro não achou
         document.getElementById("tabelaClientes").innerHTML = estadoVazio("🔎","Nenhum resultado","Nenhum cliente corresponde à busca ou aos filtros. Tente limpar a busca ou trocar os filtros.");
