@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>OMNIA — Comissão</title>
+<title>ONDIS — Comissão</title>
 <meta content="#0b0f14" name="theme-color"/>
 <link href="./icon-192.png" rel="icon"/>
 <style>
@@ -59,12 +59,12 @@
 
 <header>
   <div class="brand">
-    <h1>OMNIA <span style="color:#7fffc0">COMISSÃO</span></h1>
+    <h1>ONDIS <span style="color:#7fffc0">COMISSÃO</span></h1>
     <div class="sub" id="ctxInfo">—</div>
   </div>
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
     <span class="chip" id="roleChip">—</span>
-    <button class="btn" onclick="window.location.href='./index.html'">← OMNIA</button>
+    <button class="btn" onclick="window.location.href='./index.html'">← ONDIS</button>
     <button class="btn bad" onclick="sair()">Sair</button>
   </div>
 </header>
@@ -177,7 +177,7 @@
     document.getElementById("ctxInfo").textContent="Loja: "+LOJA_NOME+" · "+(prof.name||prof.email);
     document.getElementById("roleChip").textContent=prof.role==="admin"?"👑 Admin":(prof.role==="superadmin"?"⚡ Super":"🧑 Vendedor");
 
-    // carrega o state do OMNIA (metas + vendedores)
+    // carrega o state do ONDIS (metas + vendedores)
     try{
       const st=await getDoc(doc(db,"stores",STORE_ID,"app","state"));
       if(st.exists()){ try{ STATE=JSON.parse(st.data().json||"{}"); }catch(e){ STATE={}; } }
@@ -209,7 +209,7 @@
   function sellersDoState(){ return Array.isArray(STATE.sellers)? STATE.sellers.filter(s=>s.active!==false) : []; }
 
   function metaDoVendedor(sid, mk){
-    // Mesma lógica do OMNIA (sellerGoalMonthly):
+    // Mesma lógica do ONDIS (sellerGoalMonthly):
     // 1) meta individual do vendedor, se houver
     const byMonth = STATE.vendorGoalsByMonth || {};
     const ov = Number((byMonth[mk]||{})[sid] || 0);
@@ -239,7 +239,7 @@
       sel.innerHTML = '<option value="">— selecione o vendedor —</option>' + sellers.map(s=>`<option value="${s.id}">${s.name}</option>`).join("");
     }
     if(sellers.length===0){
-      document.getElementById("metaInfo").innerHTML='⚠️ Nenhum vendedor encontrado. Cadastre vendedores e metas no OMNIA primeiro.';
+      document.getElementById("metaInfo").innerHTML='⚠️ Nenhum vendedor encontrado. Cadastre vendedores e metas no ONDIS primeiro.';
     } else {
       aoTrocarVendedor();
     }
@@ -255,7 +255,7 @@
     if(meta>0){
       info.innerHTML=`🎯 Meta deste mês: <b style="color:#e7eefc">${money(meta)}</b>`;
     } else {
-      info.innerHTML=`⚠️ Não há meta definida para ${mk} no OMNIA (nem individual, nem meta da loja). Peça ao gerente para cadastrar a meta do mês.`;
+      info.innerHTML=`⚠️ Não há meta definida para ${mk} no ONDIS (nem individual, nem meta da loja). Peça ao gerente para cadastrar a meta do mês.`;
     }
   };
 
@@ -289,7 +289,7 @@
     if(venda<=0){ alert("Digite quanto pretende vender."); return; }
     const mk=monthKey();
     const meta=metaDoVendedor(sid, mk);
-    if(meta<=0){ alert("Não há meta definida no OMNIA para este mês (nem do vendedor, nem da loja). O gerente precisa cadastrar a meta do mês primeiro."); return; }
+    if(meta<=0){ alert("Não há meta definida no ONDIS para este mês (nem do vendedor, nem da loja). O gerente precisa cadastrar a meta do mês primeiro."); return; }
     if(FAIXAS.length===0){ alert("As faixas de comissão ainda não foram cadastradas. Peça ao gerente."); return; }
 
     const ating = (venda/meta)*100;
