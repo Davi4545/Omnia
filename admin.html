@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>OMNIA — Administração</title>
+<title>ONDIS — Administração</title>
 <meta content="#0b0f14" name="theme-color"/>
 <link href="./icon-192.png" rel="icon"/>
 <style>
@@ -53,7 +53,7 @@
 
 <header>
   <div class="brand">
-    <h1>OMNIA <span style="color:#ffd166">ADM</span></h1>
+    <h1>ONDIS <span style="color:#ffd166">ADM</span></h1>
     <div class="sub" id="adminEmail">—</div>
   </div>
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
@@ -111,6 +111,13 @@
 
   function showLoading(m){ document.getElementById("loadingScreen").classList.add("show"); document.getElementById("loadingMsg").textContent=m||"Carregando..."; }
   function hideLoading(){ document.getElementById("loadingScreen").classList.remove("show"); }
+  function msgErro(e, oQueTentava){
+    const code = (e && (e.code||e.message||"")) + "";
+    if(/permission|insufficient|PERMISSION/i.test(code)) return "Sem permissao para "+(oQueTentava||"esta acao")+". Faca login de novo ou fale com o administrador.";
+    if(/network|unavailable|offline|failed to get|deadline/i.test(code)) return "Parece que voce esta sem internet. Verifique a conexao e tente de novo.";
+    if(/quota|resource-exhausted/i.test(code)) return "O sistema esta sobrecarregado. Aguarde e tente de novo.";
+    return "Nao foi possivel "+(oQueTentava||"concluir")+". Verifique sua internet e tente de novo.";
+  }
   function formatMoney(v){ return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"}); }
 
   onAuthStateChanged(auth, async (user)=>{
@@ -233,7 +240,7 @@
 
       // 2. Exclui o usuário
       await deleteDoc(doc(db,"users",uid));
-    }catch(e){ console.error(e); alert("Erro ao excluir/redistribuir."); }
+    }catch(e){ console.error(e); alert(msgErro(e,"excluir e redistribuir")); }
     hideLoading();
     carregarVendedores();
   };
