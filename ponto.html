@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>OMNIA — Ponto Eletrônico</title>
+<title>ONDIS — Ponto Eletrônico</title>
 <meta content="#0b0f14" name="theme-color"/>
 <link href="./icon-192.png" rel="icon"/>
 <style>
@@ -74,12 +74,12 @@
 
 <header>
   <div class="brand">
-    <h1>OMNIA <span style="color:#7fffc0">PONTO</span></h1>
+    <h1>ONDIS <span style="color:#7fffc0">PONTO</span></h1>
     <div class="sub" id="ctxInfo">—</div>
   </div>
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
     <span class="chip" id="roleChip">—</span>
-    <button class="btn" onclick="window.location.href='./index.html'">← OMNIA</button>
+    <button class="btn" onclick="window.location.href='./index.html'">← ONDIS</button>
     <button class="btn bad" onclick="sair()">Sair</button>
   </div>
 </header>
@@ -240,7 +240,7 @@
 
     if(!STORE_ID){
       hideLoading();
-      document.getElementById("registrosHoje").innerHTML='<div class="hint">Nenhuma loja vinculada. Acesse o OMNIA e selecione a loja primeiro.</div>';
+      document.getElementById("registrosHoje").innerHTML='<div class="hint">Nenhuma loja vinculada. Acesse o ONDIS e selecione a loja primeiro.</div>';
       document.getElementById("roleChip").textContent=prof.role; return;
     }
     LOJA_NOME=STORE_ID;
