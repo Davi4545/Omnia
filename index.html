@@ -4,12 +4,12 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>OMNIA — Lista da Vez</title>
+<title>ONDIS — Lista da Vez</title>
 <!-- PWA (instalar como app) -->
 <meta content="#0b0f14" name="theme-color"/>
 <meta content="yes" name="apple-mobile-web-app-capable"/>
 <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
-<meta content="OMNIA" name="apple-mobile-web-app-title"/>
+<meta content="ONDIS" name="apple-mobile-web-app-title"/>
 <link href="./manifest.json" rel="manifest"/>
 <link href="./icon-192.png" rel="icon"/>
 <link href="./icon-192.png" rel="apple-touch-icon"/>
@@ -910,7 +910,7 @@
 <span style="font-weight:900; color: var(--muted);">N</span>
 </div>
 <div>
-<h1>OMNIA</h1>
+<h1>ONDIS</h1>
 <div class="sub"><span id="storeNameTop">Sua loja</span> · <span style="opacity:.7">powered by Spencer</span></div>
 </div>
 </div>
@@ -930,7 +930,7 @@
 </div>
 <div class="tabs">
 <div class="tabGroup">
-<span class="tabGroupLabel">OMNIA</span>
+<span class="tabGroupLabel">ONDIS</span>
 <button class="tab active" id="tabOps">Operação</button>
 <button class="tab" id="tabDados">Dados</button>
 <button class="tab" id="tabMetas">Metas</button>
@@ -962,7 +962,7 @@
 </div>
 </div>
 <div class="cardBody">
-<div class="hint">Regra OMNIA: atendimento só termina quando você <b>finalizar</b> (vendeu / não vendeu). Isso garante conversão real.</div>
+<div class="hint">Regra ONDIS: atendimento só termina quando você <b>finalizar</b> (vendeu / não vendeu). Isso garante conversão real.</div>
 <div class="divider"></div>
 <div class="kpis" id="kpis"></div>
 <div class="divider"></div>
@@ -1042,7 +1042,7 @@
 </div>
 <div class="cardBody">
 <div class="noteBox">
-          ✅ Ao digitar a <b>meta mensal</b> e as <b>% por semana</b>, o OMNIA calcula automaticamente:
+          ✅ Ao digitar a <b>meta mensal</b> e as <b>% por semana</b>, o ONDIS calcula automaticamente:
           <b>meta diária</b> (baseado nos dias restantes do mês) e <b>metas das semanas</b>.
           <br/>✅ Ao clicar em <b>Fechar Semana</b>, o sistema redistribui o que falta para as semanas restantes.
         </div>
@@ -1196,7 +1196,7 @@
 <div class="divider"></div>
 <div class="hint">
           • Semana do mês usada: 1 (dias 1–7), 2 (8–14), 3 (15–21), 4 (22–final).<br/>
-          • Se você fechar a semana, o OMNIA redistribui o restante automaticamente.
+          • Se você fechar a semana, o ONDIS redistribui o restante automaticamente.
         </div>
 </div>
 </section>
@@ -1458,7 +1458,7 @@
 <div class="field" style="min-width:320px">
 <label>Logo da loja (imagem)</label>
 <input accept="image/*" id="logoInput" type="file"/>
-<div class="hint">A logo fica no topo. O OMNIA continua como marca principal.</div>
+<div class="hint">A logo fica no topo. O ONDIS continua como marca principal.</div>
 </div>
 </div>
 <div class="divider"></div>
@@ -3115,7 +3115,7 @@
     const cw = weekOfMonth(todayKey());
 
     if(g.closedWeeks[String(cw)]){ alert("Essa semana já está fechada."); return; }
-    if(!confirm(`Fechar Semana ${cw}? O OMNIA vai redistribuir a meta restante.`)) return;
+    if(!confirm(`Fechar Semana ${cw}? O ONDIS vai redistribuir a meta restante.`)) return;
 
     g.closedWeeks[String(cw)] = true;
     autoRedistributeGoals(mk);
@@ -4589,7 +4589,7 @@
       <div style="padding:12px;border:1px solid #e5e7eb;border-radius:14px;background:#f8fafc">Mensagem: <b>${msg}</b></div>
       <h2 style="margin:16px 0 8px 0">Conquistas</h2>
       ${cardsOrEmpty}
-      <div style="margin-top:18px;color:#6b7280;font-size:12px">Gerado pelo OMNIA — Painel de Conquistas</div>
+      <div style="margin-top:18px;color:#6b7280;font-size:12px">Gerado pelo ONDIS — Painel de Conquistas</div>
     </body></html>`;
     const blob = new Blob([html], {type:'text/html'});
     const a = document.createElement('a');
@@ -5432,7 +5432,7 @@
         const novaCompra = (Number(info.valorCompra)||0) > 0
           ? { valor: Number(info.valorCompra)||0, desc: info.descCompra||"Compra", ts: Date.now() }
           : null;
-        const novaInter = { tipo:"🛒 Venda", texto:"Compra registrada via OMNIA"+(novaCompra?(" — "+novaCompra.desc):""), quem: info.sellerNome||"OMNIA", ts: Date.now() };
+        const novaInter = { tipo:"🛒 Venda", texto:"Compra registrada via ONDIS"+(novaCompra?(" — "+novaCompra.desc):""), quem: info.sellerNome||"ONDIS", ts: Date.now() };
 
         if(existente){
           const compras = [...(existente.compras||[])];
