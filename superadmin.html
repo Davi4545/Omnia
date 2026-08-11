@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>OMNIA — Super Admin</title>
+<title>ONDIS — Super Admin</title>
 <meta content="#0b0f14" name="theme-color"/>
 <link href="./icon-192.png" rel="icon"/>
 <style>
@@ -63,14 +63,14 @@
 
 <header>
   <div class="brand">
-    <h1>OMNIA <span style="color:#c9b6ff">SUPER ADMIN</span></h1>
+    <h1>ONDIS <span style="color:#c9b6ff">SUPER ADMIN</span></h1>
     <div class="sub" id="meEmail">—</div>
   </div>
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
     <span class="chip">⚡ Super Admin</span>
     <button class="btn" onclick="window.location.href='./crm.html'">📇 CRM</button>
     <button class="btn" onclick="window.location.href='./catalogo.html'">🛍️ Catálogo</button>
-    <button class="btn" onclick="window.location.href='./index.html'">OMNIA</button>
+    <button class="btn" onclick="window.location.href='./index.html'">ONDIS</button>
     <button class="btn bad" onclick="sair()">Sair</button>
   </div>
 </header>
@@ -137,6 +137,13 @@
 
   function showLoading(m){ document.getElementById("loadingScreen").classList.add("show"); document.getElementById("loadingMsg").textContent=m||"Carregando..."; }
   function hideLoading(){ document.getElementById("loadingScreen").classList.remove("show"); }
+  function msgErro(e, oQueTentava){
+    const code = (e && (e.code||e.message||"")) + "";
+    if(/permission|insufficient|PERMISSION/i.test(code)) return "Sem permissao para "+(oQueTentava||"esta acao")+". Faca login de novo ou fale com o administrador.";
+    if(/network|unavailable|offline|failed to get|deadline/i.test(code)) return "Parece que voce esta sem internet. Verifique a conexao e tente de novo.";
+    if(/quota|resource-exhausted/i.test(code)) return "O sistema esta sobrecarregado. Aguarde e tente de novo.";
+    return "Nao foi possivel "+(oQueTentava||"concluir")+". Verifique sua internet e tente de novo.";
+  }
 
   onAuthStateChanged(auth, async (user)=>{
     if(!user){ window.location.href="./login.html"; return; }
@@ -165,7 +172,7 @@
       const us = await getDocs(collection(db,"users"));
       USERS = []; us.forEach(d=> USERS.push({ uid:d.id, ...d.data() }));
       renderKpis(); renderLojas(); renderUsuarios();
-    }catch(e){ console.error(e); alert("Erro ao carregar. Veja as regras do Firestore."); }
+    }catch(e){ console.error(e); alert(msgErro(e,"carregar os dados")); }
     hideLoading();
   };
 
@@ -201,7 +208,7 @@
       const u = USERS.find(x=>x.uid===uid);
       if(u){ u.storeId = storeId; u.storeIds = storeId?[storeId]:[]; }
       hideLoading();
-    }catch(e){ console.error(e); alert("Erro ao trocar a loja."); hideLoading(); }
+    }catch(e){ console.error(e); alert(msgErro(e,"trocar a loja")); hideLoading(); }
   };
 
   function renderLojas(){
@@ -270,14 +277,14 @@
       document.getElementById("novaLojaNome").value="";
       document.getElementById("novaLojaCodigo").value="";
       await carregarTudo();
-    }catch(e){ console.error(e); alert("Erro ao criar loja."); hideLoading(); }
+    }catch(e){ console.error(e); alert(msgErro(e,"criar a loja")); hideLoading(); }
   };
 
   window.excluirLoja = async function(id, nome){
     if(!confirm(`Excluir a loja "${nome}"? Os usuários dela ficam sem loja. Esta ação não pode ser desfeita.`)) return;
     showLoading("Excluindo loja...");
     try{ await deleteDoc(doc(db,"stores",id)); await carregarTudo(); }
-    catch(e){ console.error(e); alert("Erro ao excluir."); hideLoading(); }
+    catch(e){ console.error(e); alert(msgErro(e,"excluir")); hideLoading(); }
   };
 
   window.setRole = async function(uid, role){
@@ -285,7 +292,7 @@
     if(!confirm(`Deseja ${txt} este usuário?`)) return;
     showLoading("Atualizando...");
     try{ await updateDoc(doc(db,"users",uid), { role }); await carregarTudo(); }
-    catch(e){ console.error(e); alert("Erro."); hideLoading(); }
+    catch(e){ console.error(e); alert(msgErro(e,"concluir")); hideLoading(); }
   };
 
   window.toggleLoja = async function(uid, storeId, checked){
@@ -298,14 +305,14 @@
       if(!u.storeId && ids.length) patch.storeId = ids[0];
       await updateDoc(doc(db,"users",uid), patch);
       u.storeIds = ids; // atualiza local
-    }catch(e){ console.error(e); alert("Erro ao vincular loja."); }
+    }catch(e){ console.error(e); alert(msgErro(e,"vincular a loja")); }
   };
 
   window.excluirUser = async function(uid, nome){
     if(!confirm(`Excluir "${nome}" permanentemente?`)) return;
     showLoading("Excluindo...");
     try{ await deleteDoc(doc(db,"users",uid)); await carregarTudo(); }
-    catch(e){ console.error(e); alert("Erro."); hideLoading(); }
+    catch(e){ console.error(e); alert(msgErro(e,"concluir")); hideLoading(); }
   };
 
   // Ver usuários de uma loja específica
@@ -400,7 +407,7 @@
       baixarArquivo(`omnia_backup_completo_${data}.json`, JSON.stringify(dump,null,2), "application/json");
       hideLoading();
       alert("Backup JSON baixado! Guarde este arquivo em local seguro (Google Drive, pen drive, etc.).");
-    }catch(e){ console.error(e); hideLoading(); alert("Erro ao gerar backup."); }
+    }catch(e){ console.error(e); hideLoading(); alert(msgErro(e,"gerar o backup")); }
   };
 
   function toCSV(linhas){
@@ -446,7 +453,7 @@
 
       hideLoading();
       alert("3 planilhas baixadas: vendas, clientes e ponto (de todas as lojas).");
-    }catch(e){ console.error(e); hideLoading(); alert("Erro ao gerar planilhas."); }
+    }catch(e){ console.error(e); hideLoading(); alert(msgErro(e,"gerar as planilhas")); }
   };
 </script>
 <!-- MODAL USUÁRIOS DA LOJA -->
