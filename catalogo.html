@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>OMNIA — Catálogo</title>
+<title>ONDIS — Catálogo</title>
 <meta content="#0b0f14" name="theme-color"/>
 <link href="./icon-192.png" rel="icon"/>
 <style>
@@ -81,7 +81,7 @@
   </div>
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
     <span class="chip" id="modoChip" style="display:none">—</span>
-    <button class="btn" id="btnVoltar" onclick="window.location.href='./index.html'" style="display:none">← OMNIA</button>
+    <button class="btn" id="btnVoltar" onclick="window.location.href='./index.html'" style="display:none">← ONDIS</button>
   </div>
 </header>
 
@@ -279,6 +279,13 @@
 
   function showLoading(m){ document.getElementById("loadingScreen").classList.add("show"); document.getElementById("loadingMsg").textContent=m||"Carregando..."; }
   function hideLoading(){ document.getElementById("loadingScreen").classList.remove("show"); }
+  function msgErro(e, oQueTentava){
+    const code = (e && (e.code||e.message||"")) + "";
+    if(/permission|insufficient|PERMISSION/i.test(code)) return "Sem permissao para "+(oQueTentava||"esta acao")+". Faca login de novo ou fale com o administrador.";
+    if(/network|unavailable|offline|failed to get|deadline/i.test(code)) return "Parece que voce esta sem internet. Verifique a conexao e tente de novo.";
+    if(/quota|resource-exhausted/i.test(code)) return "O sistema esta sobrecarregado. Aguarde e tente de novo.";
+    return "Nao foi possivel "+(oQueTentava||"concluir")+". Verifique sua internet e tente de novo.";
+  }
   function estadoVazio(ico, tit, txt){
     return `<div class="vazio"><div class="ico">${ico}</div><div class="tit">${tit}</div><div class="txt">${txt||""}</div></div>`;
   }
@@ -343,7 +350,7 @@
   }
 
   async function iniciarModoFuncionario(){
-    if(!STORE_ID){ hideLoading(); document.getElementById("gridVitrine").innerHTML='<div class="hint">Nenhuma loja vinculada. Acesse o OMNIA e selecione a loja primeiro.</div>'; return; }
+    if(!STORE_ID){ hideLoading(); document.getElementById("gridVitrine").innerHTML='<div class="hint">Nenhuma loja vinculada. Acesse o ONDIS e selecione a loja primeiro.</div>'; return; }
     await carregarNomeLoja();
     document.getElementById("abasFuncionario").style.display="flex";
     document.getElementById("btnVoltar").style.display="inline-block";
@@ -620,7 +627,7 @@
     if(!confirm(`Excluir o produto "${p?p.nome:""}"? Esta ação não pode ser desfeita.`)) return;
     showLoading("Excluindo...");
     try{ await deleteDoc(doc(produtosRef,id)); fecharProduto(); }
-    catch(e){ console.error(e); alert("Erro ao excluir."); }
+    catch(e){ console.error(e); alert(msgErro(e,"excluir o produto")); }
     hideLoading();
   };
 
@@ -656,7 +663,7 @@
   window.excluirProduto=async function(id,nome){
     if(!confirm(`Excluir o produto "${nome}"?`)) return;
     showLoading("Excluindo...");
-    try{ await deleteDoc(doc(produtosRef,id)); }catch(e){ console.error(e); alert("Erro ao excluir."); }
+    try{ await deleteDoc(doc(produtosRef,id)); }catch(e){ console.error(e); alert(msgErro(e,"excluir o produto")); }
     hideLoading();
   };
 
@@ -672,7 +679,7 @@
       MY.catalogoWhats=w;
       alert("WhatsApp salvo! Seu link já está pronto na tela.");
     }
-    catch(e){ console.error(e); alert("Erro ao salvar."); }
+    catch(e){ console.error(e); alert(msgErro(e,"salvar")); }
     hideLoading();
   };
   window.copiarLink=function(){
