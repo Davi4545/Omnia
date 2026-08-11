@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>OMNIA — Login</title>
+<title>ONDIS — Login</title>
 <meta content="#0b0f14" name="theme-color"/>
 <link href="./manifest.json" rel="manifest"/>
 <link href="./icon-192.png" rel="icon"/>
@@ -48,7 +48,7 @@
 <div class="box">
   <div class="logo">
     <div class="logoIcon">O</div>
-    <div class="logoText"><h1>OMNIA</h1><p>Sistema de vendas</p></div>
+    <div class="logoText"><h1>ONDIS</h1><p>Sistema de vendas</p></div>
   </div>
 
   <div class="tabs">
@@ -186,8 +186,15 @@
       await sendPasswordResetEmail(auth, email);
       showMsg("loginMsg","Link de redefinicao enviado! Confira seu e-mail (e o spam).","success");
     }catch(e){
-      const msgs={"auth/user-not-found":"Nao existe conta com este e-mail.","auth/invalid-email":"E-mail invalido."};
-      showMsg("loginMsg", msgs[e.code]||"Erro ao enviar o link.","error");
+      console.error("Erro esqueciSenha:", e.code, e.message);
+      const msgs={
+        "auth/user-not-found":"Nao existe conta com este e-mail. Verifique se digitou igual ao cadastrado.",
+        "auth/invalid-email":"E-mail invalido. Confira a digitacao.",
+        "auth/too-many-requests":"Muitas tentativas. Aguarde alguns minutos e tente de novo.",
+        "auth/missing-email":"Digite o e-mail no campo acima.",
+        "auth/network-request-failed":"Falha de conexao. Verifique sua internet."
+      };
+      showMsg("loginMsg", (msgs[e.code] || ("Erro ao enviar: "+e.code)), "error");
     }
   };
 
