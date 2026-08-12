@@ -342,7 +342,9 @@
       display:flex; align-items:center; justify-content:space-between; gap:12px;
       flex-wrap:wrap;
     }
-    .cardHeader h2{margin:0; font-size:14px; letter-spacing:.06em; text-transform:uppercase; color:#cfe0ff}
+    .cardHeader h2{margin:0; font-size:14px; letter-spacing:.06em; text-transform:uppercase; color:#cfe0ff; display:flex; align-items:center; gap:9px;}
+    .cardHeader h2::before{ content:""; width:4px; height:18px; border-radius:3px; background:linear-gradient(180deg,#62a8ff,#29e07a); display:inline-block; flex:0 0 auto; }
+    .cardHeader{ background: rgba(255,255,255,.02); }
     .cardBody{padding:14px}
     .row{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
     .rowRight{display:flex; gap:10px; align-items:center; justify-content:flex-end; flex-wrap:wrap}
@@ -898,56 +900,217 @@
   .dashChartCard{ background: var(--card, rgba(255,255,255,.04)); border:1px solid var(--line, rgba(255,255,255,.08)); border-radius:14px; padding:14px 16px; }
   .dashChartCard h3{ margin-bottom:10px; }
   @media (max-width: 760px){ .dashGrid{ grid-template-columns:1fr; } }
+/* ===== UPGRADE VISUAL ONDIS ===== */
+/* Logo com gradiente da marca */
+.logoBox{
+  background: linear-gradient(135deg, rgba(98,168,255,.30), rgba(41,224,122,.22));
+  border-color: rgba(98,168,255,.35);
+  box-shadow: 0 6px 18px rgba(41,224,122,.15), inset 0 1px 0 rgba(255,255,255,.12);
+}
+.logoBox span{ color:#eaf2ff !important; text-shadow:0 1px 3px rgba(0,0,0,.4); }
+
+/* Título ONDIS com gradiente */
+.brand h1{
+  background: linear-gradient(90deg, #7fbcff, #7fffc0);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 900; letter-spacing:.14em;
+}
+[data-theme="spacewhite"] .brand h1{
+  background: linear-gradient(90deg, #2b6fff, #0aa568);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+
+/* Abas: ativa com mais presença, hover suave */
+.tab{ transition: all .15s ease; }
+.tab:hover{ background: rgba(255,255,255,.10); color: var(--text); transform: translateY(-1px); }
+.tab.active{
+  background: linear-gradient(180deg, rgba(41,224,122,.20), rgba(41,224,122,.08));
+  border-color: rgba(41,224,122,.45);
+  box-shadow: 0 4px 14px rgba(41,224,122,.14);
+  font-weight: 700;
+}
+
+/* Cards com leve realce no topo e hover */
+.card{ transition: box-shadow .18s ease, transform .18s ease, border-color .18s ease; }
+.card:hover{ border-color: rgba(255,255,255,.16); box-shadow: 0 20px 46px rgba(0,0,0,.42); }
+
+/* Botões primários (Chamar próximo, +Vendedor) com mais destaque */
+#btnCallNext{
+  background: linear-gradient(180deg, rgba(247,201,72,.28), rgba(247,201,72,.12));
+  border-color: rgba(247,201,72,.45);
+  color:#ffe08a; font-weight:700;
+}
+#btnCallNext:hover{ box-shadow: 0 6px 20px rgba(247,201,72,.22); }
+
+/* Glow ambiente um pouco mais vivo */
+body{ background-attachment: fixed; }
+
+/* Divisórias mais suaves */
+.divider{ opacity:.6; }
+
+/* Chip de status com ponto pulsante quando online */
+.chip b#statusChip{ position:relative; padding-left:14px; }
+.chip b#statusChip::before{
+  content:""; position:absolute; left:0; top:50%; transform:translateY(-50%);
+  width:8px; height:8px; border-radius:50%; background:#29e07a;
+  box-shadow:0 0 0 0 rgba(41,224,122,.5); animation: statusPulse 2s infinite;
+}
+@keyframes statusPulse{
+  0%{ box-shadow:0 0 0 0 rgba(41,224,122,.5); }
+  70%{ box-shadow:0 0 0 6px rgba(41,224,122,0); }
+  100%{ box-shadow:0 0 0 0 rgba(41,224,122,0); }
+}
+/* ===== LAYOUT SIDEBAR ===== */
+.appShell{ display:flex; min-height:100vh; }
+.sidebar{
+  width:230px; flex:0 0 230px; position:sticky; top:0; height:100vh;
+  background: linear-gradient(180deg, rgba(13,18,28,.98), rgba(8,11,18,.98));
+  border-right:1px solid var(--line);
+  display:flex; flex-direction:column; gap:6px; padding:16px 12px;
+  overflow-y:auto; z-index:40; transition: width .22s ease, transform .22s ease;
+}
+.sideBrand{ display:flex; align-items:center; gap:11px; padding:4px 6px 14px; }
+.sideBrandText h1{
+  margin:0; font-size:17px; letter-spacing:.12em; font-weight:900;
+  background: linear-gradient(90deg,#7fbcff,#7fffc0);
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+}
+.sideBrandText .sub{ font-size:11px; color:var(--muted); margin-top:1px; }
+
+.sideNav{ display:flex; flex-direction:column; gap:3px; flex:1; }
+.sideSection{
+  font-size:10px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--muted); opacity:.6; font-weight:800; padding:14px 10px 5px;
+}
+.navItem{
+  display:flex; align-items:center; gap:11px; width:100%;
+  padding:10px 11px; border-radius:11px; border:1px solid transparent;
+  background:transparent; color:var(--muted); cursor:pointer;
+  font-size:13.5px; font-weight:600; text-align:left;
+  transition: all .15s ease;
+}
+.navItem .ni{ font-size:17px; width:22px; text-align:center; flex:0 0 auto; }
+.navItem .nl{ white-space:nowrap; overflow:hidden; }
+.navItem:hover{ background:rgba(255,255,255,.07); color:var(--text); transform:translateX(2px); }
+.navItem.active{
+  background: linear-gradient(180deg, rgba(41,224,122,.22), rgba(98,168,255,.12));
+  border-color: rgba(41,224,122,.40);
+  color:#eaffef; box-shadow: 0 4px 16px rgba(41,224,122,.16);
+}
+.navItem.active .ni{ filter: drop-shadow(0 0 6px rgba(41,224,122,.5)); }
+
+.sideFoot{ display:flex; flex-direction:column; gap:8px; padding-top:10px; border-top:1px solid var(--line); }
+.sideFoot .chip{ justify-content:center; }
+.accountMenu{ position:relative; }
+.accountDrop{
+  display:none; position:absolute; left:0; bottom:calc(100% + 6px); width:100%;
+  background:var(--panel, #0f141c); border:1px solid var(--line); border-radius:12px;
+  box-shadow:0 18px 40px rgba(0,0,0,.5); padding:6px; z-index:200; flex-direction:column; gap:2px;
+}
+.accountDrop.show{ display:flex; }
+.accItem{ text-align:left; background:transparent; border:none; color:var(--text); padding:10px 12px; border-radius:9px; cursor:pointer; font-size:13px; transition:background .12s ease; }
+.accItem:hover{ background:rgba(255,255,255,.08); }
+.accItem.bad{ color:#ff9090; } .accItem.bad:hover{ background:rgba(255,77,77,.12); }
+
+/* Conteúdo à direita */
+.appContent{ flex:1; min-width:0; display:flex; flex-direction:column; }
+.contentTopbar{
+  position:sticky; top:0; z-index:30; display:flex; align-items:center; gap:12px;
+  padding:12px 18px; background:rgba(11,15,20,.85); backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.contentTopbar .accountMenu{ margin-left:auto; position:relative; }
+.contentTopbar .accountDrop{
+  left:auto; right:0; bottom:auto; top:calc(100% + 6px); width:auto; min-width:190px;
+}
+.accBtn{ font-size:13px; padding:8px 12px; }
+.hamb{
+  background:rgba(255,255,255,.07); border:1px solid var(--line); color:var(--text);
+  width:38px; height:38px; border-radius:10px; cursor:pointer; font-size:17px;
+  transition: all .15s ease;
+}
+.hamb:hover{ background:rgba(255,255,255,.14); }
+.topbarTitle{ font-size:16px; font-weight:800; letter-spacing:.02em; }
+
+/* ESTADO RECOLHIDO (só ícones) */
+.appShell.collapsed .sidebar{ width:68px; flex-basis:68px; padding:16px 8px; }
+.appShell.collapsed .nl,
+.appShell.collapsed .sideBrandText,
+.appShell.collapsed .sideSection,
+.appShell.collapsed .sideFoot .chip{ display:none; }
+.appShell.collapsed .navItem{ justify-content:center; padding:11px 0; }
+.appShell.collapsed .sideBrand{ justify-content:center; padding:4px 0 14px; }
+
+/* MOBILE: sidebar vira gaveta */
+@media (max-width:820px){
+  .sidebar{
+    position:fixed; left:0; top:0; transform:translateX(-100%);
+    box-shadow: 0 0 60px rgba(0,0,0,.6);
+  }
+  .appShell.mobileOpen .sidebar{ transform:translateX(0); }
+  .appShell.collapsed .sidebar{ width:230px; flex-basis:230px; padding:16px 12px; }
+  .appShell.collapsed .nl,
+  .appShell.collapsed .sideBrandText,
+  .appShell.collapsed .sideSection{ display:block; }
+  .mobileMask{ display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:35; }
+  .appShell.mobileOpen .mobileMask{ display:block; }
+}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
 <body>
-<header>
-<div class="wrap">
-<div class="topbar">
-<div class="brand">
-<div class="logoBox" id="logoBox" title="Logo da loja">
-<span style="font-weight:900; color: var(--muted);">N</span>
+<div class="appShell" id="appShell">
+<div class="mobileMask" onclick="toggleSidebar()"></div>
+
+<!-- SIDEBAR LATERAL -->
+<aside class="sidebar" id="sidebar">
+  <div class="sideBrand">
+    <div class="logoBox" id="logoBox" title="Logo da loja">
+      <span style="font-weight:900;">N</span>
+    </div>
+    <div class="sideBrandText">
+      <h1>ONDIS</h1>
+      <div class="sub"><span id="storeNameTop">Sua loja</span></div>
+    </div>
+  </div>
+
+  <nav class="sideNav">
+    <div class="sideSection">ONDIS</div>
+    <button class="navItem active" id="tabOps"><span class="ni">🛍️</span><span class="nl">Operação</span></button>
+    <button class="navItem" id="tabDados"><span class="ni">📁</span><span class="nl">Dados</span></button>
+    <button class="navItem" id="tabMetas"><span class="ni">🎯</span><span class="nl">Metas</span></button>
+    <button class="navItem" id="tabMetasRank"><span class="ni">📶</span><span class="nl">Ranking de Metas</span></button>
+    <button class="navItem" id="tabNoConv"><span class="ni">🔍</span><span class="nl">Não Convertidos</span></button>
+    <button class="navItem" id="tabDashboard"><span class="ni">📊</span><span class="nl">Dashboard</span></button>
+    <button class="navItem" id="tabSeller"><span class="ni">🚀</span><span class="nl">Arena</span></button>
+    <button class="navItem" id="btnRanking"><span class="ni">🏆</span><span class="nl">Ranking</span></button>
+
+    <div class="sideSection" id="modulosLabel">Módulos</div>
+    <div id="modulosGroup"><!-- módulos injetados via JS --></div>
+  </nav>
+
+  <div class="sideFoot">
+    <div class="chip"><b id="statusChip">Online</b></div>
+  </div>
+</aside>
+
+<!-- CONTEÚDO -->
+<div class="appContent">
+<div class="contentTopbar">
+  <button class="hamb" id="btnToggleSidebar" onclick="toggleSidebar()" title="Ocultar/mostrar menu">☰</button>
+  <div class="topbarTitle" id="viewTitle">Operação</div>
+  <div class="accountMenu" id="accountMenu">
+    <button class="btn accBtn" id="btnAccount" onclick="toggleAccountMenu()">⚙️ <span style="margin-left:3px">Conta</span></button>
+    <div class="accountDrop" id="accountDrop">
+      <span id="userInfo" style="font-size:12px;color:var(--muted);padding:8px 12px;display:none"></span>
+      <button class="accItem" id="btnEditSelosFixo" style="display:none" onclick="closeAccountMenu();if(window.abrirEditorSelos)window.abrirEditorSelos()">⚙️ Editar selos</button>
+      <button class="accItem" id="btnSettings">🛠️ Configurações</button>
+      <button class="accItem install" id="btnInstall" style="display:none">📲 Instalar app</button>
+      <button class="accItem bad" id="btnLogout" style="display:none">🚪 Sair</button>
+    </div>
+  </div>
 </div>
-<div>
-<h1>ONDIS</h1>
-<div class="sub"><span id="storeNameTop">Sua loja</span> · <span style="opacity:.7">powered by Spencer</span></div>
-</div>
-</div>
-<div class="rightTop">
-<div class="chip">Status: <b id="statusChip">Online</b></div>
-<div class="accountMenu" id="accountMenu">
-<button class="btn" id="btnAccount" onclick="toggleAccountMenu()">⚙️ <span style="margin-left:2px">Conta</span></button>
-<div class="accountDrop" id="accountDrop">
-<span id="userInfo" style="font-size:12px;color:var(--muted);padding:8px 12px;display:none"></span>
-<button class="accItem" id="btnEditSelosFixo" style="display:none" onclick="closeAccountMenu();if(window.abrirEditorSelos)window.abrirEditorSelos()">⚙️ Editar selos</button>
-<button class="accItem" id="btnSettings">🛠️ Configurações</button>
-<button class="accItem install" id="btnInstall" style="display:none">📲 Instalar app</button>
-<button class="accItem bad" id="btnLogout" style="display:none">🚪 Sair</button>
-</div>
-</div>
-</div>
-</div>
-<div class="tabs">
-<div class="tabGroup">
-<span class="tabGroupLabel">ONDIS</span>
-<button class="tab active" id="tabOps">Operação</button>
-<button class="tab" id="tabDados">Dados</button>
-<button class="tab" id="tabMetas">Metas</button>
-<button class="tab" id="tabMetasRank">Ranking de Metas</button>
-<button class="tab" id="tabNoConv">Não Convertidos</button>
-<button class="tab" id="tabDashboard">📊 Dashboard</button>
-<button class="tab" id="tabSeller">🚀 Arena</button>
-<button class="tab" id="btnRanking">🏆 Ranking</button>
-</div>
-<div class="tabDivider"></div>
-<div class="tabGroup" id="modulosGroup">
-<span class="tabGroupLabel">Módulos</span>
-<!-- botões de módulos (CRM, Ponto, Catálogo, Comissão) injetados aqui via JS -->
-</div>
-</div>
-</div>
-</header>
 <main class="wrap">
 <!-- OPERACAO -->
 <div id="viewOps">
@@ -1393,6 +1556,8 @@
 </section>
 </div>
 </main>
+</div><!-- /appContent -->
+</div><!-- /appShell -->
 <!-- FX Layer -->
 <div id="fxLayer"></div>
 <!-- THEME DOCK -->
@@ -1643,6 +1808,23 @@
     const d = document.getElementById("accountDrop");
     if(d) d.classList.remove("show");
   };
+
+  // Sidebar: recolher (desktop) ou abrir gaveta (mobile)
+  window.toggleSidebar = function(){
+    const shell = document.getElementById("appShell");
+    if(!shell) return;
+    if(window.matchMedia("(max-width:820px)").matches){
+      shell.classList.toggle("mobileOpen");
+    } else {
+      shell.classList.toggle("collapsed");
+      try{ localStorage.setItem("ondis_sidebar_collapsed", shell.classList.contains("collapsed")?"1":"0"); }catch(e){}
+    }
+  };
+  // restaura preferência de recolhida
+  try{ if(localStorage.getItem("ondis_sidebar_collapsed")==="1"){ document.getElementById("appShell")?.classList.add("collapsed"); } }catch(e){}
+
+  // Atualiza o título da topbar conforme a aba ativa
+  window.setViewTitle = function(txt){ const t=document.getElementById("viewTitle"); if(t) t.textContent=txt; };
   // fecha o menu ao clicar fora
   document.addEventListener("click", (e)=>{
     const menu = document.getElementById("accountMenu");
@@ -4635,11 +4817,15 @@
       if(el) el.classList.remove("active");
     }
 
+    const titulos = { ops:"Operação", dados:"Dados", metas:"Metas", metasRank:"Ranking de Metas", noConv:"Não Convertidos", dashboard:"Dashboard", seller:"Arena de Resultados" };
     const show = (vid, tid) => {
       const v = document.getElementById(vid);
       if(v) v.style.display = "block";
       const t = document.getElementById(tid);
       if(t) t.classList.add("active");
+      try{ if(window.setViewTitle) setViewTitle(titulos[tab] || "Operação"); }catch(e){}
+      // no mobile, fecha a gaveta ao escolher
+      try{ document.getElementById("appShell")?.classList.remove("mobileOpen"); }catch(e){}
     };
 
     try{
@@ -5502,22 +5688,22 @@
 
     // ===== MÓDULOS (vão para a seção "Módulos" da navegação) =====
     const grupoModulos = document.getElementById("modulosGroup");
-    function addModulo(id, label, destino, extraClass){
+    function addModulo(id, ico, label, destino, extraClass){
       if(document.getElementById(id) || !grupoModulos) return;
       const b = document.createElement("button");
-      b.className = "tab" + (extraClass?(" "+extraClass):"");
+      b.className = "navItem" + (extraClass?(" "+extraClass):"");
       b.id = id;
-      b.textContent = label;
+      b.innerHTML = `<span class="ni">${ico}</span><span class="nl">${label}</span>`;
       if(typeof destino === "function") b.onclick = destino;
       else b.onclick = ()=> window.location.href = destino;
       grupoModulos.appendChild(b);
     }
 
-    addModulo("btnCRM", "📇 CRM", "./crm.html");
-    addModulo("btnPonto", "🕐 Ponto", "./ponto.html");
-    addModulo("btnCatalogo", "🛍️ Catálogo", "./catalogo.html");
-    addModulo("btnComissao", "💰 Comissão", "./comissao.html");
-    if(isAdmin) addModulo("btnAdminPanel", "👑 Gerenciar", "./admin.html", "modAdmin");
+    addModulo("btnCRM", "📇", "CRM", "./crm.html");
+    addModulo("btnPonto", "🕐", "Ponto", "./ponto.html");
+    addModulo("btnCatalogo", "🛍️", "Catálogo", "./catalogo.html");
+    addModulo("btnComissao", "💰", "Comissão", "./comissao.html");
+    if(isAdmin) addModulo("btnAdminPanel", "👑", "Gerenciar", "./admin.html", "modAdmin");
 
     // Botão "Editar selos" (dentro do menu de conta) — só para admin
     const btnSelos = document.getElementById("btnEditSelosFixo");
