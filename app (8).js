@@ -2069,7 +2069,7 @@
   $("btnReopenWeeks").addEventListener("click", reopenWeeks);
 
   // Seller View
-    $("sellerViewSelect").addEventListener("change", ()=>{ state.ui = state.ui || {}; state.ui.sellerViewId = $("sellerViewSelect").value; save(state); renderSellerView(); });
+  $("sellerViewSelect").addEventListener("change", ()=>{ state.ui = state.ui || {}; state.ui.sellerViewId = $("sellerViewSelect").value; save(state); renderSellerView(); });
   $("sellerViewMonth").addEventListener("change", renderSellerView);
   $("btnSellerDownloadBadges").addEventListener("click", downloadSellerBadges);
 

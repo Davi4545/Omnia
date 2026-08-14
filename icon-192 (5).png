@@ -1,4 +1,3 @@
-
   // ======================
   // PWA register
   // ======================
@@ -70,12 +69,18 @@
 
   // migração defensiva
   state.ui = state.ui || { theme:"default" };
-  state.options = state.options || { askValue:true, askPieces:true };
-  state.sellers = (state.sellers || []).map(s => ({
+  state.options = state.options || { askValue:true, askPieces:true, vendorDivisor: 0 };
+  state.sellers = (Array.isArray(state.sellers) ? state.sellers : []).map(s => ({
     ...s,
     active: (s.active === undefined ? true : !!s.active),
     paused: !!s.paused
   }));
+  state.queue = Array.isArray(state.queue) ? state.queue : [];
+  state.pool  = Array.isArray(state.pool) ? state.pool : [];
+  state.records = Array.isArray(state.records) ? state.records : [];
+  state.badges = state.badges || { earned: [] };
+  if(!Array.isArray(state.badges.earned)) state.badges.earned = [];
+  state.goalsByMonth = state.goalsByMonth || {};
   state.vendorGoalsByMonth = state.vendorGoalsByMonth || {};
   // migração: atendimento múltiplo
   state.currents = state.currents || [];
@@ -208,7 +213,7 @@
   // ======================
   function applyTheme(){
     const t = state.ui?.theme || "default";
-    const allowed = ["default","neon","ocean","sunset","purple","textured"];
+    const allowed = ["default","neon","ocean","sunset","purple","textured","spacewhite"];
     document.documentElement.dataset.theme = allowed.includes(t) ? t : "default";
   }
 
@@ -453,6 +458,7 @@
         </div>
         <div class="actions" style="gap:8px; align-items:center">
           <span class="tag good">Em atendimento</span>
+          <button class="btn warn" data-act="cancelAttend" data-cid="${cid}" title="Cancelar este atendimento e voltar o vendedor para a vez">↩ Cancelar atendimento</button>
         </div>
 
         <div class="divider"></div>
@@ -534,6 +540,7 @@
         if(act === 'sold') showFinalize(cid, 'sold');
         if(act === 'nosold') showFinalize(cid, 'nosold');
         if(act === 'cancel') hideFinalize(cid);
+        if(act === 'cancelAttend') cancelAttendance(cid);
         if(act === 'finalize'){
           const out = e.currentTarget.dataset.outcome || null;
           // store outcome on form
@@ -541,6 +548,31 @@
         }
       });
     });
+
+    function cancelAttendance(cid){
+      const c = getCurrentById(cid);
+      if(!c) return;
+      const s = getSeller(c.sellerId);
+      if(!s || !s.active){
+        // apenas remove do atendimento
+        state.currents = (state.currents||[]).filter(x=>x && x.id!==cid);
+        save(state);
+        renderAll();
+        return;
+      }
+
+      if(!confirm(`Cancelar o atendimento de "${s.name}" e voltar ele para a vez?`)) return;
+
+      // remove do atendimento
+      state.currents = (state.currents||[]).filter(x=>x && x.id!==cid);
+
+      // volta para a fila (fim da vez)
+      state.pool = (state.pool||[]).filter(x=>x!==s.id);
+      if(!state.queue.includes(s.id)) state.queue.push(s.id);
+
+      save(state);
+      renderAll();
+    }
 
     function showFinalize(cid, outcome){
       const form = $("finalizeForm_"+cid);
@@ -1704,19 +1736,59 @@
     DAY_GOAL: { icon:"✅", title:"Meta do Dia Batida", desc:"Bateu a meta diária do dia." },
     WEEK_GOAL: { icon:"🏁", title:"Meta da Semana Batida", desc:"Bateu a meta da semana." },
     MONTH_GOAL: { icon:"🌙", title:"Meta do Mês Batida", desc:"Chegou na meta do mês." },
-    TOP_CONV: { icon:"👑", title:"Rei da Conversão", desc:"Fechou o mês com conversão acima de 80%." },
+    TOP_CONV: { icon:"👑", title:"Rei da Conversão", desc:"Fechou o mês com conversão acima de 85%." },
+
     BIG_SALE: { icon:"💎", title:"Venda Suprema", desc:"Fez uma venda acima de R$ 5.000." },
     SALE_TOP: { icon:"🚀", title:"Venda Top", desc:"Venda entre R$ 1.500 e R$ 2.000." },
     SALE_RESPECT: { icon:"🫡", title:"Venda de Respeito", desc:"Venda entre R$ 2.500 e R$ 3.500." },
-    PA_BRONZE: { icon:"🥉", title:"P.A Bronze", desc:"P.A do mês entre 2,30 e 2,39." },
-    PA_SILVER: { icon:"🥈", title:"P.A Prata", desc:"P.A do mês entre 2,40 e 2,49." },
-    PA_GOLD: { icon:"🥇", title:"P.A Ouro", desc:"P.A do mês acima de 2,50." },
-    BIGGEST_SALE: { icon:"🏆", title:"Maior Venda do Mês", desc:"Maior venda do mês." }
+    BIGGEST_SALE: { icon:"🏆", title:"Maior Venda do Mês", desc:"Maior venda do mês." },
+
+    TVA_COMBO: { icon:"🔥", title:"Combo Master", desc:"TVA ≥ 95% (quase todas as vendas com 2+ itens no mês)." },
+
+    PA_BRONZE: { icon:"🥉", title:"P.A Bronze", desc:"P.A do mês ≥ 2,40." },
+    PA_SILVER: { icon:"🥈", title:"P.A Prata", desc:"P.A do mês ≥ 2,60." },
+    PA_GOLD: { icon:"🥇", title:"P.A Ouro", desc:"P.A do mês ≥ 2,70." },
+
+    TM_SILVER: { icon:"🧳", title:"T.M Mala de Prata", desc:"Ticket médio do mês entre R$ 600,00 e R$ 699,99." },
+    TM_GOLD: { icon:"💼", title:"T.M Mala de Ouro", desc:"Ticket médio do mês entre R$ 800,00 e R$ 899,99." },
+    TM_SUPREME: { icon:"🎒", title:"T.M Mala Suprema", desc:"Ticket médio do mês acima de R$ 950,00." },
+
+    MAGIC_5: { icon:"✨", title:"Selo Mágico", desc:"Surpresa: bateu 5 metas mensais no total." },
+    SUPREME_12: { icon:"🌌", title:"Selo Supremo", desc:"Surpresa: bateu 12 metas mensais no total." },
   };
 
   function ensureBadges(){
     if(!state.badges) state.badges = { earned: [] };
     if(!Array.isArray(state.badges.earned)) state.badges.earned = [];
+
+    // Migração defensiva: versões antigas salvavam badges sem o campo `def`.
+    // Aqui tentamos inferir para manter a galeria (ATIVADO/BLOQUEADO) funcionando.
+    const titleToDef = {
+      "Meta do Dia Batida":"DAY_GOAL",
+      "Meta da Semana Batida":"WEEK_GOAL",
+      "Meta do Mês Batida":"MONTH_GOAL",
+      "Rei da Conversão":"TOP_CONV",
+      "Venda Suprema":"BIG_SALE",
+      "Venda Top":"SALE_TOP",
+      "Venda de Respeito":"SALE_RESPECT",
+      "Maior Venda do Mês":"BIGGEST_SALE",
+      "P.A Bronze":"PA_BRONZE",
+      "P.A Prata":"PA_SILVER",
+      "P.A Ouro":"PA_GOLD",
+      "T.M Mala de Prata":"TM_SILVER",
+      "T.M Mala de Ouro":"TM_GOLD",
+      "T.M Mala Suprema":"TM_SUPREME",
+      "Combo Master":"TVA_COMBO",
+      "Selo Mágico":"MAGIC_5",
+      "Selo Supremo":"SUPREME_12"
+    };
+    try{
+      for(const e of state.badges.earned){
+        if(!e || e.def) continue;
+        const t = String(e.title||'');
+        if(titleToDef[t]) e.def = titleToDef[t];
+      }
+    }catch{}
   }
 
   function awardBadge(entry){
@@ -1774,150 +1846,520 @@
 
     // Sale-based instant badges
     const v = Number(rec.value||0);
-    if(v > 5000) awardBadge({ key:`SELLER_${sid}_${rec.id}_BIG_SALE`, scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.BIG_SALE.title, desc:BADGE_DEFS.BIG_SALE.desc, icon:BADGE_DEFS.BIG_SALE.icon, ts: nowTs() });
-    if(v >= 1500 && v <= 2000) awardBadge({ key:`SELLER_${sid}_${rec.id}_SALE_TOP`, scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.SALE_TOP.title, desc:BADGE_DEFS.SALE_TOP.desc, icon:BADGE_DEFS.SALE_TOP.icon, ts: nowTs() });
-    if(v >= 2500 && v <= 3500) awardBadge({ key:`SELLER_${sid}_${rec.id}_SALE_RESPECT`, scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.SALE_RESPECT.title, desc:BADGE_DEFS.SALE_RESPECT.desc, icon:BADGE_DEFS.SALE_RESPECT.icon, ts: nowTs() });
+    if(v > 5000) awardBadge({ key:`SELLER_${sid}_${rec.id}_BIG_SALE`, scope:'seller', sellerId:sid, monthKey:mk, def:'BIG_SALE', title:BADGE_DEFS.BIG_SALE.title, desc:BADGE_DEFS.BIG_SALE.desc, icon:BADGE_DEFS.BIG_SALE.icon, ts: nowTs() });
+    if(v >= 1500 && v <= 2000) awardBadge({ key:`SELLER_${sid}_${rec.id}_SALE_TOP`, scope:'seller', sellerId:sid, monthKey:mk, def:'SALE_TOP', title:BADGE_DEFS.SALE_TOP.title, desc:BADGE_DEFS.SALE_TOP.desc, icon:BADGE_DEFS.SALE_TOP.icon, ts: nowTs() });
+    if(v >= 2500 && v <= 3500) awardBadge({ key:`SELLER_${sid}_${rec.id}_SALE_RESPECT`, scope:'seller', sellerId:sid, monthKey:mk, def:'SALE_RESPECT', title:BADGE_DEFS.SALE_RESPECT.title, desc:BADGE_DEFS.SALE_RESPECT.desc, icon:BADGE_DEFS.SALE_RESPECT.icon, ts: nowTs() });
 
     // Day goal
     const dayGoal = sellerGoalDay(sid, mk);
     const dayRev = sellerRevenueDay(sid, tk);
     if(dayGoal>0 && dayRev >= dayGoal){
-      awardBadge({ key:`SELLER_${sid}_${tk}_DAY_GOAL`, scope:'seller', sellerId:sid, monthKey:mk, dateKey:tk, title:BADGE_DEFS.DAY_GOAL.title, desc:BADGE_DEFS.DAY_GOAL.desc, icon:BADGE_DEFS.DAY_GOAL.icon, ts: nowTs() });
+      awardBadge({ key:`SELLER_${sid}_${tk}_DAY_GOAL`, scope:'seller', sellerId:sid, monthKey:mk, dateKey:tk, def:'DAY_GOAL', title:BADGE_DEFS.DAY_GOAL.title, desc:BADGE_DEFS.DAY_GOAL.desc, icon:BADGE_DEFS.DAY_GOAL.icon, ts: nowTs() });
     }
 
     // Week goal
     const wGoal = sellerGoalWeek(sid, mk, week);
     const wRev = sellerRevenueWeek(sid, mk, week);
     if(wGoal>0 && wRev >= wGoal){
-      awardBadge({ key:`SELLER_${sid}_${mk}_W${week}_WEEK_GOAL`, scope:'seller', sellerId:sid, monthKey:mk, week, title:BADGE_DEFS.WEEK_GOAL.title, desc:BADGE_DEFS.WEEK_GOAL.desc, icon:BADGE_DEFS.WEEK_GOAL.icon, ts: nowTs() });
+      awardBadge({ key:`SELLER_${sid}_${mk}_W${week}_WEEK_GOAL`, scope:'seller', sellerId:sid, monthKey:mk, week, def:'WEEK_GOAL', title:BADGE_DEFS.WEEK_GOAL.title, desc:BADGE_DEFS.WEEK_GOAL.desc, icon:BADGE_DEFS.WEEK_GOAL.icon, ts: nowTs() });
     }
 
     // Month goal
     const mGoal = sellerGoalMonthly(sid, mk);
     const mRev = sellerSoldInMonth(sid, mk).reduce((s,r)=>s+Number(r.value||0),0);
     if(mGoal>0 && mRev >= mGoal){
-      awardBadge({ key:`SELLER_${sid}_${mk}_MONTH_GOAL`, scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.MONTH_GOAL.title, desc:BADGE_DEFS.MONTH_GOAL.desc, icon:BADGE_DEFS.MONTH_GOAL.icon, ts: nowTs() });
+      awardBadge({ key:`SELLER_${sid}_${mk}_MONTH_GOAL`, scope:'seller', sellerId:sid, monthKey:mk, def:'MONTH_GOAL', title:BADGE_DEFS.MONTH_GOAL.title, desc:BADGE_DEFS.MONTH_GOAL.desc, icon:BADGE_DEFS.MONTH_GOAL.icon, ts: nowTs() });
     }
 
     // Biggest sale of month (re-evaluate each sale)
     const sold = sellerSoldInMonth(sid, mk);
     if(sold.length){
       const max = sold.reduce((a,b)=> (Number(b.value||0)>Number(a.value||0) ? b : a), sold[0]);
-      awardBadge({ key:`SELLER_${sid}_${mk}_BIGGEST_${max.id}`, scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.BIGGEST_SALE.title, desc:BADGE_DEFS.BIGGEST_SALE.desc+` (${formatMoney(max.value)})`, icon:BADGE_DEFS.BIGGEST_SALE.icon, ts: nowTs() });
+      awardBadge({ key:`SELLER_${sid}_${mk}_BIGGEST_${max.id}`, scope:'seller', sellerId:sid, monthKey:mk, def:'BIGGEST_SALE', title:BADGE_DEFS.BIGGEST_SALE.title, desc:BADGE_DEFS.BIGGEST_SALE.desc+` (${formatMoney(max.value)})`, icon:BADGE_DEFS.BIGGEST_SALE.icon, ts: nowTs() });
     }
 
-    // End-of-month style badges: P.A and Conversion (evaluated anytime; only awards if thresholds met)
+    // End-of-month style badges: P.A, TVA e Conversão (avaliado a qualquer venda do mês)
     const all = sellerRecsInMonth(sid, mk);
     const a = agg(all);
-    if(a.paPerSale >= 2.30 && a.paPerSale <= 2.39) awardBadge({ key:`SELLER_${sid}_${mk}_PA_BRONZE`, scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.PA_BRONZE.title, desc:BADGE_DEFS.PA_BRONZE.desc, icon:BADGE_DEFS.PA_BRONZE.icon, ts: nowTs() });
-    if(a.paPerSale >= 2.40 && a.paPerSale <= 2.49) awardBadge({ key:`SELLER_${sid}_${mk}_PA_SILVER`, scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.PA_SILVER.title, desc:BADGE_DEFS.PA_SILVER.desc, icon:BADGE_DEFS.PA_SILVER.icon, ts: nowTs() });
-    if(a.paPerSale >= 2.50) awardBadge({ key:`SELLER_${sid}_${mk}_PA_GOLD`, scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.PA_GOLD.title, desc:BADGE_DEFS.PA_GOLD.desc, icon:BADGE_DEFS.PA_GOLD.icon, ts: nowTs() });
-    if(a.conv >= 80) awardBadge({ key:`SELLER_${sid}_${mk}_TOP_CONV`, scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.TOP_CONV.title, desc:BADGE_DEFS.TOP_CONV.desc, icon:BADGE_DEFS.TOP_CONV.icon, ts: nowTs() });
+
+    // P.A (peças por venda)
+    if(a.paPerSale >= 2.40) awardBadge({ key:`SELLER_${sid}_${mk}_PA_BRONZE`, def:'PA_BRONZE', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.PA_BRONZE.title, desc:BADGE_DEFS.PA_BRONZE.desc, icon:BADGE_DEFS.PA_BRONZE.icon, ts: nowTs() });
+    if(a.paPerSale >= 2.60) awardBadge({ key:`SELLER_${sid}_${mk}_PA_SILVER`, def:'PA_SILVER', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.PA_SILVER.title, desc:BADGE_DEFS.PA_SILVER.desc, icon:BADGE_DEFS.PA_SILVER.icon, ts: nowTs() });
+    if(a.paPerSale >= 2.70) awardBadge({ key:`SELLER_${sid}_${mk}_PA_GOLD`, def:'PA_GOLD', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.PA_GOLD.title, desc:BADGE_DEFS.PA_GOLD.desc, icon:BADGE_DEFS.PA_GOLD.icon, ts: nowTs() });
+
+    // TVA (taxa de venda agrupada) = % de vendas com 2+ itens no mês
+    const soldOnly = (all||[]).filter(r=>r.outcome==='sold');
+    const grouped = soldOnly.filter(r=>Number(r.pieces||0) >= 2).length;
+    const tva = soldOnly.length ? (grouped/soldOnly.length)*100 : 0;
+    if(tva >= 95) awardBadge({ key:`SELLER_${sid}_${mk}_TVA_COMBO`, def:'TVA_COMBO', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.TVA_COMBO.title, desc:`TVA do mês: ${tva.toFixed(1)}%`, icon:BADGE_DEFS.TVA_COMBO.icon, ts: nowTs() });
+
+    // Ticket médio
+    const tm = a.sales>0 ? (a.revenue/a.sales) : 0;
+    if(tm >= 600 && tm <= 699.99) awardBadge({ key:`SELLER_${sid}_${mk}_TM_SILVER`, def:'TM_SILVER', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.TM_SILVER.title, desc:BADGE_DEFS.TM_SILVER.desc, icon:BADGE_DEFS.TM_SILVER.icon, ts: nowTs() });
+    if(tm >= 800 && tm <= 899.99) awardBadge({ key:`SELLER_${sid}_${mk}_TM_GOLD`, def:'TM_GOLD', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.TM_GOLD.title, desc:BADGE_DEFS.TM_GOLD.desc, icon:BADGE_DEFS.TM_GOLD.icon, ts: nowTs() });
+    if(tm >= 950) awardBadge({ key:`SELLER_${sid}_${mk}_TM_SUPREME`, def:'TM_SUPREME', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.TM_SUPREME.title, desc:BADGE_DEFS.TM_SUPREME.desc, icon:BADGE_DEFS.TM_SUPREME.icon, ts: nowTs() });
+
+    // Conversão alta no mês
+    if(a.conv >= 85) awardBadge({ key:`SELLER_${sid}_${mk}_TOP_CONV`, def:'TOP_CONV', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.TOP_CONV.title, desc:BADGE_DEFS.TOP_CONV.desc, icon:BADGE_DEFS.TOP_CONV.icon, ts: nowTs() });
+
+    // Selos surpresa por quantidade de metas mensais batidas (acumulado)
+    const monthWins = (state.badges?.earned||[]).filter(e=>e.scope==='seller' && e.sellerId===sid && e.def==='MONTH_GOAL').length;
+    if(monthWins >= 5) awardBadge({ key:`SELLER_${sid}_MAGIC_5`, def:'MAGIC_5', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.MAGIC_5.title, desc:BADGE_DEFS.MAGIC_5.desc, icon:BADGE_DEFS.MAGIC_5.icon, ts: nowTs() });
+    if(monthWins >= 12) awardBadge({ key:`SELLER_${sid}_SUPREME_12`, def:'SUPREME_12', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.SUPREME_12.title, desc:BADGE_DEFS.SUPREME_12.desc, icon:BADGE_DEFS.SUPREME_12.icon, ts: nowTs() });
+
   }
 
-  function renderSellerView(){
-    ensureBadges();
-    const mk = $("sellerViewMonth").value || monthKey();
-    $("sellerViewMonth").value = mk;
+  // Render completo do painel do vendedor (sempre mostra algo; nunca deixa a tela vazia)
+  
+// Garante que o state existe
+if (!window.state) window.state = {};
 
-    // populate sellers (preserva seleção + estado vazio guiado)
-    const sel = $("sellerViewSelect");
-    const active = state.sellers.filter(s=>s.active);
+function renderSellerView() {
+  console.log("Iniciando renderSellerView");
 
-    const wanted = state.ui?.sellerViewId || "";
-    const opts = [];
-    if(active.length>1) opts.push('<option value="" disabled>Selecione…</option>');
-    for(const s of active){ opts.push(`<option value="${s.id}">${s.name}</option>`); }
-    sel.innerHTML = opts.join('');
+  try {
+    state.options = state.options || { askValue: true, askPieces: true, vendorDivisor: 0 };
+    state.sellers = Array.isArray(state.sellers) ? state.sellers : [];
+    state.records = Array.isArray(state.records) ? state.records : [];
+    state.badges = state.badges || { earned: [] };
 
-    // define seleção
-    let sid = "";
-    if(wanted && active.some(s=>s.id===wanted)) sid = wanted;
-    else sid = (active[0] && active[0].id) || "";
-    sel.value = sid;
-    state.ui = state.ui || {};
-    state.ui.sellerViewId = sid;
-    save(state);
-
-    if(!sid){
-      $("sellerKpis").innerHTML = '<div class="hint">Cadastre um vendedor para ver o painel.</div>';
-      $("sellerGoalsBox").innerHTML = '<div class="hint">—</div>';
-      $("sellerBadges").innerHTML = '';
-      return;
+    if (!Array.isArray(state.badges.earned)) {
+      state.badges.earned = [];
     }
-    const seller = getSeller(sid);
-    const tk = todayKey();
-    const w = weekOfMonth(tk);
+  } catch (e) {
+    console.error("Erro ao preparar state:", e);
+  }
 
-    const recMonth = sellerRecsInMonth(sid, mk);
-    const aMonth = agg(recMonth);
+  try {
+    if (typeof ensureBadges === "function") {
+      ensureBadges();
+    } else {
+      console.warn("ensureBadges não existe");
+    }
+  } catch (e) {
+    console.error("Erro em ensureBadges:", e);
+  }
 
-    const dayGoal = sellerGoalDay(sid, mk);
-    const weekGoal = sellerGoalWeek(sid, mk, w);
-    const monthGoal = sellerGoalMonthly(sid, mk);
+  const ARENA_SEALS = [
+    { name: "Bronze", icon: "🥉", min: 0 },
+    { name: "Prata", icon: "🥈", min: 800 },
+    { name: "Ouro", icon: "🏅", min: 1500 },
+    { name: "Diamante", icon: "💎", min: 2500 },
+    { name: "Esmeralda", icon: "🟢", min: 4000 }
+  ];
 
-    const dayRev = sellerRevenueDay(sid, tk);
-    const weekRev = sellerRevenueWeek(sid, mk, w);
-    const monthRev = sellerSoldInMonth(sid, mk).reduce((s,r)=>s+Number(r.value||0),0);
+  function calcArenaScore(records) {
+    let value = 0, pieces = 0, sales = 0;
 
-    const pctD = dayGoal>0 ? clamp((dayRev/dayGoal)*100,0,999) : 0;
-    const pctW = weekGoal>0 ? clamp((weekRev/weekGoal)*100,0,999) : 0;
-    const pctM = monthGoal>0 ? clamp((monthRev/monthGoal)*100,0,999) : 0;
+    for (const r of records) {
+      if (r.outcome === "sold") {
+        sales++;
+        value += Number(r.value || 0);
+        pieces += Number(r.pieces || 0);
+      }
+    }
 
-    $("sellerKpis").innerHTML = `
-      <div class="kpi"><div class="label">Atendimentos</div><div class="value">${aMonth.atend}</div></div>
-      <div class="kpi"><div class="label">Vendas</div><div class="value">${aMonth.sales}</div></div>
-      <div class="kpi"><div class="label">Conversão</div><div class="value">${aMonth.conv.toFixed(1)}%</div></div>
-      <div class="kpi"><div class="label">Faturamento</div><div class="value">${formatMoney(aMonth.revenue)}</div></div>
-      <div class="kpi"><div class="label">P.A (venda)</div><div class="value">${aMonth.paPerSale.toFixed(2)}</div></div>
-    `;
+    const score = Math.round(value + (sales * 50) + (pieces * 25));
+    return { value, pieces, sales, score };
+  }
 
-    const goalMsg = `
-      <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:space-between">
-        <div><b>${seller?.name||'Vendedor'}</b> — acompanhamento de metas</div>
-        <div class="tag">Divisor: <b>${String(state.options.vendorDivisor||'—').replace('.',',')}</b></div>
-      </div>
-      <div class="divider"></div>
-      <div class="row" style="gap:14px">
-        <div style="flex:1; min-width:240px">
-          <div class="tiny">Meta diária</div>
-          <div style="font-weight:900; font-size:16px">${formatMoney(dayRev)} <span class="tiny">/ ${formatMoney(dayGoal)}</span></div>
-          <div class="meter good"><i style="width:${clamp(pctD,0,100)}%"></i></div>
+  function getSeal(score) {
+    let current = ARENA_SEALS[0];
+    for (const s of ARENA_SEALS) {
+      if (score >= s.min) current = s;
+    }
+    return current;
+  }
+
+  const view = document.getElementById("viewSeller");
+
+  if (!view) {
+    console.error("Elemento #viewSeller NÃO encontrado no HTML");
+    return;
+  }
+
+  console.log("Elemento encontrado, renderizando...");
+
+  view.innerHTML = 
+    <section class="card arenaCard">
+      <div class="cardHeader">
+        <div class="arenaTitle">
+          <h2>Arena de Resultados</h2>
+          <div class="rowRight">
+            <button class="btn" id="btnSellerDownloadBadges">Baixar selos</button>
+          </div>
         </div>
-        <div style="flex:1; min-width:240px">
-          <div class="tiny">Meta da semana (Semana ${w})</div>
+      </div>
+
+      <div class="cardBody">
+
+        <div class="arenaFilters">
+          <div class="field flex">
+            <label>Vendedor</label>
+            <select id="sellerViewSelect"></select>
+          </div>
+
+          <div class="field">
+            <label>Mês</label>
+            <input id="sellerViewMonth" type="month"/>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div id="viewSeller"></div>
+
+        <div class="divider"></div>
+
+        <div class="arenaBadgesHead">
+          <h3 class="arenaSectionTitle">Conquistas do mês</h3>
+        </div>
+
+        <div class="badgeGrid" id="sellerBadges"></div>
+
+      </div>
+    </section>
+  `;
+
+  console.log("Render finalizado com sucesso");
+}
+
+// ⚠️ IMPORTANTE: chama a função
+renderSellerView();
+
+  const sel=document.getElementById("sellerViewSelect");
+  const mkInput=document.getElementById("sellerViewMonth");
+
+  const active=state.sellers.filter(s=>s.active!==false);
+
+  sel.innerHTML=active.map(s=>`<option value="${s.id}">${s.name}</option>`).join("");
+
+  mkInput.value=monthKey();
+
+  function update(){
+
+    const sid=sel.value;
+    const mk=mkInput.value;
+
+    const rows=[];
+
+    for(const s of active){
+
+      const recs=state.records.filter(r=>r.sellerId===s.id&&r.monthKey===mk);
+
+      const arena=calcArenaScore(recs);
+
+      const seal=getSeal(arena.score);
+
+      rows.push({
+        name:s.name,
+        value:arena.value,
+        pieces:arena.pieces,
+        score:arena.score,
+        seal
+      });
+    }
+
+    rows.sort((a,b)=>b.score-a.score);
+
+    const wrap=document.getElementById("arenaResultsRanking");
+
+    wrap.innerHTML=`
+<div class="arenaRankingCard">
+
+<table class="arenaRankingTable">
+
+<thead>
+<tr>
+<th>#</th>
+<th>Vendedor</th>
+<th>Faturamento</th>
+<th>Peças</th>
+<th>Pontos</th>
+<th>Selo</th>
+</tr>
+</thead>
+
+<tbody>
+
+${rows.map((r,i)=>`
+<tr>
+<td>${i+1}</td>
+<td>${r.name}</td>
+<td>${formatMoney(r.value)}</td>
+<td>${formatNum(r.pieces)}</td>
+<td>${formatNum(r.score)}</td>
+<td>${r.seal.icon} ${r.seal.name}</td>
+</tr>
+`).join("")}
+
+</tbody>
+</table>
+
+</div>
+`;
+  }
+
+  sel.onchange=update;
+  mkInput.onchange=update;
+
+  update();
+}
+
+    const mkInput = document.getElementById('sellerViewMonth');
+    const sel = document.getElementById('sellerViewSelect');
+    const fromEl = document.getElementById('arenaFrom');
+    const toEl = document.getElementById('arenaTo');
+    const kpisEl = document.getElementById('arenaKpis');
+    const metaEl = document.getElementById('arenaMetaBox');
+    const yearEl = document.getElementById('arenaYearBox');
+    const chartEl = document.getElementById('arenaChartBox');
+    const xpEl = document.getElementById('arenaXpBox');
+    const badgesEl = document.getElementById('sellerBadges');
+
+    const mk = mkInput.value || monthKey();
+    mkInput.value = mk;
+    const sellersList = Array.isArray(state.sellers) ? state.sellers : [];
+    const active = sellersList.filter(s=>s && (s.active !== false));
+    const any = sellersList.filter(s=>s);
+
+    if(active.length === 0){
+      if(any.length === 0){
+        sel.innerHTML = '<option value="" selected>Nenhum vendedor cadastrado</option>';
+        kpisEl.innerHTML = '<div class="hint">Cadastre um vendedor em <b>+ Vendedor</b> para usar a Arena.</div>';
+        metaEl.innerHTML = '<div class="hint">—</div>';
+        yearEl.innerHTML = '<div class="hint">—</div>';
+        chartEl.innerHTML = '<div class="hint">—</div>';
+        xpEl.innerHTML = '<div class="hint">—</div>';
+        badgesEl.innerHTML = '';
+        const btn = document.getElementById('btnSellerDownloadBadges');
+        if(btn) btn.onclick = ()=> alert('Cadastre um vendedor primeiro.');
+        return;
+      }
+
+      // fallback: existe vendedor, mas todos estão inativos
+      kpisEl.innerHTML = `<div class="hint">Nenhum vendedor está marcado como <b>ativo</b>. Vou mostrar mesmo assim para você visualizar a Arena.<br><br>Dica: ative o vendedor em <b>+ Vendedor</b>.</div>`;
+      metaEl.innerHTML = '<div class="hint">—</div>';
+      yearEl.innerHTML = '<div class="hint">—</div>';
+      chartEl.innerHTML = '<div class="hint">—</div>';
+      xpEl.innerHTML = '<div class="hint">—</div>';
+      badgesEl.innerHTML = '';
+      const btn = document.getElementById('btnSellerDownloadBadges');
+      if(btn) btn.onclick = ()=> alert('Ative um vendedor (ou cadastre) para liberar tudo.');
+      // Não retorna: permite visualizar e selecionar mesmo inativos
+    }
+
+    sel.innerHTML = (active.length?active:any).map(s=>`<option value="${s.id}">${s.name || 'Vendedor'}${(s.active===false?' (inativo)':'')}</option>`).join('');
+
+    // restore last seller
+
+    // restore last seller
+    state.ui = state.ui || {};
+    const wanted = state.ui?.sellerViewId || '';
+    const listForPick = (active.length?active:any);
+    sel.value = (wanted && listForPick.some(s=>s.id===wanted)) ? wanted : (listForPick[0] ? listForPick[0].id : '');
+    state.ui.sellerViewId = sel.value || '';
+
+    // default date range to full month
+    const mkRef = mkInput.value || monthKey();
+    const first = mkRef + '-01';
+    const last = mkRef + '-' + String(daysInMonth(mkRef)).padStart(2,'0');
+    if(!fromEl.value) fromEl.value = first;
+    if(!toEl.value) toEl.value = last;
+
+    function dateKeyFromDateInput(v){
+      if(!v) return '';
+      // input date is YYYY-MM-DD already
+      return v;
+    }
+
+    const update = ()=>{
+      const sid = sel.value;
+      state.ui.sellerViewId = sid;
+      save(state);
+
+      const mk2 = mkInput.value || monthKey();
+      const fromKey = dateKeyFromDateInput(fromEl.value || (mk2+'-01'));
+      const toKey = dateKeyFromDateInput(toEl.value || (mk2+'-'+String(daysInMonth(mk2)).padStart(2,'0')));
+
+      // Records for seller in selected month (for monthly seals)
+      const recMonth = sellerRecsInMonth(sid, mk2);
+      const soldMonth = sellerSoldInMonth(sid, mk2);
+      const aMonth = agg(recMonth);
+      const tmMonth = aMonth.sales>0 ? (aMonth.revenue/aMonth.sales) : 0;
+
+      // Records for seller in chosen date range (for KPIs && chart)
+      const recRange = state.records.filter(r=> r.sellerId===sid && r.dateKey>=fromKey && r.dateKey<=toKey);
+      const soldRange = recRange.filter(r=> r.outcome==='sold');
+      const aRange = agg(recRange);
+      const tmRange = aRange.sales>0 ? (aRange.revenue/aRange.sales) : 0;
+
+      // Venda record (mês)
+      let best = 0;
+      for(const r of soldMonth){ best = Math.max(best, Number(r.value||0)); }
+
+      kpisEl.innerHTML = `
+        
+        <div class="kpi"><div class="t">Período</div><div class="v" style="font-size:14px">${fromKey} → ${toKey}</div></div>
+        <div class="kpi"><div class="t">Atendimentos</div><div class="v">${aRange.atend}</div></div>
+        <div class="kpi"><div class="t">Vendas</div><div class="v">${aRange.sales}</div></div>
+        <div class="kpi"><div class="t">Conversão</div><div class="v">${aRange.conv.toFixed(1)}%</div></div>
+        <div class="kpi"><div class="t">Faturamento</div><div class="v">${formatMoney(aRange.revenue)}</div></div>
+        <div class="kpi"><div class="t">T.M</div><div class="v">${formatMoney(tmRange)}</div></div>
+        <div class="kpi"><div class="t">P.A</div><div class="v">${aRange.paPerSale.toFixed(2)}</div></div>
+        <div class="kpi"><div class="t">Venda record (mês)</div><div class="v">${formatMoney(best)}</div></div>
+`;
+
+      // Metas (semana + mês) — baseado no mês referência
+      const w = weekOfMonth(toKey);
+      const weekGoal = sellerGoalWeek(sid, mk2, w);
+      const monthGoal = sellerGoalMonthly(sid, mk2);
+      const weekRev = sellerRevenueWeek(sid, mk2, w);
+      const monthRev = soldMonth.reduce((s,r)=>s+Number(r.value||0),0);
+      const pctW = weekGoal>0 ? clamp((weekRev/weekGoal)*100,0,999) : 0;
+      const pctM = monthGoal>0 ? clamp((monthRev/monthGoal)*100,0,999) : 0;
+
+      metaEl.innerHTML = `
+        <div class="row" style="justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap">
+          <div><b>Meta do vendedor</b> — Semana ${w} e Mês</div>
+          <div class="tag" id="arenaBestSaleInline">Venda record (mês): <b>${formatMoney(best)}</b></div>
+        </div>
+        <div class="divider"></div>
+        <div style="margin-bottom:10px">
+          <div class="tiny">Meta da semana</div>
           <div style="font-weight:900; font-size:16px">${formatMoney(weekRev)} <span class="tiny">/ ${formatMoney(weekGoal)}</span></div>
           <div class="meter good"><i style="width:${clamp(pctW,0,100)}%"></i></div>
         </div>
-        <div style="flex:1; min-width:240px">
+        <div>
           <div class="tiny">Meta do mês</div>
           <div style="font-weight:900; font-size:16px">${formatMoney(monthRev)} <span class="tiny">/ ${formatMoney(monthGoal)}</span></div>
           <div class="meter good"><i style="width:${clamp(pctM,0,100)}%"></i></div>
         </div>
-      </div>`;
+      `;
+      const bestTag = document.getElementById('arenaBestSaleTag');
+      if(bestTag){ bestTag.style.display='inline-flex'; bestTag.innerHTML = 'Venda record do mês: <b>'+formatMoney(best)+'</b>'; }
 
-    $("sellerGoalsBox").innerHTML = goalMsg;
 
-    // badges
-    const earned = state.badges.earned.filter(e=> e.scope==='seller' && e.sellerId===sid && e.monthKey===mk);
-    const grid = $("sellerBadges");
-    if(!earned.length){
-      grid.innerHTML = '<div class="hint">Nenhum selo ainda. Finalize vendas e metas para destravar. 🚀</div>';
-    } else {
-      earned.sort((a,b)=> (b.ts||0)-(a.ts||0));
-      grid.innerHTML = earned.map(e=>`
-        <div class="badgeCard">
-          <div class="badgeTop">
-            <div class="badgeIcon">${e.icon||'🏅'}</div>
-            <div>
-              <div class="badgeTitle">${e.title}</div>
-              <div class="badgeDesc">${e.desc||''}</div>
-            </div>
+      // Acumulado do ano
+      const year = (mk2||monthKey()).slice(0,4);
+      const recYear = state.records.filter(r=> r.sellerId===sid && r.dateKey && r.dateKey.startsWith(year+'-') && r.outcome==='sold');
+      const revYear = recYear.reduce((s,r)=>s+Number(r.value||0),0);
+      const salesYear = recYear.length;
+      const tmYear = salesYear>0 ? (revYear/salesYear) : 0;
+      yearEl.innerHTML = `
+        <div class="row" style="justify-content:space-between; align-items:center">
+          <div><b>Acumulado do ano</b> (${year})</div>
+          <div class="tag">T.M ano: <b>${formatMoney(tmYear)}</b></div>
+        </div>
+        <div class="divider"></div>
+        <div class="row" style="gap:14px; flex-wrap:wrap">
+          <div style="flex:1; min-width:220px">
+            <div class="tiny">Faturamento (ano)</div>
+            <div style="font-weight:900; font-size:18px">${formatMoney(revYear)}</div>
           </div>
-          <div class="badgeDesc" style="margin-top:8px">${e.dateKey ? ('Dia: <b>'+e.dateKey+'</b>') : (e.week ? ('Semana: <b>'+e.week+'</b>') : '')}</div>
-        </div>`).join('');
-    }
+          <div style="flex:1; min-width:220px">
+            <div class="tiny">Vendas (ano)</div>
+            <div style="font-weight:900; font-size:18px">${salesYear}</div>
+          </div>
+        </div>
+      `;
+
+      // Chart — sparkline diária do mês (mês referência)
+      const days = daysInMonth(mk2);
+      const daily = Array.from({length:days}, (_,i)=>{
+        const dk = mk2 + '-' + String(i+1).padStart(2,'0');
+        const v = state.records.filter(r=> r.sellerId===sid && r.dateKey===dk && r.outcome==='sold').reduce((s,r)=>s+Number(r.value||0),0);
+        return v;
+      });
+      const maxV = Math.max(1, ...daily);
+      const wpx = 420, hpx = 120;
+      const pts = daily.map((v,i)=>{
+        const x = (i/(days-1||1))*wpx;
+        const y = hpx - (v/maxV)*hpx;
+        return [x,y];
+      });
+      const d = pts.map((p,i)=> (i===0?`M ${p[0].toFixed(1)} ${p[1].toFixed(1)}`:`L ${p[0].toFixed(1)} ${p[1].toFixed(1)}`)).join(' ');
+      chartEl.innerHTML = `
+        <div class="row" style="justify-content:space-between; gap:10px; flex-wrap:wrap">
+          <div class="tiny">${mk2} · evolução diária do faturamento</div>
+          <div class="tag">T.M mês: <b>${formatMoney(tmMonth)}</b></div>
+        </div>
+        <div style="margin-top:10px">
+          <svg viewBox="0 0 ${wpx} ${hpx}" width="100%" height="${hpx}" style="display:block; border-radius:12px; background: rgba(0,0,0,.12); border:1px solid var(--line)">
+            <path d="${d}" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="hint" style="margin-top:8px">Dica: foque em constância. Um dia bom por semana não bate meta — rotina bate. 🚀</div>
+      `;
+
+      // Badges do mês (sistema de selos: desbloqueados + bloqueados)
+      const earned = state.badges.earned.filter(e=> e.scope==='seller' && e.sellerId===sid && e.monthKey===mk2);
+      const earnedByDef = new Map();
+      for(const e of earned){
+        const d = e.def || '';
+        if(!d) continue;
+        if(!earnedByDef.has(d)) earnedByDef.set(d, []);
+        earnedByDef.get(d).push(e);
+      }
+
+      const badgeOrder = [
+        'DAY_GOAL','WEEK_GOAL','MONTH_GOAL',
+        'TVA_COMBO','PA_BRONZE','PA_SILVER','PA_GOLD',
+        'TM_SILVER','TM_GOLD','TM_SUPREME',
+        'SALE_TOP','SALE_RESPECT','BIG_SALE','BIGGEST_SALE',
+        'TOP_CONV','MAGIC_5','SUPREME_12'
+      ];
+
+      const cards = [];
+      for(const defKey of badgeOrder){
+        const def = BADGE_DEFS[defKey];
+        if(!def) continue;
+        const list = earnedByDef.get(defKey) || [];
+        const unlocked = list.length>0;
+        const latest = unlocked ? list.sort((a,b)=>(b.ts||0)-(a.ts||0))[0] : null;
+        const sub = latest?.dateKey ? ('Dia: <b>'+latest.dateKey+'</b>') : (latest?.week ? ('Semana: <b>'+latest.week+'</b>') : (latest?.monthKey ? ('Mês: <b>'+latest.monthKey+'</b>') : ''));
+        const desc = unlocked ? (latest.desc || def.desc || '') : (def.desc || '');
+        cards.push(`
+          <div class="badgeCard ${unlocked?'':'badgeLocked'}">
+            <div class="badgeTop">
+              <div class="badgeIcon">${def.icon||'🏅'}</div>
+              <div>
+                <div class="badgeTitle">${def.title}</div>
+                <div class="badgeDesc">${desc}</div>
+              </div>
+            </div>
+            <div class="badgeDesc" style="margin-top:8px">${unlocked ? ('<span class="tag">ATIVADO</span> '+sub) : '<span class="tag">BLOQUEADO</span>'}</div>
+          </div>`);
+      }
+
+      badgesEl.innerHTML = cards.length ? cards.join('') : '<div class="hint">Nenhum selo ainda. Finalize vendas e metas para destravar. ⭐</div>';
+
+      // XP + estrelas (metas semanais/mensais batidas no mês)
+      const stars = earned.filter(e=> (e.key||'').includes('_WEEK_GOAL') || (e.key||'').includes('_MONTH_GOAL')).length;
+      const target = 12; // 12 estrelas = barra cheia (ajustável)
+      const pctXP = clamp((stars/target)*100, 0, 100);
+      const starIcons = Array.from({length: Math.min(24, Math.max(0, stars))}, ()=> '⭐').join('');
+      xpEl.innerHTML = `
+        <div class="row" style="justify-content:space-between; align-items:center">
+          <div><b>XP</b> · evolui com metas batidas</div>
+          <div class="tag">Estrelas: <b>${stars}</b></div>
+        </div>
+        <div class="divider"></div>
+        <div class="meter good"><i style="width:${pctXP}%"></i></div>
+        <div class="hint" style="margin-top:8px">${stars>0 ? starIcons : 'Ganhe ⭐ batendo metas semanais e mensais.'}</div>
+      `;
+
+      const btn = document.getElementById('btnSellerDownloadBadges');
+      if(btn) btn.onclick = downloadSellerBadges;
+    };
+
+    sel.onchange = update;
+    mkInput.onchange = ()=>{ fromEl.value=''; toEl.value=''; update(); };
+    fromEl.onchange = update;
+    toEl.onchange = update;
+    update();
   }
+
 
   function downloadSellerBadges(){
     const sid = $("sellerViewSelect").value;
@@ -1931,17 +2373,23 @@
       'Disciplina + foco = meta batida. Vamos! 💪',
       'Quem faz o básico bem feito, domina o jogo. 👑'
     ]);
-    const cards = earned.map(e=>`<div style="border:1px solid #e5e7eb;border-radius:14px;padding:12px;margin:10px 0;display:flex;gap:10px;align-items:center">
+    earned.sort((a,b)=> (b.ts||0)-(a.ts||0));
+    const personal = `<div style="border:1px solid #e5e7eb;border-radius:14px;padding:12px;margin:10px 0;display:flex;gap:10px;align-items:center;background:#f8fafc">
+      <div style="font-size:26px">🏷️</div>
+      <div><div style="font-weight:900">Selo Personalizado</div><div style="color:#4b5563;font-size:13px">Vendedor: <b>${seller?.name||'Vendedor'}</b></div></div>
+    </div>`;
+    const cards = (personal + (earned.map(e=>`<div style="border:1px solid #e5e7eb;border-radius:14px;padding:12px;margin:10px 0;display:flex;gap:10px;align-items:center">
       <div style="font-size:26px">${e.icon||'🏅'}</div>
       <div><div style="font-weight:900">${e.title}</div><div style="color:#4b5563;font-size:13px">${e.desc||''}</div></div>
-    </div>`).join('') || '<div style="color:#6b7280">Nenhum selo no período.</div>';
+    </div>`).join('')));
+    const cardsOrEmpty = earned.length ? cards : (personal + '<div style="color:#6b7280">Nenhum selo no período.</div>');
     const html = `<!doctype html><html><head><meta charset="utf-8"><title>Selos - ${seller?.name||'Vendedor'} - ${mk}</title></head>
     <body style="font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;padding:18px;background:#fff;color:#111">
       <h1 style="margin:0 0 6px 0">Selos do Vendedor: ${seller?.name||'Vendedor'}</h1>
       <div style="color:#374151;margin-bottom:10px">Mês: <b>${mk}</b></div>
       <div style="padding:12px;border:1px solid #e5e7eb;border-radius:14px;background:#f8fafc">Mensagem: <b>${msg}</b></div>
       <h2 style="margin:16px 0 8px 0">Conquistas</h2>
-      ${cards}
+      ${cardsOrEmpty}
       <div style="margin-top:18px;color:#6b7280;font-size:12px">Gerado pelo OMNIA — Painel de Conquistas</div>
     </body></html>`;
     const blob = new Blob([html], {type:'text/html'});
@@ -1973,41 +2421,42 @@
 
   // Tabs/views
   function setTab(tab){
-    const ops = $("viewOps");
-    const dados = $("viewDados");
-    const metas = $("viewMetas");
-    const mRank = $("viewMetasRank");
-    const nc = $("viewNoConv");
-    const seller = $("viewSeller");
+    const viewIds = ["viewOps","viewDados","viewMetas","viewMetasRank","viewNoConv","viewSeller"];
+    const tabIds  = ["tabOps","tabDados","tabMetas","tabMetasRank","tabNoConv","tabSeller"];
 
-    const tOps = $("tabOps");
-    const tDados = $("tabDados");
-    const tMetas = $("tabMetas");
-    const tMR = $("tabMetasRank");
-    const tNC = $("tabNoConv");
-    const tSeller = $("tabSeller");
+    // hide all views safely
+    for(const vid of viewIds){
+      const el = document.getElementById(vid);
+      if(el) el.style.display = "none";
+    }
+    // remove active from tabs safely
+    for(const tid of tabIds){
+      const el = document.getElementById(tid);
+      if(el) el.classList.remove("active");
+    }
 
-    ops.style.display = "none";
-    dados.style.display = "none";
-    metas.style.display = "none";
-    mRank.style.display = "none";
-    nc.style.display = "none";
-    seller.style.display = "none";
+    const show = (vid, tid) => {
+      const v = document.getElementById(vid);
+      if(v) v.style.display = "block";
+      const t = document.getElementById(tid);
+      if(t) t.classList.add("active");
+    };
 
-    tOps.classList.remove("active");
-    tDados.classList.remove("active");
-    tMetas.classList.remove("active");
-    tMR.classList.remove("active");
-    tNC.classList.remove("active");
-    tSeller.classList.remove("active");
-
-    if(tab === "ops"){ ops.style.display = ""; tOps.classList.add("active"); }
-    else if(tab === "dados"){ dados.style.display = ""; tDados.classList.add("active"); renderData(); }
-    else if(tab === "metas"){ metas.style.display = ""; tMetas.classList.add("active"); renderGoals(); }
-    else if(tab === "metasRank"){ mRank.style.display = ""; tMR.classList.add("active"); renderMetaRank(); }
-    else if(tab === "noConv"){ nc.style.display = ""; tNC.classList.add("active"); renderNoConv(); }
-    else if(tab === "seller"){ seller.style.display = ""; tSeller.classList.add("active"); renderSellerView(); }
+    try{
+      if(tab === "ops"){ show("viewOps","tabOps"); }
+      else if(tab === "dados"){ show("viewDados","tabDados"); renderData(); }
+      else if(tab === "metas"){ show("viewMetas","tabMetas"); renderGoals(); }
+      else if(tab === "metasRank"){ show("viewMetasRank","tabMetasRank"); renderMetaRank(); }
+      else if(tab === "noConv"){ show("viewNoConv","tabNoConv"); renderNoConv(); }
+      else if(tab === "seller"){ show("viewSeller","tabSeller"); try{ renderSellerView(); }catch(err){ console.error("renderSellerView failed", err); try{ const v=document.getElementById("viewSeller"); if(v) v.style.display="block"; }catch{} } }
+      else { show("viewOps","tabOps"); }
+    }catch(err){
+      console.error("setTab failed", err);
+      // Never leave the user with a blank screen
+      show("viewOps","tabOps");
+    }
   }
+
   $("tabOps").addEventListener("click", ()=> setTab("ops"));
   $("tabDados").addEventListener("click", ()=> setTab("dados"));
   $("tabMetas").addEventListener("click", ()=> setTab("metas"));
@@ -2068,10 +2517,27 @@
   $("btnCloseWeek").addEventListener("click", closeCurrentWeek);
   $("btnReopenWeeks").addEventListener("click", reopenWeeks);
 
-  // Seller View
-    $("sellerViewSelect").addEventListener("change", ()=>{ state.ui = state.ui || {}; state.ui.sellerViewId = $("sellerViewSelect").value; save(state); renderSellerView(); });
-  $("sellerViewMonth").addEventListener("change", renderSellerView);
-  $("btnSellerDownloadBadges").addEventListener("click", downloadSellerBadges);
+  // Seller View (dinamico: criado dentro de renderSellerView)
+  // Delegacao segura: evita quebrar o app caso a Arena ainda nao tenha sido renderizada.
+  document.addEventListener("change", (e)=>{
+    const t = e.target;
+    if(!(t instanceof HTMLElement)) return;
+    if(t.id === "sellerViewSelect"){
+      try{ state.ui = state.ui || {}; state.ui.sellerViewId = t.value; save(state); }catch{}
+      try{ renderSellerView(); }catch{}
+    }
+    if(t.id === "sellerViewMonth"){
+      try{ renderSellerView(); }catch{}
+    }
+  });
+
+  document.addEventListener("click", (e) => {
+  if (e.target.innerText.includes("Arena de Resultados")) {
+    console.log("CLICOU NA ARENA");
+    renderSellerView();
+  }
+});
+
 
   // Meta Rank
   $("btnRefreshMetaRank").addEventListener("click", renderMetaRank);
@@ -2089,6 +2555,7 @@
   $("themeNeon").addEventListener("click", ()=>{ state.ui.theme = "neon"; save(state); renderAll(); });
   $("themeOcean").addEventListener("click", ()=>{ state.ui.theme = "ocean"; save(state); renderAll(); });
   $("themeSunset").addEventListener("click", ()=>{ state.ui.theme = "sunset"; save(state); renderAll(); });
+  $("themeSpaceWhite").addEventListener("click", ()=>{ state.ui.theme = "spacewhite"; save(state); renderAll(); });
   $("themePurple").addEventListener("click", ()=>{ state.ui.theme = "purple"; save(state); renderAll(); });
   $("themeTextured").addEventListener("click", ()=>{ state.ui.theme = "textured"; save(state); renderAll(); });
 
@@ -2266,6 +2733,15 @@
       closeModal(document.getElementById('sellerBack'));
       alert('Vendedor criado ✅');
     });
+
+
+    // Aba Vendedor (fallback seguro)
+    bindSafeClick(document.getElementById('btnSeller'), ()=>{
+      try{ setTab('seller'); }catch(err){ console.error(err); try{ document.getElementById('viewSeller').style.display=''; }catch{} }
+    });
+    bindSafeClick(document.getElementById('tabSeller'), ()=>{
+      try{ setTab('seller'); }catch(err){ console.error(err); try{ document.getElementById('viewSeller').style.display=''; }catch{} }
+    });
   });
 
   // Captura erros não tratados (para não “morrer” sem aviso)
@@ -2291,18 +2767,30 @@
 
   // Fallback por delegação de clique
   document.addEventListener('click', (ev)=>{
-    const t = ev.target;
-    if(!(t instanceof HTMLElement)) return;
-    const id = t.id;
+    const target = ev.target;
+    if(!(target instanceof HTMLElement)) return;
+    const id = target.id;
+
+    // Config
     if(id==='btnSettings'){
       ev.preventDefault();
       try{
-        // preenche campos se existirem
         if(document.getElementById('storeName')) document.getElementById('storeName').value = state?.store?.name || '';
         if(document.getElementById('storeStatus')) document.getElementById('storeStatus').value = state?.store?.status || 'Online';
       }catch{}
       safeOpenById('settingsBack');
+      return;
     }
+
+    // Aba vendedor
+    if(id==='btnSeller' || id==='tabSeller'){
+      ev.preventDefault();
+      try{ setTab('seller'); }
+      catch(err){ console.error(err); try{ document.getElementById('viewSeller').style.display=''; }catch{} }
+      return;
+    }
+
+    // Abrir modal vendedor
     if(id==='btnAddSeller'){
       ev.preventDefault();
       try{
@@ -2310,31 +2798,34 @@
         const p=document.getElementById('sellerPhoto'); if(p) p.value='';
       }catch{}
       safeOpenById('sellerBack');
+      return;
     }
+
+    // Criar vendedor
     if(id==='btnCreateSeller'){
-      // se o listener original não estiver rodando, cria aqui
-      // (se listener original rodar também, ele já fecha modal e salva, então aqui só entra em caso de falha)
       ev.preventDefault();
       try{
-        const nameEl=document.getElementById('sellerName');
-        const name=(nameEl?.value||'').trim();
+        const name=(document.getElementById('sellerName')?.value||'').trim();
         if(!name){ alert('Digite o nome do vendedor.'); return; }
+
         // usa a função original se existir
         if(typeof window.__createSellerOriginal==='function'){
           window.__createSellerOriginal();
           return;
         }
-        const id = uid();
-        state.sellers.push({ id, name, photo:'', paused:false, active:true });
-        state.pool.push(id);
+
+        const idNew = uid();
+        state.sellers.push({ id: idNew, name, photo:'', paused:false, active:true });
+        state.pool.push(idNew);
         save(state);
         renderAll();
         try{ closeModal(document.getElementById('sellerBack')); }catch{ document.getElementById('sellerBack').style.display='none'; }
         alert('Vendedor criado ✅');
       }catch(err){
         console.error(err);
-        alert('Erro ao criar vendedor. Se persistir, reinstale o PWA para limpar cache.');
+        alert('Erro ao criar vendedor.');
       }
+      return;
     }
   }, true);
 // Init inputs

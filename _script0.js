@@ -1,4 +1,1426 @@
+<!DOCTYPE html>
 
+<html lang="pt-br">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>OMNIA — Lista da Vez</title>
+<!-- PWA (instalar como app) -->
+<meta content="#0b0f14" name="theme-color"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
+<meta content="OMNIA" name="apple-mobile-web-app-title"/>
+<link href="./manifest.json" rel="manifest"/>
+<link href="./icon-192.png" rel="icon"/>
+<link href="./icon-192.png" rel="apple-touch-icon"/>
+<style>
+    :root{
+      --bg:#0b0f14;
+      --panel: rgba(255,255,255,.06);
+      --panel2: rgba(0,0,0,.22);
+      --text:#e7eefc;
+      --muted:#9db0d0;
+      --line:rgba(255,255,255,.10);
+
+      --good:#29e07a;
+      --bad:#ff4d4d;
+      --warn:#f7c948;
+      --brand:#62a8ff;
+
+      --shadow: 0 16px 40px rgba(0,0,0,.35);
+      --radius:16px;
+
+      --grad: radial-gradient(1200px 600px at 20% 0%, rgba(41,224,122,.12), transparent 60%),
+              radial-gradient(900px 500px at 90% 10%, rgba(69,140,255,.12), transparent 55%),
+              var(--bg);
+
+      --btnGrad: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      --btnBorder: var(--line);
+    }
+
+    /* THEME: NEON */
+    [data-theme="neon"]{
+      --bg:#05060b;
+      --text:#f6fbff;
+      --muted:#b7c3ff;
+      --line:rgba(255,255,255,.14);
+
+      --good:#00ff9a;
+      --bad:#ff3b7a;
+      --warn:#ffd166;
+      --brand:#6a7cff;
+
+      --panel: rgba(255,255,255,.07);
+      --panel2: rgba(0,0,0,.30);
+
+      --grad:
+        radial-gradient(900px 520px at 12% 0%, rgba(0,255,154,.16), transparent 60%),
+        radial-gradient(800px 520px at 92% 10%, rgba(255,59,122,.14), transparent 55%),
+        radial-gradient(700px 520px at 52% 30%, rgba(106,124,255,.12), transparent 60%),
+        linear-gradient(180deg, #05060b, #080a12);
+
+      --btnGrad: linear-gradient(180deg, rgba(106,124,255,.22), rgba(0,255,154,.12));
+      --btnBorder: rgba(0,255,154,.28);
+    }
+
+    /* THEME: OCEAN */
+    [data-theme="ocean"]{
+      --bg:#061018;
+      --text:#eaf6ff;
+      --muted:#a6c7dd;
+      --line:rgba(255,255,255,.12);
+
+      --good:#2ee6a6;
+      --bad:#ff5c7a;
+      --warn:#ffd166;
+      --brand:#2fb7ff;
+
+      --panel: rgba(255,255,255,.07);
+      --panel2: rgba(0,0,0,.28);
+
+      --grad:
+        radial-gradient(900px 520px at 15% 5%, rgba(47,183,255,.18), transparent 60%),
+        radial-gradient(700px 520px at 85% 10%, rgba(46,230,166,.14), transparent 55%),
+        linear-gradient(180deg, #061018, #071a26);
+
+      --btnGrad: linear-gradient(180deg, rgba(47,183,255,.18), rgba(46,230,166,.10));
+      --btnBorder: rgba(47,183,255,.28);
+    }
+
+    /* THEME: SUNSET */
+    [data-theme="sunset"]{
+      --bg:#120a0a;
+      --text:#fff1e8;
+      --muted:#ffd1bd;
+      --line:rgba(255,255,255,.12);
+
+      --good:#ffb703;
+      --bad:#ff4d6d;
+      --warn:#ffd166;
+      --brand:#ff7a59;
+
+      --panel: rgba(255,255,255,.07);
+      --panel2: rgba(0,0,0,.28);
+
+      --grad:
+        radial-gradient(900px 520px at 18% 5%, rgba(255,122,89,.22), transparent 60%),
+        radial-gradient(700px 520px at 85% 10%, rgba(255,77,109,.16), transparent 55%),
+        radial-gradient(700px 520px at 50% 25%, rgba(255,183,3,.12), transparent 60%),
+        linear-gradient(180deg, #120a0a, #1a0f12);
+
+      --btnGrad: linear-gradient(180deg, rgba(255,122,89,.18), rgba(255,183,3,.10));
+      --btnBorder: rgba(255,122,89,.30);
+    }
+
+
+
+    /* THEME: TEXTURED */
+    [data-theme="textured"]{
+      --bg:#090c12;
+      --text:#eef5ff;
+      --muted:#b9c7dd;
+      --line:rgba(255,255,255,.13);
+
+      --good:#34d399;
+      --bad:#fb7185;
+      --warn:#fbbf24;
+      --brand:#93c5fd;
+
+      --panel: rgba(255,255,255,.07);
+      --panel2: rgba(0,0,0,.30);
+
+      --grad:
+        radial-gradient(900px 520px at 12% 0%, rgba(147,197,253,.16), transparent 60%),
+        radial-gradient(700px 520px at 92% 10%, rgba(52,211,153,.12), transparent 55%),
+        linear-gradient(180deg, #090c12, #0b1220);
+      --btnGrad: linear-gradient(180deg, rgba(245,248,255,.16), rgba(245,248,255,.08));
+      --btnBorder: rgba(245,248,255,.22);
+    }
+    [data-theme="textured"] body{
+      background-image:
+        linear-gradient(180deg, rgba(0,0,0,.16), rgba(0,0,0,.16)),
+        repeating-linear-gradient(45deg, rgba(255,255,255,.04) 0 2px, rgba(255,255,255,0) 2px 8px),
+        var(--grad);
+      background-blend-mode: overlay, overlay, normal;
+    }
+    /* THEME: PURPLE */
+    [data-theme="purple"]{
+      --bg:#0b0616;
+      --text:#f7f1ff;
+      --muted:#d7c6ff;
+      --line:rgba(255,255,255,.12);
+
+      --good:#7cf7c8;
+      --bad:#ff4dd8;
+      --warn:#ffd166;
+      --brand:#9b7bff;
+
+      --panel: rgba(255,255,255,.07);
+      --panel2: rgba(0,0,0,.30);
+
+      --grad:
+        radial-gradient(900px 520px at 14% 5%, rgba(155,123,255,.20), transparent 60%),
+        radial-gradient(700px 520px at 86% 10%, rgba(255,77,216,.14), transparent 55%),
+        radial-gradient(700px 520px at 52% 30%, rgba(124,247,200,.10), transparent 60%),
+        linear-gradient(180deg, #0b0616, #120b22);
+
+      --btnGrad: linear-gradient(180deg, rgba(155,123,255,.20), rgba(124,247,200,.10));
+      --btnBorder: rgba(155,123,255,.28);
+    }
+
+    *{box-sizing:border-box}
+
+    /* THEME: TEXTURIZADO */
+    [data-theme="textured"]{
+      --bg:#0b0f14;
+      --text:#eaf2ff;
+      --muted:#b9c7e6;
+      --line:rgba(255,255,255,.14);
+      --good:#2ee6a6;
+      --bad:#ff5c7a;
+      --warn:#ffd166;
+      --brand:#9bb7ff;
+      --panel: rgba(255,255,255,.07);
+      --panel2: rgba(0,0,0,.30);
+      --grad:
+        radial-gradient(900px 520px at 10% 0%, rgba(155,183,255,.16), transparent 60%),
+        radial-gradient(800px 520px at 90% 10%, rgba(46,230,166,.12), transparent 55%),
+        linear-gradient(180deg, rgba(11,15,20,.92), rgba(9,12,18,.92)),
+        repeating-linear-gradient(45deg, rgba(255,255,255,.04) 0 2px, rgba(255,255,255,0) 2px 8px);
+      --btnGrad: linear-gradient(180deg, rgba(245,248,255,.16), rgba(245,248,255,.08));
+      --btnBorder: rgba(245,248,255,.22);
+    }
+
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background: var(--grad);
+      color:var(--text);
+      overflow-x:hidden;
+    }
+
+    header{
+      position: sticky; top:0; z-index:10;
+      background: rgba(11,15,20,.82);
+      backdrop-filter: blur(10px);
+      border-bottom:1px solid var(--line);
+    }
+    [data-theme="neon"] header{ background: rgba(5,6,11,.74); }
+    [data-theme="ocean"] header{ background: rgba(6,16,24,.76); }
+    [data-theme="sunset"] header{ background: rgba(18,10,10,.76); }
+    [data-theme="purple"] header{ background: rgba(11,6,22,.76); }
+
+    .wrap{max-width:1200px; margin:0 auto; padding:14px 16px;}
+    .topbar{display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;}
+    .brand{display:flex; align-items:center; gap:12px;}
+    .logoBox{
+      width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.06);
+      border:1px solid var(--line); display:grid; place-items:center; overflow:hidden;
+    }
+    .logoBox img{width:100%;height:100%;object-fit:cover}
+    .brand h1{margin:0; font-size:18px; letter-spacing:.12em;}
+    .sub{font-size:12px; color:var(--muted); margin-top:2px}
+    .rightTop{display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;}
+    .chip{
+      padding:8px 10px; border-radius:999px; background:rgba(255,255,255,.06);
+      border:1px solid var(--line); color:var(--muted); font-size:12px;
+      display:flex; gap:8px; align-items:center;
+    }
+    .chip b{color:var(--text); font-weight:600}
+
+    button, input, select{font: inherit;}
+    .btn{
+      background: rgba(245,248,255,.08);
+      border: 1px solid rgba(245,248,255,.18);
+      color: var(--text);
+      padding: 7px 10px;
+      border-radius: 11px;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(0,0,0,.22);
+      transition: transform .08s ease, filter .12s ease, background .12s ease, border-color .12s ease;
+      font-size: 12px;
+      line-height: 1.0;
+    }
+.btn:hover{transform: translateY(-1px); filter: brightness(1.05);}
+    .btn:active{transform: translateY(0px)}
+    .btn.good{background: linear-gradient(180deg, rgba(41,224,122,.22), rgba(41,224,122,.10)); border-color:rgba(41,224,122,.35)}
+    .btn.bad{background: linear-gradient(180deg, rgba(255,77,77,.22), rgba(255,77,77,.10)); border-color:rgba(255,77,77,.35)}
+    .btn.warn{background: linear-gradient(180deg, rgba(247,201,72,.22), rgba(247,201,72,.10)); border-color:rgba(247,201,72,.35)}
+    .btn.ghost{background: rgba(255,255,255,.06); border: 1px solid var(--line); box-shadow:none}
+
+    .btn.install{
+      position: relative;
+      border-color: rgba(0,255,154,.38);
+      box-shadow: 0 0 0 1px rgba(0,255,154,.18), 0 14px 30px rgba(0,0,0,.35);
+      animation: neonPulse 1.2s ease-in-out infinite;
+    }
+    @keyframes neonPulse{
+      0%,100%{ filter: brightness(1.0); }
+      50%{ filter: brightness(1.15); }
+    }
+
+    [data-theme="neon"] .btn.good{background: linear-gradient(180deg, rgba(0,255,154,.22), rgba(0,255,154,.10)); border-color:rgba(0,255,154,.35)}
+    [data-theme="neon"] .btn.bad{background: linear-gradient(180deg, rgba(255,59,122,.22), rgba(255,59,122,.10)); border-color:rgba(255,59,122,.35)}
+    [data-theme="neon"] .btn.warn{background: linear-gradient(180deg, rgba(255,209,102,.22), rgba(255,209,102,.10)); border-color:rgba(255,209,102,.35)}
+
+    .tabs{display:flex; gap:8px; flex-wrap:wrap; padding:10px 0 2px 0;}
+    .tab{
+      padding:8px 10px; border-radius:999px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+      cursor:pointer;
+      font-size:12px;
+    }
+    .tab.active{
+      color: var(--text);
+      background: rgba(41,224,122,.12);
+      border-color: rgba(41,224,122,.35);
+    }
+    [data-theme="neon"] .tab.active{
+      background: rgba(0,255,154,.14);
+      border-color: rgba(0,255,154,.35);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:14px;
+      margin-top:10px;
+    }
+    @media (max-width: 980px){ .grid{grid-template-columns:1fr} }
+    .card{
+      background: linear-gradient(180deg, var(--panel), rgba(255,255,255,.03));
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .cardHeader{
+      padding:14px;
+      border-bottom:1px solid var(--line);
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      flex-wrap:wrap;
+    }
+    .cardHeader h2{margin:0; font-size:14px; letter-spacing:.06em; text-transform:uppercase; color:#cfe0ff}
+    .cardBody{padding:14px}
+    .row{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+    .rowRight{display:flex; gap:10px; align-items:center; justify-content:flex-end; flex-wrap:wrap}
+    .field{display:flex; flex-direction:column; gap:6px; min-width: 220px;}
+    .field label{font-size:12px; color:var(--muted)}
+    .field input, .field select{
+      background: rgba(0,0,0,.25);
+      border:1px solid var(--line);
+      color:var(--text);
+      border-radius:12px;
+      padding:10px 12px;
+      outline:none;
+    }
+    .field input::placeholder{color: rgba(231,238,252,.45)}
+    .list{display:flex; flex-direction:column; gap:10px;}
+    .item{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+      padding:10px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background: var(--panel2);
+    }
+    .leftItem{display:flex; align-items:center; gap:10px; min-width:0}
+    .avatar{
+      width:44px; height:44px; border-radius:14px;
+      background: rgba(255,255,255,.06);
+      border:1px solid var(--line);
+      display:grid; place-items:center; overflow:hidden;
+      flex:0 0 auto;
+    }
+    .avatar img{width:100%; height:100%; object-fit:cover}
+    .nameBlock{min-width:0}
+    .name{font-weight:650; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+    .meta{font-size:12px; color:var(--muted)}
+    .pos{
+      width:28px;height:28px;border-radius:999px;background: rgba(41,224,122,.14);
+      border:1px solid rgba(41,224,122,.35);
+      display:grid; place-items:center; color:var(--good); font-weight:800; font-size:12px;
+      flex:0 0 auto;
+    }
+    [data-theme="neon"] .pos{ background: rgba(0,255,154,.14); border-color: rgba(0,255,154,.35); }
+
+    .tag{
+      font-size:12px; padding:6px 10px; border-radius:999px;
+      background: rgba(255,255,255,.06); border:1px solid var(--line); color:var(--muted);
+    }
+    .tag.good{background: rgba(41,224,122,.14); border-color: rgba(41,224,122,.35); color: #b8ffd6}
+    .tag.bad{background: rgba(255,77,77,.14); border-color: rgba(255,77,77,.35); color: #ffd0d0}
+    .tag.warn{background: rgba(247,201,72,.14); border-color: rgba(247,201,72,.35); color: #ffefc0}
+
+    .divider{height:1px; background: var(--line); margin:12px 0}
+    .actions{display:flex; gap:10px; flex-wrap:wrap}
+    .big{display:grid; grid-template-columns: 1fr 1fr; gap:10px;}
+    @media (max-width: 520px){ .big{grid-template-columns: 1fr} }
+
+    .kpis{
+      display:grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap:10px;
+    }
+    @media (max-width: 980px){ .kpis{grid-template-columns: repeat(2, minmax(0, 1fr));} }
+    .kpi{
+      padding:12px;
+      border-radius: 14px;
+      border:1px solid var(--line);
+      background: var(--panel2);
+    }
+    .kpi .t{font-size:12px; color:var(--muted)}
+    .kpi .v{font-size:18px; font-weight:800; margin-top:4px}
+    .kpi .v.good{color: var(--good)}
+
+    /* ARENA */
+    .arenaCard .cardHeader{padding:12px 14px;}
+    .arenaCard .cardBody{padding:12px 14px;}
+    .arenaTitle{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+    .arenaTitle h2{margin:0; font-size:14px; letter-spacing:.06em; text-transform:uppercase;}
+    .arenaFilters{display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap;}
+    .arenaFilters .field{min-width:170px;}
+    .arenaFilters .field.flex{flex:1; min-width:240px;}
+    .arenaSectionTitle{margin:0 0 8px 0; font-size:11px; letter-spacing:.10em; text-transform:uppercase; color:var(--muted);}
+    .arenaGrid2{display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:12px;}
+    @media (max-width: 860px){ .arenaGrid2{grid-template-columns: 1fr;} }
+    .arenaBox{padding:12px; border-radius:14px; border:1px solid var(--line); background: rgba(255,255,255,.04);}
+    .arenaBox b{color:var(--text);}
+    .arenaSplit{display:grid; grid-template-columns: 1.2fr .8fr; gap:12px;}
+    @media (max-width: 980px){ .arenaSplit{grid-template-columns: 1fr;} }
+    .arenaBadgesHead{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;}
+    .arenaHint{margin-top:10px} 
+    /* Compact KPIs */
+    .kpi .t{font-size:11px; letter-spacing:.08em; text-transform:uppercase;}
+    .kpi .v{font-size:16px;}
+
+    table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.18);
+    }
+    th, td{
+      padding:10px 10px;
+      border-bottom:1px solid var(--line);
+      font-size:12px;
+      text-align:left;
+      color: var(--text);
+      vertical-align: middle;
+    }
+    th{color:#cfe0ff; text-transform:uppercase; letter-spacing:.06em; font-size:11px;}
+    tr:last-child td{border-bottom:none}
+
+    /* MODALS */
+    #settingsBack .modal{ width: min(560px, 100%); }
+    #sellerBack .modal{ width: min(560px, 100%); }
+    .modalBack{
+      position:fixed; inset:0; background: rgba(0,0,0,.55);
+      display:none; align-items:center; justify-content:center; padding:18px;
+      z-index: 50;
+    }
+    .modal{
+      max-height: 86vh;
+      overflow: auto;
+
+      width:min(620px, 100%);
+      border-radius: 18px;
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(17,24,38,.96), rgba(12,16,26,.96));
+      box-shadow: 0 25px 80px rgba(0,0,0,.55);
+      overflow:hidden;
+    }
+    [data-theme="neon"] .modal{
+      max-height: 86vh;
+      overflow: auto;
+
+      background: linear-gradient(180deg, rgba(12,14,26,.96), rgba(5,6,11,.96));
+    }
+    .modalHead{padding:14px; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;}
+    .modalHead h3{margin:0; font-size:14px; letter-spacing:.06em; text-transform:uppercase; color:#cfe0ff}
+    .close{background:transparent; border:1px solid var(--line); color:var(--text); border-radius:12px; padding:8px 10px; cursor:pointer}
+    .modalBody{padding:12px; max-height: calc(100vh - 140px); overflow:auto}
+    .hint{font-size:12px; color:var(--muted)}
+    .dangerZone{
+      padding:12px; border-radius:14px; border:1px dashed rgba(255,77,77,.4);
+      background: rgba(255,77,77,.08);
+      display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    }
+    .tiny{font-size:12px; color:var(--muted)}
+    .noteBox{
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      font-size:12px;
+    }
+
+    /* THEME SWITCHER */
+    .themeDock{
+      position: fixed;
+      right: 14px;
+      bottom: 14px;
+      display:flex;
+      flex-direction: column;
+      gap:10px;
+      z-index: 60;
+    }
+    .themeBtn{
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 10px 22px rgba(0,0,0,.28);
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      transition: transform .1s ease, filter .12s ease;
+      position: relative;
+      overflow:hidden;
+    }
+    .themeBtn:hover{ transform: translateY(-2px); filter: brightness(1.08); }
+    .themeBtn:active{ transform: translateY(0); }
+     .themeBtn .dot{ width: 12px; height: 12px; border-radius:999px; border:1px solid rgba(255,255,255,.18); }
+
+    .themeBtn.default .dot{ background: rgba(255,255,255,.22); }
+
+    .themeBtn.neon{
+      border-color: rgba(0,255,154,.28);
+      background:
+        radial-gradient(18px 18px at 25% 30%, rgba(0,255,154,.95), transparent 60%),
+        radial-gradient(22px 22px at 70% 30%, rgba(255,59,122,.85), transparent 60%),
+        radial-gradient(28px 28px at 60% 75%, rgba(106,124,255,.85), transparent 60%),
+        rgba(255,255,255,.05);
+    }
+    .themeBtn.neon .dot{ background: rgba(0,255,154,.55); box-shadow: 0 0 18px rgba(0,255,154,.65); }
+
+    .themeBtn.ocean{
+      border-color: rgba(47,183,255,.28);
+      background:
+        radial-gradient(18px 18px at 30% 30%, rgba(47,183,255,.95), transparent 60%),
+        radial-gradient(24px 24px at 70% 65%, rgba(46,230,166,.85), transparent 60%),
+        rgba(255,255,255,.05);
+    }
+    .themeBtn.ocean .dot{ background: rgba(47,183,255,.55); box-shadow: 0 0 18px rgba(47,183,255,.55); }
+
+    .themeBtn.sunset{
+      border-color: rgba(255,122,89,.30);
+      background:
+        radial-gradient(20px 20px at 35% 35%, rgba(255,122,89,.95), transparent 60%),
+        radial-gradient(26px 26px at 70% 70%, rgba(255,183,3,.85), transparent 60%),
+        rgba(255,255,255,.05);
+    }
+    .themeBtn.sunset .dot{ background: rgba(255,183,3,.55); box-shadow: 0 0 18px rgba(255,183,3,.45); }
+
+    .themeBtn.purple{
+      border-color: rgba(155,123,255,.30);
+      background:
+        radial-gradient(20px 20px at 35% 35%, rgba(155,123,255,.95), transparent 60%),
+        radial-gradient(26px 26px at 70% 70%, rgba(255,77,216,.75), transparent 60%),
+        rgba(255,255,255,.05);
+    }
+    .themeBtn.textured .dot{ background: rgba(245,248,255,.22); box-shadow: inset 0 0 0 2px rgba(255,255,255,.08);}
+    .themeBtn.purple .dot{ background: rgba(155,123,255,.55); box-shadow: 0 0 18px rgba(155,123,255,.55); }
+
+    .themeTip{
+      position:absolute;
+      right: 60px;
+      white-space:nowrap;
+      padding:6px 10px;
+      border-radius: 999px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.35);
+      color: var(--muted);
+      font-size: 12px;
+      opacity: 0;
+      transform: translateX(6px);
+      pointer-events:none;
+      transition: .15s ease;
+    }
+    .themeBtn:hover .themeTip{ opacity: 1; transform: translateX(0); }
+
+    /* FX layer */
+    #fxLayer{
+      position: fixed;
+      inset:0;
+      pointer-events:none;
+      z-index: 80;
+      overflow:hidden;
+    }
+    .particle{
+      position:absolute;
+      width:10px; height:10px;
+      border-radius:999px;
+      opacity:.95;
+      transform: translate(-50%,-50%);
+      animation: pop 900ms ease-out forwards;
+      filter: drop-shadow(0 0 10px rgba(255,255,255,.18));
+    }
+    @keyframes pop{
+      0%{ transform: translate(var(--x0), var(--y0)) scale(.5); opacity: 1; }
+      100%{ transform: translate(var(--x1), var(--y1)) scale(0.9); opacity: 0; }
+    }
+    .rocketFly{
+      position:absolute;
+      font-size: 30px;
+      transform: translate(-50%,-50%);
+      animation: rocket 900ms cubic-bezier(.18,.72,.18,1) forwards;
+      filter: drop-shadow(0 0 18px rgba(255,209,102,.2));
+    }
+    @keyframes rocket{
+      0%{ transform: translate(var(--rx0), var(--ry0)) rotate(-10deg) scale(.9); opacity:1; }
+      100%{ transform: translate(var(--rx1), var(--ry1)) rotate(-25deg) scale(1.2); opacity:0; }
+    }
+
+    /* Goal progress bars */
+    .bar{
+      width: 100%;
+      height: 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.22);
+      overflow:hidden;
+    }
+    .bar > i{
+      display:block;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(41,224,122,.90), rgba(98,168,255,.70));
+      border-right: 1px solid rgba(255,255,255,.2);
+      transition: width .35s ease;
+    }
+    [data-theme="neon"] .bar > i{
+      background: linear-gradient(90deg, rgba(0,255,154,.95), rgba(255,59,122,.65), rgba(106,124,255,.80));
+      box-shadow: 0 0 18px rgba(0,255,154,.16);
+    }
+
+    /* Moon race */
+    .race{
+      position: relative;
+      height: 150px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(2px 2px at 12% 18%, rgba(255,255,255,.7), transparent 60%),
+        radial-gradient(2px 2px at 32% 62%, rgba(255,255,255,.55), transparent 60%),
+        radial-gradient(2px 2px at 58% 28%, rgba(255,255,255,.6), transparent 60%),
+        radial-gradient(2px 2px at 76% 52%, rgba(255,255,255,.45), transparent 60%),
+        rgba(0,0,0,.22);
+      overflow:hidden;
+    }
+    .moon{
+      position:absolute;
+      right: 10px;
+      top: 14px;
+      width: 92px; height: 92px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.9), rgba(200,210,230,.65) 45%, rgba(150,160,180,.35) 75%);
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: 0 0 30px rgba(255,255,255,.08);
+      display:grid;
+      place-items:center;
+      font-size: 22px;
+      color: rgba(0,0,0,.35);
+      font-weight: 900;
+    }
+    .track{
+      position:absolute;
+      left: 12px;
+      right: 120px;
+      top: 78px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.10);
+    }
+    .rocket{
+      position:absolute;
+      left: 12px;
+      display:flex;
+      align-items:center;
+      gap: 8px;
+      transition: left .5s ease, top .2s ease;
+      will-change: left;
+    }
+    .rocket .pic{
+      width: 28px; height: 28px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.16);
+      overflow:hidden;
+      background: rgba(255,255,255,.06);
+      display:grid; place-items:center;
+      font-weight: 900;
+      color: var(--muted);
+      flex:0 0 auto;
+    }
+    .rocket .pic img{ width:100%; height:100%; object-fit:cover }
+    .rocket .ship{ font-size: 18px; filter: drop-shadow(0 0 16px rgba(255,209,102,.10)); }
+    .rocket .lbl{ font-size: 12px; color: var(--muted); white-space:nowrap; }
+
+    .moonBoom{
+      position:absolute;
+      inset:0;
+      display:none;
+      place-items:center;
+      background: radial-gradient(300px 200px at 85% 40%, rgba(255,209,102,.22), transparent 70%),
+                  radial-gradient(300px 220px at 80% 55%, rgba(255,59,122,.18), transparent 70%),
+                  rgba(0,0,0,.35);
+      text-align:center;
+      padding: 10px;
+    }
+    .moonBoom .title{
+      font-size: 26px;
+      font-weight: 1000;
+      letter-spacing: .10em;
+    }
+    .moonBoom .sub{ margin-top: 6px; color: var(--muted); font-size: 13px; }
+
+    /* Fun compare chart (Convert x Não Convert) */
+    .compare{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+    @media (max-width: 720px){ .compare{grid-template-columns:1fr} }
+    .barCard{
+      padding:12px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background: var(--panel2);
+    }
+    .meter{
+      height: 16px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.22);
+      overflow:hidden;
+      margin-top: 8px;
+    }
+    .meter > i{
+      display:block;
+      height:100%;
+      width: 0%;
+      transition: width .45s ease;
+    }
+    .meter.good > i{ background: linear-gradient(90deg, rgba(41,224,122,.95), rgba(98,168,255,.65)); }
+    .meter.bad > i{ background: linear-gradient(90deg, rgba(255,77,77,.90), rgba(255,209,102,.55)); }
+    [data-theme="neon"] .meter.good > i{ background: linear-gradient(90deg, rgba(0,255,154,.95), rgba(106,124,255,.70)); }
+    [data-theme="neon"] .meter.bad > i{ background: linear-gradient(90deg, rgba(255,59,122,.90), rgba(255,209,102,.60)); }
+  
+    .btn.ice{
+      background: rgba(245,248,255,.10);
+      border: 1px solid rgba(245,248,255,.18);
+      color: var(--text);
+    }
+    .btn.good.activeSelected{
+      background: rgba(41,224,122,.18) !important;
+      border-color: rgba(41,224,122,.45) !important;
+      box-shadow: 0 0 0 3px rgba(41,224,122,.10);
+    }
+    
+  
+    .attAvatar{width:52px;height:52px;border-radius:16px;}
+    .attCard{background: rgba(255,255,255,.035); border:1px solid var(--line); border-radius:18px; padding:12px; margin-bottom:10px;}
+    .attTop{display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;}
+    .attLeft{display:flex; gap:12px; align-items:center;}
+    .attMeta{font-size:12px; color:var(--muted);}
+    .attName{font-weight:900; font-size:16px;}
+    .btn.selected{background: linear-gradient(180deg, rgba(41,224,122,.35), rgba(41,224,122,.14)); border-color:rgba(41,224,122,.55)}
+    .badgeGrid{display:grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap:10px;}
+    .badgeCard{background: rgba(255,255,255,.04); border:1px solid var(--line); border-radius:16px; padding:12px; min-height:96px;}
+    .badgeTop{display:flex; gap:10px; align-items:center;}
+    .badgeIcon{width:42px;height:42px;border-radius:14px;background: rgba(245,248,255,.08); border:1px solid rgba(245,248,255,.16); display:grid; place-items:center; font-size:20px;}
+    .badgeTitle{font-weight:900;}
+    .badgeDesc{font-size:12px; color:var(--muted); margin-top:4px;}
+    .badgeLocked{opacity:.55; filter:saturate(.6);}
+    .modalCard{max-width:520px; width:calc(100vw - 28px); max-height: calc(100vh - 28px); overflow:auto;}
+
+  
+/* Theme: Space White */
+:root[data-theme="spacewhite"]{
+  background: var(--bg);
+}
+:root[data-theme="spacewhite"]{
+  --bg: #f5f7ff;
+  --panel: rgba(11,16,32,.05);
+  --panel2: rgba(11,16,32,.07);
+  --card: rgba(12,18,32,.06);
+  --card2: rgba(12,18,32,.09);
+  --text: #0b1020;
+  --muted: rgba(11,16,32,.62);
+  --line: rgba(11,16,32,.10);
+  --accent: #3b82f6;
+  --accent2: #8b5cf6;
+  --good: #16a34a;
+  --bad: #dc2626;
+}
+:root[data-theme="spacewhite"] body{
+  background:
+    radial-gradient(1000px 700px at 15% 20%, rgba(59,130,246,.18), transparent 55%),
+    radial-gradient(900px 600px at 85% 35%, rgba(139,92,246,.16), transparent 55%),
+    radial-gradient(700px 500px at 40% 90%, rgba(16,185,129,.10), transparent 55%),
+    radial-gradient(2px 2px at 20% 30%, rgba(11,16,32,.18) 50%, transparent 51%) 0 0/120px 120px,
+    radial-gradient(2px 2px at 70% 60%, rgba(11,16,32,.14) 50%, transparent 51%) 0 0/160px 160px,
+    linear-gradient(180deg, #ffffff, #edf1ff 65%, #ffffff);
+}
+:root[data-theme="spacewhite"] .glass{ background: rgba(255,255,255,.72); border-color: rgba(11,16,32,.08); }
+:root[data-theme="spacewhite"] .btn{ background: rgba(255,255,255,.65); border-color: rgba(11,16,32,.14); }
+:root[data-theme="spacewhite"] .btn:hover{ background: rgba(255,255,255,.85);} 
+:root[data-theme="spacewhite"] .chip{ background: rgba(255,255,255,.72); border-color: rgba(11,16,32,.10);} 
+:root[data-theme="spacewhite"] .tab{ color: rgba(11,16,32,.72);} 
+:root[data-theme="spacewhite"] .tab.active{ color: rgba(11,16,32,.95);} 
+.themeBtn.spacewhite .dot{
+  background: linear-gradient(135deg, #ffffff, #dbe7ff 45%, #c7d2fe);
+  box-shadow: 0 0 0 1px rgba(11,16,32,.12) inset, 0 6px 18px rgba(59,130,246,.20);
+}
+</style>
+</head>
+<body>
+<header>
+<div class="wrap">
+<div class="topbar">
+<div class="brand">
+<div class="logoBox" id="logoBox" title="Logo da loja">
+<span style="font-weight:900; color: var(--muted);">N</span>
+</div>
+<div>
+<h1>OMNIA</h1>
+<div class="sub"><span id="storeNameTop">Sua loja</span> · <span style="opacity:.7">powered by Spencer</span></div>
+</div>
+</div>
+<div class="rightTop">
+<div class="chip">Status: <b id="statusChip">Online</b></div>
+<button class="btn" id="btnRanking">Ranking</button>
+<button class="btn" id="btnData">Dados</button>
+<button class="btn" id="btnGoals">Metas</button>
+<button class="btn" id="btnGoalRank">Ranking Metas</button>
+<button class="btn" id="btnNoConv">Não Convertidos</button>
+<button class="btn" id="btnSeller">Arena de Resultados</button>
+<button class="btn" id="btnSettings">Config</button>
+<button class="btn install" id="btnInstall" style="display:none">Instalar</button>
+</div>
+</div>
+<div class="tabs">
+<button class="tab active" id="tabOps">Operação</button>
+<button class="tab" id="tabDados">Dados</button>
+<button class="tab" id="tabMetas">Metas</button>
+<button class="tab" id="tabMetasRank">Ranking Metas</button>
+<button class="tab" id="tabNoConv">Não Convertidos</button>
+<button class="tab" id="tabSeller">Arena de Resultados</button>
+</div>
+</div>
+</header>
+<main class="wrap">
+<!-- OPERACAO -->
+<div id="viewOps">
+<div class="grid">
+<section class="card">
+<div class="cardHeader">
+<h2>Lista da vez</h2>
+<div class="rowRight">
+<button class="btn" id="btnPreference">Preferência</button>
+<button class="btn warn" id="btnCallNext">Chamar próximo</button>
+<button class="btn" id="btnAddSeller">+ Vendedor</button>
+</div>
+</div>
+<div class="cardBody">
+<div class="hint">Regra OMNIA: atendimento só termina quando você <b>finalizar</b> (vendeu / não vendeu). Isso garante conversão real.</div>
+<div class="divider"></div>
+<div class="kpis" id="kpis"></div>
+<div class="divider"></div>
+<div class="list" id="queueList"></div>
+<div class="divider"></div>
+<div class="row" style="justify-content:space-between">
+<div class="tiny">Vendedores fora da fila</div>
+<div class="tiny">Clique para entrar / retomar</div>
+</div>
+<div class="list" id="poolList" style="margin-top:10px"></div>
+</div>
+</section>
+<section class="card">
+<div class="cardHeader">
+<h2>Em atendimento</h2>
+<div class="rowRight"><span class="tag" id="attendTag">Nenhum</span></div>
+</div>
+<div class="cardBody" id="attendPanel">
+<div class="hint">Chame o próximo para iniciar um atendimento.</div>
+</div>
+</section>
+</div>
+</div>
+<!-- DADOS -->
+<div id="viewDados" style="display:none">
+<section class="card">
+<div class="cardHeader">
+<h2>Banco de Dados</h2>
+<div class="rowRight">
+<button class="btn" id="btnExportCSV">Exportar CSV</button>
+<button class="btn" id="btnExportJSON">Exportar JSON</button>
+</div>
+</div>
+<div class="cardBody">
+<div class="row">
+<div class="field">
+<label>Data (ranking do dia)</label>
+<input id="dataDate" type="date"/>
+</div>
+<div class="field">
+<label>Mês (ranking do mês)</label>
+<input id="dataMonth" type="month"/>
+</div>
+<div class="field">
+<label>Visão</label>
+<select id="dataView">
+<option value="dayRank">Ranking do dia (data escolhida)</option>
+<option value="daily">Conversão por dia (Loja)</option>
+<option value="sellerDaily">Conversão por dia (Vendedor)</option>
+<option selected="" value="monthRank">Ranking do mês (mês escolhido)</option>
+<option value="raw">Registros (atendimentos do mês escolhido)</option>
+</select>
+</div>
+</div>
+<div class="divider"></div>
+<div class="kpis" id="kpisData"></div>
+<div class="divider"></div>
+<div id="dataTableWrap"></div>
+<div class="divider"></div>
+<div class="hint">
+          • <b>Conversão</b> = vendas ÷ atendimentos<br/>
+          • <b>P.A. por venda</b> = peças ÷ vendas<br/>
+          • <b>P.A. por atendimento</b> = peças ÷ atendimentos
+        </div>
+</div>
+</section>
+</div>
+<!-- METAS -->
+<div id="viewMetas" style="display:none">
+<section class="card">
+<div class="cardHeader">
+<h2>Metas</h2>
+<div class="rowRight">
+<button class="btn" id="btnAutoRedistribute">Auto redistribuir</button>
+<button class="btn good" id="btnSaveGoals">Salvar metas</button>
+</div>
+</div>
+<div class="cardBody">
+<div class="noteBox">
+          ✅ Ao digitar a <b>meta mensal</b> e as <b>% por semana</b>, o OMNIA calcula automaticamente:
+          <b>meta diária</b> (baseado nos dias restantes do mês) e <b>metas das semanas</b>.
+          <br/>✅ Ao clicar em <b>Fechar Semana</b>, o sistema redistribui o que falta para as semanas restantes.
+        </div>
+<div class="divider"></div>
+<div class="row">
+<div class="field">
+<label>Mês da meta</label>
+<input id="goalMonth" type="month"/>
+</div>
+<div class="field">
+<label>Meta mensal (R$)</label>
+<input id="goalMonthly" inputmode="decimal" placeholder="Ex: 120000,00"/>
+</div>
+<div class="field">
+<label>Meta diária (AUTO) (R$)</label>
+<input disabled="" id="goalDaily" inputmode="decimal" placeholder="Auto"/>
+</div>
+</div>
+<div class="divider"></div>
+<h3 style="margin:0 0 8px 0; font-size:14px; letter-spacing:.06em; text-transform:uppercase; color:#cfe0ff">Meta do Vendedor</h3>
+<div class="row" style="gap:12px">
+<div class="field" style="min-width:220px">
+<label>Dividir meta da loja por</label>
+<input id="goalVendorDivisor" inputmode="decimal" placeholder="Ex: 3,5"/>
+</div>
+<div class="field" style="min-width:260px">
+<label>Vendedor (ajuste opcional)</label>
+<select id="goalVendorSelect"></select>
+</div>
+<div class="field" style="min-width:240px">
+<label>Meta mensal do vendedor (override)</label>
+<input id="goalVendorMonthlyOverride" inputmode="decimal" placeholder="Deixe vazio p/ automático"/>
+</div>
+<div class="rowRight" style="margin-left:auto">
+<button class="btn" id="btnSaveVendorGoal">Salvar meta vendedor</button>
+</div>
+</div>
+<div class="kpis" id="kpisVendorGoals" style="margin-top:10px"></div>
+<div class="divider"></div>
+<h3 style="margin:0 0 8px 0; font-size:14px; letter-spacing:.06em; text-transform:uppercase; color:#cfe0ff">Distribuição semanal</h3>
+<div class="row" style="gap:12px">
+<div class="field" style="min-width:200px">
+<label>Semana atual</label>
+<input disabled="" id="goalCurrentWeek"/>
+</div>
+<div class="field" style="min-width:280px">
+<label>Semana fechada?</label>
+<input disabled="" id="goalWeekClosed"/>
+</div>
+<div class="rowRight" style="margin-left:auto">
+<button class="btn warn" id="btnCloseWeek">Fechar Semana Atual</button>
+<button class="btn ghost" id="btnReopenWeeks">Reabrir Semanas</button>
+</div>
+</div>
+<div class="divider"></div>
+<div class="row">
+<div class="field" style="min-width:180px">
+<label>% Semana 1 (base)</label>
+<input id="pW1" inputmode="decimal" placeholder="Ex: 25"/>
+</div>
+<div class="field" style="min-width:180px">
+<label>% Semana 2 (base)</label>
+<input id="pW2" inputmode="decimal" placeholder="Ex: 25"/>
+</div>
+<div class="field" style="min-width:180px">
+<label>% Semana 3 (base)</label>
+<input id="pW3" inputmode="decimal" placeholder="Ex: 25"/>
+</div>
+<div class="field" style="min-width:180px">
+<label>% Semana 4 (base)</label>
+<input id="pW4" inputmode="decimal" placeholder="Ex: 25"/>
+</div>
+</div>
+<div class="divider"></div>
+<div class="row">
+<div class="field" style="min-width:220px">
+<label>Meta Semana 1 (R$)</label>
+<input disabled="" id="goalW1"/>
+</div>
+<div class="field" style="min-width:220px">
+<label>Meta Semana 2 (R$)</label>
+<input disabled="" id="goalW2"/>
+</div>
+<div class="field" style="min-width:220px">
+<label>Meta Semana 3 (R$)</label>
+<input disabled="" id="goalW3"/>
+</div>
+<div class="field" style="min-width:220px">
+<label>Meta Semana 4 (R$)</label>
+<input disabled="" id="goalW4"/>
+</div>
+</div>
+<div class="divider"></div>
+<div class="row">
+<div class="field" style="min-width:220px">
+<label>% Semana 1 (recalculada)</label>
+<input disabled="" id="rpW1"/>
+</div>
+<div class="field" style="min-width:220px">
+<label>% Semana 2 (recalculada)</label>
+<input disabled="" id="rpW2"/>
+</div>
+<div class="field" style="min-width:220px">
+<label>% Semana 3 (recalculada)</label>
+<input disabled="" id="rpW3"/>
+</div>
+<div class="field" style="min-width:220px">
+<label>% Semana 4 (recalculada)</label>
+<input disabled="" id="rpW4"/>
+</div>
+</div>
+<div class="divider"></div>
+<h3 style="margin:0 0 8px 0; font-size:14px; letter-spacing:.06em; text-transform:uppercase; color:#cfe0ff">Progresso</h3>
+<div class="kpis" id="kpisGoals"></div>
+<div class="divider"></div>
+<div class="row" style="gap:14px">
+<div style="flex:1; min-width: 280px">
+<div class="row" style="justify-content:space-between">
+<div class="tiny">Meta diária (AUTO — dias restantes)</div>
+<div class="tiny"><b id="goalDailyText"></b></div>
+</div>
+<div class="bar"><i id="barDaily"></i></div>
+<div class="row" style="justify-content:space-between; margin-top:8px">
+<div class="tiny">Falta</div>
+<div class="tiny"><b id="goalDailyLeft"></b></div>
+</div>
+</div>
+<div style="flex:1; min-width: 280px">
+<div class="row" style="justify-content:space-between">
+<div class="tiny">Meta semanal (semana atual)</div>
+<div class="tiny"><b id="goalWeeklyText"></b></div>
+</div>
+<div class="bar"><i id="barWeekly"></i></div>
+<div class="row" style="justify-content:space-between; margin-top:8px">
+<div class="tiny">Falta</div>
+<div class="tiny"><b id="goalWeeklyLeft"></b></div>
+</div>
+</div>
+<div style="flex:1; min-width: 280px">
+<div class="row" style="justify-content:space-between">
+<div class="tiny">Meta mensal</div>
+<div class="tiny"><b id="goalMonthlyText"></b></div>
+</div>
+<div class="bar"><i id="barMonthly"></i></div>
+<div class="row" style="justify-content:space-between; margin-top:8px">
+<div class="tiny">Falta</div>
+<div class="tiny"><b id="goalMonthlyLeft"></b></div>
+</div>
+</div>
+</div>
+<div class="divider"></div>
+<div class="hint">
+          • Semana do mês usada: 1 (dias 1–7), 2 (8–14), 3 (15–21), 4 (22–final).<br/>
+          • Se você fechar a semana, o OMNIA redistribui o restante automaticamente.
+        </div>
+</div>
+</section>
+</div>
+<!-- RANKING METAS -->
+<div id="viewMetasRank" style="display:none">
+<section class="card">
+<div class="cardHeader">
+<h2>Ranking Metas</h2>
+<div class="rowRight">
+<button class="btn" id="btnRefreshMetaRank">Atualizar</button>
+</div>
+</div>
+<div class="cardBody">
+<div class="row">
+<div class="field">
+<label>Mês</label>
+<input id="metaRankMonth" type="month"/>
+</div>
+<div class="field">
+<label>Meta mensal (referência)</label>
+<input id="metaRankMonthly" inputmode="decimal" placeholder="Auto pela meta salva"/>
+</div>
+<div class="field">
+<label>Exibição</label>
+<select id="metaRankMode">
+<option value="seller">Progresso por vendedor (no mês)</option>
+<option selected="" value="store">Progresso da loja + corrida até a lua</option>
+</select>
+</div>
+</div>
+<div class="divider"></div>
+<div class="kpis" id="metaRankKpis"></div>
+<div class="divider"></div>
+<div class="race" id="race">
+<div class="track"></div>
+<div class="moon">🌙</div>
+<div class="moonBoom" id="moonBoom">
+<div>
+<div class="title">🚀 META BATIDA!</div>
+<div class="sub">Parabéns! Chegamos na lua. Bora manter o ritmo! 🔥</div>
+</div>
+</div>
+</div>
+<div class="divider"></div>
+<div id="metaRankTable"></div>
+</div>
+</section>
+</div>
+<!-- NÃO CONVERTIDOS -->
+<div id="viewNoConv" style="display:none">
+<section class="card">
+<div class="cardHeader">
+<h2>Análise — Não Convertidos</h2>
+<div class="rowRight">
+<button class="btn" id="btnNoConvRefresh">Atualizar</button>
+</div>
+</div>
+<div class="cardBody">
+<div class="row">
+<div class="field">
+<label>Data (análise do dia)</label>
+<input id="ncDate" type="date"/>
+</div>
+<div class="field">
+<label>Mês (análise do mês)</label>
+<input id="ncMonth" type="month"/>
+</div>
+<div class="field">
+<label>Visão</label>
+<select id="ncView">
+<option selected="" value="day">Dia</option>
+<option value="month">Mês</option>
+</select>
+</div>
+</div>
+<div class="divider"></div>
+<div class="compare">
+<div class="barCard">
+<div class="row" style="justify-content:space-between">
+<div style="font-weight:900">✅ Convertidos</div>
+<div class="tag good" id="convCount">0</div>
+</div>
+<div class="meter good"><i id="convBar"></i></div>
+<div class="hint" id="convHint" style="margin-top:8px">—</div>
+</div>
+<div class="barCard">
+<div class="row" style="justify-content:space-between">
+<div style="font-weight:900">❌ Não convertidos</div>
+<div class="tag bad" id="noConvCount">0</div>
+</div>
+<div class="meter bad"><i id="noConvBar"></i></div>
+<div class="hint" id="noConvHint" style="margin-top:8px">—</div>
+</div>
+</div>
+<div class="divider"></div>
+<div class="kpis" id="ncKpis"></div>
+<div class="divider"></div>
+<div class="row" style="gap:14px">
+<div id="ncReasonsWrap" style="flex:1; min-width: 300px"></div>
+<div id="ncItemsWrap" style="flex:1; min-width: 300px"></div>
+</div>
+<div class="divider"></div>
+<div class="row" style="gap:14px">
+<div id="ncGenderWrap" style="flex:1; min-width: 300px"></div>
+<div id="ncSizesWrap" style="flex:1; min-width: 300px"></div>
+</div>
+<div class="divider"></div>
+<div class="hint">
+          Aqui você enxerga o que mais está travando as vendas: preço, numeração, falta de peça, etc.
+          Isso vira ação prática (estoque, mix, VM, argumentação do time).
+        </div>
+</div>
+</section>
+<!-- VENDEDOR -->
+<div id="viewSeller" style="display:none">
+<section class="card">
+<div class="cardHeader">
+<h2>Painel do Vendedor</h2>
+<div class="rowRight">
+<button class="btn" id="btnSellerDownloadBadges">Baixar selos</button>
+</div>
+</div>
+<div class="cardBody">
+<div class="row">
+<div class="field" style="min-width:260px">
+<label>Vendedor</label>
+<select id="sellerViewSelect"></select>
+</div>
+<div class="field" style="min-width:220px">
+<label>Mês</label>
+<input id="sellerViewMonth" type="month"/>
+</div>
+</div>
+<div class="divider"></div>
+<div class="kpis" id="sellerKpis"></div>
+<div class="divider"></div>
+<div class="noteBox" id="sellerGoalsBox"></div>
+<div class="divider"></div>
+<h3 style="margin:0 0 8px 0; font-size:14px; letter-spacing:.06em; text-transform:uppercase; color:#cfe0ff">Galeria de Selos</h3>
+<div class="badgeGrid" id="sellerBadges"></div>
+<div class="divider"></div>
+<div class="hint">No fim do mês, o vendedor pode baixar os selos e trocar por prêmios. 🔥</div>
+</div>
+</section>
+</div>
+</div></main>
+<!-- FX Layer -->
+<div id="fxLayer"></div>
+<!-- THEME DOCK -->
+<div class="themeDock">
+<button class="themeBtn default" id="themeDefault" title="Tema padrão">
+<span class="themeTip">Padrão</span>
+<span class="dot"></span>
+</button>
+<button class="themeBtn neon" id="themeNeon" title="Tema neon">
+<span class="themeTip">Neon</span>
+<span class="dot"></span>
+</button>
+<button class="themeBtn ocean" id="themeOcean" title="Tema ocean">
+<span class="themeTip">Ocean</span>
+<span class="dot"></span>
+</button>
+<button class="themeBtn sunset" id="themeSunset" title="Tema sunset">
+<span class="themeTip">Sunset</span>
+<span class="dot"></span>
+</button>
+<button class="themeBtn spacewhite" id="themeSpaceWhite" title="Tema branco espacial">
+<span class="themeTip">Space</span>
+<span class="dot"></span>
+</button>
+<button class="themeBtn textured" id="themeTextured" title="Tema texturizado">
+<span class="themeTip">Texture</span>
+<span class="dot"></span>
+</button>
+<button class="themeBtn purple" id="themePurple" title="Tema purple">
+<span class="themeTip">Purple</span>
+<span class="dot"></span>
+</button>
+</div>
+<!-- MODAL SETTINGS -->
+<div class="modalBack" id="settingsBack">
+<div class="modal">
+<div class="modalHead">
+<h3>Configurações da Loja</h3>
+<button class="close" id="closeSettings">Fechar</button>
+</div>
+<div class="modalBody">
+<div class="row">
+<div class="field">
+<label>Nome da loja</label>
+<input id="storeName" placeholder="Ex: TXC Araguaína"/>
+</div>
+<div class="field">
+<label>Status</label>
+<select id="storeStatus">
+<option value="Online">Online</option>
+<option value="Offline">Offline</option>
+</select>
+</div>
+</div>
+<div class="divider"></div>
+<div class="row">
+<div class="field" style="min-width:320px">
+<label>Logo da loja (imagem)</label>
+<input accept="image/*" id="logoInput" type="file"/>
+<div class="hint">A logo fica no topo. O OMNIA continua como marca principal.</div>
+</div>
+</div>
+<div class="divider"></div>
+<div class="row">
+<div class="field">
+<label>Finalização pede Valor (R$)?</label>
+<select id="optValue">
+<option value="yes">Sim</option>
+<option value="no">Não</option>
+</select>
+</div>
+<div class="field">
+<label>Finalização pede Peças (P.A.)?</label>
+<select id="optPieces">
+<option value="yes">Sim</option>
+<option value="no">Não</option>
+</select>
+</div>
+</div>
+<div class="divider"></div>
+<div class="dangerZone" style="border-color: rgba(247,201,72,.40); background: rgba(247,201,72,.08);">
+<div>
+<div style="font-weight:800">Desativar vendedor (remover da operação)</div>
+<div class="tiny">Remove da fila/pool e não aparece mais para atendimento. Não apaga histórico.</div>
+</div>
+<button class="btn warn" id="btnDeactivateSeller">Desativar vendedor</button>
+</div>
+<div class="divider"></div>
+<div class="dangerZone">
+<div>
+<div style="font-weight:800">Zerar dia (apagar registros de hoje)</div>
+<div class="tiny">Mantém vendedores e fila. Apaga atendimentos finalizados de hoje.</div>
+</div>
+<button class="btn bad" id="btnResetDay">Zerar dia</button>
+</div>
+<div class="divider"></div>
+
+<div class="dangerZone" style="border-color: rgba(98,168,255,.45); background: rgba(98,168,255,.08);">
+  <div>
+    <div style="font-weight:800">Corrigir atualização / limpar cache do app</div>
+    <div class="tiny">Resolve quando alguma tela (ex: Arena) não abre por causa de cache do PWA ou dados antigos.</div>
+  </div>
+  <button class="btn" id="btnHardRefresh">Limpar cache e recarregar</button>
+</div>
+
+<div class="divider"></div>
+<div class="dangerZone">
+<div>
+<div style="font-weight:800">Reset total (apagar tudo)</div>
+<div class="tiny">Apaga vendedores, fila, logo, metas e todos os registros. Irreversível.</div>
+</div>
+<button class="btn bad" id="btnResetAll">Reset total</button>
+</div>
+</div>
+</div>
+</div>
+<!-- MODAL ADD SELLER -->
+<div class="modalBack" id="sellerBack">
+<div class="modal">
+<div class="modalHead">
+<h3>Novo vendedor</h3>
+<button class="close" id="closeSeller">Fechar</button>
+</div>
+<div class="modalBody">
+<div class="row">
+<div class="field">
+<label>Nome</label>
+<input id="sellerName" placeholder="Ex: Camila"/>
+</div>
+<div class="field" style="min-width:320px">
+<label>Foto (opcional)</label>
+<input accept="image/*" id="sellerPhoto" type="file"/>
+</div>
+</div>
+<div class="divider"></div>
+<div class="actions">
+<button class="btn good" id="btnCreateSeller">Criar vendedor</button>
+</div>
+<div class="hint" style="margin-top:10px">Depois de criar, clique no vendedor (fora da fila) para colocá-lo na fila.</div>
+</div>
+</div>
+</div>
+<!-- MODAL RANKING -->
+<div class="modalBack" id="rankingBack">
+<div class="modal">
+<div class="modalHead">
+<h3>Ranking do dia</h3>
+<button class="close" id="closeRanking">Fechar</button>
+</div>
+<div class="modalBody">
+<div class="hint">Ordenado por <b>Conversão</b>. Empate: mais vendas.</div>
+<div class="divider"></div>
+<div class="list" id="rankingList"></div>
+</div>
+</div>
+</div>
+<!-- MODAL PREFERÊNCIA -->
+<div class="modalBack" id="prefBack">
+<div class="modal">
+<div class="modalHead">
+<h3>Preferência do Cliente</h3>
+<button class="close" id="closePref">Fechar</button>
+</div>
+<div class="modalBody">
+<div class="hint">Selecione o vendedor que o cliente veio procurar. O atendimento inicia na hora.</div>
+<div class="divider"></div>
+<div class="list" id="prefList"></div>
+</div>
+</div>
+</div>
+<!-- MODAL DESATIVAR VENDEDOR -->
+<div class="modalBack" id="deactBack">
+<div class="modal">
+<div class="modalHead">
+<h3>Desativar Vendedor</h3>
+<button class="close" id="closeDeact">Fechar</button>
+</div>
+<div class="modalBody">
+<div class="hint">Escolha quem será removido da operação. (Histórico permanece.)</div>
+<div class="divider"></div>
+<div class="list" id="deactList"></div>
+<div class="divider"></div>
+<div class="noteBox">
+        Dica: desativado = some da fila/pool e não pode ser chamado por preferência.
+      </div>
+</div>
+</div>
+</div>
+<!-- MODAL INSTALL -->
+<div class="modalBack" id="installBack">
+<div class="modal">
+<div class="modalHead">
+<h3>Instalar NexxtOne</h3>
+<button class="close" id="closeInstall">Fechar</button>
+</div>
+<div class="modalBody">
+<div class="noteBox" id="installInfo">
+        Para instalar:
+        <br/>• <b>Android (Chrome)</b>: menu ⋮ → <b>Adicionar à tela inicial</b>
+<br/>• <b>iPhone/iPad (Safari)</b>: <b>Compartilhar</b> → <b>Adicionar à Tela de Início</b>
+<br/>• <b>PC (Chrome/Edge)</b>: ícone <b>Instalar</b> na barra de endereço
+        <div class="divider"></div>
+<span class="tiny">Obs: o botão de instalar funciona melhor quando o NexxtOne está em um link (http/https). Abrir por arquivo (file://) pode impedir a instalação.</span>
+</div>
+</div>
+</div>
+</div>
+<script>
   // ======================
   // PWA register
   // ======================
@@ -70,12 +1492,18 @@
 
   // migração defensiva
   state.ui = state.ui || { theme:"default" };
-  state.options = state.options || { askValue:true, askPieces:true };
-  state.sellers = (state.sellers || []).map(s => ({
+  state.options = state.options || { askValue:true, askPieces:true, vendorDivisor: 0 };
+  state.sellers = (Array.isArray(state.sellers) ? state.sellers : []).map(s => ({
     ...s,
     active: (s.active === undefined ? true : !!s.active),
     paused: !!s.paused
   }));
+  state.queue = Array.isArray(state.queue) ? state.queue : [];
+  state.pool  = Array.isArray(state.pool) ? state.pool : [];
+  state.records = Array.isArray(state.records) ? state.records : [];
+  state.badges = state.badges || { earned: [] };
+  if(!Array.isArray(state.badges.earned)) state.badges.earned = [];
+  state.goalsByMonth = state.goalsByMonth || {};
   state.vendorGoalsByMonth = state.vendorGoalsByMonth || {};
   // migração: atendimento múltiplo
   state.currents = state.currents || [];
@@ -208,7 +1636,7 @@
   // ======================
   function applyTheme(){
     const t = state.ui?.theme || "default";
-    const allowed = ["default","neon","ocean","sunset","purple","textured"];
+    const allowed = ["default","neon","ocean","sunset","purple","textured","spacewhite"];
     document.documentElement.dataset.theme = allowed.includes(t) ? t : "default";
   }
 
@@ -453,6 +1881,7 @@
         </div>
         <div class="actions" style="gap:8px; align-items:center">
           <span class="tag good">Em atendimento</span>
+          <button class="btn warn" data-act="cancelAttend" data-cid="${cid}" title="Cancelar este atendimento e voltar o vendedor para a vez">↩ Cancelar atendimento</button>
         </div>
 
         <div class="divider"></div>
@@ -534,6 +1963,7 @@
         if(act === 'sold') showFinalize(cid, 'sold');
         if(act === 'nosold') showFinalize(cid, 'nosold');
         if(act === 'cancel') hideFinalize(cid);
+        if(act === 'cancelAttend') cancelAttendance(cid);
         if(act === 'finalize'){
           const out = e.currentTarget.dataset.outcome || null;
           // store outcome on form
@@ -541,6 +1971,31 @@
         }
       });
     });
+
+    function cancelAttendance(cid){
+      const c = getCurrentById(cid);
+      if(!c) return;
+      const s = getSeller(c.sellerId);
+      if(!s || !s.active){
+        // apenas remove do atendimento
+        state.currents = (state.currents||[]).filter(x=>x && x.id!==cid);
+        save(state);
+        renderAll();
+        return;
+      }
+
+      if(!confirm(`Cancelar o atendimento de "${s.name}" e voltar ele para a vez?`)) return;
+
+      // remove do atendimento
+      state.currents = (state.currents||[]).filter(x=>x && x.id!==cid);
+
+      // volta para a fila (fim da vez)
+      state.pool = (state.pool||[]).filter(x=>x!==s.id);
+      if(!state.queue.includes(s.id)) state.queue.push(s.id);
+
+      save(state);
+      renderAll();
+    }
 
     function showFinalize(cid, outcome){
       const form = $("finalizeForm_"+cid);
@@ -1704,19 +3159,59 @@
     DAY_GOAL: { icon:"✅", title:"Meta do Dia Batida", desc:"Bateu a meta diária do dia." },
     WEEK_GOAL: { icon:"🏁", title:"Meta da Semana Batida", desc:"Bateu a meta da semana." },
     MONTH_GOAL: { icon:"🌙", title:"Meta do Mês Batida", desc:"Chegou na meta do mês." },
-    TOP_CONV: { icon:"👑", title:"Rei da Conversão", desc:"Fechou o mês com conversão acima de 80%." },
+    TOP_CONV: { icon:"👑", title:"Rei da Conversão", desc:"Fechou o mês com conversão acima de 85%." },
+
     BIG_SALE: { icon:"💎", title:"Venda Suprema", desc:"Fez uma venda acima de R$ 5.000." },
     SALE_TOP: { icon:"🚀", title:"Venda Top", desc:"Venda entre R$ 1.500 e R$ 2.000." },
     SALE_RESPECT: { icon:"🫡", title:"Venda de Respeito", desc:"Venda entre R$ 2.500 e R$ 3.500." },
-    PA_BRONZE: { icon:"🥉", title:"P.A Bronze", desc:"P.A do mês entre 2,30 e 2,39." },
-    PA_SILVER: { icon:"🥈", title:"P.A Prata", desc:"P.A do mês entre 2,40 e 2,49." },
-    PA_GOLD: { icon:"🥇", title:"P.A Ouro", desc:"P.A do mês acima de 2,50." },
-    BIGGEST_SALE: { icon:"🏆", title:"Maior Venda do Mês", desc:"Maior venda do mês." }
+    BIGGEST_SALE: { icon:"🏆", title:"Maior Venda do Mês", desc:"Maior venda do mês." },
+
+    TVA_COMBO: { icon:"🔥", title:"Combo Master", desc:"TVA ≥ 95% (quase todas as vendas com 2+ itens no mês)." },
+
+    PA_BRONZE: { icon:"🥉", title:"P.A Bronze", desc:"P.A do mês ≥ 2,40." },
+    PA_SILVER: { icon:"🥈", title:"P.A Prata", desc:"P.A do mês ≥ 2,60." },
+    PA_GOLD: { icon:"🥇", title:"P.A Ouro", desc:"P.A do mês ≥ 2,70." },
+
+    TM_SILVER: { icon:"🧳", title:"T.M Mala de Prata", desc:"Ticket médio do mês entre R$ 600,00 e R$ 699,99." },
+    TM_GOLD: { icon:"💼", title:"T.M Mala de Ouro", desc:"Ticket médio do mês entre R$ 800,00 e R$ 899,99." },
+    TM_SUPREME: { icon:"🎒", title:"T.M Mala Suprema", desc:"Ticket médio do mês acima de R$ 950,00." },
+
+    MAGIC_5: { icon:"✨", title:"Selo Mágico", desc:"Surpresa: bateu 5 metas mensais no total." },
+    SUPREME_12: { icon:"🌌", title:"Selo Supremo", desc:"Surpresa: bateu 12 metas mensais no total." },
   };
 
   function ensureBadges(){
     if(!state.badges) state.badges = { earned: [] };
     if(!Array.isArray(state.badges.earned)) state.badges.earned = [];
+
+    // Migração defensiva: versões antigas salvavam badges sem o campo `def`.
+    // Aqui tentamos inferir para manter a galeria (ATIVADO/BLOQUEADO) funcionando.
+    const titleToDef = {
+      "Meta do Dia Batida":"DAY_GOAL",
+      "Meta da Semana Batida":"WEEK_GOAL",
+      "Meta do Mês Batida":"MONTH_GOAL",
+      "Rei da Conversão":"TOP_CONV",
+      "Venda Suprema":"BIG_SALE",
+      "Venda Top":"SALE_TOP",
+      "Venda de Respeito":"SALE_RESPECT",
+      "Maior Venda do Mês":"BIGGEST_SALE",
+      "P.A Bronze":"PA_BRONZE",
+      "P.A Prata":"PA_SILVER",
+      "P.A Ouro":"PA_GOLD",
+      "T.M Mala de Prata":"TM_SILVER",
+      "T.M Mala de Ouro":"TM_GOLD",
+      "T.M Mala Suprema":"TM_SUPREME",
+      "Combo Master":"TVA_COMBO",
+      "Selo Mágico":"MAGIC_5",
+      "Selo Supremo":"SUPREME_12"
+    };
+    try{
+      for(const e of state.badges.earned){
+        if(!e || e.def) continue;
+        const t = String(e.title||'');
+        if(titleToDef[t]) e.def = titleToDef[t];
+      }
+    }catch{}
   }
 
   function awardBadge(entry){
@@ -1774,150 +3269,404 @@
 
     // Sale-based instant badges
     const v = Number(rec.value||0);
-    if(v > 5000) awardBadge({ key:`SELLER_${sid}_${rec.id}_BIG_SALE`, scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.BIG_SALE.title, desc:BADGE_DEFS.BIG_SALE.desc, icon:BADGE_DEFS.BIG_SALE.icon, ts: nowTs() });
-    if(v >= 1500 && v <= 2000) awardBadge({ key:`SELLER_${sid}_${rec.id}_SALE_TOP`, scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.SALE_TOP.title, desc:BADGE_DEFS.SALE_TOP.desc, icon:BADGE_DEFS.SALE_TOP.icon, ts: nowTs() });
-    if(v >= 2500 && v <= 3500) awardBadge({ key:`SELLER_${sid}_${rec.id}_SALE_RESPECT`, scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.SALE_RESPECT.title, desc:BADGE_DEFS.SALE_RESPECT.desc, icon:BADGE_DEFS.SALE_RESPECT.icon, ts: nowTs() });
+    if(v > 5000) awardBadge({ key:`SELLER_${sid}_${rec.id}_BIG_SALE`, scope:'seller', sellerId:sid, monthKey:mk, def:'BIG_SALE', title:BADGE_DEFS.BIG_SALE.title, desc:BADGE_DEFS.BIG_SALE.desc, icon:BADGE_DEFS.BIG_SALE.icon, ts: nowTs() });
+    if(v >= 1500 && v <= 2000) awardBadge({ key:`SELLER_${sid}_${rec.id}_SALE_TOP`, scope:'seller', sellerId:sid, monthKey:mk, def:'SALE_TOP', title:BADGE_DEFS.SALE_TOP.title, desc:BADGE_DEFS.SALE_TOP.desc, icon:BADGE_DEFS.SALE_TOP.icon, ts: nowTs() });
+    if(v >= 2500 && v <= 3500) awardBadge({ key:`SELLER_${sid}_${rec.id}_SALE_RESPECT`, scope:'seller', sellerId:sid, monthKey:mk, def:'SALE_RESPECT', title:BADGE_DEFS.SALE_RESPECT.title, desc:BADGE_DEFS.SALE_RESPECT.desc, icon:BADGE_DEFS.SALE_RESPECT.icon, ts: nowTs() });
 
     // Day goal
     const dayGoal = sellerGoalDay(sid, mk);
     const dayRev = sellerRevenueDay(sid, tk);
     if(dayGoal>0 && dayRev >= dayGoal){
-      awardBadge({ key:`SELLER_${sid}_${tk}_DAY_GOAL`, scope:'seller', sellerId:sid, monthKey:mk, dateKey:tk, title:BADGE_DEFS.DAY_GOAL.title, desc:BADGE_DEFS.DAY_GOAL.desc, icon:BADGE_DEFS.DAY_GOAL.icon, ts: nowTs() });
+      awardBadge({ key:`SELLER_${sid}_${tk}_DAY_GOAL`, scope:'seller', sellerId:sid, monthKey:mk, dateKey:tk, def:'DAY_GOAL', title:BADGE_DEFS.DAY_GOAL.title, desc:BADGE_DEFS.DAY_GOAL.desc, icon:BADGE_DEFS.DAY_GOAL.icon, ts: nowTs() });
     }
 
     // Week goal
     const wGoal = sellerGoalWeek(sid, mk, week);
     const wRev = sellerRevenueWeek(sid, mk, week);
     if(wGoal>0 && wRev >= wGoal){
-      awardBadge({ key:`SELLER_${sid}_${mk}_W${week}_WEEK_GOAL`, scope:'seller', sellerId:sid, monthKey:mk, week, title:BADGE_DEFS.WEEK_GOAL.title, desc:BADGE_DEFS.WEEK_GOAL.desc, icon:BADGE_DEFS.WEEK_GOAL.icon, ts: nowTs() });
+      awardBadge({ key:`SELLER_${sid}_${mk}_W${week}_WEEK_GOAL`, scope:'seller', sellerId:sid, monthKey:mk, week, def:'WEEK_GOAL', title:BADGE_DEFS.WEEK_GOAL.title, desc:BADGE_DEFS.WEEK_GOAL.desc, icon:BADGE_DEFS.WEEK_GOAL.icon, ts: nowTs() });
     }
 
     // Month goal
     const mGoal = sellerGoalMonthly(sid, mk);
     const mRev = sellerSoldInMonth(sid, mk).reduce((s,r)=>s+Number(r.value||0),0);
     if(mGoal>0 && mRev >= mGoal){
-      awardBadge({ key:`SELLER_${sid}_${mk}_MONTH_GOAL`, scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.MONTH_GOAL.title, desc:BADGE_DEFS.MONTH_GOAL.desc, icon:BADGE_DEFS.MONTH_GOAL.icon, ts: nowTs() });
+      awardBadge({ key:`SELLER_${sid}_${mk}_MONTH_GOAL`, scope:'seller', sellerId:sid, monthKey:mk, def:'MONTH_GOAL', title:BADGE_DEFS.MONTH_GOAL.title, desc:BADGE_DEFS.MONTH_GOAL.desc, icon:BADGE_DEFS.MONTH_GOAL.icon, ts: nowTs() });
     }
 
     // Biggest sale of month (re-evaluate each sale)
     const sold = sellerSoldInMonth(sid, mk);
     if(sold.length){
       const max = sold.reduce((a,b)=> (Number(b.value||0)>Number(a.value||0) ? b : a), sold[0]);
-      awardBadge({ key:`SELLER_${sid}_${mk}_BIGGEST_${max.id}`, scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.BIGGEST_SALE.title, desc:BADGE_DEFS.BIGGEST_SALE.desc+` (${formatMoney(max.value)})`, icon:BADGE_DEFS.BIGGEST_SALE.icon, ts: nowTs() });
+      awardBadge({ key:`SELLER_${sid}_${mk}_BIGGEST_${max.id}`, scope:'seller', sellerId:sid, monthKey:mk, def:'BIGGEST_SALE', title:BADGE_DEFS.BIGGEST_SALE.title, desc:BADGE_DEFS.BIGGEST_SALE.desc+` (${formatMoney(max.value)})`, icon:BADGE_DEFS.BIGGEST_SALE.icon, ts: nowTs() });
     }
 
-    // End-of-month style badges: P.A and Conversion (evaluated anytime; only awards if thresholds met)
+    // End-of-month style badges: P.A, TVA e Conversão (avaliado a qualquer venda do mês)
     const all = sellerRecsInMonth(sid, mk);
     const a = agg(all);
-    if(a.paPerSale >= 2.30 && a.paPerSale <= 2.39) awardBadge({ key:`SELLER_${sid}_${mk}_PA_BRONZE`, scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.PA_BRONZE.title, desc:BADGE_DEFS.PA_BRONZE.desc, icon:BADGE_DEFS.PA_BRONZE.icon, ts: nowTs() });
-    if(a.paPerSale >= 2.40 && a.paPerSale <= 2.49) awardBadge({ key:`SELLER_${sid}_${mk}_PA_SILVER`, scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.PA_SILVER.title, desc:BADGE_DEFS.PA_SILVER.desc, icon:BADGE_DEFS.PA_SILVER.icon, ts: nowTs() });
-    if(a.paPerSale >= 2.50) awardBadge({ key:`SELLER_${sid}_${mk}_PA_GOLD`, scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.PA_GOLD.title, desc:BADGE_DEFS.PA_GOLD.desc, icon:BADGE_DEFS.PA_GOLD.icon, ts: nowTs() });
-    if(a.conv >= 80) awardBadge({ key:`SELLER_${sid}_${mk}_TOP_CONV`, scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.TOP_CONV.title, desc:BADGE_DEFS.TOP_CONV.desc, icon:BADGE_DEFS.TOP_CONV.icon, ts: nowTs() });
+
+    // P.A (peças por venda)
+    if(a.paPerSale >= 2.40) awardBadge({ key:`SELLER_${sid}_${mk}_PA_BRONZE`, def:'PA_BRONZE', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.PA_BRONZE.title, desc:BADGE_DEFS.PA_BRONZE.desc, icon:BADGE_DEFS.PA_BRONZE.icon, ts: nowTs() });
+    if(a.paPerSale >= 2.60) awardBadge({ key:`SELLER_${sid}_${mk}_PA_SILVER`, def:'PA_SILVER', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.PA_SILVER.title, desc:BADGE_DEFS.PA_SILVER.desc, icon:BADGE_DEFS.PA_SILVER.icon, ts: nowTs() });
+    if(a.paPerSale >= 2.70) awardBadge({ key:`SELLER_${sid}_${mk}_PA_GOLD`, def:'PA_GOLD', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.PA_GOLD.title, desc:BADGE_DEFS.PA_GOLD.desc, icon:BADGE_DEFS.PA_GOLD.icon, ts: nowTs() });
+
+    // TVA (taxa de venda agrupada) = % de vendas com 2+ itens no mês
+    const soldOnly = (all||[]).filter(r=>r.outcome==='sold');
+    const grouped = soldOnly.filter(r=>Number(r.pieces||0) >= 2).length;
+    const tva = soldOnly.length ? (grouped/soldOnly.length)*100 : 0;
+    if(tva >= 95) awardBadge({ key:`SELLER_${sid}_${mk}_TVA_COMBO`, def:'TVA_COMBO', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.TVA_COMBO.title, desc:`TVA do mês: ${tva.toFixed(1)}%`, icon:BADGE_DEFS.TVA_COMBO.icon, ts: nowTs() });
+
+    // Ticket médio
+    const tm = a.sales>0 ? (a.revenue/a.sales) : 0;
+    if(tm >= 600 && tm <= 699.99) awardBadge({ key:`SELLER_${sid}_${mk}_TM_SILVER`, def:'TM_SILVER', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.TM_SILVER.title, desc:BADGE_DEFS.TM_SILVER.desc, icon:BADGE_DEFS.TM_SILVER.icon, ts: nowTs() });
+    if(tm >= 800 && tm <= 899.99) awardBadge({ key:`SELLER_${sid}_${mk}_TM_GOLD`, def:'TM_GOLD', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.TM_GOLD.title, desc:BADGE_DEFS.TM_GOLD.desc, icon:BADGE_DEFS.TM_GOLD.icon, ts: nowTs() });
+    if(tm >= 950) awardBadge({ key:`SELLER_${sid}_${mk}_TM_SUPREME`, def:'TM_SUPREME', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.TM_SUPREME.title, desc:BADGE_DEFS.TM_SUPREME.desc, icon:BADGE_DEFS.TM_SUPREME.icon, ts: nowTs() });
+
+    // Conversão alta no mês
+    if(a.conv >= 85) awardBadge({ key:`SELLER_${sid}_${mk}_TOP_CONV`, def:'TOP_CONV', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.TOP_CONV.title, desc:BADGE_DEFS.TOP_CONV.desc, icon:BADGE_DEFS.TOP_CONV.icon, ts: nowTs() });
+
+    // Selos surpresa por quantidade de metas mensais batidas (acumulado)
+    const monthWins = (state.badges?.earned||[]).filter(e=>e.scope==='seller' && e.sellerId===sid && e.def==='MONTH_GOAL').length;
+    if(monthWins >= 5) awardBadge({ key:`SELLER_${sid}_MAGIC_5`, def:'MAGIC_5', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.MAGIC_5.title, desc:BADGE_DEFS.MAGIC_5.desc, icon:BADGE_DEFS.MAGIC_5.icon, ts: nowTs() });
+    if(monthWins >= 12) awardBadge({ key:`SELLER_${sid}_SUPREME_12`, def:'SUPREME_12', scope:'seller', sellerId:sid, monthKey:mk, title:BADGE_DEFS.SUPREME_12.title, desc:BADGE_DEFS.SUPREME_12.desc, icon:BADGE_DEFS.SUPREME_12.icon, ts: nowTs() });
+
   }
 
+  // Render completo do painel do vendedor (sempre mostra algo; nunca deixa a tela vazia)
+  
+  // Arena de Resultados (vendedor) — painel mensal + intervalo de datas + conquistas
   function renderSellerView(){
-    ensureBadges();
-    const mk = $("sellerViewMonth").value || monthKey();
-    $("sellerViewMonth").value = mk;
+    // migração defensiva (evita "tela em branco" em estados antigos no localStorage)
+    try{
+      state.options = state.options || { askValue:true, askPieces:true, vendorDivisor: 0 };
+      state.sellers = Array.isArray(state.sellers) ? state.sellers : [];
+      state.records = Array.isArray(state.records) ? state.records : [];
+      state.badges = state.badges || { earned: [] };
+      if(!Array.isArray(state.badges.earned)) state.badges.earned = [];
+    }catch{}
 
-    // populate sellers (preserva seleção + estado vazio guiado)
-    const sel = $("sellerViewSelect");
-    const active = state.sellers.filter(s=>s.active);
+    try{ ensureBadges(); }catch(e){ console.error(e); try{ if(!state.badges) state.badges={earned:[]}; }catch{} }
 
-    const wanted = state.ui?.sellerViewId || "";
-    const opts = [];
-    if(active.length>1) opts.push('<option value="" disabled>Selecione…</option>');
-    for(const s of active){ opts.push(`<option value="${s.id}">${s.name}</option>`); }
-    sel.innerHTML = opts.join('');
+    const view = document.getElementById('viewSeller');
+    if(!view) return;
 
-    // define seleção
-    let sid = "";
-    if(wanted && active.some(s=>s.id===wanted)) sid = wanted;
-    else sid = (active[0] && active[0].id) || "";
-    sel.value = sid;
-    state.ui = state.ui || {};
-    state.ui.sellerViewId = sid;
-    save(state);
-
-    if(!sid){
-      $("sellerKpis").innerHTML = '<div class="hint">Cadastre um vendedor para ver o painel.</div>';
-      $("sellerGoalsBox").innerHTML = '<div class="hint">—</div>';
-      $("sellerBadges").innerHTML = '';
-      return;
-    }
-    const seller = getSeller(sid);
-    const tk = todayKey();
-    const w = weekOfMonth(tk);
-
-    const recMonth = sellerRecsInMonth(sid, mk);
-    const aMonth = agg(recMonth);
-
-    const dayGoal = sellerGoalDay(sid, mk);
-    const weekGoal = sellerGoalWeek(sid, mk, w);
-    const monthGoal = sellerGoalMonthly(sid, mk);
-
-    const dayRev = sellerRevenueDay(sid, tk);
-    const weekRev = sellerRevenueWeek(sid, mk, w);
-    const monthRev = sellerSoldInMonth(sid, mk).reduce((s,r)=>s+Number(r.value||0),0);
-
-    const pctD = dayGoal>0 ? clamp((dayRev/dayGoal)*100,0,999) : 0;
-    const pctW = weekGoal>0 ? clamp((weekRev/weekGoal)*100,0,999) : 0;
-    const pctM = monthGoal>0 ? clamp((monthRev/monthGoal)*100,0,999) : 0;
-
-    $("sellerKpis").innerHTML = `
-      <div class="kpi"><div class="label">Atendimentos</div><div class="value">${aMonth.atend}</div></div>
-      <div class="kpi"><div class="label">Vendas</div><div class="value">${aMonth.sales}</div></div>
-      <div class="kpi"><div class="label">Conversão</div><div class="value">${aMonth.conv.toFixed(1)}%</div></div>
-      <div class="kpi"><div class="label">Faturamento</div><div class="value">${formatMoney(aMonth.revenue)}</div></div>
-      <div class="kpi"><div class="label">P.A (venda)</div><div class="value">${aMonth.paPerSale.toFixed(2)}</div></div>
-    `;
-
-    const goalMsg = `
-      <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:space-between">
-        <div><b>${seller?.name||'Vendedor'}</b> — acompanhamento de metas</div>
-        <div class="tag">Divisor: <b>${String(state.options.vendorDivisor||'—').replace('.',',')}</b></div>
-      </div>
-      <div class="divider"></div>
-      <div class="row" style="gap:14px">
-        <div style="flex:1; min-width:240px">
-          <div class="tiny">Meta diária</div>
-          <div style="font-weight:900; font-size:16px">${formatMoney(dayRev)} <span class="tiny">/ ${formatMoney(dayGoal)}</span></div>
-          <div class="meter good"><i style="width:${clamp(pctD,0,100)}%"></i></div>
+    // Sempre injetar markup (nunca deixa tela em branco)
+    view.innerHTML = `
+      <section class="card arenaCard">
+        <div class="cardHeader">
+          <div class="arenaTitle">
+            <h2>Arena de Resultados</h2>
+            <div class="rowRight">
+              <button class="btn" id="btnSellerDownloadBadges">Baixar selos</button>
+            </div>
+          </div>
         </div>
-        <div style="flex:1; min-width:240px">
-          <div class="tiny">Meta da semana (Semana ${w})</div>
+        <div class="cardBody">
+          <div class="arenaFilters">
+            <div class="field flex">
+              <label>Vendedor</label>
+              <select id="sellerViewSelect"></select>
+            </div>
+            <div class="field">
+              <label>Mês (referência)</label>
+              <input id="sellerViewMonth" type="month" />
+            </div>
+            <div class="field">
+              <label>De</label>
+              <input id="arenaFrom" type="date" />
+            </div>
+            <div class="field">
+              <label>Até</label>
+              <input id="arenaTo" type="date" />
+            </div>
+          </div>
+
+          <div class="divider"></div>
+          <div class="kpis" id="arenaKpis"></div>
+
+          <div class="divider"></div>
+          <div class="arenaSplit">
+            <div class="arenaBox" id="arenaMetaBox"></div>
+            <div class="arenaBox" id="arenaYearBox"></div>
+          </div>
+
+          <div class="divider"></div>
+          <div class="arenaGrid2">
+            <div>
+              <h3 class="arenaSectionTitle">Painel gráfico de meta</h3>
+              <div class="arenaBox" id="arenaChartBox"></div>
+            </div>
+            <div>
+              <h3 class="arenaSectionTitle">XP do vendedor</h3>
+              <div class="arenaBox" id="arenaXpBox"></div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+          <div class="arenaBadgesHead">
+            <h3 class="arenaSectionTitle" style="margin:0">Conquistas do mês</h3>
+            <div class="tag">Colecione e troque por prêmios</div>
+          </div>
+          <div class="badgeGrid" id="sellerBadges"></div>
+          <div class="hint arenaHint">Selos destravam automaticamente. No fim do mês, baixe e troque por prêmios. ⭐</div>
+        </div>
+      </section>
+`;
+
+    const mkInput = document.getElementById('sellerViewMonth');
+    const sel = document.getElementById('sellerViewSelect');
+    const fromEl = document.getElementById('arenaFrom');
+    const toEl = document.getElementById('arenaTo');
+    const kpisEl = document.getElementById('arenaKpis');
+    const metaEl = document.getElementById('arenaMetaBox');
+    const yearEl = document.getElementById('arenaYearBox');
+    const chartEl = document.getElementById('arenaChartBox');
+    const xpEl = document.getElementById('arenaXpBox');
+    const badgesEl = document.getElementById('sellerBadges');
+
+    const mk = mkInput.value || monthKey();
+    mkInput.value = mk;
+    const sellersList = Array.isArray(state.sellers) ? state.sellers : [];
+    const active = sellersList.filter(s=>s && (s.active !== false));
+    const any = sellersList.filter(s=>s);
+
+    if(active.length === 0){
+      if(any.length === 0){
+        sel.innerHTML = '<option value="" selected>Nenhum vendedor cadastrado</option>';
+        kpisEl.innerHTML = '<div class="hint">Cadastre um vendedor em <b>+ Vendedor</b> para usar a Arena.</div>';
+        metaEl.innerHTML = '<div class="hint">—</div>';
+        yearEl.innerHTML = '<div class="hint">—</div>';
+        chartEl.innerHTML = '<div class="hint">—</div>';
+        xpEl.innerHTML = '<div class="hint">—</div>';
+        badgesEl.innerHTML = '';
+        const btn = document.getElementById('btnSellerDownloadBadges');
+        if(btn) btn.onclick = ()=> alert('Cadastre um vendedor primeiro.');
+        return;
+      }
+
+      // fallback: existe vendedor, mas todos estão inativos
+      kpisEl.innerHTML = `<div class="hint">Nenhum vendedor está marcado como <b>ativo</b>. Vou mostrar mesmo assim para você visualizar a Arena.<br><br>Dica: ative o vendedor em <b>+ Vendedor</b>.</div>`;
+      metaEl.innerHTML = '<div class="hint">—</div>';
+      yearEl.innerHTML = '<div class="hint">—</div>';
+      chartEl.innerHTML = '<div class="hint">—</div>';
+      xpEl.innerHTML = '<div class="hint">—</div>';
+      badgesEl.innerHTML = '';
+      const btn = document.getElementById('btnSellerDownloadBadges');
+      if(btn) btn.onclick = ()=> alert('Ative um vendedor (ou cadastre) para liberar tudo.');
+      // Não retorna: permite visualizar e selecionar mesmo inativos
+    }
+
+    sel.innerHTML = (active.length?active:any).map(s=>`<option value="${s.id}">${s.name || 'Vendedor'}${(s.active===false?' (inativo)':'')}</option>`).join('');
+
+    // restore last seller
+
+    // restore last seller
+    state.ui = state.ui || {};
+    const wanted = state.ui?.sellerViewId || '';
+    const listForPick = (active.length?active:any);
+    sel.value = (wanted && listForPick.some(s=>s.id===wanted)) ? wanted : (listForPick[0] ? listForPick[0].id : '');
+    state.ui.sellerViewId = sel.value || '';
+
+    // default date range to full month
+    const mkRef = mkInput.value || monthKey();
+    const first = mkRef + '-01';
+    const last = mkRef + '-' + String(daysInMonth(mkRef)).padStart(2,'0');
+    if(!fromEl.value) fromEl.value = first;
+    if(!toEl.value) toEl.value = last;
+
+    function dateKeyFromDateInput(v){
+      if(!v) return '';
+      // input date is YYYY-MM-DD already
+      return v;
+    }
+
+    const update = ()=>{
+      const sid = sel.value;
+      state.ui.sellerViewId = sid;
+      save(state);
+
+      const mk2 = mkInput.value || monthKey();
+      const fromKey = dateKeyFromDateInput(fromEl.value || (mk2+'-01'));
+      const toKey = dateKeyFromDateInput(toEl.value || (mk2+'-'+String(daysInMonth(mk2)).padStart(2,'0')));
+
+      // Records for seller in selected month (for monthly seals)
+      const recMonth = sellerRecsInMonth(sid, mk2);
+      const soldMonth = sellerSoldInMonth(sid, mk2);
+      const aMonth = agg(recMonth);
+      const tmMonth = aMonth.sales>0 ? (aMonth.revenue/aMonth.sales) : 0;
+
+      // Records for seller in chosen date range (for KPIs && chart)
+      const recRange = state.records.filter(r=> r.sellerId===sid && r.dateKey>=fromKey && r.dateKey<=toKey);
+      const soldRange = recRange.filter(r=> r.outcome==='sold');
+      const aRange = agg(recRange);
+      const tmRange = aRange.sales>0 ? (aRange.revenue/aRange.sales) : 0;
+
+      // Venda record (mês)
+      let best = 0;
+      for(const r of soldMonth){ best = Math.max(best, Number(r.value||0)); }
+
+      kpisEl.innerHTML = `
+        
+        <div class="kpi"><div class="t">Período</div><div class="v" style="font-size:14px">${fromKey} → ${toKey}</div></div>
+        <div class="kpi"><div class="t">Atendimentos</div><div class="v">${aRange.atend}</div></div>
+        <div class="kpi"><div class="t">Vendas</div><div class="v">${aRange.sales}</div></div>
+        <div class="kpi"><div class="t">Conversão</div><div class="v">${aRange.conv.toFixed(1)}%</div></div>
+        <div class="kpi"><div class="t">Faturamento</div><div class="v">${formatMoney(aRange.revenue)}</div></div>
+        <div class="kpi"><div class="t">T.M</div><div class="v">${formatMoney(tmRange)}</div></div>
+        <div class="kpi"><div class="t">P.A</div><div class="v">${aRange.paPerSale.toFixed(2)}</div></div>
+        <div class="kpi"><div class="t">Venda record (mês)</div><div class="v">${formatMoney(best)}</div></div>
+`;
+
+      // Metas (semana + mês) — baseado no mês referência
+      const w = weekOfMonth(toKey);
+      const weekGoal = sellerGoalWeek(sid, mk2, w);
+      const monthGoal = sellerGoalMonthly(sid, mk2);
+      const weekRev = sellerRevenueWeek(sid, mk2, w);
+      const monthRev = soldMonth.reduce((s,r)=>s+Number(r.value||0),0);
+      const pctW = weekGoal>0 ? clamp((weekRev/weekGoal)*100,0,999) : 0;
+      const pctM = monthGoal>0 ? clamp((monthRev/monthGoal)*100,0,999) : 0;
+
+      metaEl.innerHTML = `
+        <div class="row" style="justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap">
+          <div><b>Meta do vendedor</b> — Semana ${w} e Mês</div>
+          <div class="tag" id="arenaBestSaleInline">Venda record (mês): <b>${formatMoney(best)}</b></div>
+        </div>
+        <div class="divider"></div>
+        <div style="margin-bottom:10px">
+          <div class="tiny">Meta da semana</div>
           <div style="font-weight:900; font-size:16px">${formatMoney(weekRev)} <span class="tiny">/ ${formatMoney(weekGoal)}</span></div>
           <div class="meter good"><i style="width:${clamp(pctW,0,100)}%"></i></div>
         </div>
-        <div style="flex:1; min-width:240px">
+        <div>
           <div class="tiny">Meta do mês</div>
           <div style="font-weight:900; font-size:16px">${formatMoney(monthRev)} <span class="tiny">/ ${formatMoney(monthGoal)}</span></div>
           <div class="meter good"><i style="width:${clamp(pctM,0,100)}%"></i></div>
         </div>
-      </div>`;
+      `;
+      const bestTag = document.getElementById('arenaBestSaleTag');
+      if(bestTag){ bestTag.style.display='inline-flex'; bestTag.innerHTML = 'Venda record do mês: <b>'+formatMoney(best)+'</b>'; }
 
-    $("sellerGoalsBox").innerHTML = goalMsg;
 
-    // badges
-    const earned = state.badges.earned.filter(e=> e.scope==='seller' && e.sellerId===sid && e.monthKey===mk);
-    const grid = $("sellerBadges");
-    if(!earned.length){
-      grid.innerHTML = '<div class="hint">Nenhum selo ainda. Finalize vendas e metas para destravar. 🚀</div>';
-    } else {
-      earned.sort((a,b)=> (b.ts||0)-(a.ts||0));
-      grid.innerHTML = earned.map(e=>`
-        <div class="badgeCard">
-          <div class="badgeTop">
-            <div class="badgeIcon">${e.icon||'🏅'}</div>
-            <div>
-              <div class="badgeTitle">${e.title}</div>
-              <div class="badgeDesc">${e.desc||''}</div>
-            </div>
+      // Acumulado do ano
+      const year = (mk2||monthKey()).slice(0,4);
+      const recYear = state.records.filter(r=> r.sellerId===sid && r.dateKey && r.dateKey.startsWith(year+'-') && r.outcome==='sold');
+      const revYear = recYear.reduce((s,r)=>s+Number(r.value||0),0);
+      const salesYear = recYear.length;
+      const tmYear = salesYear>0 ? (revYear/salesYear) : 0;
+      yearEl.innerHTML = `
+        <div class="row" style="justify-content:space-between; align-items:center">
+          <div><b>Acumulado do ano</b> (${year})</div>
+          <div class="tag">T.M ano: <b>${formatMoney(tmYear)}</b></div>
+        </div>
+        <div class="divider"></div>
+        <div class="row" style="gap:14px; flex-wrap:wrap">
+          <div style="flex:1; min-width:220px">
+            <div class="tiny">Faturamento (ano)</div>
+            <div style="font-weight:900; font-size:18px">${formatMoney(revYear)}</div>
           </div>
-          <div class="badgeDesc" style="margin-top:8px">${e.dateKey ? ('Dia: <b>'+e.dateKey+'</b>') : (e.week ? ('Semana: <b>'+e.week+'</b>') : '')}</div>
-        </div>`).join('');
-    }
+          <div style="flex:1; min-width:220px">
+            <div class="tiny">Vendas (ano)</div>
+            <div style="font-weight:900; font-size:18px">${salesYear}</div>
+          </div>
+        </div>
+      `;
+
+      // Chart — sparkline diária do mês (mês referência)
+      const days = daysInMonth(mk2);
+      const daily = Array.from({length:days}, (_,i)=>{
+        const dk = mk2 + '-' + String(i+1).padStart(2,'0');
+        const v = state.records.filter(r=> r.sellerId===sid && r.dateKey===dk && r.outcome==='sold').reduce((s,r)=>s+Number(r.value||0),0);
+        return v;
+      });
+      const maxV = Math.max(1, ...daily);
+      const wpx = 420, hpx = 120;
+      const pts = daily.map((v,i)=>{
+        const x = (i/(days-1||1))*wpx;
+        const y = hpx - (v/maxV)*hpx;
+        return [x,y];
+      });
+      const d = pts.map((p,i)=> (i===0?`M ${p[0].toFixed(1)} ${p[1].toFixed(1)}`:`L ${p[0].toFixed(1)} ${p[1].toFixed(1)}`)).join(' ');
+      chartEl.innerHTML = `
+        <div class="row" style="justify-content:space-between; gap:10px; flex-wrap:wrap">
+          <div class="tiny">${mk2} · evolução diária do faturamento</div>
+          <div class="tag">T.M mês: <b>${formatMoney(tmMonth)}</b></div>
+        </div>
+        <div style="margin-top:10px">
+          <svg viewBox="0 0 ${wpx} ${hpx}" width="100%" height="${hpx}" style="display:block; border-radius:12px; background: rgba(0,0,0,.12); border:1px solid var(--line)">
+            <path d="${d}" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="hint" style="margin-top:8px">Dica: foque em constância. Um dia bom por semana não bate meta — rotina bate. 🚀</div>
+      `;
+
+      // Badges do mês (sistema de selos: desbloqueados + bloqueados)
+      const earned = state.badges.earned.filter(e=> e.scope==='seller' && e.sellerId===sid && e.monthKey===mk2);
+      const earnedByDef = new Map();
+      for(const e of earned){
+        const d = e.def || '';
+        if(!d) continue;
+        if(!earnedByDef.has(d)) earnedByDef.set(d, []);
+        earnedByDef.get(d).push(e);
+      }
+
+      const badgeOrder = [
+        'DAY_GOAL','WEEK_GOAL','MONTH_GOAL',
+        'TVA_COMBO','PA_BRONZE','PA_SILVER','PA_GOLD',
+        'TM_SILVER','TM_GOLD','TM_SUPREME',
+        'SALE_TOP','SALE_RESPECT','BIG_SALE','BIGGEST_SALE',
+        'TOP_CONV','MAGIC_5','SUPREME_12'
+      ];
+
+      const cards = [];
+      for(const defKey of badgeOrder){
+        const def = BADGE_DEFS[defKey];
+        if(!def) continue;
+        const list = earnedByDef.get(defKey) || [];
+        const unlocked = list.length>0;
+        const latest = unlocked ? list.sort((a,b)=>(b.ts||0)-(a.ts||0))[0] : null;
+        const sub = latest?.dateKey ? ('Dia: <b>'+latest.dateKey+'</b>') : (latest?.week ? ('Semana: <b>'+latest.week+'</b>') : (latest?.monthKey ? ('Mês: <b>'+latest.monthKey+'</b>') : ''));
+        const desc = unlocked ? (latest.desc || def.desc || '') : (def.desc || '');
+        cards.push(`
+          <div class="badgeCard ${unlocked?'':'badgeLocked'}">
+            <div class="badgeTop">
+              <div class="badgeIcon">${def.icon||'🏅'}</div>
+              <div>
+                <div class="badgeTitle">${def.title}</div>
+                <div class="badgeDesc">${desc}</div>
+              </div>
+            </div>
+            <div class="badgeDesc" style="margin-top:8px">${unlocked ? ('<span class="tag">ATIVADO</span> '+sub) : '<span class="tag">BLOQUEADO</span>'}</div>
+          </div>`);
+      }
+
+      badgesEl.innerHTML = cards.length ? cards.join('') : '<div class="hint">Nenhum selo ainda. Finalize vendas e metas para destravar. ⭐</div>';
+
+      // XP + estrelas (metas semanais/mensais batidas no mês)
+      const stars = earned.filter(e=> (e.key||'').includes('_WEEK_GOAL') || (e.key||'').includes('_MONTH_GOAL')).length;
+      const target = 12; // 12 estrelas = barra cheia (ajustável)
+      const pctXP = clamp((stars/target)*100, 0, 100);
+      const starIcons = Array.from({length: Math.min(24, Math.max(0, stars))}, ()=> '⭐').join('');
+      xpEl.innerHTML = `
+        <div class="row" style="justify-content:space-between; align-items:center">
+          <div><b>XP</b> · evolui com metas batidas</div>
+          <div class="tag">Estrelas: <b>${stars}</b></div>
+        </div>
+        <div class="divider"></div>
+        <div class="meter good"><i style="width:${pctXP}%"></i></div>
+        <div class="hint" style="margin-top:8px">${stars>0 ? starIcons : 'Ganhe ⭐ batendo metas semanais e mensais.'}</div>
+      `;
+
+      const btn = document.getElementById('btnSellerDownloadBadges');
+      if(btn) btn.onclick = downloadSellerBadges;
+    };
+
+    sel.onchange = update;
+    mkInput.onchange = ()=>{ fromEl.value=''; toEl.value=''; update(); };
+    fromEl.onchange = update;
+    toEl.onchange = update;
+    update();
   }
+
 
   function downloadSellerBadges(){
     const sid = $("sellerViewSelect").value;
@@ -1931,17 +3680,23 @@
       'Disciplina + foco = meta batida. Vamos! 💪',
       'Quem faz o básico bem feito, domina o jogo. 👑'
     ]);
-    const cards = earned.map(e=>`<div style="border:1px solid #e5e7eb;border-radius:14px;padding:12px;margin:10px 0;display:flex;gap:10px;align-items:center">
+    earned.sort((a,b)=> (b.ts||0)-(a.ts||0));
+    const personal = `<div style="border:1px solid #e5e7eb;border-radius:14px;padding:12px;margin:10px 0;display:flex;gap:10px;align-items:center;background:#f8fafc">
+      <div style="font-size:26px">🏷️</div>
+      <div><div style="font-weight:900">Selo Personalizado</div><div style="color:#4b5563;font-size:13px">Vendedor: <b>${seller?.name||'Vendedor'}</b></div></div>
+    </div>`;
+    const cards = (personal + (earned.map(e=>`<div style="border:1px solid #e5e7eb;border-radius:14px;padding:12px;margin:10px 0;display:flex;gap:10px;align-items:center">
       <div style="font-size:26px">${e.icon||'🏅'}</div>
       <div><div style="font-weight:900">${e.title}</div><div style="color:#4b5563;font-size:13px">${e.desc||''}</div></div>
-    </div>`).join('') || '<div style="color:#6b7280">Nenhum selo no período.</div>';
+    </div>`).join('')));
+    const cardsOrEmpty = earned.length ? cards : (personal + '<div style="color:#6b7280">Nenhum selo no período.</div>');
     const html = `<!doctype html><html><head><meta charset="utf-8"><title>Selos - ${seller?.name||'Vendedor'} - ${mk}</title></head>
     <body style="font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;padding:18px;background:#fff;color:#111">
       <h1 style="margin:0 0 6px 0">Selos do Vendedor: ${seller?.name||'Vendedor'}</h1>
       <div style="color:#374151;margin-bottom:10px">Mês: <b>${mk}</b></div>
       <div style="padding:12px;border:1px solid #e5e7eb;border-radius:14px;background:#f8fafc">Mensagem: <b>${msg}</b></div>
       <h2 style="margin:16px 0 8px 0">Conquistas</h2>
-      ${cards}
+      ${cardsOrEmpty}
       <div style="margin-top:18px;color:#6b7280;font-size:12px">Gerado pelo OMNIA — Painel de Conquistas</div>
     </body></html>`;
     const blob = new Blob([html], {type:'text/html'});
@@ -1973,41 +3728,42 @@
 
   // Tabs/views
   function setTab(tab){
-    const ops = $("viewOps");
-    const dados = $("viewDados");
-    const metas = $("viewMetas");
-    const mRank = $("viewMetasRank");
-    const nc = $("viewNoConv");
-    const seller = $("viewSeller");
+    const viewIds = ["viewOps","viewDados","viewMetas","viewMetasRank","viewNoConv","viewSeller"];
+    const tabIds  = ["tabOps","tabDados","tabMetas","tabMetasRank","tabNoConv","tabSeller"];
 
-    const tOps = $("tabOps");
-    const tDados = $("tabDados");
-    const tMetas = $("tabMetas");
-    const tMR = $("tabMetasRank");
-    const tNC = $("tabNoConv");
-    const tSeller = $("tabSeller");
+    // hide all views safely
+    for(const vid of viewIds){
+      const el = document.getElementById(vid);
+      if(el) el.style.display = "none";
+    }
+    // remove active from tabs safely
+    for(const tid of tabIds){
+      const el = document.getElementById(tid);
+      if(el) el.classList.remove("active");
+    }
 
-    ops.style.display = "none";
-    dados.style.display = "none";
-    metas.style.display = "none";
-    mRank.style.display = "none";
-    nc.style.display = "none";
-    seller.style.display = "none";
+    const show = (vid, tid) => {
+      const v = document.getElementById(vid);
+      if(v) v.style.display = "block";
+      const t = document.getElementById(tid);
+      if(t) t.classList.add("active");
+    };
 
-    tOps.classList.remove("active");
-    tDados.classList.remove("active");
-    tMetas.classList.remove("active");
-    tMR.classList.remove("active");
-    tNC.classList.remove("active");
-    tSeller.classList.remove("active");
-
-    if(tab === "ops"){ ops.style.display = ""; tOps.classList.add("active"); }
-    else if(tab === "dados"){ dados.style.display = ""; tDados.classList.add("active"); renderData(); }
-    else if(tab === "metas"){ metas.style.display = ""; tMetas.classList.add("active"); renderGoals(); }
-    else if(tab === "metasRank"){ mRank.style.display = ""; tMR.classList.add("active"); renderMetaRank(); }
-    else if(tab === "noConv"){ nc.style.display = ""; tNC.classList.add("active"); renderNoConv(); }
-    else if(tab === "seller"){ seller.style.display = ""; tSeller.classList.add("active"); renderSellerView(); }
+    try{
+      if(tab === "ops"){ show("viewOps","tabOps"); }
+      else if(tab === "dados"){ show("viewDados","tabDados"); renderData(); }
+      else if(tab === "metas"){ show("viewMetas","tabMetas"); renderGoals(); }
+      else if(tab === "metasRank"){ show("viewMetasRank","tabMetasRank"); renderMetaRank(); }
+      else if(tab === "noConv"){ show("viewNoConv","tabNoConv"); renderNoConv(); }
+      else if(tab === "seller"){ show("viewSeller","tabSeller"); try{ renderSellerView(); }catch(err){ console.error("renderSellerView failed", err); try{ const v=document.getElementById("viewSeller"); if(v) v.style.display="block"; }catch{} } }
+      else { show("viewOps","tabOps"); }
+    }catch(err){
+      console.error("setTab failed", err);
+      // Never leave the user with a blank screen
+      show("viewOps","tabOps");
+    }
   }
+
   $("tabOps").addEventListener("click", ()=> setTab("ops"));
   $("tabDados").addEventListener("click", ()=> setTab("dados"));
   $("tabMetas").addEventListener("click", ()=> setTab("metas"));
@@ -2068,10 +3824,28 @@
   $("btnCloseWeek").addEventListener("click", closeCurrentWeek);
   $("btnReopenWeeks").addEventListener("click", reopenWeeks);
 
-  // Seller View
-  $("sellerViewSelect").addEventListener("change", ()=>{ state.ui = state.ui || {}; state.ui.sellerViewId = $("sellerViewSelect").value; save(state); renderSellerView(); });
-  $("sellerViewMonth").addEventListener("change", renderSellerView);
-  $("btnSellerDownloadBadges").addEventListener("click", downloadSellerBadges);
+  // Seller View (dinamico: criado dentro de renderSellerView)
+  // Delegacao segura: evita quebrar o app caso a Arena ainda nao tenha sido renderizada.
+  document.addEventListener("change", (e)=>{
+    const t = e.target;
+    if(!(t instanceof HTMLElement)) return;
+    if(t.id === "sellerViewSelect"){
+      try{ state.ui = state.ui || {}; state.ui.sellerViewId = t.value; save(state); }catch{}
+      try{ renderSellerView(); }catch{}
+    }
+    if(t.id === "sellerViewMonth"){
+      try{ renderSellerView(); }catch{}
+    }
+  });
+
+  document.addEventListener("click", (e)=>{
+    const t = e.target;
+    if(!(t instanceof HTMLElement)) return;
+    if(t.id === "btnSellerDownloadBadges"){
+      try{ downloadSellerBadges(); }catch(err){ console.error(err); }
+    }
+  });
+
 
   // Meta Rank
   $("btnRefreshMetaRank").addEventListener("click", renderMetaRank);
@@ -2089,6 +3863,7 @@
   $("themeNeon").addEventListener("click", ()=>{ state.ui.theme = "neon"; save(state); renderAll(); });
   $("themeOcean").addEventListener("click", ()=>{ state.ui.theme = "ocean"; save(state); renderAll(); });
   $("themeSunset").addEventListener("click", ()=>{ state.ui.theme = "sunset"; save(state); renderAll(); });
+  $("themeSpaceWhite").addEventListener("click", ()=>{ state.ui.theme = "spacewhite"; save(state); renderAll(); });
   $("themePurple").addEventListener("click", ()=>{ state.ui.theme = "purple"; save(state); renderAll(); });
   $("themeTextured").addEventListener("click", ()=>{ state.ui.theme = "textured"; save(state); renderAll(); });
 
@@ -2132,6 +3907,31 @@
     save(state);
     renderAll();
     alert("Registros de hoje zerados.");
+  });
+
+  // Limpar cache do PWA + dados locais (para resolver telas que não abrem por cache antigo)
+  $("btnHardRefresh").addEventListener("click", async ()=>{
+    if(!confirm("Limpar cache e recarregar? (Isso mantém seus dados, mas limpa cache do app/PWA).")) return;
+    try{
+      // tenta limpar caches do service worker
+      if("caches" in window){
+        const keys = await caches.keys();
+        await Promise.all(keys.map(k=>caches.delete(k)));
+      }
+    }catch(e){ console.warn(e); }
+    try{
+      // tenta desregistrar SW
+      if("serviceWorker" in navigator){
+        const regs = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(regs.map(r=>r.unregister()));
+      }
+    }catch(e){ console.warn(e); }
+    try{
+      // força reload sem cache
+      location.reload(true);
+    }catch{
+      location.reload();
+    }
   });
 
   $("btnResetAll").addEventListener("click", ()=>{
@@ -2266,6 +4066,15 @@
       closeModal(document.getElementById('sellerBack'));
       alert('Vendedor criado ✅');
     });
+
+
+    // Aba Vendedor (fallback seguro)
+    bindSafeClick(document.getElementById('btnSeller'), ()=>{
+      try{ setTab('seller'); }catch(err){ console.error(err); try{ document.getElementById('viewSeller').style.display=''; }catch{} }
+    });
+    bindSafeClick(document.getElementById('tabSeller'), ()=>{
+      try{ setTab('seller'); }catch(err){ console.error(err); try{ document.getElementById('viewSeller').style.display=''; }catch{} }
+    });
   });
 
   // Captura erros não tratados (para não “morrer” sem aviso)
@@ -2291,18 +4100,30 @@
 
   // Fallback por delegação de clique
   document.addEventListener('click', (ev)=>{
-    const t = ev.target;
-    if(!(t instanceof HTMLElement)) return;
-    const id = t.id;
+    const target = ev.target;
+    if(!(target instanceof HTMLElement)) return;
+    const id = target.id;
+
+    // Config
     if(id==='btnSettings'){
       ev.preventDefault();
       try{
-        // preenche campos se existirem
         if(document.getElementById('storeName')) document.getElementById('storeName').value = state?.store?.name || '';
         if(document.getElementById('storeStatus')) document.getElementById('storeStatus').value = state?.store?.status || 'Online';
       }catch{}
       safeOpenById('settingsBack');
+      return;
     }
+
+    // Aba vendedor
+    if(id==='btnSeller' || id==='tabSeller'){
+      ev.preventDefault();
+      try{ setTab('seller'); }
+      catch(err){ console.error(err); try{ document.getElementById('viewSeller').style.display=''; }catch{} }
+      return;
+    }
+
+    // Abrir modal vendedor
     if(id==='btnAddSeller'){
       ev.preventDefault();
       try{
@@ -2310,31 +4131,34 @@
         const p=document.getElementById('sellerPhoto'); if(p) p.value='';
       }catch{}
       safeOpenById('sellerBack');
+      return;
     }
+
+    // Criar vendedor
     if(id==='btnCreateSeller'){
-      // se o listener original não estiver rodando, cria aqui
-      // (se listener original rodar também, ele já fecha modal e salva, então aqui só entra em caso de falha)
       ev.preventDefault();
       try{
-        const nameEl=document.getElementById('sellerName');
-        const name=(nameEl?.value||'').trim();
+        const name=(document.getElementById('sellerName')?.value||'').trim();
         if(!name){ alert('Digite o nome do vendedor.'); return; }
+
         // usa a função original se existir
         if(typeof window.__createSellerOriginal==='function'){
           window.__createSellerOriginal();
           return;
         }
-        const id = uid();
-        state.sellers.push({ id, name, photo:'', paused:false, active:true });
-        state.pool.push(id);
+
+        const idNew = uid();
+        state.sellers.push({ id: idNew, name, photo:'', paused:false, active:true });
+        state.pool.push(idNew);
         save(state);
         renderAll();
         try{ closeModal(document.getElementById('sellerBack')); }catch{ document.getElementById('sellerBack').style.display='none'; }
         alert('Vendedor criado ✅');
       }catch(err){
         console.error(err);
-        alert('Erro ao criar vendedor. Se persistir, reinstale o PWA para limpar cache.');
+        alert('Erro ao criar vendedor.');
       }
+      return;
     }
   }, true);
 // Init inputs
@@ -2416,3 +4240,151 @@
 
   // Init
   renderAll();
+  // Pre-render Arena para evitar tela em branco caso a navegação falhe (PWA/cache)
+  try{ renderSellerView(); }catch(e){ console.error('pre-render arena failed', e); }
+  // Deep-link: #arena ou #seller abre Arena diretamente (útil para testes e para links)
+  try{
+    const h = (location.hash||"").toLowerCase();
+    if(h==="#arena" || h==="#seller"){
+      setTimeout(()=>{ try{ setTab('seller'); }catch{} }, 0);
+    }
+  }catch{}
+</script>
+<script>
+// HARDEN_CRITICAL_BUTTONS
+(function(){
+  function $(id){return document.getElementById(id);} 
+  function safe(fn){try{fn();}catch(e){console.error(e);alert('Erro: '+(e?.message||e));}}
+  function openBack(id){const el=$(id); if(!el) return; el.style.display='flex';}
+  function closeBack(id){const el=$(id); if(!el) return; el.style.display='none';}
+  // fallback openers
+  window.openSettingsFallback=function(){openBack('settingsBack');};
+  window.openSellerFallback=function(){openBack('sellerBack');};
+  // ensure create seller always works
+  window.createSellerFallback=async function(){
+    safe(async ()=>{
+      const name=($('sellerName')?.value||'').trim();
+      if(!name){alert('Digite o nome do vendedor.');return;}
+      // use app helpers if present
+      const KEY=window.KEY||'nexxt_state_v4';
+      const state=window.state;
+      if(!state||!Array.isArray(state.sellers)) throw new Error('Estado não carregou. Recarregue a página.');
+      let photo='';
+      const file=$('sellerPhoto')?.files?.[0];
+      if(file && window.fileToDataUrl){photo=await window.fileToDataUrl(file);}
+      const uid=(window.uid?window.uid():('id_'+Math.random().toString(16).slice(2)));
+      state.sellers.push({id:uid,name,photo,paused:false,active:true});
+      state.pool.push(uid);
+      if(window.save) window.save(state); else localStorage.setItem(KEY, JSON.stringify(state));
+      if(window.renderAll) window.renderAll();
+      closeBack('sellerBack');
+    });
+  };
+  // bind after DOM ready
+  function bind(){
+    const bs=$('btnSettings'); if(bs){ bs.onclick=()=>safe(()=>{ if(window.openModal){
+        // sync fields if possible
+        try{ $('storeName').value=(window.state?.store?.name||''); $('storeStatus').value=(window.state?.store?.status||'Online'); $('optValue').value=(window.state?.options?.askValue?'yes':'no'); $('optPieces').value=(window.state?.options?.askPieces?'yes':'no'); }catch{}
+        window.openModal($('settingsBack'));
+      } else openBack('settingsBack');}); }
+    const ba=$('btnAddSeller'); if(ba){ ba.onclick=()=>safe(()=>{ try{ $('sellerName').value=''; $('sellerPhoto').value=''; }catch{}; if(window.openModal) window.openModal($('sellerBack')); else openBack('sellerBack');}); }
+    const bc=$('btnCreateSeller'); if(bc){ bc.onclick=()=>window.createSellerFallback(); }
+    const cs=$('closeSettings'); if(cs){ cs.onclick=()=>{ if(window.closeModal) window.closeModal($('settingsBack')); else closeBack('settingsBack'); }; }
+    const cl=$('closeSeller'); if(cl){ cl.onclick=()=>{ if(window.closeModal) window.closeModal($('sellerBack')); else closeBack('sellerBack'); }; }
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded', bind);} else bind();
+})();
+
+
+  // --- HARDEN: botões críticos sempre funcionam (PWA/cache/listeners) ---
+  (function hardenCriticalButtons(){
+    const byId=(id)=>document.getElementById(id);
+    function safe(fn){return function(e){try{fn(e)}catch(err){console.error(err); alert("Erro: "+(err?.message||err));}}}
+    // Settings
+    const bSet=byId("btnSettings");
+    if(bSet){ bSet.onclick = safe(()=>{
+      try{
+        byId("storeName").value = state?.store?.name || "";
+        byId("storeStatus").value = state?.store?.status || "Online";
+        byId("optValue").value = state?.options?.askValue ? "yes" : "no";
+        byId("optPieces").value = state?.options?.askPieces ? "yes" : "no";
+      }catch{}
+      openModal(byId("settingsBack"));
+    }); }
+    // Add seller
+    const bAdd=byId("btnAddSeller");
+    if(bAdd){ bAdd.onclick = safe(()=>{
+      byId("sellerName").value = "";
+      try{ byId("sellerPhoto").value = ""; }catch{}
+      openModal(byId("sellerBack"));
+    }); }
+    // Create seller
+    const bCreate=byId("btnCreateSeller");
+    if(bCreate){ bCreate.onclick = safe(async()=>{
+      const name = (byId("sellerName").value||"").trim();
+      if(!name){ alert("Digite o nome do vendedor."); return; }
+      let photo="";
+      const file = byId("sellerPhoto")?.files?.[0];
+      if(file){ photo = await fileToDataUrl(file); }
+      const id = uid();
+      state.sellers.push({ id, name, photo, paused:false, active:true });
+      state.pool.push(id);
+      save(state);
+      renderAll();
+      closeModal(byId("sellerBack"));
+    }); }
+  })();
+
+  window.addEventListener("error", (e)=>{
+    console.error(e.error||e.message);
+  });
+  window.addEventListener("unhandledrejection", (e)=>{
+    console.error(e.reason);
+  });
+
+  // --- HARDEN: abrir Arena (tab seller) sempre renderiza ---
+  (function hardenArena(){
+    function openArena(){
+      try{
+        setTab('seller');
+        // Força re-render após troca de aba (garante que o HTML seja injetado)
+        try{ setTimeout(()=>{ try{ renderSellerView(); }catch{} }, 0); }catch{}
+      }
+      catch(err){
+        console.error('openArena failed', err);
+        try{
+          // fallback: show seller view and render minimal UI
+          const ids=['viewOps','viewDados','viewMetas','viewMetasRank','viewNoConv','viewSeller'];
+          for(const id of ids){ const el=document.getElementById(id); if(el) el.style.display='none'; }
+          const v=document.getElementById('viewSeller'); if(v) v.style.display='block';
+          if(v && !v.innerHTML.trim()){ v.innerHTML = '<section class="card"><div class="cardHeader"><h2>Arena de Resultados</h2></div><div class="cardBody"><div class="hint">Erro ao renderizar a Arena. Recarregue o app.</div></div></section>'; }
+        }catch{}
+      }
+    }
+    // Aceita aliases (caso o botão tenha outro id em versões diferentes)
+    ['btnSeller','tabSeller','btnArena','tabArena','btnArenaJogos','tabArenaJogos'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el){
+        el.onclick = openArena;
+        el.addEventListener('click', openArena);
+      }
+    });
+    // Delegacao (caso os botoes sejam recriados)
+    document.addEventListener('click', (e)=>{
+      const t=e.target;
+      const btn = t && (t.closest ? t.closest('button') : null);
+      const id = (t && t.id) || (btn && btn.id) || '';
+      const label = (btn && (btn.textContent||'').trim().toLowerCase()) || '';
+      if(
+        id==='btnSeller' || id==='tabSeller' ||
+        id==='btnArena' || id==='tabArena' ||
+        id==='btnArenaJogos' || id==='tabArenaJogos' ||
+        label.includes('arena')
+      ){
+        openArena();
+      }
+    }, true);
+  })();
+</script>
+</body>
+</html>
