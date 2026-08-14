@@ -43,7 +43,11 @@
   .kpi .t{font-size:11px;color:#9db0d0;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
   .kpi .v{font-size:20px;font-weight:900;}
 </style>
-</head>
+<link href="./ondis-premium.css" rel="stylesheet"/>
+<script src="./ondis-premium.js"></script>
+<link rel="stylesheet" href="./ondis-v9.css">
+<script src="./ondis-v9.js" defer></script>
+<link rel="stylesheet" href="./ondis-v11.css?v=12.3.0"><script src="./ondis-v11.js?v=12.3.0" defer></script></head>
 <body>
 
 <div class="loading show" id="loadingScreen">
@@ -113,10 +117,10 @@
   function hideLoading(){ document.getElementById("loadingScreen").classList.remove("show"); }
   function msgErro(e, oQueTentava){
     const code = (e && (e.code||e.message||"")) + "";
-    if(/permission|insufficient|PERMISSION/i.test(code)) return "Sem permissao para "+(oQueTentava||"esta acao")+". Faca login de novo ou fale com o administrador.";
-    if(/network|unavailable|offline|failed to get|deadline/i.test(code)) return "Parece que voce esta sem internet. Verifique a conexao e tente de novo.";
-    if(/quota|resource-exhausted/i.test(code)) return "O sistema esta sobrecarregado. Aguarde e tente de novo.";
-    return "Nao foi possivel "+(oQueTentava||"concluir")+". Verifique sua internet e tente de novo.";
+    if(/permission|insufficient|PERMISSION/i.test(code)) return "Sem permissão para "+(oQueTentava||"esta ação")+". Faça login novamente ou fale com o administrador.";
+    if(/network|unavailable|offline|failed to get|deadline/i.test(code)) return "Parece que você está sem internet. Verifique a conexão e tente novamente.";
+    if(/quota|resource-exhausted/i.test(code)) return "O sistema está sobrecarregado. Aguarde e tente novamente.";
+    return "Não foi possível "+(oQueTentava||"concluir")+". Verifique sua internet e tente novamente.";
   }
   function formatMoney(v){ return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"}); }
 

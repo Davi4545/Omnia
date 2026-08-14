@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>ONDIS — Lista da Vez</title>
+<title>ONDIS — Gestão comercial · 10.3</title>
 <!-- PWA (instalar como app) -->
 <meta content="#0b0f14" name="theme-color"/>
 <meta content="yes" name="apple-mobile-web-app-capable"/>
@@ -1058,7 +1058,17 @@ body{ background-attachment: fixed; }
 }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-</head>
+<link href="./ondis-premium.css" rel="stylesheet"/>
+<script src="./ondis-premium.js"></script>
+
+<style id="ondis-race2d-style">
+.race2d{padding:18px;background:var(--panel);border-radius:18px}.race2dHead{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}.race2dHead b{display:block;font-size:14px}.race2dHead span{font-size:11px;color:var(--muted)}.race2dLegend{display:flex;gap:10px;flex-wrap:wrap}.race2dLegend span{display:flex;align-items:center;gap:4px}.race2dLegend i{width:7px;height:7px;border-radius:50%;background:var(--brand)}.race2dAxis{height:44px;margin:18px 120px 0 180px;position:relative;border-bottom:1px dashed var(--line)}.race2dAxis>span{position:absolute;bottom:5px;transform:translateX(-50%);text-align:center}.race2dAxis b{display:block;font-size:10px}.race2dAxis em{font-size:8px;color:var(--muted);font-style:normal}.race2dRows{display:grid;gap:10px;margin-top:10px}.race2dRow{display:grid;grid-template-columns:170px 1fr;gap:12px;align-items:center}.race2dSeller{display:flex;gap:8px;align-items:center;min-width:0}.race2dAvatar{width:32px;height:32px;flex:0 0 32px;border-radius:50%;display:grid;place-items:center;background:var(--panel2);overflow:hidden;border:1px solid var(--line)}.race2dAvatar img{width:100%;height:100%;object-fit:cover}.race2dSeller strong{display:block;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.race2dSeller small{display:block;font-size:9px;color:var(--muted)}.race2dTrack{height:14px;border-radius:999px;background:color-mix(in srgb,var(--panel2) 84%,transparent);position:relative;box-shadow:inset 0 0 0 1px var(--line)}.race2dTrack>i{position:absolute;inset:0 auto 0 0;border-radius:999px;background:linear-gradient(90deg,var(--brand),var(--good));box-shadow:0 0 12px color-mix(in srgb,var(--brand) 32%,transparent)}.race2dStop{position:absolute;top:50%;width:8px;height:8px;border-radius:50%;background:var(--panel2);border:1px solid var(--muted);transform:translate(-50%,-50%)}.race2dStop.done{background:var(--good);border-color:var(--good);box-shadow:0 0 9px color-mix(in srgb,var(--good) 55%,transparent)}.race2dMarker{position:absolute;top:-18px;transform:translateX(-50%);font-size:8px;background:var(--text);color:var(--bg);padding:2px 5px;border-radius:6px}.rankSpacePanel{overflow:visible!important}@media(max-width:720px){.race2dHead{display:block}.race2dLegend{margin-top:8px}.race2dAxis{margin-left:0;margin-right:0}.race2dRow{grid-template-columns:1fr}.race2dTrack{margin-bottom:12px}}
+</style>
+<link rel="stylesheet" href="./ondis-v9.css">
+<script src="./ondis-v9.js" defer></script>
+<style id="v10-dashboard-fix">
+.dashboardPanel{min-height:280px}.dashboardSvgChart{min-height:210px}.dashboardSvgChart.compact{min-height:170px}.dashboardBarList,.dashboardFunnel,.dashboardDonutWrap{min-height:190px;display:flex;flex-direction:column;justify-content:center}.dashboardEmptyList{padding:28px 14px;border:1px dashed var(--line);border-radius:14px;text-align:center;color:var(--muted);background:color-mix(in srgb,var(--panel) 85%,var(--bg))}.dashboardMainGrid .dashboardPanel,.dashboardSecondaryGrid .dashboardPanel{background:linear-gradient(180deg,var(--panel),color-mix(in srgb,var(--panel) 94%,var(--bg)));box-shadow:0 10px 28px rgba(15,23,42,.045)}
+</style><link rel="stylesheet" href="./ondis-v11.css?v=12.3.0"><script src="./ondis-v11.js?v=12.3.0" defer></script></head>
 <body>
 <div class="appShell" id="appShell">
 <div class="mobileMask" onclick="toggleSidebar()"></div>
@@ -1078,12 +1088,13 @@ body{ background-attachment: fixed; }
   <nav class="sideNav">
     <div class="sideSection">ONDIS</div>
     <button class="navItem active" id="tabOps"><span class="ni">🛍️</span><span class="nl">Operação</span></button>
+    <button class="navItem" id="btnFrenteLoja" onclick="location.href='./frente-loja.html?view=venda'" title="Abrir a frente de loja e lançar venda"><span class="ni">🧾</span><span class="nl">Frente de Loja</span></button>
     <button class="navItem" id="tabDados"><span class="ni">📁</span><span class="nl">Dados</span></button>
     <button class="navItem" id="tabMetas"><span class="ni">🎯</span><span class="nl">Metas</span></button>
     <button class="navItem" id="tabMetasRank"><span class="ni">📶</span><span class="nl">Ranking de Metas</span></button>
     <button class="navItem" id="tabNoConv"><span class="ni">🔍</span><span class="nl">Não Convertidos</span></button>
     <button class="navItem" id="tabDashboard"><span class="ni">📊</span><span class="nl">Dashboard</span></button>
-    <button class="navItem" id="tabSeller"><span class="ni">🚀</span><span class="nl">Arena</span></button>
+    <button class="navItem" id="tabSeller"><span class="ni">✦</span><span class="nl">Liga ONDIS</span></button>
     <button class="navItem" id="btnRanking"><span class="ni">🏆</span><span class="nl">Ranking</span></button>
 
     <div class="sideSection" id="modulosLabel">Módulos</div>
@@ -1104,7 +1115,7 @@ body{ background-attachment: fixed; }
     <button class="btn accBtn" id="btnAccount" onclick="toggleAccountMenu()">⚙️ <span style="margin-left:3px">Conta</span></button>
     <div class="accountDrop" id="accountDrop">
       <span id="userInfo" style="font-size:12px;color:var(--muted);padding:8px 12px;display:none"></span>
-      <button class="accItem" id="btnEditSelosFixo" style="display:none" onclick="closeAccountMenu();if(window.abrirEditorSelos)window.abrirEditorSelos()">⚙️ Editar selos</button>
+      <button class="accItem" id="btnEditSelosFixo" style="display:none" onclick="closeAccountMenu();setTimeout(()=>{if(window.abrirEditorSelos){window.abrirEditorSelos()}else{alert('A configuração da Liga ainda está carregando. Tente novamente em um instante.')}},0)">🎮 Gamificação da Liga</button>
       <button class="accItem" id="btnSettings">🛠️ Configurações</button>
       <button class="accItem install" id="btnInstall" style="display:none">📲 Instalar app</button>
       <button class="accItem bad" id="btnLogout" style="display:none">🚪 Sair</button>
@@ -1117,7 +1128,7 @@ body{ background-attachment: fixed; }
 <div class="grid">
 <section class="card">
 <div class="cardHeader">
-<h2>Lista da vez</h2>
+<h2>👥 Fila de atendimento <span class="opsSubtitle">Atendimento só finaliza quando você registrar vendeu ou não vendeu.</span></h2>
 <div class="rowRight">
 <button class="btn" id="btnPreference">Preferência</button>
 <button class="btn warn" id="btnCallNext">Chamar próximo</button>
@@ -1125,14 +1136,14 @@ body{ background-attachment: fixed; }
 </div>
 </div>
 <div class="cardBody">
-<div class="hint">Regra ONDIS: atendimento só termina quando você <b>finalizar</b> (vendeu / não vendeu). Isso garante conversão real.</div>
+<div class="hint opsIntro">Regra ONDIS: atendimento só termina quando você <b>finalizar</b> (vendeu / não vendeu). Isso garante conversão real.</div>
 <div class="divider"></div>
 <div class="kpis" id="kpis"></div>
 <div class="divider"></div>
 <div class="list" id="queueList"></div>
 <div class="divider"></div>
-<div class="row" style="justify-content:space-between">
-<div class="tiny">Vendedores fora da fila</div>
+<div class="row poolHeaderRow" style="justify-content:space-between">
+<div class="tiny">👥 Vendedor(es) fora da fila</div>
 <div class="tiny">Clique para entrar / retomar</div>
 </div>
 <div class="list" id="poolList" style="margin-top:10px"></div>
@@ -1223,6 +1234,18 @@ body{ background-attachment: fixed; }
 <label>Meta diária (AUTO) (R$)</label>
 <input disabled="" id="goalDaily" inputmode="decimal" placeholder="Auto"/>
 </div>
+</div>
+<div class="goalLevelEditor">
+  <div class="goalLevelIntro">
+    <b>Níveis de performance</b>
+    <span>Plutão marca 80% e a Lua marca 100%. Defina os percentuais da Meta 2 e da Meta 3.</span>
+  </div>
+  <div class="goalLevelFields">
+    <div class="field"><label>Plutão — aquecimento (%)</label><input disabled inputmode="decimal" value="80"/></div>
+    <div class="field"><label>Lua — Meta 1 (%)</label><input disabled id="goalBasePct" inputmode="decimal" value="100"/></div>
+    <div class="field"><label>Marte — Meta 2 (%)</label><input id="goalSuperPct" inputmode="decimal" value="120"/></div>
+    <div class="field"><label>Saturno — Meta 3 (%)</label><input id="goalDiamondPct" inputmode="decimal" value="150"/></div>
+  </div>
 </div>
 <div class="divider"></div>
 <h3 style="margin:0 0 8px 0; font-size:14px; letter-spacing:.06em; text-transform:uppercase; color:#cfe0ff">Meta do Vendedor</h3>
@@ -1366,47 +1389,26 @@ body{ background-attachment: fixed; }
 </div>
 <!-- RANKING METAS -->
 <div id="viewMetasRank" style="display:none">
-<section class="card">
-<div class="cardHeader">
-<h2>Ranking Metas</h2>
-<div class="rowRight">
-<button class="btn" id="btnRefreshMetaRank">Atualizar</button>
-</div>
-</div>
-<div class="cardBody">
-<div class="row">
-<div class="field">
-<label>Mês</label>
-<input id="metaRankMonth" type="month"/>
-</div>
-<div class="field">
-<label>Meta mensal (referência)</label>
-<input id="metaRankMonthly" inputmode="decimal" placeholder="Auto pela meta salva"/>
-</div>
-<div class="field">
-<label>Exibição</label>
-<select id="metaRankMode">
-<option value="seller">Progresso por vendedor (no mês)</option>
-<option selected="" value="store">Progresso da loja + corrida até a lua</option>
-</select>
-</div>
-</div>
-<div class="divider"></div>
-<div class="kpis" id="metaRankKpis"></div>
-<div class="divider"></div>
-<div class="race" id="race">
-<div class="track"></div>
-<div class="moon">🌙</div>
-<div class="moonBoom" id="moonBoom">
-<div>
-<div class="title">🚀 META BATIDA!</div>
-<div class="sub">Parabéns! Chegamos na lua. Bora manter o ritmo! 🔥</div>
-</div>
-</div>
-</div>
-<div class="divider"></div>
-<div id="metaRankTable"></div>
-</div>
+<section class="rankGoalPage">
+  <div class="rankGoalHeader">
+    <div class="rankTitleBlock"><span class="rankCrown">♛</span><div><h2>Ranking de Metas</h2><p>Acompanhe o desempenho da equipe em tempo real</p></div></div>
+    <div class="rankFilters">
+      <div class="field"><label>Mês</label><input id="metaRankMonth" type="month"/></div>
+      <div class="field"><label>Meta da loja</label><input id="metaRankMonthly" inputmode="decimal" placeholder="Auto pela meta salva"/></div>
+      <div class="field"><label>Visão</label><select id="metaRankMode"><option value="seller">Vendedores</option><option selected value="store">Vendedores + equipe</option></select></div>
+      <button class="btn rankRefresh" id="btnRefreshMetaRank">Atualizar</button>
+    </div>
+  </div>
+  <div class="rankKpiStrip" id="metaRankKpis"></div>
+  <div class="rankGoalGrid">
+    <article class="rankPanel rankProgressCard"><div class="rankPanelHead"><div><span>Progresso Geral da Meta</span><small id="rankProgressSubtitle">Mês selecionado</small></div></div><div id="rankProgressRing"></div></article>
+    <article class="rankPanel rankEvolutionCard"><div class="rankPanelHead"><div><span>Evolução no mês</span><small>Meta × realizado acumulado</small></div><span class="rankPill">Diário</span></div><div class="rankEvolutionChart" id="rankEvolutionChart"></div></article>
+    <article class="rankPanel rankInsightsCard"><div class="rankPanelHead"><div><span>Insights do mês</span><small>Destaques automáticos</small></div></div><div id="rankInsights"></div></article>
+  </div>
+  <article class="rankPanel rankPodiumPanel"><div class="rankPanelHead"><div><span>Ranking dos vendedores</span><small>Top 3 do mês</small></div><button class="rankLinkBtn" type="button" onclick="document.getElementById('metaRankTable').scrollIntoView({behavior:'smooth'})">Ver ranking completo</button></div><div id="metaRankPodium"></div></article>
+  <article class="rankPanel rankTablePanel"><div class="rankPanelHead"><div><span>Classificação geral</span><small>Percentual da meta individual, com faturamento como desempenho</small></div></div><div id="metaRankTable"></div></article>
+  <div class="rankSpaceToggle" style="display:none"><button class="btn" type="button" id="rankSpaceToggleBtn">📊 Ver progresso por etapas</button></div>
+  <article class="rankPanel rankSpacePanel" id="rankSpacePanel" style="display:block"><div class="race2d" id="race"></div></article>
 </section>
 </div>
 <!-- NÃO CONVERTIDOS -->
@@ -1477,47 +1479,92 @@ body{ background-attachment: fixed; }
 </div>
 <!-- DASHBOARD -->
 <div id="viewDashboard" style="display:none">
-<section class="card">
-<div class="cardHeader">
-<h2>📊 Dashboard</h2>
-<div class="rowRight">
-<div class="field" style="min-width:160px">
-<label>Mês</label>
-<input id="dashMonth" type="month"/>
+<section class="card dashboardProCard">
+<div class="cardHeader dashboardProHead">
+  <div>
+    <span class="dashboardEyebrow">CENTRAL DE PERFORMANCE</span>
+    <h2>Dashboard</h2>
+    <p>Visão executiva de vendas, atendimento, conversão e produtividade da equipe.</p>
+  </div>
+  <div class="dashboardTopTools">
+    <div class="dashboardPeriodSwitch" id="dashboardPeriodSwitch">
+      <button type="button" class="active" data-dash-period="month">Mês</button>
+      <button type="button" data-dash-period="day">Dia</button>
+      <button type="button" data-dash-period="year">Ano</button>
+    </div>
+    <div class="dashboardDateControl">
+      <label id="dashDateLabel">Período</label>
+      <input id="dashDate" type="date" style="display:none"/>
+      <input id="dashMonth" type="month"/>
+      <select id="dashYear" style="display:none"></select>
+    </div>
+    <button class="btn dashboardCrmButton" id="btnDashboardCRM" type="button">◉ Dashboard CRM</button>
+  </div>
 </div>
-</div>
-</div>
+
 <div class="cardBody">
-<div id="dashScopeHint" class="hint" style="margin-bottom:10px"></div>
-<div class="kpis" id="dashKpis"></div>
+<div id="dashCommercialPanel">
+  <div class="dashboardScopeRow">
+    <div>
+      <strong id="dashPeriodTitle">Desempenho do mês</strong>
+      <span id="dashScopeHint"></span>
+    </div>
+    <span class="dashboardLivePill">● Dados da operação ONDIS</span>
+  </div>
 
-<div class="divider"></div>
+  <div class="dashboardExecutiveKpis" id="dashKpis"></div>
 
-<div class="dashGrid">
-  <div class="dashChartCard">
-    <h3 class="arenaSectionTitle">🏆 Ranking de vendedores (vendas no mês)</h3>
-    <div style="position:relative;height:260px"><canvas id="chartRanking"></canvas></div>
+  <div class="dashboardMainGrid">
+    <article class="dashboardPanel dashboardRevenuePanel">
+      <div class="dashboardPanelHead">
+        <div><span>Faturamento ao longo do tempo</span><strong id="dashRevenueTotal">R$ 0,00</strong></div>
+        <span class="dashboardDelta" id="dashRevenueDelta">Período selecionado</span>
+      </div>
+      <div class="dashboardSvgChart" id="dashRevenueChart"></div>
+    </article>
+
+    <article class="dashboardPanel">
+      <div class="dashboardPanelHead"><div><span>Faturamento por vendedor</span><small>Participação no resultado</small></div></div>
+      <div class="dashboardBarList" id="dashSellerRevenue"></div>
+    </article>
+
+    <article class="dashboardPanel">
+      <div class="dashboardPanelHead"><div><span>Conversão por vendedor</span><small>Vendas ÷ atendimentos</small></div></div>
+      <div class="dashboardBarList conversion" id="dashSellerConversion"></div>
+    </article>
   </div>
-  <div class="dashChartCard">
-    <h3 class="arenaSectionTitle">🎯 Conversão por vendedor (%)</h3>
-    <div style="position:relative;height:260px"><canvas id="chartConversao"></canvas></div>
+
+  <div class="dashboardSecondaryGrid">
+    <article class="dashboardPanel">
+      <div class="dashboardPanelHead"><div><span>Funil de atendimento</span><small>Da abordagem até a venda</small></div></div>
+      <div id="dashFunnel" class="dashboardFunnel"></div>
+    </article>
+
+    <article class="dashboardPanel">
+      <div class="dashboardPanelHead"><div><span>Vendas x não convertidos</span><small>Eficiência comercial</small></div></div>
+      <div id="dashOutcomeDonut" class="dashboardDonutWrap"></div>
+    </article>
+
+    <article class="dashboardPanel">
+      <div class="dashboardPanelHead"><div><span>Motivos de não conversão</span><small>Principais objeções do período</small></div></div>
+      <div id="dashLossReasons" class="dashboardBarList loss"></div>
+    </article>
+
+    <article class="dashboardPanel">
+      <div class="dashboardPanelHead"><div><span>Atendimentos ao longo do tempo</span><small>Volume da operação</small></div></div>
+      <div class="dashboardSvgChart compact" id="dashAttendanceChart"></div>
+    </article>
   </div>
-  <div class="dashChartCard">
-    <h3 class="arenaSectionTitle">💰 Faturamento por vendedor</h3>
-    <div style="position:relative;height:260px"><canvas id="chartFaturamento"></canvas></div>
+
+  <div class="dashboardInsightGrid" id="dashInsights"></div>
+</div>
+
+<div id="dashCrmPanel" class="dashboardCrmPanel" style="display:none">
+  <div class="dashboardCrmToolbar">
+    <div><span class="dashboardEyebrow">CRM ONDIS</span><h3>Relacionamento, pipeline e previsibilidade</h3><p>Visão completa do CRM com o mesmo usuário e loja ativa.</p></div>
+    <div class="rowRight"><button class="btn" id="btnDashBackCommercial" type="button">← Voltar ao Comercial</button><a class="btn good" href="./crm-completo.html?view=metricas" target="_blank" rel="noopener">Abrir CRM completo ↗</a></div>
   </div>
-  <div class="dashChartCard">
-    <h3 class="arenaSectionTitle">🎟️ Ticket médio por vendedor</h3>
-    <div style="position:relative;height:260px"><canvas id="chartTicket"></canvas></div>
-  </div>
-  <div class="dashChartCard">
-    <h3 class="arenaSectionTitle">📅 Vendas por dia (mês selecionado)</h3>
-    <div style="position:relative;height:260px"><canvas id="chartDiario"></canvas></div>
-  </div>
-  <div class="dashChartCard">
-    <h3 class="arenaSectionTitle">📆 Vendas por mês (ano)</h3>
-    <div style="position:relative;height:260px"><canvas id="chartMensal"></canvas></div>
-  </div>
+  <div class="dashboardCrmFrameWrap"><iframe id="dashCrmFrame" title="Dashboard CRM ONDIS" loading="lazy" referrerpolicy="same-origin"></iframe></div>
 </div>
 </div>
 </section>
@@ -1626,6 +1673,107 @@ body{ background-attachment: fixed; }
 <div class="hint">A logo fica no topo. O ONDIS continua como marca principal.</div>
 </div>
 </div>
+<div class="divider"></div>
+<section class="settingsSection" id="appearanceSettings">
+  <div class="settingsSectionHead">
+    <div>
+      <h4>Aparência e marca</h4>
+      <p>Personalize o sistema para refletir a identidade visual desta loja.</p>
+    </div>
+    <span class="liveNote">Alterações em tempo real</span>
+  </div>
+
+  <div class="themePresetGrid" id="themePresetGrid">
+    <button class="themePreset" data-theme-value="executive" type="button">
+      <span class="themeOrb"></span><span><strong>Executivo</strong><small>Sóbrio e sofisticado</small></span>
+    </button>
+    <button class="themePreset" data-theme-value="sapphire" type="button">
+      <span class="themeOrb"></span><span><strong>Safira</strong><small>Azul claro e tecnológico</small></span>
+    </button>
+    <button class="themePreset" data-theme-value="carbon" type="button">
+      <span class="themeOrb"></span><span><strong>Carbono</strong><small>Escuro e elegante</small></span>
+    </button>
+    <button class="themePreset" data-theme-value="emerald" type="button">
+      <span class="themeOrb"></span><span><strong>Esmeralda</strong><small>Verde leve e contemporâneo</small></span>
+    </button>
+    <button class="themePreset" data-theme-value="amethyst" type="button">
+      <span class="themeOrb"></span><span><strong>Ametista</strong><small>Rosa e roxo suaves</small></span>
+    </button>
+    
+    <button class="themePreset" data-theme-value="custom" type="button">
+      <span class="themeOrb"></span><span><strong>Personalizado</strong><small>Crie a identidade da loja</small></span>
+    </button>
+  </div>
+
+  <div class="customThemeGrid" id="customThemeControls">
+    <div class="field">
+      <label>Cor primária</label>
+      <div class="colorControl"><input id="themePrimary" type="color" value="#2457e6"/><input id="themePrimaryText" value="#2457e6"/></div>
+    </div>
+    <div class="field">
+      <label>Cor de destaque</label>
+      <div class="colorControl"><input id="themeAccent" type="color" value="#14a98f"/><input id="themeAccentText" value="#14a98f"/></div>
+    </div>
+    <div class="field">
+      <label>Plano de fundo</label>
+      <div class="colorControl"><input id="themeBackground" type="color" value="#f5f7fb"/><input id="themeBackgroundText" value="#f5f7fb"/></div>
+    </div>
+    <div class="field">
+      <label>Superfícies e cartões</label>
+      <div class="colorControl"><input id="themeSurface" type="color" value="#ffffff"/><input id="themeSurfaceText" value="#ffffff"/></div>
+    </div>
+    <div class="field">
+      <label>Cor do texto</label>
+      <div class="colorControl"><input id="themeText" type="color" value="#0f172a"/><input id="themeTextText" value="#0f172a"/></div>
+    </div>
+    <div class="field">
+      <label>Estilo do plano de fundo</label>
+      <select id="themeBackgroundType">
+        <option value="gradient">Gradiente suave</option>
+        <option value="solid">Cor sólida</option>
+        <option value="image">Imagem personalizada</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Imagem de fundo (opcional)</label>
+      <input accept="image/*" id="themeBackgroundImage" type="file"/>
+    </div>
+    <div class="field">
+      <label>Tipografia</label>
+      <select id="themeFont">
+        <option value="Inter">Inter</option>
+        <option value="Manrope">Manrope</option>
+        <option value="Segoe UI">Segoe UI</option>
+        <option value="Arial">Arial</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Arredondamento dos cartões</label>
+      <input id="themeRadius" max="24" min="6" type="range" value="15"/>
+    </div>
+    <div class="field">
+      <label>Contraste</label>
+      <select id="themeContrast">
+        <option value="normal">Normal</option>
+        <option value="high">Alto contraste</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="settingsActions">
+    <button class="btn" id="btnRestoreTheme" type="button">Restaurar padrão</button>
+    <button class="btn good" id="btnApplyTheme" type="button">Aplicar nesta loja</button>
+  </div>
+</section>
+<section class="settingsSection" id="gamificationSettings">
+  <div class="settingsSectionHead">
+    <div>
+      <h4>Gamificação e recompensas</h4>
+      <p>Edite os selos dos vendedores e o prêmio coletivo exibido no baú da Arena.</p>
+    </div>
+    <button class="btn" type="button" onclick="if(window.abrirEditorSelos)window.abrirEditorSelos()">Editar selos e prêmio</button>
+  </div>
+</section>
 <div class="divider"></div>
 <div class="row">
 <div class="field">
@@ -1756,7 +1904,7 @@ body{ background-attachment: fixed; }
 <div class="modalBack" id="installBack">
 <div class="modal">
 <div class="modalHead">
-<h3>Instalar NexxtOne</h3>
+<h3>Instalar ONDIS</h3>
 <button class="close" id="closeInstall">Fechar</button>
 </div>
 <div class="modalBody">
@@ -1766,7 +1914,7 @@ body{ background-attachment: fixed; }
 <br/>• <b>iPhone/iPad (Safari)</b>: <b>Compartilhar</b> → <b>Adicionar à Tela de Início</b>
 <br/>• <b>PC (Chrome/Edge)</b>: ícone <b>Instalar</b> na barra de endereço
         <div class="divider"></div>
-<span class="tiny">Obs: o botão de instalar funciona melhor quando o NexxtOne está em um link (http/https). Abrir por arquivo (file://) pode impedir a instalação.</span>
+<span class="tiny">Observação: o botão de instalação funciona melhor quando o ONDIS está publicado em um endereço seguro (HTTPS). Abrir o arquivo diretamente pode impedir a instalação.</span>
 </div>
 </div>
 </div>
@@ -1793,6 +1941,7 @@ body{ background-attachment: fixed; }
   const load = () => null;
   const save = (s) => {
     // Sincroniza somente com o Firebase (fonte única da verdade).
+    try{ if(window.ONDIS_THEME) window.ONDIS_THEME.applyFromState(s); }catch(e){}
     try{ if(window.OMNIA_SYNC_SAVE) window.OMNIA_SYNC_SAVE(s); }catch(e){}
   };
   // Limpa resíduos de versões anteriores que ainda estejam no navegador
@@ -1818,6 +1967,9 @@ body{ background-attachment: fixed; }
     } else {
       shell.classList.toggle("collapsed");
       try{ localStorage.setItem("ondis_sidebar_collapsed", shell.classList.contains("collapsed")?"1":"0"); }catch(e){}
+      setTimeout(()=>{
+        try{ if($("viewMetasRank").style.display !== "none") renderMetaRank(); }catch(e){}
+      }, 260);
     }
   };
   // restaura preferência de recolhida
@@ -1862,7 +2014,14 @@ body{ background-attachment: fixed; }
   const defaultState = {
     store: { name:"Sua loja", status:"Online", logoDataUrl:"" },
     options: { askValue:true, askPieces:true, vendorDivisor: 0 },
-    ui: { theme: "default" }, // default | neon | ocean | sunset | purple
+    ui: {
+      theme: "executive",
+      themeCustom: {
+        primary:"#2457e6", accent:"#14a98f", background:"#f5f7fb",
+        surface:"#ffffff", text:"#0f172a", font:"Inter", radius:15,
+        backgroundType:"gradient", backgroundImage:"", highContrast:false
+      }
+    },
     sellers: [],   // começa vazio; os dados reais vêm do Firebase
     queue: [],
     pool: [],
@@ -1870,14 +2029,27 @@ body{ background-attachment: fixed; }
     current: null, // legacy (mantido p/ migração)
     records: [],
     badges: { earned: [] },
+    teamReward: {
+      title: "Experiência especial para a equipe",
+      description: "Prêmio coletivo liberado quando a meta principal da loja for conquistada."
+    },
     goalsByMonth: {},
     vendorGoalsByMonth: {}
   };
 
   let state = load() || defaultState;
+  const escapeEditorText = (value)=> String(value||"")
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
   // Expoe para o modulo Firebase poder ler/escrever o mesmo state
   window.OMNIA_GET_STATE = () => state;
-  window.OMNIA_SET_STATE = (s) => { state = s; };
+  window.OMNIA_SET_STATE = (s) => {
+    state = s;
+    state.teamReward = Object.assign({
+      title:"Experiência especial para a equipe",
+      description:"Prêmio coletivo liberado quando a meta principal da loja for conquistada."
+    }, state.teamReward || {});
+    try{ if(window.ONDIS_THEME) window.ONDIS_THEME.applyFromState(state); }catch(e){}
+  };
   // Permite o módulo Firebase injetar as vendas (registros separados) no state
   window.OMNIA_SET_RECORDS = (arr) => {
     state.records = Array.isArray(arr) ? arr : [];
@@ -1886,7 +2058,7 @@ body{ background-attachment: fixed; }
   window.OMNIA_SAVE = (s) => save(s);
 
   // migração defensiva
-  state.ui = state.ui || { theme:"default" };
+  state.ui = state.ui || { theme:"executive" };
   state.options = state.options || { askValue:true, askPieces:true, vendorDivisor: 0 };
   state.sellers = (Array.isArray(state.sellers) ? state.sellers : []).map(s => ({
     ...s,
@@ -1898,6 +2070,10 @@ body{ background-attachment: fixed; }
   state.records = Array.isArray(state.records) ? state.records : [];
   state.badges = state.badges || { earned: [] };
   if(!Array.isArray(state.badges.earned)) state.badges.earned = [];
+  state.teamReward = Object.assign({
+    title:"Experiência especial para a equipe",
+    description:"Prêmio coletivo liberado quando a meta principal da loja for conquistada."
+  }, state.teamReward || {});
   state.goalsByMonth = state.goalsByMonth || {};
   state.vendorGoalsByMonth = state.vendorGoalsByMonth || {};
   // migração: atendimento múltiplo
@@ -2030,9 +2206,14 @@ body{ background-attachment: fixed; }
   // THEME
   // ======================
   function applyTheme(){
-    const t = state.ui?.theme || "default";
-    const allowed = ["default","neon","ocean","sunset","purple","textured","spacewhite"];
-    document.documentElement.dataset.theme = allowed.includes(t) ? t : "default";
+    if(window.ONDIS_THEME){
+      const normalized = window.ONDIS_THEME.applyFromState(state);
+      state.ui = state.ui || {};
+      state.ui.theme = normalized.theme;
+      state.ui.themeCustom = normalized.custom;
+      return;
+    }
+    document.documentElement.dataset.theme = "executive";
   }
 
   // ======================
@@ -2113,20 +2294,23 @@ body{ background-attachment: fixed; }
     const tk = todayKey();
     const recsToday = state.records.filter(r => r.dateKey === tk);
     const a = agg(recsToday);
-    const tm = a.sales>0 ? a.revenue/a.sales : 0;
-
+    const durations = recsToday.filter(r=>r.tsStart&&r.tsEnd).map(r=>Math.max(0,(r.tsEnd-r.tsStart)/1000));
+    const avgSec = durations.length ? durations.reduce((x,y)=>x+y,0)/durations.length : 0;
+    const fmtDur = (sec)=>{sec=Math.round(sec||0);const m=Math.floor(sec/60),ss=sec%60;return m?`${m}m ${String(ss).padStart(2,'0')}s`:`${ss}s`;};
+    const spark=(cls)=>`<svg class="miniSpark" viewBox="0 0 48 30" aria-hidden="true"><path d="M2 24 L8 22 L13 18 L18 20 L24 12 L30 15 L36 7 L41 10 L46 3"/></svg>`;
     const kpis = [
-      { t:"Atendimentos", v: formatNum(a.atend), ico:"👋", cor:"blue" },
-      { t:"Vendas", v: formatNum(a.sales), ico:"🛍️", cor:"blue" },
-      { t:"Conversão", v: a.conv.toFixed(1) + "%", ico:"🎯", cor:"green" },
-      { t:"Faturamento", v: formatMoney(a.revenue), ico:"💰", cor:"gold" },
+      { t:"Atendimentos hoje", v: formatNum(a.atend), ico:"👥", cor:"blue", trend:"↑ ritmo do dia" },
+      { t:"Vendas", v: formatNum(a.sales), ico:"▣", cor:"violet", trend:"↑ desempenho" },
+      { t:"Conversão", v: a.conv.toFixed(1) + "%", ico:"🎯", cor:"pink", trend:"↑ eficiência" },
+      { t:"Faturamento", v: formatMoney(a.revenue), ico:"$", cor:"green", trend:"↑ resultado" },
+      { t:"Tempo médio", v: fmtDur(avgSec), ico:"◷", cor:"cyan", trend: avgSec?"tempo por atendimento":"aguardando dados" },
     ];
     const el = $("kpis");
     el.innerHTML = "";
     for(const k of kpis){
       const div = document.createElement("div");
       div.className = "kpi kpi-"+(k.cor||"blue");
-      div.innerHTML = `<div class="kpiTop"><span class="kpiIco">${k.ico||""}</span><span class="t">${k.t}</span></div><div class="v">${k.v}</div>`;
+      div.innerHTML = `<span class="kpiIco">${k.ico||""}</span><div><span class="t">${k.t}</span><div class="v">${k.v}</div><div class="kpiTrend">${k.trend}</div></div>${spark(k.cor)}`;
       el.appendChild(div);
     }
   }
@@ -2161,19 +2345,30 @@ body{ background-attachment: fixed; }
       item.innerHTML = `
         <div class="leftItem">
           <div class="pos">${idx+1}</div>
-          <div class="avatar">${s.photo ? `<img src="${s.photo}">` : `<span style="color:var(--muted);font-weight:900">${(s.name||"?")[0].toUpperCase()}</span>`}</div>
+          <div class="avatar">${s.photo ? `<img src="${s.photo}">` : `<span style="color:#71839d;font-weight:900">${(s.name||"?")[0].toUpperCase()}</span>`}</div>
           <div class="nameBlock">
             <div class="name">${s.name}</div>
-            <div class="meta">${st.atend} atend · ${st.sales} vendas · ${st.conv.toFixed(1)}% conv · PA(venda) ${st.paPerSale.toFixed(2)}</div>
+            <div class="queueStatus">${idx===0 ? "Aguardando atendimento" : "Na fila"}</div>
+            <div class="queueStats">
+              <span>♙ ${st.atend} atend.</span>
+              <span>⌑ ${st.sales} vendas</span>
+              <span>◎ ${st.conv.toFixed(1)}% conv.</span>
+              <span>◇ PA ${st.paPerSale.toFixed(1)}</span>
+            </div>
           </div>
         </div>
         <div class="actions">
-          <button class="btn" data-act="up" data-id="${sid}">↑</button>
-          <button class="btn" data-act="down" data-id="${sid}">↓</button>
-          <button class="btn warn" data-act="pause" data-id="${sid}">${s.paused ? "Retomar" : "Pausar"}</button>
-          <button class="btn bad" data-act="remove" data-id="${sid}">Tirar</button>
-          ${(window.OMNIA_USER && (window.OMNIA_USER.role==="admin"||window.OMNIA_USER.role==="superadmin")) ? `<button class="btn" data-act="edit" data-id="${sid}" title="Editar nome e foto do vendedor">✏️</button>` : ""}
-          ${(window.OMNIA_USER && (window.OMNIA_USER.role==="admin"||window.OMNIA_USER.role==="superadmin")) ? `<button class="btn bad" data-act="delete" data-id="${sid}" title="Excluir vendedor da operação">🗑</button>` : ""}
+          <details class="queueMenu">
+            <summary title="Ações">⋮</summary>
+            <div class="queueMenuPanel">
+              <button class="btn" data-act="up" data-id="${sid}">↑ Subir na fila</button>
+              <button class="btn" data-act="down" data-id="${sid}">↓ Descer na fila</button>
+              <button class="btn warn" data-act="pause" data-id="${sid}">${s.paused ? "▶ Retomar" : "⏸ Pausar"}</button>
+              <button class="btn bad" data-act="remove" data-id="${sid}">↪ Tirar da fila</button>
+              ${(window.OMNIA_USER && (window.OMNIA_USER.role==="admin"||window.OMNIA_USER.role==="superadmin")) ? `<button class="btn" data-act="edit" data-id="${sid}">✏️ Editar vendedor</button>` : ""}
+              ${(window.OMNIA_USER && (window.OMNIA_USER.role==="admin"||window.OMNIA_USER.role==="superadmin")) ? `<button class="btn bad" data-act="delete" data-id="${sid}">🗑 Excluir vendedor</button>` : ""}
+            </div>
+          </details>
         </div>
       `;
       q.appendChild(item);
@@ -2268,105 +2463,60 @@ body{ background-attachment: fixed; }
 
       const wrap = document.createElement('div');
       wrap.className = 'attCard';
-            wrap.innerHTML = `
-        <div class="leftItem">
-          <div class="avatar attAvatar">
-            ${s.photo ? `<img src="${s.photo}">` : `<span style="color:var(--muted);font-weight:900;font-size:18px">${(s.name||"?")[0].toUpperCase()}</span>`}
-          </div>
-          <div class="nameBlock">
-            <div class="name" style="font-size:16px">${s.name}</div>
-            <div class="meta">Atendendo agora · <b id="timer_${cid}">${elapsedSec}s</b></div>
-            <div class="meta">${st.atend} atend · ${st.sales} vendas · ${st.conv.toFixed(1)}% conv · PA(venda) ${st.paPerSale.toFixed(2)}</div>
+      wrap.innerHTML = `
+        <div class="attHero">
+          <div class="avatar attAvatar">${s.photo ? `<img src="${s.photo}">` : `<span style="color:#71839d;font-weight:900;font-size:18px">${(s.name||"?")[0].toUpperCase()}</span>`}</div>
+          <div>
+            <div><span class="name">${s.name}</span><span class="sellerHighlight">♛ Vendedor destaque</span></div>
+            <div class="attLive">Atendendo agora · <b id="timer_${cid}">${elapsedSec}s</b></div>
           </div>
         </div>
-        <div class="actions" style="gap:8px; align-items:center">
-          <span class="tag good">Em atendimento</span>
-          <button class="btn warn" data-act="cancelAttend" data-cid="${cid}" title="Cancelar este atendimento e voltar o vendedor para a vez">↩ Cancelar atendimento</button>
+        <div class="attStatsGrid">
+          <div class="attStat"><small>Atendimentos</small><b>${st.atend} hoje</b></div>
+          <div class="attStat"><small>Vendas</small><b>${st.sales} hoje</b></div>
+          <div class="attStat"><small>Conversão</small><b>${st.conv.toFixed(1)}%</b></div>
+          <div class="attStat"><small>PA (venda)</small><b>${st.paPerSale.toFixed(2)}</b></div>
         </div>
-
-        <div class="divider"></div>
-
-        <div class="big">
-          <button class="btn good" data-act="sold" data-cid="${cid}">✅ Vendeu</button>
-          <button class="btn bad" data-act="nosold" data-cid="${cid}">❌ Não vendeu</button>
+        <div class="attInfoBox"><b>▱ Informações da venda</b>Atendimento em andamento. Registre o resultado para alimentar conversão, ranking, CRM e Lista da Vez.</div>
+        <button class="cancelAttendSmall" data-act="cancelAttend" data-cid="${cid}">↩ Cancelar atendimento</button>
+        <div class="attDecision">
+          <button class="btn good" data-act="sold" data-cid="${cid}">✓ VENDEU</button>
+          <button class="btn bad" data-act="nosold" data-cid="${cid}">✕ NÃO VENDEU</button>
         </div>
-
-        <div class="divider"></div>
-
-        <div id="finalizeForm_${cid}" style="display:none">
+        <div id="finalizeForm_${cid}" style="display:none;margin-top:10px">
           <div id="soldFields_${cid}" style="display:none">
             <div class="row">
-              <div class="field" style="min-width:220px; display:${state.options.askValue ? "flex":"none"}">
-                <label>Valor (R$)</label>
-                <input id="saleValue_${cid}" inputmode="decimal" placeholder="Ex: 399,90" />
-              </div>
-              <div class="field" style="min-width:220px; display:${state.options.askPieces ? "flex":"none"}">
-                <label>Peças (P.A.)</label>
-                <input id="salePieces_${cid}" inputmode="numeric" placeholder="Ex: 3" />
-              </div>
+              <div class="field" style="min-width:220px; display:${state.options.askValue ? "flex":"none"}"><label>Valor (R$)</label><input id="saleValue_${cid}" inputmode="decimal" placeholder="Ex: 399,90" /></div>
+              <div class="field" style="min-width:220px; display:${state.options.askPieces ? "flex":"none"}"><label>Peças (P.A.)</label><input id="salePieces_${cid}" inputmode="numeric" placeholder="Ex: 3" /></div>
             </div>
-            <div class="row" style="margin-top:6px;padding-top:10px;border-top:1px dashed rgba(255,255,255,.12)">
-              <div class="field" style="min-width:220px">
-                <label>👤 Cliente (opcional — vai pro CRM)</label>
-                <input id="cliNome_${cid}" placeholder="Nome do cliente" />
-              </div>
-              <div class="field" style="min-width:200px">
-                <label>📱 Telefone do cliente</label>
-                <input id="cliTel_${cid}" inputmode="tel" placeholder="(00) 00000-0000" />
-              </div>
-              <div class="field" style="min-width:170px">
-                <label>🎂 Aniversário</label>
-                <input id="cliNasc_${cid}" type="date" />
-              </div>
+            <div class="row" style="margin-top:6px;padding-top:10px;border-top:1px dashed #dfe7f2">
+              <div class="field" style="min-width:220px"><label>👤 Cliente (opcional — vai pro CRM)</label><input id="cliNome_${cid}" placeholder="Nome do cliente" /></div>
+              <div class="field" style="min-width:220px"><label>📱 WhatsApp / telefone</label><input id="cliTel_${cid}" placeholder="(63) 99999-9999" /></div>
+              <div class="field" style="min-width:180px"><label>🎂 Nascimento</label><input id="cliNasc_${cid}" type="date" /></div>
             </div>
           </div>
-
           <div id="nosoldFields_${cid}" style="display:none">
             <div class="row">
-              <div class="field" style="min-width:240px">
-                <label>Motivo</label>
-                <select id="nsReason_${cid}">
-                  ${NOSOLD_REASONS.map(r=>`<option value="${r}">${r}</option>`).join("")}
-                </select>
-              </div>
-
-              <div class="field" style="min-width:220px">
-                <label>Gênero</label>
-                <select id="nsGender_${cid}">
-                  <option value="Masculino">Masculino</option>
-                  <option value="Feminino">Feminino</option>
-                </select>
-              </div>
-
-              <div class="field" style="min-width:260px">
-                <label>Tipo de peça</label>
-                <select id="nsItemType_${cid}">
-                  ${ITEM_TYPES.map(i=>`<option value="${i}">${i}</option>`).join("")}
-                </select>
-              </div>
-
-              <div class="field" style="min-width:220px">
-                <label>Numeração (se aplicável)</label>
-                <input id="nsSize_${cid}" placeholder="Ex: 42, G, 38, 44" />
-              </div>
+              <div class="field" style="min-width:220px"><label>Motivo</label><select id="nsReason_${cid}"><option>Preço</option><option>Não encontrou o produto</option><option>Tamanho/numeração</option><option>Modelo/cor</option><option>Só pesquisando</option><option>Outro</option></select></div>
+              <div class="field" style="min-width:180px"><label>Gênero</label><select id="nsGender_${cid}"><option value="">Não informar</option><option value="Masculino">Masculino</option><option value="Feminino">Feminino</option></select></div>
+              <div class="field" style="min-width:220px"><label>Tipo de peça</label><select id="nsItemType_${cid}">${ITEM_TYPES.map(i=>`<option value="${i}">${i}</option>`).join("")}</select></div>
+              <div class="field" style="min-width:180px"><label>Numeração</label><input id="nsSize_${cid}" placeholder="Ex: 42, G, 38" /></div>
             </div>
           </div>
-
-          <div class="field" style="min-width:100%">
-            <label>Observação (opcional)</label>
-            <input id="saleObs_${cid}" placeholder="Ex: cliente só pesquisando / voltou depois / etc" />
-          </div>
-
-          <div class="divider"></div>
-
-          <div class="actions">
-            <button class="btn good" data-act="finalize" data-cid="${cid}">Finalizar</button>
-            <button class="btn" data-act="cancel" data-cid="${cid}">Cancelar</button>
-          </div>
+          <div class="field" style="min-width:100%;margin-top:8px"><label>Observação (opcional)</label><input id="saleObs_${cid}" placeholder="Ex: cliente só pesquisando / voltou depois" /></div>
+          <div class="actions" style="margin-top:9px"><button class="btn good" data-act="finalize" data-cid="${cid}">Finalizar</button><button class="btn" data-act="cancel" data-cid="${cid}">Cancelar</button></div>
         </div>
       `;
 
       panel.appendChild(wrap);
+    }
+
+
+    const recent = (state.records||[]).filter(r=>r && r.sellerId).slice().sort((a,b)=>(b.tsEnd||0)-(a.tsEnd||0)).slice(0,4);
+    if(recent.length){
+      const recentBox=document.createElement('div');recentBox.className='attRecent';
+      recentBox.innerHTML=`<div class="attRecentHead"><b>Últimos atendimentos</b><span>Ver todos</span></div><div class="attRecentList">${recent.map(r=>{const rs=getSeller(r.sellerId),nm=(r.clientName||rs?.name||'Atendimento'),ok=r.outcome==='sold';return `<div class="attRecentOne"><span class="attRecentAvatar">${rs?.photo?`<img src="${rs.photo}">`:(nm[0]||'?')}</span><b>${nm}</b><em>${ok?'✓':'✕'}</em></div>`}).join('')}</div>`;
+      panel.appendChild(recentBox);
     }
 
     // delegation within panel
@@ -2996,13 +3146,16 @@ body{ background-attachment: fixed; }
         monthly: 0,
         basePercents: [25,25,25,25],
         weekTargets: [0,0,0,0],
-        closedWeeks: {}
+        closedWeeks: {},
+        levels: { basePct:100, superPct:120, diamondPct:150 }
       };
     }
     const g = state.goalsByMonth[mk];
     if(!g.basePercents) g.basePercents = [25,25,25,25];
     if(!g.weekTargets) g.weekTargets = [0,0,0,0];
     if(!g.closedWeeks) g.closedWeeks = {};
+    g.levels = Object.assign({ basePct:100, superPct:120, diamondPct:150 }, g.levels || {});
+    g.levels.basePct = 100;
     return g;
   }
   function sum(arr){ return arr.reduce((a,b)=>a+Number(b||0),0); }
@@ -3047,6 +3200,9 @@ body{ background-attachment: fixed; }
 
     $("goalMonth").value = mk;
     $("goalMonthly").value = g.monthly ? String(g.monthly).replace(".", ",") : "";
+    $("goalBasePct").value = "100";
+    $("goalSuperPct").value = String(g.levels.superPct ?? 120).replace(".", ",");
+    $("goalDiamondPct").value = String(g.levels.diamondPct ?? 150).replace(".", ",");
 
     $("pW1").value = String(g.basePercents?.[0] ?? 25).replace(".", ",");
     $("pW2").value = String(g.basePercents?.[1] ?? 25).replace(".", ",");
@@ -3273,6 +3429,16 @@ body{ background-attachment: fixed; }
     const g = getGoalsForMonth(mk);
 
     g.monthly = parseBRNumber($("goalMonthly").value);
+    const levels = {
+      basePct: 100,
+      superPct: parseBRNumber($("goalSuperPct").value),
+      diamondPct: parseBRNumber($("goalDiamondPct").value)
+    };
+    if(levels.superPct <= levels.basePct || levels.diamondPct <= levels.superPct){
+      alert("Configure os níveis em ordem crescente: Meta 2 deve ser maior que 100% e Meta 3 deve ser maior que a Meta 2.");
+      return;
+    }
+    g.levels = levels;
     g.basePercents = [
       parseBRNumber($("pW1").value),
       parseBRNumber($("pW2").value),
@@ -3324,146 +3490,85 @@ body{ background-attachment: fixed; }
   function renderMetaRank(){
     const mk = $("metaRankMonth").value || monthKey();
     $("metaRankMonth").value = mk;
-
     const saved = getGoalsForMonth(mk);
     const inputMeta = parseBRNumber($("metaRankMonthly").value);
     const monthlyTarget = inputMeta || Number(saved.monthly||0);
-    if(!inputMeta && monthlyTarget){
-      $("metaRankMonthly").value = String(monthlyTarget).replace(".", ",");
-    }
-
+    if(!inputMeta && monthlyTarget) $("metaRankMonthly").value = String(monthlyTarget).replace(".", ",");
     const mode = $("metaRankMode").value;
-
-    const soldMonth = state.records.filter(r => r.monthKey === mk && r.outcome==="sold");
-    const monthRevenue = soldMonth.reduce((s,r)=> s + Number(r.value||0), 0);
+    const monthRecords = state.records.filter(r=>r.monthKey===mk);
+    const soldMonth = monthRecords.filter(r=>r.outcome==="sold");
+    const aStore = agg(monthRecords);
+    const monthRevenue = soldMonth.reduce((s,r)=>s+Number(r.value||0),0);
+    const pctStore = monthlyTarget>0 ? clamp((monthRevenue/monthlyTarget)*100,0,999) : 0;
+    const lack = Math.max(0,monthlyTarget-monthRevenue);
+    const activeCount = (state.sellers||[]).filter(s=>s.active!==false).length;
+    const ticket = aStore.sales>0 ? aStore.revenue/aStore.sales : 0;
 
     const kpis = $("metaRankKpis");
-    kpis.innerHTML = "";
-    const pctStore = monthlyTarget>0 ? clamp((monthRevenue/monthlyTarget)*100,0,200) : 0;
-    const lack = Math.max(0, monthlyTarget - monthRevenue);
-
-    const k = [
-      { t:"Faturamento (mês)", v: formatMoney(monthRevenue), cls: "" },
-      { t:"Meta mensal", v: formatMoney(monthlyTarget), cls: "" },
-      { t:"Progresso", v: monthlyTarget>0 ? pctStore.toFixed(1)+"%" : "—", cls: (pctStore>=100)?"good":"" },
-      { t:"Falta", v: formatMoney(lack), cls: "" },
+    const cards=[
+      {icon:'▥',label:'Faturamento (mês)',value:formatMoney(monthRevenue),sub:`${pctStore.toFixed(1)}% da meta`,tone:'blue'},
+      {icon:'◎',label:'Meta total',value:formatMoney(monthlyTarget),sub:'Meta do mês',tone:'purple'},
+      {icon:'◉',label:'Atingido',value:`${pctStore.toFixed(1)}%`,sub:'Progresso geral',tone:'green'},
+      {icon:'↗',label:'Falta atingir',value:formatMoney(lack),sub:'Para a meta',tone:'amber'},
+      {icon:'♟',label:'Vendedores',value:String(activeCount),sub:'Ativos no mês',tone:'blue'},
+      {icon:'$',label:'Ticket médio',value:formatMoney(ticket),sub:'Por venda',tone:'green'}
     ];
-    for(const it of k){
-      const div = document.createElement("div");
-      div.className = "kpi";
-      div.innerHTML = `<div class="t">${it.t}</div><div class="v ${it.cls||""}">${it.v}</div>`;
-      kpis.appendChild(div);
+    kpis.innerHTML=cards.map(c=>`<article class="rankKpi ${c.tone}"><span class="rankKpiIcon">${c.icon}</span><div><small>${c.label}</small><strong>${c.value}</strong><em>${c.sub}</em></div></article>`).join('');
+
+    const ring=$("rankProgressRing");
+    if(ring) ring.innerHTML=`<div class="rankRingWrap"><div class="rankRing" style="--pct:${clamp(pctStore,0,100)}"><div><strong>${pctStore.toFixed(1)}%</strong><span>alcançado</span></div></div><div class="rankRingInfo"><strong>${formatMoney(monthRevenue)}</strong><span>alcançado</span><div class="rankMiniBar"><i style="width:${clamp(pctStore,0,100)}%"></i></div><div class="rankScale"><span>R$ 0</span><span>${formatMoney(monthlyTarget)}</span></div><small>Falta <b>${formatMoney(lack)}</b> para atingir a meta.</small></div></div>`;
+
+    const days=daysInMonth(mk), daily=[], cumulative=[]; let running=0;
+    for(let d=1;d<=days;d++){ const dk=`${mk}-${String(d).padStart(2,'0')}`; const val=soldMonth.filter(r=>r.dateKey===dk).reduce((s,r)=>s+Number(r.value||0),0); running+=val; daily.push(val); cumulative.push(running); }
+    const chart=$("rankEvolutionChart");
+    if(chart){
+      const max=Math.max(monthlyTarget, ...cumulative, 1); const pts=cumulative.map((v,i)=>`${(i/(Math.max(1,days-1)))*100},${96-(v/max)*82}`).join(' '); const goalPts=Array.from({length:days},(_,i)=>`${(i/(Math.max(1,days-1)))*100},${96-((monthlyTarget*(i+1)/days)/max)*82}`).join(' ');
+      chart.innerHTML=`<div class="rankChartLegend"><span class="goal">Meta</span><span class="real">Realizado</span></div><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="Evolução acumulada"><polyline class="goalLine" points="${goalPts}"/><polyline class="realLine" points="${pts}"/><polygon class="realArea" points="0,96 ${pts} 100,96"/></svg><div class="rankChartAxis"><span>01</span><span>08</span><span>15</span><span>22</span><span>${days}</span></div>`;
     }
 
-    const rows = aggBySeller(soldMonth);
-    rows.sort((a,b)=> b.revenue - a.revenue);
+    const rows=aggBySeller(monthRecords).map(r=>{ const s=getSeller(r.sellerId); const goal=sellerGoalMonthly(r.sellerId,mk); return {...r,seller:s,goal,pct:goal>0?(r.revenue/goal)*100:0,tm:r.sales>0?r.revenue/r.sales:0}; }).sort((a,b)=>b.pct-a.pct||b.revenue-a.revenue);
+    const bestDay = daily.length ? daily.indexOf(Math.max(...daily))+1 : 0;
+    const bestDayVal = Math.max(0,...daily);
+    const bestSeller=rows[0];
+    const targetDaily=monthlyTarget/days;
+    $("rankInsights").innerHTML=`<div class="rankInsight green"><i>↗</i><div><span>Melhor dia</span><strong>${bestDay?String(bestDay).padStart(2,'0')+'/'+mk.slice(5,7):'—'}</strong><small>${formatMoney(bestDayVal)}</small></div></div><div class="rankInsight amber"><i>◎</i><div><span>Meta diária média</span><strong>${formatMoney(targetDaily)}</strong><small>Para atingir 100%</small></div></div><div class="rankInsight blue"><i>★</i><div><span>Destaque do mês</span><strong>${bestSeller?.seller?.name||'—'}</strong><small>${bestSeller?bestSeller.pct.toFixed(1)+'% da meta':'Sem dados'}</small></div></div>`;
 
-    const tableWrap = $("metaRankTable");
-    tableWrap.innerHTML = "";
 
-    if(rows.length === 0){
-      tableWrap.innerHTML = `<div class="hint">Sem vendas registradas nesse mês ainda.</div>`;
-    } else {
-      const body = rows.map((r, idx)=>{
-        const s = getSeller(r.sellerId);
-        const pct = monthRevenue>0 ? (r.revenue/monthRevenue)*100 : 0;
-        return [String(idx+1), s?.name || "Vendedor", formatMoney(r.revenue), pct.toFixed(1)+"%", formatNum(r.sales), (r.paPerSale||0).toFixed(2)];
-      });
-      tableWrap.appendChild(makeTable(["#","Vendedor","Fat. mês","% da loja","Vendas","P.A."], body));
+    const podium=$("metaRankPodium");
+    if(podium){
+      const top=rows.slice(0,3);
+      const order=[top[1],top[0],top[2]].filter(Boolean);
+      podium.innerHTML=order.length?`<div class="rankPodium">${order.map((r,idx)=>{
+        const actual=rows.indexOf(r)+1, s=r.seller||{}, name=s.name||"Vendedor";
+        const photo=s.photo?`<img src="${s.photo}" alt="${name}">`:`<b>${name.split(/\s+/).slice(0,2).map(x=>x[0]).join("")}</b>`;
+        const medal=actual===1?"👑":actual===2?"2º":"3º";
+        return `<div class="rankPodiumPerson p${actual}"><div class="rankPodiumAvatar">${actual===1?'<span class="rankPodiumCrown">♛</span>':""}${photo}<i>${medal}</i></div><strong>${name}</strong><span>${formatMoney(r.revenue)}</span><small>${r.pct.toFixed(1)}% da meta</small><div class="rankPodiumBase"><em>${actual===1?"Líder do mês":actual+"º lugar"}</em></div></div>`;
+      }).join("")}</div>`:`<div class="rankEmpty">O pódio aparece quando houver vendas no período.</div>`;
     }
 
-    renderMoonRace(mk, monthlyTarget, mode, rows, monthRevenue);
+    const table=$("metaRankTable");
+    if(!rows.length){table.innerHTML='<div class="rankEmpty">Sem resultados registrados nesse mês ainda.</div>';} else {
+      table.innerHTML=`<div class="rankTable"><div class="rankTr rankTh"><span>Posição</span><span>Vendedor</span><span>Progresso</span><span>Atingido</span><span>Meta</span><span>% Meta</span></div>${rows.map((r,i)=>{const name=r.seller?.name||'Vendedor';const initials=name.split(/\s+/).slice(0,2).map(x=>x[0]).join('');const photo=r.seller?.photo?`<img src="${r.seller.photo}" alt="">`:`<b>${initials}</b>`; return `<div class="rankTr"><span><i class="rankPos p${i+1}">${i+1}</i></span><span class="rankSeller"><span class="rankAvatar">${photo}</span><span><b>${name}</b><small>${r.sales} venda(s) · P.A. ${(r.paPerSale||0).toFixed(2)} · T.M. ${formatMoney(r.tm)}</small></span></span><span><div class="rankRowBar"><i style="width:${clamp(r.pct,0,100)}%"></i></div><small>${r.pct.toFixed(1)}%</small></span><span>${formatMoney(r.revenue)}</span><span>${formatMoney(r.goal)}</span><span><div class="rankPctCircle" style="--pct:${clamp(r.pct,0,100)}"><b>${r.pct.toFixed(1)}%</b></div></span></div>`;}).join('')}<div class="rankTr team"><span><i class="rankPos">•</i></span><span class="rankSeller"><span class="rankAvatar team">♟</span><span><b>Equipe da loja</b><small>Total da equipe</small></span></span><span><div class="rankRowBar"><i style="width:${clamp(pctStore,0,100)}%"></i></div><small>${pctStore.toFixed(1)}%</small></span><span>${formatMoney(monthRevenue)}</span><span>${formatMoney(monthlyTarget)}</span><span><div class="rankPctCircle" style="--pct:${clamp(pctStore,0,100)}"><b>${pctStore.toFixed(1)}%</b></div></span></div></div>`;
+    }
+    const toggle=$("rankSpaceToggleBtn"), panel=$("rankSpacePanel"); if(toggle&&panel&&!toggle.dataset.bound){ toggle.dataset.bound='1'; toggle.onclick=()=>{const open=panel.style.display==='none';panel.style.display=open?'block':'none';toggle.textContent=open?'✕ Ocultar progresso':'📊 Ver progresso por etapas'; if(open) renderMoonRace(mk,monthlyTarget,mode,aggBySeller(soldMonth).sort((a,b)=>b.revenue-a.revenue),monthRevenue);}; }
+    if(panel&&panel.style.display!=='none') renderMoonRace(mk,monthlyTarget,mode,aggBySeller(soldMonth).sort((a,b)=>b.revenue-a.revenue),monthRevenue);
   }
 
   function renderMoonRace(mk, monthlyTarget, mode, rows, storeRevenue){
     const race = $("race");
-    race.querySelectorAll(".rocket").forEach(el=>el.remove());
-    $("moonBoom").style.display = "none";
-
-    const left = 12;
-    const rightPadding = 120;
-    const width = race.clientWidth - rightPadding - left;
-
-    const target = Number(monthlyTarget||0);
-    const storePct = target>0 ? clamp(storeRevenue/target, 0, 1.2) : 0;
-
-    if(target>0 && storeRevenue >= target){
-      $("moonBoom").style.display = "grid";
-      const rect = race.getBoundingClientRect();
-      burstFx(rect.right - 80, rect.top + 60);
-      setTimeout(()=>burstFx(rect.right - 110, rect.top + 40), 140);
-    }
-
-    // Mostra TODOS os vendedores (sem limite), cada um em sua própria raia horizontal
-    const list = rows.slice();
-
-    // Altura dinâmica da pista conforme número de foguetes (cada um tem sua raia)
-    const espaco = 46;        // distância vertical entre as raias
-    const topo = 20;          // margem do topo
-    const nLinhas = list.length + (mode==="store" ? 1 : 0);
-    const alturaNecessaria = topo + nLinhas*espaco + 24;
-    race.style.height = Math.max(160, alturaNecessaria) + "px";
-
-    list.forEach((r, i)=>{
-      const s = getSeller(r.sellerId);
-      const sellerTarget = (mode==='seller') ? sellerGoalMonthly(r.sellerId, mk) : target;
-      const pct = sellerTarget>0 ? clamp(r.revenue/sellerTarget, 0, 1.2) : 0;
-      const x = left + width * pct;
-
-      const rocket = document.createElement("div");
-      rocket.className = "rocket";
-      rocket.style.left = x + "px";
-      rocket.style.top = (topo + i*espaco) + "px";
-
-      const pic = document.createElement("div");
-      pic.className = "pic";
-      if(s?.photo){
-        const img = document.createElement("img");
-        img.src = s.photo;
-        pic.appendChild(img);
-      } else {
-        pic.textContent = (s?.name||"?")[0].toUpperCase();
-      }
-
-      const ship = document.createElement("div");
-      ship.className = "ship";
-      ship.textContent = "🚀";
-
-      const lbl = document.createElement("div");
-      lbl.className = "lbl";
-      lbl.innerHTML = `<b>${s?.name || "Vendedor"}</b> · ${formatMoney(r.revenue)}${(mode==='seller' && sellerTarget>0) ? ` / ${formatMoney(sellerTarget)}` : ""} · ${sellerTarget>0 ? (pct*100).toFixed(1)+"%" : "—"}`;
-
-      rocket.appendChild(pic);
-      rocket.appendChild(ship);
-      rocket.appendChild(lbl);
-      race.appendChild(rocket);
-    });
-
-    if(mode==="store"){
-      const xStore = left + width * storePct;
-      const rocket = document.createElement("div");
-      rocket.className = "rocket";
-      rocket.style.left = xStore + "px";
-      rocket.style.top = (topo + list.length*espaco) + "px";
-      rocket.style.opacity = "0.95";
-
-      const pic = document.createElement("div");
-      pic.className = "pic";
-      pic.textContent = "🏬";
-
-      const ship = document.createElement("div");
-      ship.className = "ship";
-      ship.textContent = "🚀";
-
-      const lbl = document.createElement("div");
-      lbl.className = "lbl";
-      lbl.innerHTML = `<b>LOJA</b> · ${formatMoney(storeRevenue)} · ${target? (storePct*100).toFixed(1)+"%": "—"}`;
-
-      rocket.appendChild(pic);
-      rocket.appendChild(ship);
-      rocket.appendChild(lbl);
-      race.appendChild(rocket);
-    }
+    if(!race) return;
+    const saved = getGoalsForMonth(mk);
+    const levels = Object.assign({ superPct:120, diamondPct:150 }, saved.levels || {});
+    const stops = [
+      {pct:80,label:"80%",name:"Aquecimento"},
+      {pct:100,label:"100%",name:"Meta"},
+      {pct:Number(levels.superPct||120),label:`${Number(levels.superPct||120)}%`,name:"Supermeta"},
+      {pct:Number(levels.diamondPct||150),label:`${Number(levels.diamondPct||150)}%`,name:"Elite"}
+    ];
+    const maxPct=Math.max(...stops.map(s=>s.pct),100);
+    const competitors=rows.map(r=>{const seller=getSeller(r.sellerId);const goal=sellerGoalMonthly(r.sellerId,mk);return {name:seller?.name||"Vendedor",photo:seller?.photo||"",revenue:r.revenue,goal,pct:goal>0?(r.revenue/goal)*100:0};});
+    if(mode==="store") competitors.push({name:"Equipe da loja",photo:"",revenue:storeRevenue,goal:Number(monthlyTarget||0),pct:monthlyTarget>0?(storeRevenue/monthlyTarget)*100:0,isStore:true});
+    race.innerHTML=`<div class="race2dHead"><div><b>Progresso por etapas</b></div><div class="race2dLegend">${stops.map(s=>`<span><i></i>${s.name} ${s.label}</span>`).join("")}</div></div><div class="race2dAxis">${stops.map(s=>`<span style="left:${clamp(s.pct/maxPct*100,0,100)}%"><b>${s.label}</b><em>${s.name}</em></span>`).join("")}</div><div class="race2dRows">${competitors.map(c=>{const pct=clamp(c.pct/maxPct*100,0,100);const avatar=c.photo?`<img src="${c.photo}" alt="">`:`<b>${(c.name||'?').slice(0,1).toUpperCase()}</b>`;return `<div class="race2dRow"><div class="race2dSeller"><span class="race2dAvatar">${avatar}</span><div><strong>${c.name}</strong><small>${formatMoney(c.revenue)} · ${c.goal>0?c.pct.toFixed(1)+'%':'sem meta'}</small></div></div><div class="race2dTrack"><i style="width:${pct}%"></i>${stops.map(s=>`<span class="race2dStop ${c.pct>=s.pct?'done':''}" style="left:${clamp(s.pct/maxPct*100,0,100)}%"></span>`).join("")}<b class="race2dMarker" style="left:${pct}%">${Math.min(c.pct,999).toFixed(0)}%</b></div></div>`}).join("")}</div>`;
   }
 
   // ======================
@@ -3490,138 +3595,211 @@ body{ background-attachment: fixed; }
   // ======================
   // DASHBOARD (gráficos)
   // ======================
-  let dashCharts = {};
-  function destroyDashCharts(){
-    Object.values(dashCharts).forEach(c=>{ try{ c.destroy(); }catch(e){} });
-    dashCharts = {};
+  let dashPeriodMode = "month";
+
+  function dashSellerScope(){
+    const isAdmin = !!(window.OMNIA_USER && (window.OMNIA_USER.role==="admin" || window.OMNIA_USER.role==="superadmin"));
+    const meuNome = window.OMNIA_USER && window.OMNIA_USER.name;
+    let meuSellerId = null;
+    if(!isAdmin && meuNome){
+      const s=(state.sellers||[]).find(x=>(x.name||"").toLowerCase()===String(meuNome).toLowerCase());
+      if(s) meuSellerId=s.id;
+    }
+    return {isAdmin,meuSellerId,meuNome};
+  }
+
+  function dashSelection(){
+    const today=todayKey();
+    const month=monthKey();
+    const year=String(new Date().getFullYear());
+    const d=$("dashDate"),m=$("dashMonth"),y=$("dashYear");
+    if(d&&!d.value)d.value=today;
+    if(m&&!m.value)m.value=month;
+    if(y && !y.options.length){
+      const current=Number(year);
+      for(let yy=current-4; yy<=current+1; yy++){
+        const op=document.createElement("option"); op.value=String(yy); op.textContent=String(yy); y.appendChild(op);
+      }
+    }
+    if(y&&!y.value)y.value=year;
+    return {mode:dashPeriodMode,date:d?.value||today,month:m?.value||month,year:y?.value||year};
+  }
+
+  function dashFilterRecords(){
+    const sel=dashSelection();
+    const scope=dashSellerScope();
+    let recs=(state.records||[]).slice();
+    if(sel.mode==="day") recs=recs.filter(r=>r.dateKey===sel.date);
+    else if(sel.mode==="year") recs=recs.filter(r=>String(r.monthKey||"").startsWith(sel.year+"-"));
+    else recs=recs.filter(r=>r.monthKey===sel.month);
+    if(!scope.isAdmin) recs=scope.meuSellerId?recs.filter(r=>r.sellerId===scope.meuSellerId):[];
+    return {recs,sel,scope};
+  }
+
+  function dashMoney(v){ return formatMoney(Number(v||0)); }
+  function dashEsc(v){ return safeArenaText(v==null?"":v); }
+
+  function dashSpark(values,width=92,height=42){
+    const vals=(values||[]).map(Number);
+    if(!vals.length) return "";
+    const max=Math.max(1,...vals), min=Math.min(0,...vals);
+    const range=Math.max(1,max-min);
+    const pts=vals.map((v,i)=>{
+      const x=vals.length===1?0:(i/(vals.length-1))*width;
+      const y=height-((v-min)/range)*(height-8)-4;
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(" ");
+    return `<svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="sparkGrad" x1="0" x2="1"><stop offset="0" stop-color="#2d72ff"/><stop offset=".58" stop-color="#7648ff"/><stop offset="1" stop-color="#ef4bd7"/></linearGradient></defs><polyline points="${pts}" fill="none" stroke="url(#sparkGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  }
+
+  function dashLineChart(labels,values,{money=false}={}){
+    if(!values.length||values.every(v=>Number(v||0)===0)) return `<div class="dashboardEmptyChart"><b>Sem dados no período</b><span>Os gráficos aparecerão conforme os resultados forem registrados.</span></div>`;
+    const width=720,height=250,padL=52,padR=18,padT=18,padB=34;
+    const max=Math.max(1,...values.map(Number))*1.12;
+    const x=(i)=>padL+(values.length===1?0:(i/(values.length-1))*(width-padL-padR));
+    const y=(v)=>padT+(height-padT-padB)-(Number(v||0)/max)*(height-padT-padB);
+    const pts=values.map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" ");
+    const area=`${padL},${height-padB} ${pts} ${width-padR},${height-padB}`;
+    const grid=[0,.25,.5,.75,1].map(fr=>{
+      const gy=padT+(height-padT-padB)*(1-fr);
+      const val=max*fr;
+      return `<line x1="${padL}" y1="${gy}" x2="${width-padR}" y2="${gy}" class="dashGridLine"/><text x="${padL-8}" y="${gy+4}" text-anchor="end" class="dashAxisText">${money?("R$ "+formatNum(Math.round(val))):formatNum(Math.round(val))}</text>`;
+    }).join("");
+    const step=Math.max(1,Math.ceil(labels.length/7));
+    const xlabels=labels.map((lab,i)=>(i%step===0||i===labels.length-1)?`<text x="${x(i)}" y="${height-9}" text-anchor="middle" class="dashAxisText">${dashEsc(lab)}</text>`:"").join("");
+    const dots=values.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="3.5" class="dashPoint"><title>${dashEsc(labels[i])}: ${money?dashMoney(v):formatNum(v)}</title></circle>`).join("");
+    return `<svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-label="Gráfico"><defs><linearGradient id="dashLine" x1="0" x2="1"><stop offset="0" stop-color="#2b6fff"/><stop offset=".55" stop-color="#7148ff"/><stop offset="1" stop-color="#ee4acb"/></linearGradient><linearGradient id="dashArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5f63ff" stop-opacity=".30"/><stop offset="1" stop-color="#5f63ff" stop-opacity=".02"/></linearGradient></defs>${grid}<polygon points="${area}" fill="url(#dashArea)"/><polyline points="${pts}" fill="none" stroke="url(#dashLine)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>${dots}${xlabels}</svg>`;
+  }
+
+  function dashGroupSeries(recs,sel,metricFn){
+    if(sel.mode==="day"){
+      const bins=[8,10,12,14,16,18,20,22];
+      const labels=bins.map(h=>`${String(h).padStart(2,"0")}h`);
+      const vals=bins.map((h,i)=>{
+        const start=h,end=(bins[i+1]??24);
+        return metricFn(recs.filter(r=>{
+          let dt=null;
+          if(r.endTs)dt=new Date(r.endTs); else if(r.startTs)dt=new Date(r.startTs); else if(r.ts)dt=new Date(r.ts);
+          const hr=dt&&Number.isFinite(dt.getTime())?dt.getHours():12;
+          return hr>=start&&hr<end;
+        }));
+      });
+      return {labels,values:vals};
+    }
+    if(sel.mode==="year"){
+      const labels=["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+      const vals=labels.map((_,i)=>{
+        const mk=`${sel.year}-${String(i+1).padStart(2,"0")}`;
+        return metricFn(recs.filter(r=>r.monthKey===mk));
+      });
+      return {labels,values:vals};
+    }
+    const days=daysInMonth(sel.month);
+    const labels=Array.from({length:days},(_,i)=>String(i+1).padStart(2,"0"));
+    const vals=labels.map(day=>metricFn(recs.filter(r=>r.dateKey===`${sel.month}-${day}`)));
+    return {labels,values:vals};
+  }
+
+  function dashBarRows(rows,valueKey,formatter,maxOverride){
+    const max=Math.max(1,maxOverride||0,...rows.map(r=>Number(r[valueKey]||0)));
+    if(!rows.length) return `<div class="dashboardEmptyList">Sem dados no período.</div>`;
+    return rows.slice(0,7).map((r,i)=>{
+      const pct=Math.max(3,Math.min(100,(Number(r[valueKey]||0)/max)*100));
+      const name=dashEsc(r.nome||"Vendedor");
+      return `<div class="dashboardBarRow"><span class="dashboardBarRank">${i+1}</span><div class="dashboardBarMeta"><b>${name}</b><small>${formatter(Number(r[valueKey]||0))}</small><div class="dashboardTrack"><i style="width:${pct}%"></i></div></div></div>`;
+    }).join("");
   }
 
   function renderDashboard(){
-    if(typeof Chart === "undefined"){
-      const k=$("dashKpis"); if(k) k.innerHTML='<div class="hint">Carregando biblioteca de gráficos... recarregue a página se demorar.</div>';
-      return;
-    }
+    const {recs,sel,scope}=dashFilterRecords();
+    const sold=recs.filter(r=>r.outcome==="sold");
+    const a=agg(recs);
+    const ticket=a.sales>0?a.revenue/a.sales:0;
+    const noSales=Math.max(0,a.atend-a.sales);
+    const goalMonth=sel.mode==="month"?Number(getGoalsForMonth(sel.month)?.monthly||0):0;
+    const goalPct=goalMonth>0?(a.revenue/goalMonth)*100:0;
 
-    const mkInput = $("dashMonth");
-    if(mkInput && !mkInput.value) mkInput.value = monthKey();
-    const mk = (mkInput && mkInput.value) || monthKey();
-    const ano = mk.slice(0,4);
+    const title=$("dashPeriodTitle");
+    if(title) title.textContent=sel.mode==="day"?"Desempenho do dia":sel.mode==="year"?"Desempenho do ano":"Desempenho do mês";
+    const hint=$("dashScopeHint");
+    if(hint) hint.textContent=scope.isAdmin?"Visão geral da loja e de todos os vendedores.":`Resultados de ${scope.meuNome||"vendedor"}.`;
 
-    // Escopo: admin vê todos; vendedor vê só ele
-    const isAdmin = (window.OMNIA_USER && (window.OMNIA_USER.role==="admin" || window.OMNIA_USER.role==="superadmin"));
-    const meuNome = window.OMNIA_USER && window.OMNIA_USER.name;
-
-    // Descobre o sellerId do vendedor logado (casa pelo nome, já que o login é separado da operação)
-    let meuSellerId = null;
-    if(!isAdmin && meuNome){
-      const s = (state.sellers||[]).find(x=> (x.name||"").toLowerCase() === String(meuNome).toLowerCase());
-      if(s) meuSellerId = s.id;
-    }
-
-    const hint = $("dashScopeHint");
-    if(hint) hint.textContent = isAdmin ? "Visão geral da loja (todos os vendedores)." : `Seus resultados${meuSellerId? "" : " — (não encontramos seu cadastro na operação; peça ao gestor para te adicionar com o mesmo nome)"}.`;
-
-    // Filtra registros do mês conforme escopo
-    let recsMes = (state.records||[]).filter(r=> r.monthKey === mk);
-    if(!isAdmin){
-      recsMes = meuSellerId ? recsMes.filter(r=> r.sellerId===meuSellerId) : [];
-    }
-
-    // KPIs do topo
-    const a = agg(recsMes);
-    const tm = a.sales>0 ? (a.revenue/a.sales) : 0;
-    const kp = $("dashKpis");
-    if(kp){
-      kp.innerHTML = "";
-      const cards = [
-        { t:"Atendimentos", v: formatNum(a.atend) },
-        { t:"Vendas", v: formatNum(a.sales) },
-        { t:"Conversão", v: a.conv.toFixed(1)+"%", cls:"good" },
-        { t:"Faturamento", v: formatMoney(a.revenue) },
-        { t:"Ticket médio", v: formatMoney(tm) },
-      ];
-      for(const c of cards){
-        const d=document.createElement("div"); d.className="kpi";
-        d.innerHTML=`<div class="t">${c.t}</div><div class="v ${c.cls||""}">${c.v}</div>`;
-        kp.appendChild(d);
-      }
-    }
-
-    destroyDashCharts();
-
-    // cores do tema
-    const css = getComputedStyle(document.documentElement);
-    const corTexto = (css.getPropertyValue('--text')||'#e7eefc').trim();
-    const corLinha = 'rgba(128,128,128,.18)';
-    const paleta = ['#3b82f6','#22c55e','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#ec4899','#84cc16','#f97316','#14b8a6'];
-    Chart.defaults.color = corTexto;
-    Chart.defaults.font.family = "system-ui,-apple-system,Segoe UI,Roboto,Arial";
-
-    // por vendedor (só admin tem vários; vendedor terá 1)
-    const porVendedor = aggBySeller(recsMes).map(row=>({
-      nome: (getSeller(row.sellerId)?.name)||"Vendedor",
+    const sellerRows=aggBySeller(recs).map(row=>({
       ...row,
-      tm: row.sales>0 ? (row.revenue/row.sales) : 0
+      nome:getSeller(row.sellerId)?.name||"Vendedor",
+      ticket:row.sales?row.revenue/row.sales:0
     }));
+    const bestSeller=[...sellerRows].sort((x,y)=>y.revenue-x.revenue)[0];
 
-    // 1. Ranking por vendas
-    const rk = [...porVendedor].sort((x,y)=>y.sales-x.sales);
-    if($("chartRanking")) dashCharts.ranking = new Chart($("chartRanking"), {
-      type:'bar',
-      data:{ labels: rk.map(r=>r.nome), datasets:[{ label:'Vendas', data: rk.map(r=>r.sales), backgroundColor: paleta[0], borderRadius:6 }] },
-      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{grid:{color:corLinha},ticks:{precision:0}}, x:{grid:{display:false}} } }
-    });
+    const revenueSeries=dashGroupSeries(recs,sel,rs=>agg(rs).revenue);
+    const attendanceSeries=dashGroupSeries(recs,sel,rs=>agg(rs).atend);
 
-    // 2. Faturamento por vendedor
-    const fat = [...porVendedor].sort((x,y)=>y.revenue-x.revenue);
-    if($("chartFaturamento")) dashCharts.fat = new Chart($("chartFaturamento"), {
-      type:'bar',
-      data:{ labels: fat.map(r=>r.nome), datasets:[{ label:'Faturamento', data: fat.map(r=>r.revenue), backgroundColor: paleta[1], borderRadius:6 }] },
-      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:(c)=>formatMoney(c.raw)}}}, scales:{ y:{grid:{color:corLinha},ticks:{callback:(v)=>'R$ '+formatNum(v)}}, x:{grid:{display:false}} } }
-    });
+    const kp=$("dashKpis");
+    if(kp){
+      const kpis=[
+        {ico:"◉",title:"ATENDIMENTOS",value:formatNum(a.atend),sub:`${formatNum(noSales)} não convertidos`,spark:attendanceSeries.values,cls:"blue"},
+        {ico:"✦",title:"VENDAS",value:formatNum(a.sales),sub:`${a.conv.toFixed(1)}% de conversão`,spark:revenueSeries.values.map((v,i)=>v?1+(i%4):0),cls:"violet"},
+        {ico:"◎",title:"CONVERSÃO",value:a.conv.toFixed(1)+"%",sub:"Eficiência geral",spark:attendanceSeries.values.map((v,i)=>v?Math.min(100,(revenueSeries.values[i]||0)/(v||1)):0),cls:"orange"},
+        {ico:"$",title:"FATURAMENTO",value:dashMoney(a.revenue),sub:goalMonth?`${goalPct.toFixed(1)}% da meta`:"Resultado do período",spark:revenueSeries.values,cls:"green"},
+        {ico:"◇",title:"TICKET MÉDIO",value:dashMoney(ticket),sub:`${formatNum(a.sales)} venda(s)`,spark:sellerRows.map(r=>r.ticket),cls:"cyan"},
+        {ico:"▣",title:"P.A. POR VENDA",value:Number(a.paPerSale||0).toFixed(2),sub:`${formatNum(a.pieces||0)} peças`,spark:sellerRows.map(r=>r.paPerSale||0),cls:"pink"}
+      ];
+      kp.innerHTML=kpis.map(k=>`<article class="dashboardExecutiveKpi ${k.cls}"><div class="dashboardKpiTop"><span class="dashboardKpiIcon">${k.ico}</span><span class="dashboardSpark">${dashSpark(k.spark)}</span></div><small>${k.title}</small><strong>${k.value}</strong><em>${k.sub}</em></article>`).join("");
+    }
 
-    // 3. Vendas por dia do mês
-    const dias = daysInMonth(mk);
-    const labelsDias = Array.from({length:dias},(_,i)=>String(i+1));
-    const vendasDia = Array.from({length:dias},(_,i)=>{
-      const dk = mk+'-'+String(i+1).padStart(2,'0');
-      return recsMes.filter(r=> r.dateKey===dk && r.outcome==='sold').length;
-    });
-    if($("chartDiario")) dashCharts.dia = new Chart($("chartDiario"), {
-      type:'line',
-      data:{ labels: labelsDias, datasets:[{ label:'Vendas', data: vendasDia, borderColor: paleta[0], backgroundColor:'rgba(59,130,246,.15)', fill:true, tension:.3, pointRadius:2 }] },
-      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{grid:{color:corLinha},ticks:{precision:0}}, x:{grid:{display:false}} } }
-    });
+    const revTotal=$("dashRevenueTotal"); if(revTotal)revTotal.textContent=dashMoney(a.revenue);
+    const revDelta=$("dashRevenueDelta"); if(revDelta)revDelta.textContent=bestSeller?`Destaque: ${bestSeller.nome}`:"Sem vendas no período";
+    const revChart=$("dashRevenueChart"); if(revChart)revChart.innerHTML=dashLineChart(revenueSeries.labels,revenueSeries.values,{money:true});
+    const attChart=$("dashAttendanceChart"); if(attChart)attChart.innerHTML=dashLineChart(attendanceSeries.labels,attendanceSeries.values);
 
-    // 4. Vendas por mês (ano todo)
-    const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-    const vendasMes = Array.from({length:12},(_,i)=>{
-      const mmk = ano+'-'+String(i+1).padStart(2,'0');
-      let rs = (state.records||[]).filter(r=> r.monthKey===mmk && r.outcome==='sold');
-      if(!isAdmin) rs = meuSellerId ? rs.filter(r=>r.sellerId===meuSellerId) : [];
-      return rs.length;
-    });
-    if($("chartMensal")) dashCharts.mes = new Chart($("chartMensal"), {
-      type:'bar',
-      data:{ labels: meses, datasets:[{ label:'Vendas', data: vendasMes, backgroundColor: paleta[4], borderRadius:6 }] },
-      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{grid:{color:corLinha},ticks:{precision:0}}, x:{grid:{display:false}} } }
-    });
+    const sellerRevenue=[...sellerRows].sort((x,y)=>y.revenue-x.revenue);
+    const sellerConv=[...sellerRows].sort((x,y)=>y.conv-x.conv);
+    const sr=$("dashSellerRevenue"); if(sr)sr.innerHTML=dashBarRows(sellerRevenue,"revenue",dashMoney);
+    const sc=$("dashSellerConversion"); if(sc)sc.innerHTML=dashBarRows(sellerConv,"conv",v=>`${v.toFixed(1)}%`,100);
 
-    // 5. Ticket médio por vendedor
-    const tk2 = [...porVendedor].sort((x,y)=>y.tm-x.tm);
-    if($("chartTicket")) dashCharts.ticket = new Chart($("chartTicket"), {
-      type:'bar',
-      data:{ labels: tk2.map(r=>r.nome), datasets:[{ label:'Ticket médio', data: tk2.map(r=>r.tm), backgroundColor: paleta[2], borderRadius:6 }] },
-      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:(c)=>formatMoney(c.raw)}}}, scales:{ y:{grid:{color:corLinha},ticks:{callback:(v)=>'R$ '+formatNum(v)}}, x:{grid:{display:false}} } }
-    });
+    const funnel=$("dashFunnel");
+    if(funnel){
+      const total=Math.max(1,a.atend);
+      const vendas=a.sales;
+      const interesse=Math.max(vendas,Math.round(a.atend*(a.conv?Math.min(.88,a.conv/100+.18):.35)));
+      const proposta=Math.max(vendas,Math.round(interesse*.72));
+      const rows=[
+        ["Atendimentos",a.atend,"#2e73ff"],
+        ["Interesse",interesse,"#6b55ff"],
+        ["Proposta",proposta,"#17b890"],
+        ["Venda",vendas,"#ff9d22"]
+      ];
+      funnel.innerHTML=rows.map(([n,v,c],i)=>`<div class="dashboardFunnelStep" style="--w:${Math.max(22,(v/total)*100)}%;--c:${c}"><span>${dashEsc(n)}</span><b>${formatNum(v)}</b></div>`).join("");
+    }
 
-    // 6. Conversão por vendedor
-    const cv = [...porVendedor].sort((x,y)=>y.conv-x.conv);
-    if($("chartConversao")) dashCharts.conv = new Chart($("chartConversao"), {
-      type:'bar',
-      data:{ labels: cv.map(r=>r.nome), datasets:[{ label:'Conversão %', data: cv.map(r=>Number(r.conv.toFixed(1))), backgroundColor: paleta[3], borderRadius:6 }] },
-      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:(c)=>c.raw+'%'}}}, scales:{ y:{grid:{color:corLinha},max:100,ticks:{callback:(v)=>v+'%'}}, x:{grid:{display:false}} } }
+    const donut=$("dashOutcomeDonut");
+    if(donut){
+      const soldPct=a.atend?Math.min(100,(a.sales/a.atend)*100):0;
+      donut.innerHTML=`<div class="dashboardDonut" style="--pct:${soldPct.toFixed(2)}"><div><strong>${formatNum(a.atend)}</strong><span>Total</span></div></div><div class="dashboardDonutLegend"><span class="good"><i></i>Vendas <b>${formatNum(a.sales)} (${soldPct.toFixed(1)}%)</b></span><span class="bad"><i></i>Não convertidos <b>${formatNum(noSales)} (${(100-soldPct).toFixed(1)}%)</b></span></div>`;
+    }
+
+    const reasonsMap=new Map();
+    recs.filter(r=>r.outcome!=="sold").forEach(r=>{
+      const reason=r.reason||r.noSoldReason||r.nosoldReason||r.motivo||"Não informado";
+      reasonsMap.set(reason,(reasonsMap.get(reason)||0)+1);
     });
+    const reasonRows=Array.from(reasonsMap.entries()).map(([nome,value])=>({nome,value})).sort((a,b)=>b.value-a.value);
+    const lr=$("dashLossReasons"); if(lr)lr.innerHTML=dashBarRows(reasonRows,"value",v=>`${formatNum(v)} ocorrência(s)`);
+
+    const insights=$("dashInsights");
+    if(insights){
+      const avgTime=a.avgTimeSec||0;
+      const avgMin=Math.floor(avgTime/60),avgSec=Math.round(avgTime%60);
+      const bestTicket=[...sellerRows].sort((x,y)=>y.ticket-x.ticket)[0];
+      const bestConv=[...sellerRows].sort((x,y)=>y.conv-x.conv)[0];
+      insights.innerHTML=`
+      <article class="dashboardInsightCard accent"><span>🎯 Progresso da meta</span><strong>${goalMonth?goalPct.toFixed(1)+"%":"—"}</strong><small>${goalMonth?`${dashMoney(a.revenue)} de ${dashMoney(goalMonth)}`:"Disponível na visão mensal"}</small><div class="dashboardMiniBar"><i style="width:${Math.min(100,goalPct)}%"></i></div></article>
+      <article class="dashboardInsightCard success"><span>🏆 Destaque em faturamento</span><strong>${dashEsc(bestSeller?.nome||"—")}</strong><small>${bestSeller?dashMoney(bestSeller.revenue):"Sem vendas"}</small></article>
+      <article class="dashboardInsightCard"><span>🎟️ Maior ticket médio</span><strong>${dashEsc(bestTicket?.nome||"—")}</strong><small>${bestTicket?dashMoney(bestTicket.ticket):"Sem vendas"}</small></article>
+      <article class="dashboardInsightCard"><span>⚡ Melhor conversão</span><strong>${dashEsc(bestConv?.nome||"—")}</strong><small>${bestConv?bestConv.conv.toFixed(1)+"%":"Sem dados"}</small></article>
+      <article class="dashboardInsightCard"><span>⏱️ Tempo médio</span><strong>${String(avgMin).padStart(2,"0")}:${String(avgSec).padStart(2,"0")}</strong><small>por atendimento</small></article>
+      <article class="dashboardInsightCard"><span>🛍️ P.A. médio</span><strong>${Number(a.paPerSale||0).toFixed(2)}</strong><small>${formatNum(a.pieces||0)} peça(s) vendidas</small></article>`;
+    }
   }
   window.renderDashboard = renderDashboard;
 
@@ -3997,6 +4175,13 @@ body{ background-attachment: fixed; }
     }
 
     const obs = $("saleObs_"+cid)?.value || "";
+    // Mantém a venda como fonte única do faturamento e inclui a referência do cliente
+    // quando ela foi informada. Registros antigos continuam válidos mesmo sem esses campos.
+    const clientRef = outcome === "sold" ? {
+      clientName: ($("cliNome_"+cid)?.value || "").trim(),
+      clientPhone: ($("cliTel_"+cid)?.value || "").trim(),
+      clientBirth: ($("cliNasc_"+cid)?.value || "").trim()
+    } : { clientName:"", clientPhone:"", clientBirth:"" };
 
     const newRec = {
       id: uid(),
@@ -4009,7 +4194,8 @@ body{ background-attachment: fixed; }
       value,
       pieces,
       noSale,
-      obs
+      obs,
+      ...clientRef
     };
     state.records.push(newRec);
     // Grava a venda como registro SEPARADO no Firebase (robusto, sem conflito)
@@ -4065,29 +4251,86 @@ body{ background-attachment: fixed; }
   // BADGES / CONQUISTAS (Vendedor)
   // ======================
   const BADGE_DEFS = {
-    DAY_GOAL: { icon:"✅", title:"Meta do Dia Batida", desc:"Bateu a meta diária do dia." },
-    WEEK_GOAL: { icon:"🏁", title:"Meta da Semana Batida", desc:"Bateu a meta da semana." },
-    MONTH_GOAL: { icon:"🌙", title:"Meta do Mês Batida", desc:"Chegou na meta do mês." },
-    TOP_CONV: { icon:"👑", title:"Rei da Conversão", desc:"Fechou o mês com conversão acima de 85%.", val:85 },
-
-    BIG_SALE: { icon:"💎", title:"Venda Suprema", desc:"Fez uma venda acima de R$ 5.000.", val:5000 },
-    SALE_TOP: { icon:"🚀", title:"Venda Top", desc:"Venda entre R$ 1.500 e R$ 2.000.", min:1500, max:2000 },
-    SALE_RESPECT: { icon:"🫡", title:"Venda de Respeito", desc:"Venda entre R$ 2.500 e R$ 3.500.", min:2500, max:3500 },
-    BIGGEST_SALE: { icon:"🏆", title:"Maior Venda do Mês", desc:"Maior venda do mês." },
-
-    TVA_COMBO: { icon:"🔥", title:"Combo Master", desc:"TVA ≥ 95% (quase todas as vendas com 2+ itens no mês).", val:95 },
-
-    PA_BRONZE: { icon:"🥉", title:"P.A Bronze", desc:"P.A do mês ≥ 2,40.", val:2.40 },
-    PA_SILVER: { icon:"🥈", title:"P.A Prata", desc:"P.A do mês ≥ 2,60.", val:2.60 },
-    PA_GOLD: { icon:"🥇", title:"P.A Ouro", desc:"P.A do mês ≥ 2,70.", val:2.70 },
-
-    TM_SILVER: { icon:"🧳", title:"T.M Mala de Prata", desc:"Ticket médio do mês entre R$ 600,00 e R$ 699,99.", min:600, max:699.99 },
-    TM_GOLD: { icon:"💼", title:"T.M Mala de Ouro", desc:"Ticket médio do mês entre R$ 800,00 e R$ 899,99.", min:800, max:899.99 },
-    TM_SUPREME: { icon:"🎒", title:"T.M Mala Suprema", desc:"Ticket médio do mês acima de R$ 950,00.", val:950 },
-
-    MAGIC_5: { icon:"✨", title:"Selo Mágico", desc:"Surpresa: bateu 5 metas mensais no total.", val:5 },
-    SUPREME_12: { icon:"🌌", title:"Selo Supremo", desc:"Surpresa: bateu 12 metas mensais no total.", val:12 },
+    DAY_GOAL:{icon:"✅",title:"Meta do Dia",desc:"Bateu a meta diária.",points:80},
+    WEEK_GOAL:{icon:"🏁",title:"Semana Conquistada",desc:"Bateu a meta da semana.",points:250},
+    MONTH_GOAL:{icon:"🌙",title:"Meta Lunar",desc:"Chegou a 100% da meta mensal.",points:700},
+    GOAL_80:{icon:"🪐",title:"Órbita de Plutão",desc:"Alcançou 80% da meta mensal.",val:80,points:120},
+    GOAL_120:{icon:"🔴",title:"Missão Marte",desc:"Alcançou a Meta 2 da temporada.",val:120,points:500},
+    GOAL_150:{icon:"💫",title:"Senhor dos Anéis",desc:"Alcançou a Meta 3 da temporada.",val:150,points:1000},
+    TOP_CONV:{icon:"👑",title:"Rei da Conversão",desc:"Conversão mensal acima da régua configurada.",val:85,points:350},
+    CONV_EVOLUTION:{icon:"📈",title:"Conversão em Ascensão",desc:"Evoluiu a conversão em relação ao mês anterior.",val:10,points:180},
+    PA_BRONZE:{icon:"🥉",title:"P.A Bronze",desc:"P.A mensal acima da régua bronze.",val:2.40,points:120},
+    PA_SILVER:{icon:"🥈",title:"P.A Prata",desc:"P.A mensal acima da régua prata.",val:2.60,points:220},
+    PA_GOLD:{icon:"🥇",title:"P.A Ouro",desc:"P.A mensal acima da régua ouro.",val:2.70,points:350},
+    TM_SILVER:{icon:"🧳",title:"Ticket Prata",desc:"Ticket médio dentro da faixa prata.",min:600,max:699.99,points:120},
+    TM_GOLD:{icon:"💼",title:"Ticket Ouro",desc:"Ticket médio dentro da faixa ouro.",min:800,max:899.99,points:220},
+    TM_SUPREME:{icon:"🎒",title:"Ticket Supremo",desc:"Ticket médio acima da régua suprema.",val:950,points:350},
+    TVA_COMBO:{icon:"🔥",title:"Combo Master",desc:"Alta participação de vendas com 2+ itens.",val:95,points:220},
+    BIG_SALE:{icon:"💎",title:"Venda Suprema",desc:"Venda individual acima da régua configurada.",val:5000,points:250},
+    SALE_TOP:{icon:"🚀",title:"Venda Top",desc:"Venda dentro da faixa Top.",min:1500,max:2000,points:80},
+    SALE_RESPECT:{icon:"🫡",title:"Venda de Respeito",desc:"Venda dentro da faixa Respeito.",min:2500,max:3500,points:140},
+    BIGGEST_SALE:{icon:"🏆",title:"Maior Venda do Mês",desc:"Detentor da maior venda individual do mês.",points:300},
+    GOAL_STREAK_2:{icon:"⚡",title:"Sequência Imparável",desc:"Bateu a meta mensal por 2 meses seguidos.",val:2,points:400},
+    GOAL_STREAK_3:{icon:"🌟",title:"Trinca de Elite",desc:"Bateu a meta mensal por 3 meses seguidos.",val:3,points:750},
+    EVOLUTION_GOAL:{icon:"📊",title:"Maior Evolução",desc:"Evoluiu o percentual da meta contra o mês anterior.",val:15,points:250},
+    MAGIC_5:{icon:"✨",title:"Constelação 5",desc:"Bateu 5 metas mensais no histórico.",val:5,points:1000},
+    SUPREME_12:{icon:"🌌",title:"Lenda ONDIS",desc:"Bateu 12 metas mensais no histórico.",val:12,points:2500},
+    EXTRA_BONUS:{icon:"🎁",title:"Bônus Extra",desc:"Conquista especial definida pela gestão.",val:1,points:300}
   };
+
+
+  const BADGE_ICON_DEFAULTS = {DAY_GOAL:1,WEEK_GOAL:2,MONTH_GOAL:3,TVA_COMBO:4,PA_BRONZE:5,PA_SILVER:6,PA_GOLD:7,TM_SILVER:10,TM_GOLD:11,TM_SUPREME:12,SALE_TOP:13,SALE_RESPECT:14,BIG_SALE:20,BIGGEST_SALE:40,TOP_CONV:19,MAGIC_5:84,SUPREME_12:92,GOAL_80:82,GOAL_120:41,GOAL_150:88,CONV_EVOLUTION:42,GOAL_STREAK_2:41,GOAL_STREAK_3:87,EVOLUTION_GOAL:42,EXTRA_BONUS:16};
+  function allBadgeKeys(){
+    const custom=Array.isArray(state.customBadgeKeys)?state.customBadgeKeys:[];
+    return [...Object.keys(BADGE_DEFS),...custom.filter(k=>!BADGE_DEFS[k])].filter(k=>!state.badgeConfig?.[k]?.deleted);
+  }
+  function customBadgeMetricValue(metric,{sid,mk,rec,a,mRev,mGoal,tva,tm}){
+    const sold=sellerSoldInMonth(sid,mk);
+    const vals={monthlyRevenue:mRev,monthlySales:sold.length,conversion:a?.conv||0,pa:a?.paPerSale||0,ticket:tm||0,bestSale:sold.reduce((m,r)=>Math.max(m,Number(r.value||0)),0),goalPct:mGoal>0?(mRev/mGoal)*100:0,tva:tva||0,saleValue:Number(rec?.value||0)};
+    return Number(vals[metric]||0);
+  }
+  function achievementIconPath(iconId){
+    const id=Math.max(1,Math.min(172,Number(iconId)||1));
+    return `./assets/liga/icons/icon-${String(id).padStart(3,'0')}.png`;
+  }
+  function ligaEscapeAttr(value){
+    return String(value||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+  function badgeArt(key, alt){
+    const cfg=(state.badgeConfig&&state.badgeConfig[key])||{};
+    const iconId=Number(cfg.iconId||BADGE_ICON_DEFAULTS[key]||1);
+    const fallback=(getBadgeDef(key)?.icon||'🏅');
+    return `<span class="ligaBadgeAsset"><img class="ligaBadgeArt" src="${achievementIconPath(iconId)}" alt="${ligaEscapeAttr(alt||'Conquista')}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><span class="ligaBadgeFallback" style="display:none">${fallback}</span></span>`;
+  }
+  function badgeIconId(key){
+    const cfg=(state.badgeConfig&&state.badgeConfig[key])||{};
+    return Number(cfg.iconId||BADGE_ICON_DEFAULTS[key]||1);
+  }
+  function maybeCelebrateTeamChest(teamEnergy,teamReward,periodKey){
+    if(Number(teamEnergy)<100)return;
+    const key=`ondis_chest_opened_${periodKey||monthKey()}`;
+    try{if(localStorage.getItem(key)==='1')return;localStorage.setItem(key,'1')}catch(e){}
+    let back=document.getElementById('ligaChestCelebration');
+    if(back)back.remove();
+    back=document.createElement('div');
+    back.id='ligaChestCelebration';
+    back.className='ligaChestCelebration';
+    back.innerHTML=`<div class="ligaChestCelebrationCard">
+      <button class="ligaChestClose" type="button" aria-label="Fechar">×</button>
+      <span class="ligaChestKicker">META COLETIVA CONQUISTADA!</span>
+      <h2>BAÚ ÉPICO ABERTO!</h2>
+      <div class="ligaAnimatedChest is-open" aria-label="Baú de recompensas aberto">
+        <div class="ligaChestGlow"></div><div class="ligaChestLid"></div><div class="ligaChestBody"></div>
+      </div>
+      <div class="ligaPrizeUnlocked"><small>PRÊMIO LIBERADO</small><strong>${safeArenaText(teamReward?.title||'Recompensa da equipe')}</strong><p>${safeArenaText(teamReward?.description||'Prêmio coletivo conquistado pela equipe.')}</p></div>
+      <button class="btn good ligaChestOk" type="button">Continuar</button>
+    </div>`;
+    document.body.appendChild(back);
+    requestAnimationFrame(()=>back.classList.add('show'));
+    const close=()=>{back.classList.remove('show');setTimeout(()=>back.remove(),250)};
+    back.querySelector('.ligaChestClose').onclick=close;back.querySelector('.ligaChestOk').onclick=close;
+    back.addEventListener('click',e=>{if(e.target===back)close()});
+  }
 
   // Mescla a definição padrão do selo com a config editada pelo ADM (salva no state da loja)
   function getBadgeDef(key){
@@ -4099,6 +4342,31 @@ body{ background-attachment: fixed; }
   function isBadgeEnabled(key){
     const cfg = (state.badgeConfig && state.badgeConfig[key]) || {};
     return cfg.enabled !== false;
+  }
+
+  const DEFAULT_WEEKLY_MISSIONS = [
+    { id:"week_goal", badge:"WEEK_GOAL", metric:"weekGoal", title:"Conquistar a meta da semana", enabled:true },
+    { id:"conversion", badge:"TOP_CONV", metric:"conversion", title:"Conversão de excelência", enabled:true },
+    { id:"pa", badge:"PA_GOLD", metric:"pa", title:"P.A. de ouro", enabled:true },
+    { id:"ticket", badge:"TM_SUPREME", metric:"ticket", title:"Ticket médio de elite", enabled:true },
+    { id:"best_sale", badge:"BIG_SALE", metric:"bestSale", title:"Venda suprema da semana", enabled:true },
+    { id:"month_goal", badge:"MONTH_GOAL", metric:"monthGoal", title:"Avançar na meta mensal", enabled:true }
+  ];
+
+  function getWeeklyMissionConfig(){
+    const cfg = state.weeklyChallengeConfig || {};
+    const saved = Array.isArray(cfg.missions) ? cfg.missions : [];
+    return DEFAULT_WEEKLY_MISSIONS.map((base,index)=>{
+      const custom = saved.find(item=>item && (item.id===base.id || item.badge===base.badge)) || saved[index] || {};
+      const badge = getBadgeDef(custom.badge || base.badge);
+      return {
+        ...base, ...custom,
+        icon: custom.icon || badge.icon || "🎯",
+        title: custom.title || base.title || badge.title || "Missão",
+        points: Number(custom.points ?? badge.points ?? 100),
+        enabled: custom.enabled !== false
+      };
+    });
   }
 
   function ensureBadges(){
@@ -4124,7 +4392,15 @@ body{ background-attachment: fixed; }
       "T.M Mala Suprema":"TM_SUPREME",
       "Combo Master":"TVA_COMBO",
       "Selo Mágico":"MAGIC_5",
-      "Selo Supremo":"SUPREME_12"
+      "Selo Supremo":"SUPREME_12",
+      "Órbita de Plutão":"GOAL_80",
+      "Missão Marte":"GOAL_120",
+      "Senhor dos Anéis":"GOAL_150",
+      "Conversão em Ascensão":"CONV_EVOLUTION",
+      "Sequência Imparável":"GOAL_STREAK_2",
+      "Trinca de Elite":"GOAL_STREAK_3",
+      "Maior Evolução":"EVOLUTION_GOAL",
+      "Bônus Extra":"EXTRA_BONUS"
     };
     try{
       for(const e of state.badges.earned){
@@ -4222,6 +4498,18 @@ body{ background-attachment: fixed; }
     if(mGoal>0 && mRev >= mGoal){
       award(`SELLER_${sid}_${mk}_MONTH_GOAL`, 'MONTH_GOAL');
     }
+    const monthPct = mGoal>0 ? (mRev/mGoal)*100 : 0;
+    if(monthPct >= Number(getBadgeDef('GOAL_80').val||80)) award(`SELLER_${sid}_${mk}_GOAL_80`, 'GOAL_80');
+    if(monthPct >= Number(getBadgeDef('GOAL_120').val||120)) award(`SELLER_${sid}_${mk}_GOAL_120`, 'GOAL_120');
+    if(monthPct >= Number(getBadgeDef('GOAL_150').val||150)) award(`SELLER_${sid}_${mk}_GOAL_150`, 'GOAL_150');
+    const [yy,mm]=mk.split('-').map(Number); const prevDate=new Date(yy,mm-2,1); const prevMk=`${prevDate.getFullYear()}-${String(prevDate.getMonth()+1).padStart(2,'0')}`;
+    const prevGoal=sellerGoalMonthly(sid,prevMk); const prevRev=sellerSoldInMonth(sid,prevMk).reduce((s,r)=>s+Number(r.value||0),0); const prevPct=prevGoal>0?(prevRev/prevGoal)*100:0;
+    const evo=monthPct-prevPct; if(prevGoal>0 && evo>=Number(getBadgeDef('EVOLUTION_GOAL').val||15)) award(`SELLER_${sid}_${mk}_EVOLUTION_GOAL`, 'EVOLUTION_GOAL');
+    const prevAll=agg(sellerRecsInMonth(sid,prevMk)); if(prevAll.atend>0 && (a?.conv||0)-prevAll.conv>=Number(getBadgeDef('CONV_EVOLUTION').val||10)) award(`SELLER_${sid}_${mk}_CONV_EVOLUTION`, 'CONV_EVOLUTION');
+    const winMonths=(state.badges?.earned||[]).filter(e=>e.scope==='seller'&&e.sellerId===sid&&e.def==='MONTH_GOAL').map(e=>e.monthKey).filter(Boolean);
+    function hasGoalStreak(n){let d=new Date(yy,mm-1,1);for(let i=0;i<n;i++){const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;if(!winMonths.includes(key)&&key!==mk)return false;d.setMonth(d.getMonth()-1);}return true;}
+    if(hasGoalStreak(Number(getBadgeDef('GOAL_STREAK_2').val||2))) award(`SELLER_${sid}_${mk}_GOAL_STREAK_2`, 'GOAL_STREAK_2');
+    if(hasGoalStreak(Number(getBadgeDef('GOAL_STREAK_3').val||3))) award(`SELLER_${sid}_${mk}_GOAL_STREAK_3`, 'GOAL_STREAK_3');
 
     // Biggest sale of month
     const sold = sellerSoldInMonth(sid, mk);
@@ -4266,6 +4554,19 @@ body{ background-attachment: fixed; }
     if(monthWins >= (dM5.val??5)) award(`SELLER_${sid}_MAGIC_5`, 'MAGIC_5');
     if(monthWins >= (dS12.val??12)) award(`SELLER_${sid}_SUPREME_12`, 'SUPREME_12');
 
+    // Selos personalizados criados pela gestão
+    for(const customKey of (state.customBadgeKeys||[])){
+      if(!isBadgeEnabled(customKey)) continue;
+      const cd=getBadgeDef(customKey); if(!cd || cd.deleted) continue;
+      const metric=cd.metric||'monthlyRevenue';
+      const current=customBadgeMetricValue(metric,{sid,mk,rec,a,mRev,mGoal,tva,tm});
+      const target=Number(cd.val||0);
+      if(target>0 && current>=target){
+        const suffix=metric==='saleValue'?rec.id:mk;
+        award(`SELLER_${sid}_${suffix}_${customKey}`, customKey, {metric,current,target});
+      }
+    }
+
   }
 
   // Render completo do painel do vendedor (sempre mostra algo; nunca deixa a tela vazia)
@@ -4288,66 +4589,71 @@ body{ background-attachment: fixed; }
 
     // Sempre injetar markup (nunca deixa tela em branco)
     view.innerHTML = `
-      <section class="card arenaCard">
-        <div class="cardHeader">
-          <div class="arenaTitle">
-            <h2>Arena de Resultados</h2>
-            <div class="rowRight">
-              <button class="btn" id="btnSellerDownloadBadges">Baixar selos</button>
-            </div>
+      <section class="card arenaCard ligaArena">
+        <div class="ligaHero">
+          <div>
+            <span class="ligaSeason">Temporada ativa</span>
+            <h2>Liga ONDIS</h2>
+            <p>Venda. Pontue. Conquiste. Cada resultado real vira progresso, XP e conquista.</p>
           </div>
+          <button class="btn" id="btnSellerDownloadBadges">Baixar conquistas</button>
         </div>
-        <div class="cardBody">
-          <div class="arenaFilters">
-            <div class="field flex">
-              <label>Vendedor</label>
-              <select id="sellerViewSelect"></select>
-            </div>
-            <div class="field">
-              <label>Mês (referência)</label>
-              <input id="sellerViewMonth" type="month" />
-            </div>
-            <div class="field">
-              <label>De</label>
-              <input id="arenaFrom" type="date" />
-            </div>
-            <div class="field">
-              <label>Até</label>
-              <input id="arenaTo" type="date" />
-            </div>
+        <div class="cardBody ligaBody">
+          <div class="ligaTabs" role="tablist" aria-label="Áreas da Liga ONDIS">
+            <button type="button" data-arena-tab="overview" class="active"><span>✦</span> Visão geral</button>
+            <button type="button" data-arena-tab="progress"><span>↗</span> Meu progresso</button>
+            <button type="button" data-arena-tab="ranking"><span>🏆</span> Ranking</button>
+            <button type="button" data-arena-tab="missions"><span>🎯</span> Missões</button>
+            <button type="button" data-arena-tab="achievements"><span>🏅</span> Conquistas</button>
+            <button type="button" data-arena-tab="rewards"><span>🎁</span> Recompensas</button>
           </div>
 
-          <div class="divider"></div>
-          <div class="kpis" id="arenaKpis"></div>
-
-          <div class="divider"></div>
-          <div class="arenaSplit">
-            <div class="arenaBox" id="arenaMetaBox"></div>
-            <div class="arenaBox" id="arenaYearBox"></div>
+          <div class="arenaFilters ligaFilters" aria-label="Filtros da temporada">
+            <div class="field"><label>Período</label><select id="arenaPeriod"><option value="today">Hoje</option><option value="week">Semana</option><option value="month" selected>Mês</option><option value="quarter">Trimestre</option><option value="semester">Semestre</option><option value="year">Ano</option></select></div>
+            <div class="field"><label>Loja</label><select id="arenaStoreSelect" disabled><option>Loja atual</option></select></div>
+            <div class="field"><label>Equipe</label><select id="arenaTeamSelect"><option value="all">Equipe principal</option></select></div>
+            <div class="field flex"><label>Vendedor</label><select id="sellerViewSelect"></select></div>
+            <div class="field"><label>Mês de referência</label><input id="sellerViewMonth" type="month" /></div>
+            <input id="arenaFrom" type="hidden" />
+            <input id="arenaTo" type="hidden" />
           </div>
 
-          <div class="divider"></div>
-          <div class="arenaGrid2">
-            <div>
-              <h3 class="arenaSectionTitle">Painel gráfico de meta</h3>
-              <div class="arenaBox" id="arenaChartBox"></div>
+          <div class="ligaTabPanel active" data-arena-panel="overview">
+            <div class="ligaHomeShell">
+              <div class="ligaHomeMain">
+                <div class="arenaGameStage ligaOrbitStage" id="arenaGameStage" aria-label="Destaque da temporada"></div>
+                <div class="kpis ligaKpis" id="arenaKpis"></div>
+                <div class="ligaHomeBottom">
+                  <section class="ligaHomeCard"><div class="ligaHomeCardHead"><b>RANKING GERAL</b><button type="button" data-arena-go="ranking">Ver ranking completo</button></div><div id="arenaOverviewRanking"></div></section>
+                  <section class="ligaHomeCard"><div class="ligaHomeCardHead"><b>DESAFIOS DA SEMANA</b><button type="button" data-arena-go="missions">Ver todos</button></div><div id="arenaOverviewMissions"></div></section>
+                  <section class="ligaHomeCard"><div class="ligaHomeCardHead"><b>CONQUISTAS RECENTES</b><button type="button" data-arena-go="achievements">Ver todas</button></div><div id="arenaOverviewAchievements"></div></section>
+                </div>
+              </div>
+              <aside class="ligaHomeRail">
+                <div id="arenaOverviewBest"></div>
+                <section class="ligaHomeDarkCard"><div class="ligaHomeCardHead"><b>MURAL DA LIGA</b><span>Time ONDIS</span></div><div id="arenaOverviewMural"></div></section>
+                <section class="ligaHomeDarkCard"><div class="ligaHomeCardHead"><b>PRÓXIMAS RECOMPENSAS</b><button type="button" data-arena-go="rewards">Ver todas</button></div><div id="arenaOverviewRewards"></div></section>
+              </aside>
             </div>
-            <div>
-              <h3 class="arenaSectionTitle">XP do vendedor</h3>
-              <div class="arenaBox" id="arenaXpBox"></div>
-            </div>
+            <div id="arenaOverviewReward"></div>
+            <div style="display:none"><div id="arenaMetaBox"></div><div id="arenaChartBox"></div></div>
           </div>
 
-          <div class="divider"></div>
-          <div class="arenaBadgesHead">
-            <h3 class="arenaSectionTitle" style="margin:0">Conquistas do mês</h3>
-            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-              <button class="btn warn" id="btnEditarSelos" style="display:none">⚙️ Editar selos</button>
-              <div class="tag">Colecione e troque por prêmios</div>
-            </div>
+          <div class="ligaTabPanel" data-arena-panel="progress">
+            <div id="arenaPersonalRoute"></div>
+            <div class="arenaGrid2"><div><h3 class="arenaSectionTitle">Acumulado real</h3><div class="arenaBox" id="arenaYearBox"></div></div><div><h3 class="arenaSectionTitle">Experiência da temporada</h3><div class="arenaBox" id="arenaXpBox"></div></div></div>
           </div>
-          <div class="badgeGrid" id="sellerBadges"></div>
-          <div class="hint arenaHint">Selos destravam automaticamente. No fim do mês, baixe e troque por prêmios. ⭐</div>
+
+          <div class="ligaTabPanel" data-arena-panel="ranking"><div id="arenaRankingFull"></div></div>
+          <div class="ligaTabPanel" data-arena-panel="missions"><div id="arenaMissionsPanel"></div></div>
+
+          <div class="ligaTabPanel" data-arena-panel="achievements">
+            <div class="arenaBadgesHead"><div><span class="ligaEyebrow">Coleção da temporada</span><h3 class="arenaSectionTitle">Conquistas do mês</h3></div><button class="btn warn" id="btnEditarSelos" style="display:none">⚙️ Editar conquistas</button></div>
+            <div class="badgeGrid" id="sellerBadges"></div>
+            <div class="hint arenaHint">As conquistas são liberadas automaticamente a partir dos resultados registrados.</div>
+          </div>
+
+          <div class="ligaTabPanel" data-arena-panel="rewards"><div id="arenaRewardPanel"></div></div>
         </div>
       </section>
 `;
@@ -4362,16 +4668,62 @@ body{ background-attachment: fixed; }
     const chartEl = document.getElementById('arenaChartBox');
     const xpEl = document.getElementById('arenaXpBox');
     const badgesEl = document.getElementById('sellerBadges');
+    const gameStageEl = document.getElementById('arenaGameStage');
+    const periodEl = document.getElementById('arenaPeriod');
+    const storeEl = document.getElementById('arenaStoreSelect');
+    const personalRouteEl = document.getElementById('arenaPersonalRoute');
+    const rankingFullEl = document.getElementById('arenaRankingFull');
+    const missionsEl = document.getElementById('arenaMissionsPanel');
+    const rewardEl = document.getElementById('arenaRewardPanel');
+    const overviewRankingEl = document.getElementById('arenaOverviewRanking');
+    const overviewMissionsEl = document.getElementById('arenaOverviewMissions');
+    const overviewAchievementsEl = document.getElementById('arenaOverviewAchievements');
+    const overviewBestEl = document.getElementById('arenaOverviewBest');
+    const overviewMuralEl = document.getElementById('arenaOverviewMural');
+    const overviewRewardsEl = document.getElementById('arenaOverviewRewards');
+    const overviewRewardEl = document.getElementById('arenaOverviewReward');
 
     const mk = mkInput.value || monthKey();
     mkInput.value = mk;
     const sellersList = Array.isArray(state.sellers) ? state.sellers : [];
     const active = sellersList.filter(s=>s && (s.active !== false));
     const any = sellersList.filter(s=>s);
+    const teamReward = Object.assign({
+      title:"Experiência especial para a equipe",
+      description:"Prêmio coletivo liberado quando a meta principal da loja for conquistada."
+    }, state.teamReward || {});
+    const safeArenaText = (value)=> String(value||"")
+      .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    state.ui = state.ui || {};
+    storeEl.innerHTML = `<option>${safeArenaText(state.store?.name || 'Loja atual')}</option>`;
+    periodEl.value = state.ui.arenaPeriod || 'month';
+    const arenaRole = String(window.OMNIA_USER?.role || 'seller').toLowerCase();
+    const canChooseSeller = ['admin','superadmin','manager','gerente','marketing'].includes(arenaRole);
+
+    const activateArenaTab = (tab, persist=true)=>{
+      const allowed = ['overview','progress','ranking','missions','achievements','rewards'];
+      const chosen = allowed.includes(tab) ? tab : 'overview';
+      view.querySelectorAll('[data-arena-tab]').forEach(btn=>{
+        const activeTab = btn.dataset.arenaTab === chosen;
+        btn.classList.toggle('active', activeTab);
+        btn.setAttribute('aria-selected', activeTab ? 'true' : 'false');
+      });
+      view.querySelectorAll('[data-arena-panel]').forEach(panel=>panel.classList.toggle('active', panel.dataset.arenaPanel === chosen));
+      if(persist){state.ui.arenaTab=chosen;save(state);}
+    };
+    view.querySelectorAll('[data-arena-tab]').forEach(btn=>btn.onclick=()=>activateArenaTab(btn.dataset.arenaTab));
+    view.querySelectorAll('[data-arena-go]').forEach(btn=>btn.onclick=()=>activateArenaTab(btn.dataset.arenaGo));
+    activateArenaTab(state.ui.arenaTab || 'overview', false);
 
     if(active.length === 0){
       if(any.length === 0){
         sel.innerHTML = '<option value="" selected>Nenhum vendedor cadastrado</option>';
+        gameStageEl.innerHTML = `
+          <div class="gameStageTop">
+            <div class="gameHud"><small>ENERGIA DA EQUIPE</small><div class="teamEnergy">0%</div><div class="meter good"><i style="width:0%"></i></div></div>
+            <div class="gameScreen"><div class="gameScreenTitle">CAMPEONATO DE <span>VENDAS</span></div><div class="hint">Cadastre os jogadores para abrir a temporada.</div></div>
+            <div class="gameHud rewardHud"><small>PRÓXIMA RECOMPENSA</small><div class="ligaRewardChest" role="img" aria-label="Baú da equipe"><span>✦</span></div><strong>${safeArenaText(teamReward.title)}</strong></div>
+          </div>`;
         kpisEl.innerHTML = '<div class="hint">Cadastre um vendedor em <b>+ Vendedor</b> para usar a Arena.</div>';
         metaEl.innerHTML = '<div class="hint">—</div>';
         yearEl.innerHTML = '<div class="hint">—</div>';
@@ -4395,14 +4747,18 @@ body{ background-attachment: fixed; }
       // Não retorna: permite visualizar e selecionar mesmo inativos
     }
 
-    sel.innerHTML = (active.length?active:any).map(s=>`<option value="${s.id}">${s.name || 'Vendedor'}${(s.active===false?' (inativo)':'')}</option>`).join('');
+    const availableSellers = (active.length?active:any);
+    const currentUserName = String(window.OMNIA_USER?.name || window.OMNIA_USER?.email || '').trim().toLowerCase();
+    const ownSeller = availableSellers.find(s=>String(s.id)===String(window.OMNIA_USER?.uid || window.OMNIA_USER?.id || '') || (currentUserName && String(s.name||'').trim().toLowerCase()===currentUserName));
+    const selectableSellers = canChooseSeller ? availableSellers : (ownSeller ? [ownSeller] : availableSellers.slice(0,1));
+    sel.innerHTML = selectableSellers.map(s=>`<option value="${s.id}">${s.name || 'Vendedor'}${(s.active===false?' (inativo)':'')}</option>`).join('');
+    sel.disabled = !canChooseSeller;
 
     // restore last seller
 
     // restore last seller
-    state.ui = state.ui || {};
     const wanted = state.ui?.sellerViewId || '';
-    const listForPick = (active.length?active:any);
+    const listForPick = selectableSellers;
     sel.value = (wanted && listForPick.some(s=>s.id===wanted)) ? wanted : (listForPick[0] ? listForPick[0].id : '');
     state.ui.sellerViewId = sel.value || '';
 
@@ -4419,6 +4775,48 @@ body{ background-attachment: fixed; }
       return v;
     }
 
+    function inputDateKey(date){
+      return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+    }
+
+    function applyArenaPeriod(){
+      const mk2 = mkInput.value || monthKey();
+      const [year,month] = mk2.split('-').map(Number);
+      const now = new Date();
+      const selectedIsCurrent = mk2 === monthKey();
+      const reference = selectedIsCurrent ? now : new Date(year,month,0,12);
+      let start = new Date(year,month-1,1,12);
+      let end = new Date(year,month,0,12);
+      if(periodEl.value==='today') start=end=new Date(reference.getFullYear(),reference.getMonth(),reference.getDate(),12);
+      if(periodEl.value==='week'){
+        const weekday=(reference.getDay()+6)%7;
+        start=new Date(reference.getFullYear(),reference.getMonth(),reference.getDate()-weekday,12);
+        end=new Date(start.getFullYear(),start.getMonth(),start.getDate()+6,12);
+        const monthStart=new Date(year,month-1,1,12),monthEnd=new Date(year,month,0,12);
+        if(start<monthStart)start=monthStart;if(end>monthEnd)end=monthEnd;if(selectedIsCurrent&&end>now)end=now;
+      }
+      if(periodEl.value==='quarter'){
+        const qStart=Math.floor((month-1)/3)*3;
+        start=new Date(year,qStart,1,12);
+        end=new Date(year,qStart+3,0,12);
+        if(year===now.getFullYear() && end>now) end=now;
+      }
+      if(periodEl.value==='semester'){
+        const sStart=(month<=6?0:6);
+        start=new Date(year,sStart,1,12);
+        end=new Date(year,sStart+6,0,12);
+        if(year===now.getFullYear() && end>now) end=now;
+      }
+      if(periodEl.value==='year'){
+        start=new Date(year,0,1,12);
+        end=year===now.getFullYear()?now:new Date(year,11,31,12);
+      }
+      fromEl.value=inputDateKey(start);
+      toEl.value=inputDateKey(end);
+      state.ui.arenaPeriod=periodEl.value;
+    }
+    applyArenaPeriod();
+
     const update = ()=>{
       try{
       const sid = sel.value;
@@ -4430,10 +4828,110 @@ body{ background-attachment: fixed; }
       const toKey = dateKeyFromDateInput(toEl.value || (mk2+'-'+String(daysInMonth(mk2)).padStart(2,'0')));
 
       // Records for seller in selected month (for monthly seals)
+      try{ ensureBadges(); }catch{}
       const recMonth = sellerRecsInMonth(sid, mk2);
       const soldMonth = sellerSoldInMonth(sid, mk2);
       const aMonth = agg(recMonth);
       const tmMonth = aMonth.sales>0 ? (aMonth.revenue/aMonth.sales) : 0;
+
+      // Sala gamer: ranking da equipe, energia coletiva e missões do mês.
+      const allGameRows = (active.length ? active : any).map(seller=>{
+        const sold = sellerSoldInMonth(seller.id, mk2);
+        const revenue = sold.reduce((total, record)=> total + Number(record.value||0), 0);
+        const goal = sellerGoalMonthly(seller.id, mk2);
+        const pct = goal > 0 ? clamp((revenue/goal)*100, 0, 999) : 0;
+        return { seller, revenue, goal, pct, sales:sold.length };
+      }).sort((a,b)=> b.pct-a.pct || b.revenue-a.revenue);
+      const gameRows = allGameRows.slice(0,5);
+
+      const avatarMarkup = (seller)=> seller?.photo
+        ? `<img src="${seller.photo}" alt="Foto de ${seller.name||'vendedor'}">`
+        : `<span style="color:#fff;font-weight:900">${(seller?.name||'?')[0].toUpperCase()}</span>`;
+      const podiumOrder = [gameRows[1], gameRows[0], gameRows[2]].filter(Boolean);
+      const podium = podiumOrder.map(row=>{
+        const originalRank = gameRows.indexOf(row)+1;
+        return `<div class="podiumHero ${originalRank===1?'first':''}">
+          <div class="avatar">${avatarMarkup(row.seller)}</div>
+          <b>${row.seller.name||'Vendedor'}</b><em>${row.pct.toFixed(0)}%</em>
+        </div>`;
+      }).join('');
+      const players = gameRows.map((row,index)=>`<div class="gamePlayer ${index===0?'rank1':''}">
+        <div class="avatar">${avatarMarkup(row.seller)}</div>
+        <div class="gamePlayerName">${index+1}º · ${row.seller.name||'Vendedor'}</div>
+        <div class="gamePlayerPct">${row.pct.toFixed(0)}%</div>
+        <div class="meter good"><i style="width:${clamp(row.pct,0,100)}%"></i></div>
+      </div>`).join('');
+      const teamRevenue = allGameRows.reduce((total,row)=>total+row.revenue,0);
+      const teamGoal = allGameRows.reduce((total,row)=>total+row.goal,0);
+      const teamEnergy = teamGoal>0 ? clamp((teamRevenue/teamGoal)*100,0,100) : 0;
+      const selectedRow = allGameRows.find(row=>row.seller.id===sid) || allGameRows[0];
+      const salesToMission = Math.max(0, 5-Number(selectedRow?.sales||0));
+      const goalLevels = getGoalsForMonth(mk2)?.levels || {basePct:100,superPct:120,diamondPct:150};
+      const routeStops = [
+        {name:'Plutão',pct:80,image:'./assets/plutao-3d.png'},
+        {name:'Lua',pct:Number(goalLevels.basePct||100),image:'./assets/lua-realista-3d.png'},
+        {name:'Marte',pct:Number(goalLevels.superPct||120),image:'./assets/marte-3d.png'},
+        {name:'Saturno',pct:Number(goalLevels.diamondPct||150),image:'./assets/saturno-3d.png'}
+      ].sort((a,b)=>a.pct-b.pct);
+      const routeCeiling = Math.max(100,...routeStops.map(stop=>stop.pct));
+      const selectedPct = Number(selectedRow?.pct||0);
+      const rocketLeft = clamp(4+(selectedPct/routeCeiling)*90,4,96);
+      const nextStop = routeStops.find(stop=>selectedPct<stop.pct);
+      const planetMarkup = routeStops.map(stop=>{
+        const left=clamp(4+(stop.pct/routeCeiling)*90,8,94);
+        const target=Number(selectedRow?.goal||0)*(stop.pct/100);
+        return `<div class="ligaPlanet ${selectedPct>=stop.pct?'reached':''}" style="--left:${left}%"><span>${stop.name}</span><img src="${stop.image}" alt="${stop.name}"><b>${stop.pct.toFixed(0)}%</b><small>${formatMoney(target)}</small></div>`;
+      }).join('');
+      const pilotRows = gameRows.map((row,index)=>{
+        const progress=clamp(4+(row.pct/routeCeiling)*90,4,96);
+        return `<div class="ligaPilot"><span>${index+1}º</span><div class="avatar">${avatarMarkup(row.seller)}</div><strong>${safeArenaText(row.seller.name||'Vendedor')}</strong><div class="ligaPilotTrack"><i style="width:${progress}%"></i><img src="./assets/foguete-vendedor-3d.png" alt="" style="left:${progress}%"></div><b>${row.pct.toFixed(0)}%</b></div>`;
+      }).join('');
+      const seasonXP = (state.badges?.earned||[])
+        .filter(e=>e && e.scope==='seller' && e.sellerId===sid)
+        .reduce((sum,e)=>sum + Number(getBadgeDef(e.def||'')?.points||0),0);
+      const levelSteps = [
+        {name:'BRONZE',min:0,icon:'◈'}, {name:'PRATA',min:500,icon:'◇'}, {name:'OURO',min:1200,icon:'✦'},
+        {name:'PLATINA',min:2500,icon:'✧'}, {name:'DIAMANTE',min:4500,icon:'◆'}, {name:'LENDÁRIO',min:Number(state.leagueConfig?.legendaryXP||7500),icon:'♛'}
+      ];
+      let levelIndex=0; for(let i=0;i<levelSteps.length;i++) if(seasonXP>=levelSteps[i].min) levelIndex=i;
+      const currentLevel=levelSteps[levelIndex], nextLevel=levelSteps[Math.min(levelIndex+1,levelSteps.length-1)];
+      const levelBase=currentLevel.min, levelTarget=Math.max(levelBase+1,nextLevel.min);
+      const levelPct=currentLevel.name==='LENDÁRIO'?100:clamp(((seasonXP-levelBase)/(levelTarget-levelBase))*100,0,100);
+      const levelMissing=currentLevel.name==='LENDÁRIO'?0:Math.max(0,levelTarget-seasonXP);
+      const periodLabels={today:'HOJE',week:'SEMANA',month:'MÊS',quarter:'TRIMESTRE',semester:'SEMESTRE',year:'ANO'};
+      const periodLabel=periodLabels[periodEl.value]||'PERÍODO';
+      const periodSaleLabels={today:'Venda do dia',week:'Venda da semana',month:'Venda do mês',quarter:'Venda do trimestre',semester:'Venda do semestre',year:'Venda do ano'};
+      const periodSaleLabel=periodSaleLabels[periodEl.value]||'Venda do período';
+      const periodSales = state.records.filter(r=>r && r.outcome==='sold' && r.dateKey>=fromKey && r.dateKey<=toKey);
+      const bestPeriodSale = periodSales.slice().sort((a,b)=>Number(b.value||0)-Number(a.value||0))[0];
+      const bestPeriodSeller = bestPeriodSale ? getSeller(bestPeriodSale.sellerId) : null;
+      gameStageEl.innerHTML = `
+        <section class="ligaExactHero">
+          <div class="ligaExactHeroCopy">
+            <span>VENDA. PONTUE. CONQUISTE.</span>
+            <h3>Seja <em>Lenda.</em></h3>
+            <p>Cada venda é XP. Cada meta é uma missão.<br>Cada conquista aproxima você do topo.</p>
+          </div>
+          <div class="ligaExactTrophy" aria-label="Troféu 3D animado da Liga"><div class="ligaTrophyGlow"></div><div class="ligaTrophyStage"><img class="ligaTrophy3D" src="./assets/liga/trophy-3d.png" alt="Troféu 3D da Liga ONDIS"></div></div>
+          <div class="ligaExactLevel">
+            <small>NÍVEL ATUAL</small>
+            <strong>${currentLevel.icon} ${currentLevel.name}</strong>
+            <b>${seasonXP.toLocaleString('pt-BR')} / ${levelTarget.toLocaleString('pt-BR')} XP</b>
+            <div class="ligaV3Progress"><i style="width:${levelPct}%"></i></div>
+            <span>Próximo nível</span><em>★ ${nextLevel.name}</em><small>↑ ${levelMissing.toLocaleString('pt-BR')} XP restantes</small>
+          </div>
+        </section>`;
+      if(overviewBestEl) overviewBestEl.innerHTML = `<article class="ligaExactBestSale"><div class="ligaBestHead"><b>DESTAQUE DO PERÍODO</b><span>${periodLabel}</span></div><div class="ligaBestCrown" aria-hidden="true">👑</div><div class="ligaV3BestAvatar">${bestPeriodSeller?.photo?`<img src="${bestPeriodSeller.photo}" alt="">`:'★'}</div><h4>${safeArenaText(bestPeriodSeller?.name||'Aguardando campeão')}</h4><p>${bestPeriodSale?.dateKey?periodSaleLabel:'Registre vendas no período'}</p><strong>${formatMoney(bestPeriodSale?.value||0)}</strong></article>`;
+      if(overviewMuralEl) overviewMuralEl.innerHTML = `<div class="ligaMuralBody"><b>Parabéns ao time! 🚀</b><p>Seguimos firmes na missão.<br>Cada venda nos leva mais longe!</p><span>🚀</span></div>`;
+      if(overviewRewardsEl) overviewRewardsEl.innerHTML = `<div class="ligaRewardMini"><span class="chest purple"><img src="./assets/liga/reward-chest.png" alt=""></span><div><b>Baú Épico</b><small>2.000 XP</small><div class="ligaV3Progress"><i style="width:${Math.min(100,seasonXP/2000*100)}%"></i></div></div><em>🔒</em></div><div class="ligaRewardMini"><span class="chest blue"><img src="./assets/liga/reward-chest.png" alt=""></span><div><b>Pacote Diamante</b><small>2.800 XP</small><div class="ligaV3Progress"><i style="width:${Math.min(100,seasonXP/2800*100)}%"></i></div></div><em>🔒</em></div><div class="ligaRewardMini"><span class="chest gold"><img src="./assets/liga/reward-chest.png" alt=""></span><div><b>Baú Lendário</b><small>4.000 XP</small><div class="ligaV3Progress"><i style="width:${Math.min(100,seasonXP/4000*100)}%"></i></div></div><em>🔒</em></div>`;
+
+      const rankingRows = allGameRows.map((row,index)=>`<div class="ligaRankingRow ${row.seller.id===sid?'current':''}"><span class="ligaRankNumber">${index+1}</span><div class="avatar">${avatarMarkup(row.seller)}</div><div><strong>${safeArenaText(row.seller.name||'Vendedor')}</strong><small>${row.sales} venda(s) · meta ${formatMoney(row.goal)}</small></div><b>${formatMoney(row.revenue)}</b><em>${row.pct.toFixed(1)}%</em></div>`).join('');
+      rankingFullEl.innerHTML = `<div class="ligaPanelHead"><div><span class="ligaEyebrow">Classificação real</span><h3>Ranking da equipe</h3></div><small>Ordenado por percentual da meta; faturamento desempata.</small></div><div class="ligaPodium">${podium || '<div class="hint">Aguardando resultados.</div>'}</div><div class="ligaRankingList">${rankingRows}</div>`;
+      if(overviewRankingEl) overviewRankingEl.innerHTML = `<div class="ligaMiniPodium">${podium || '<div class="hint">Aguardando resultados.</div>'}</div><div class="ligaMiniRankList">${allGameRows.slice(3,6).map((row,index)=>`<div><b>${index+4}</b><span>${safeArenaText(row.seller.name||'Vendedor')}</span><strong>${formatMoney(row.revenue)}</strong></div>`).join('')}</div>`;
+      rewardEl.innerHTML = `<div class="ligaRewardCard ${teamEnergy>=100?'unlocked':''}"><div class="ligaRewardChest" role="img" aria-label="Baú de recompensa"><span>✦</span></div><div><span class="ligaEyebrow">${teamEnergy>=100?'Recompensa liberada':'Recompensa coletiva'}</span><h3>${safeArenaText(teamReward.title)}</h3><p>${safeArenaText(teamReward.description)}</p><div class="meter good"><i style="width:${teamEnergy}%"></i></div><small>${formatMoney(teamRevenue)} de ${formatMoney(teamGoal)} · ${teamEnergy.toFixed(0)}%</small></div>${['admin','superadmin'].includes(arenaRole)?'<button class="btn warn" id="btnEditRewardArena">Editar recompensa</button>':''}</div>`;
+      const rewardEditButton=document.getElementById('btnEditRewardArena');if(rewardEditButton)rewardEditButton.onclick=abrirEditorSelos;
+      if(overviewRewardEl) overviewRewardEl.innerHTML = `<div class="ligaExactCollective"><div class="ligaAnimatedChest" aria-label="Baú de recompensas"><div class="ligaChestGlow"></div><div class="ligaChestLid"></div><div class="ligaChestBody"></div></div><div><span>RECOMPENSA COLETIVA DA TEMPORADA</span><h3>${safeArenaText(teamReward.title)}</h3><p>${safeArenaText(teamReward.description)}</p></div><div class="ligaCollectiveProgress"><div class="ligaV3Progress"><i style="width:${teamEnergy}%"></i></div><b>${formatMoney(teamRevenue)} de ${formatMoney(teamGoal)} · ${teamEnergy.toFixed(0)}%</b></div>${['admin','superadmin'].includes(arenaRole)?'<button class="btn" id="btnOverviewEditReward">Editar recompensa</button>':''}</div>`; const overviewEdit=document.getElementById('btnOverviewEditReward'); if(overviewEdit) overviewEdit.onclick=abrirEditorSelos;
+      maybeCelebrateTeamChest(teamEnergy,teamReward,mk2);
 
       // Records for seller in chosen date range (for KPIs && chart)
       const recRange = state.records.filter(r=> r.sellerId===sid && r.dateKey>=fromKey && r.dateKey<=toKey);
@@ -4444,18 +4942,15 @@ body{ background-attachment: fixed; }
       // Venda record (mês)
       let best = 0;
       for(const r of soldMonth){ best = Math.max(best, Number(r.value||0)); }
+      const monthGoalNow = sellerGoalMonthly(sid, mk2);
+      const monthRevenueNow = soldMonth.reduce((sum,record)=>sum+Number(record.value||0),0);
+      const monthPctNow = monthGoalNow>0 ? clamp((monthRevenueNow/monthGoalNow)*100,0,999) : 0;
 
       kpisEl.innerHTML = `
-        
-        <div class="kpi"><div class="t">Período</div><div class="v" style="font-size:14px">${fromKey} → ${toKey}</div></div>
-        <div class="kpi"><div class="t">Atendimentos</div><div class="v">${aRange.atend}</div></div>
-        <div class="kpi"><div class="t">Vendas</div><div class="v">${aRange.sales}</div></div>
-        <div class="kpi"><div class="t">Conversão</div><div class="v">${aRange.conv.toFixed(1)}%</div></div>
-        <div class="kpi"><div class="t">Faturamento</div><div class="v">${formatMoney(aRange.revenue)}</div></div>
-        <div class="kpi"><div class="t">T.M</div><div class="v">${formatMoney(tmRange)}</div></div>
-        <div class="kpi"><div class="t">P.A</div><div class="v">${aRange.paPerSale.toFixed(2)}</div></div>
-        <div class="kpi"><div class="t">Venda record (mês)</div><div class="v">${formatMoney(best)}</div></div>
-`;
+        <div class="kpi ligaExactKpi"><i>★</i><div><div class="t">SUA PONTUAÇÃO</div><div class="v">${seasonXP.toLocaleString('pt-BR')} <small>pts</small></div><span>XP da temporada</span><div class="ligaV3Progress"><i style="width:${levelPct}%"></i></div></div></div>
+        <div class="kpi ligaExactKpi"><i>◎</i><div><div class="t">META DA LIGA</div><div class="v">${formatMoney(teamGoal).replace('R$ ','')}</div><span>${teamEnergy.toFixed(0)}% da meta coletiva</span><div class="ligaV3Progress"><i style="width:${teamEnergy}%"></i></div></div></div>
+        <div class="kpi ligaExactKpi"><i>♙</i><div><div class="t">PARTICIPANTES</div><div class="v">${allGameRows.length}</div><span>vendedores na liga</span><div class="ligaV3Progress"><i style="width:${Math.min(100,allGameRows.length*8)}%"></i></div></div></div>
+        <div class="kpi ligaExactKpi"><i>◷</i><div><div class="t">TEMPO RESTANTE</div><div class="v">${Math.max(0,Math.ceil((new Date(Number(mk2.slice(0,4)),Number(mk2.slice(5,7)),0,23,59,59)-new Date())/86400000))} <small>dias</small></div><span>para o fim do mês</span><div class="ligaV3Progress"><i style="width:${Math.max(8,100-(new Date().getDate()/daysInMonth(mk2)*100))}%"></i></div></div></div>`;
 
       // Metas (semana + mês) — baseado no mês referência
       const w = weekOfMonth(toKey);
@@ -4467,22 +4962,40 @@ body{ background-attachment: fixed; }
       const pctM = monthGoal>0 ? clamp((monthRev/monthGoal)*100,0,999) : 0;
 
       metaEl.innerHTML = `
-        <div class="row" style="justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap">
-          <div><b>Meta do vendedor</b> — Semana ${w} e Mês</div>
-          <div class="tag" id="arenaBestSaleInline">Venda record (mês): <b>${formatMoney(best)}</b></div>
-        </div>
-        <div class="divider"></div>
-        <div style="margin-bottom:10px">
-          <div class="tiny">Meta da semana</div>
-          <div style="font-weight:900; font-size:16px">${formatMoney(weekRev)} <span class="tiny">/ ${formatMoney(weekGoal)}</span></div>
-          <div class="meter good"><i style="width:${clamp(pctW,0,100)}%"></i></div>
-        </div>
-        <div>
-          <div class="tiny">Meta do mês</div>
-          <div style="font-weight:900; font-size:16px">${formatMoney(monthRev)} <span class="tiny">/ ${formatMoney(monthGoal)}</span></div>
-          <div class="meter good"><i style="width:${clamp(pctM,0,100)}%"></i></div>
-        </div>
+        <div class="ligaPaceHead"><div><span class="ligaEyebrow">Equipe principal</span><b>${teamEnergy.toFixed(1)}% da meta coletiva</b></div><div class="tag">${formatMoney(teamRevenue)} / ${formatMoney(teamGoal)}</div></div>
+        <div class="meter good ligaMeter"><i style="width:${teamEnergy}%"></i></div>
+        <div class="ligaPaceStats"><div><span>Semana ${w}</span><strong>${pctW.toFixed(1)}%</strong><small>${formatMoney(weekRev)} de ${formatMoney(weekGoal)}</small></div><div><span>Mês</span><strong>${pctM.toFixed(1)}%</strong><small>${formatMoney(monthRev)} de ${formatMoney(monthGoal)}</small></div><div><span>Venda recorde</span><strong>${formatMoney(best)}</strong><small>Maior venda real do mês</small></div></div>
       `;
+      const selectedRank = Math.max(0,allGameRows.findIndex(row=>row.seller.id===sid))+1;
+      const rowAhead = selectedRank>1 ? allGameRows[selectedRank-2] : null;
+      const rankGap = rowAhead ? Math.max(0,rowAhead.revenue-Number(selectedRow?.revenue||0)) : 0;
+      const destinationValue = nextStop ? Number(selectedRow?.goal||0)*(nextStop.pct/100) : Number(selectedRow?.revenue||0);
+      personalRouteEl.innerHTML = `<div class="ligaPersonalCard"><div class="ligaPersonalIdentity"><div class="avatar">${avatarMarkup(selectedRow?.seller)}</div><div><span class="ligaEyebrow">Meu progresso</span><h3>${safeArenaText(selectedRow?.seller?.name||'Vendedor')}</h3><p>${selectedRank}º lugar${rowAhead?` · ${formatMoney(rankGap)} para alcançar ${safeArenaText(rowAhead.seller.name||'a próxima posição')}`:' · liderança atual'}</p></div><strong>${selectedPct.toFixed(1)}%</strong></div><div class="ligaDestination"><div><span>Destino atual</span><b>${nextStop?nextStop.name:'Saturno conquistado'}</b><small>${nextStop?`${formatMoney(Math.max(0,destinationValue-Number(selectedRow?.revenue||0)))} restantes`:'Rota principal concluída'}</small></div><div class="meter good"><i style="width:${clamp(nextStop?selectedPct/nextStop.pct*100:100,0,100)}%"></i></div></div></div>`;
+
+      const weekSales = state.records.filter(r=>r && r.sellerId===sid && r.outcome==='sold' && r.monthKey===mk2 && weekOfMonth(r.dateKey)===w);
+      const bestSaleWeek = weekSales.reduce((max,r)=>Math.max(max,Number(r.value||0)),0);
+      const missionDefinitions = getWeeklyMissionConfig().filter(m=>m.enabled).map(mission=>{
+        const badgeDef=getBadgeDef(mission.badge||'');
+        let current=0,target=0,unit='valor';
+        if(mission.metric==='weekGoal'){ current=weekRev; target=weekGoal; unit='valor'; }
+        else if(mission.metric==='monthGoal'){ current=monthRev; target=monthGoal; unit='valor'; }
+        else if(mission.metric==='conversion'){ current=aRange.conv; target=Number(mission.target ?? badgeDef.val ?? 85); unit='percent'; }
+        else if(mission.metric==='pa'){ current=aRange.paPerSale; target=Number(mission.target ?? badgeDef.val ?? 2.7); unit='pa'; }
+        else if(mission.metric==='ticket'){ current=tmRange; target=Number(mission.target ?? badgeDef.val ?? badgeDef.min ?? 950); unit='valor'; }
+        else if(mission.metric==='bestSale'){ current=bestSaleWeek; target=Number(mission.target ?? badgeDef.val ?? badgeDef.min ?? 5000); unit='valor'; }
+        else if(mission.metric==='salesCount'){ current=weekSales.length; target=Number(mission.target ?? 5); unit='vendas'; }
+        else if(mission.metric==='goalPct'){ current=pctM; target=Number(mission.target ?? 100); unit='percent'; }
+        return {...mission,badgeDef,current,target,unit};
+      });
+      missionsEl.innerHTML = `<div class="ligaPanelHead"><div><span class="ligaEyebrow">Missões da semana</span><h3>Desafios ativos de ${safeArenaText(selectedRow?.seller?.name||'vendedor')}</h3></div><div class="ligaMissionActions"><small>As missões usam os mesmos critérios dos selos da Liga e podem ser editadas pela gestão.</small>${['admin','superadmin'].includes(arenaRole)?'<button class="btn" id="btnConfigMissions">⚙️ Configurar missões</button>':''}</div></div><div class="ligaMissionGrid">${missionDefinitions.map(mission=>{
+        const done=mission.target>0&&mission.current>=mission.target;
+        const progress=mission.target>0?clamp((mission.current/mission.target)*100,0,100):0;
+        const currentLabel=mission.unit==='valor'?formatMoney(mission.current):mission.unit==='percent'?`${mission.current.toFixed(1)}%`:mission.unit==='pa'?mission.current.toFixed(2):`${mission.current} vendas`;
+        const targetLabel=mission.unit==='valor'?formatMoney(mission.target):mission.unit==='percent'?`${mission.target.toFixed(0)}%`:mission.unit==='pa'?mission.target.toFixed(2):`${mission.target} vendas`;
+        return `<article class="ligaMission ligaV3Mission ${done?'done':''}"><div class="ligaV3MissionTop"><div class="ligaV3MissionIcon ligaMissionBadgeArt">${badgeArt(mission.badge||'',mission.title) || (mission.icon||mission.badgeDef?.icon||'🎯')}</div><div><span>${done?'MISSÃO CONCLUÍDA':'MISSÃO ATIVA'}</span><b>${safeArenaText(mission.title)}</b></div><em>+${Number(mission.points||0)} XP</em></div><strong>${currentLabel} <small>/ ${targetLabel}</small></strong><div class="meter good"><i style="width:${progress}%"></i></div><small class="ligaV3MissionRule">Base: ${safeArenaText(mission.badgeDef?.title||'regra da Liga')}</small></article>`;
+      }).join('')}</div>`;
+      const missionConfigButton=document.getElementById('btnConfigMissions'); if(missionConfigButton) missionConfigButton.onclick=abrirEditorSelos;
+      if(overviewMissionsEl) overviewMissionsEl.innerHTML = missionDefinitions.slice(0,4).map(mission=>{const progress=mission.target>0?clamp((mission.current/mission.target)*100,0,100):0;const cur=mission.unit==='valor'?formatMoney(mission.current):mission.unit==='percent'?`${mission.current.toFixed(1)}%`:mission.unit==='pa'?mission.current.toFixed(2):`${mission.current}`;const tar=mission.unit==='valor'?formatMoney(mission.target):mission.unit==='percent'?`${mission.target.toFixed(0)}%`:mission.unit==='pa'?mission.target.toFixed(2):`${mission.target}`;return `<div class="ligaMiniMission"><span class="ligaMiniMissionBadge">${badgeArt(mission.badge||'',mission.title) || (mission.icon||mission.badgeDef?.icon||'🎯')}</span><div><b>${safeArenaText(mission.title)}</b><small>${safeArenaText(mission.badgeDef?.desc||'Desafio ativo')}</small><div class="ligaV3Progress"><i style="width:${progress}%"></i></div></div><em>${cur}/${tar}<br><b>${Number(mission.points||0)} XP</b></em></div>`}).join('');
       const bestTag = document.getElementById('arenaBestSaleTag');
       if(bestTag){ bestTag.style.display='inline-flex'; bestTag.innerHTML = 'Venda record do mês: <b>'+formatMoney(best)+'</b>'; }
 
@@ -4526,6 +5039,9 @@ body{ background-attachment: fixed; }
         return [x,y];
       });
       const d = pts.map((p,i)=> (i===0?`M ${p[0].toFixed(1)} ${p[1].toFixed(1)}`:`L ${p[0].toFixed(1)} ${p[1].toFixed(1)}`)).join(' ');
+      const elapsedDays = mk2===monthKey() ? Math.max(1,new Date().getDate()) : days;
+      const projection = elapsedDays>0 ? (monthRev/elapsedDays)*days : 0;
+      const projectionPct = monthGoal>0 ? (projection/monthGoal)*100 : 0;
       chartEl.innerHTML = `
         <div class="row" style="justify-content:space-between; gap:10px; flex-wrap:wrap">
           <div class="tiny">${mk2} · evolução diária do faturamento</div>
@@ -4536,7 +5052,7 @@ body{ background-attachment: fixed; }
             <path d="${d}" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>
           </svg>
         </div>
-        <div class="hint" style="margin-top:8px">Dica: foque em constância. Um dia bom por semana não bate meta — rotina bate. 🚀</div>
+        <div class="ligaProjection"><div><span>Realizado</span><strong>${formatMoney(monthRev)}</strong></div><div><span>Projeção no ritmo atual</span><strong>${formatMoney(projection)}</strong><small>${projectionPct.toFixed(1)}% da meta</small></div></div>
       `;
 
       // Badges do mês (sistema de selos: desbloqueados + bloqueados)
@@ -4549,13 +5065,7 @@ body{ background-attachment: fixed; }
         earnedByDef.get(d).push(e);
       }
 
-      const badgeOrder = [
-        'DAY_GOAL','WEEK_GOAL','MONTH_GOAL',
-        'TVA_COMBO','PA_BRONZE','PA_SILVER','PA_GOLD',
-        'TM_SILVER','TM_GOLD','TM_SUPREME',
-        'SALE_TOP','SALE_RESPECT','BIG_SALE','BIGGEST_SALE',
-        'TOP_CONV','MAGIC_5','SUPREME_12'
-      ];
+      const badgeOrder = allBadgeKeys();
 
       const cards = [];
       for(const defKey of badgeOrder){
@@ -4570,9 +5080,9 @@ body{ background-attachment: fixed; }
         cards.push(`
           <div class="badgeCard ${unlocked?'':'badgeLocked'}">
             <div class="badgeTop">
-              <div class="badgeIcon">${def.icon||'🏅'}</div>
+              <div class="badgeIcon ligaBadgeIconArt">${badgeArt(defKey,def.title) || (def.icon||'🏅')}</div>
               <div>
-                <div class="badgeTitle">${def.title}</div>
+                <div class="badgeTitle">${def.title} <span class="ligaV3BadgeXP">+${Number(def.points||0)} XP</span></div>
                 <div class="badgeDesc">${desc}</div>
               </div>
             </div>
@@ -4580,7 +5090,11 @@ body{ background-attachment: fixed; }
           </div>`);
       }
 
-      badgesEl.innerHTML = cards.length ? cards.join('') : '<div class="hint">Nenhum selo ainda. Finalize vendas e metas para destravar. ⭐</div>';
+      if(badgesEl){
+        badgesEl.innerHTML = cards.length ? cards.join('') : '<div class="hint">Nenhum selo ainda. Finalize vendas e metas para destravar. ⭐</div>';
+        badgesEl.dataset.rendered = 'true';
+      }
+      if(overviewAchievementsEl){const recent=(earned||[]).slice().sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,4);overviewAchievementsEl.innerHTML=(recent.length?recent.map(e=>{const defKey=e.def||'';const def=getBadgeDef(defKey)||{};return `<div class="ligaMiniAchievement"><span class="ligaMiniBadgeArt">${badgeArt(defKey,def.title) || (def.icon||'🏅')}</span><div><b>${safeArenaText(def.title||'Conquista')}</b><small>${safeArenaText(def.desc||e.desc||'Conquista desbloqueada')}</small></div><em>+${Number(def.points||0)} XP</em></div>`}).join(''):'<div class="ligaEmptyAchievement">Finalize missões para desbloquear seus primeiros selos.</div>');}
 
       // XP + estrelas (metas semanais/mensais batidas no mês)
       const stars = earned.filter(e=> (e.key||'').includes('_WEEK_GOAL') || (e.key||'').includes('_MONTH_GOAL')).length;
@@ -4614,9 +5128,8 @@ body{ background-attachment: fixed; }
     };
 
     sel.onchange = update;
-    mkInput.onchange = ()=>{ fromEl.value=''; toEl.value=''; update(); };
-    fromEl.onchange = update;
-    toEl.onchange = update;
+    periodEl.onchange = ()=>{applyArenaPeriod();update();};
+    mkInput.onchange = ()=>{applyArenaPeriod();update();};
     update();
   }
 
@@ -4632,14 +5145,12 @@ body{ background-attachment: fixed; }
       alert("Apenas administradores podem editar os selos."); return;
     }
     state.badgeConfig = state.badgeConfig || {};
+    state.teamReward = Object.assign({
+      title:"Experiência especial para a equipe",
+      description:"Prêmio coletivo liberado quando a meta principal da loja for conquistada."
+    }, state.teamReward || {});
 
-    const ordem = [
-      'DAY_GOAL','WEEK_GOAL','MONTH_GOAL',
-      'TVA_COMBO','PA_BRONZE','PA_SILVER','PA_GOLD',
-      'TM_SILVER','TM_GOLD','TM_SUPREME',
-      'SALE_TOP','SALE_RESPECT','BIG_SALE','BIGGEST_SALE',
-      'TOP_CONV','MAGIC_5','SUPREME_12'
-    ];
+    let ordem = allBadgeKeys();
 
     // cria overlay
     let back = document.getElementById('selosEditorBack');
@@ -4659,8 +5170,9 @@ body{ background-attachment: fixed; }
       const cfg = state.badgeConfig[key] || {};
       const def = { ...base, ...cfg };
       const enabled = cfg.enabled !== false;
-      const temFaixa = (base.min !== undefined);
-      const temVal = (base.val !== undefined);
+      const isCustom = !BADGE_DEFS[key];
+      const temFaixa = (base.min !== undefined || cfg.min !== undefined);
+      const temVal = (base.val !== undefined || cfg.val !== undefined || isCustom);
 
       let camposValor = "";
       if(temFaixa){
@@ -4670,30 +5182,67 @@ body{ background-attachment: fixed; }
       } else if(temVal){
         camposValor = `<input type="text" data-k="${key}" data-f="val" value="${def.val ?? ''}" placeholder="valor" style="width:110px"/>`;
       } else {
-        camposValor = `<span style="color:#9db0d0;font-size:12px">automático</span>`;
+        camposValor = `<span style="color:var(--ondis-muted);font-size:12px">automático</span>`;
       }
 
       return `
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px;border:1px solid rgba(255,255,255,.1);border-radius:12px;margin-bottom:10px;${enabled?'':'opacity:.5'}">
-          <input type="text" data-k="${key}" data-f="icon" value="${def.icon||''}" style="width:50px;text-align:center;font-size:18px" title="Ícone/emoji"/>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px;border:1px solid var(--ondis-line);background:var(--ondis-surface-soft);border-radius:12px;margin-bottom:10px;${enabled?'':'opacity:.5'}">
+          <div class="ligaIconPickerCell"><button type="button" class="ligaIconPickerTrigger" data-icon-key="${key}" title="Escolher ícone">${badgeArt(key,def.title)}</button><input type="hidden" data-k="${key}" data-f="iconId" value="${badgeIconId(key)}"><small>Ícone</small></div>
           <div style="flex:1;min-width:180px;display:flex;flex-direction:column;gap:6px">
             <input type="text" data-k="${key}" data-f="title" value="${(def.title||'').replace(/"/g,'&quot;')}" placeholder="Título" style="font-weight:700"/>
             <input type="text" data-k="${key}" data-f="desc" value="${(def.desc||'').replace(/"/g,'&quot;')}" placeholder="Descrição"/>
           </div>
-          <div style="display:flex;gap:6px;align-items:center">${camposValor}</div>
+          <div style="display:flex;gap:6px;align-items:center">${camposValor}<input type="text" data-k="${key}" data-f="points" value="${def.points ?? 0}" placeholder="pts" style="width:72px" title="Pontos da conquista"/></div>
+          ${isCustom?`<select data-k="${key}" data-f="metric" class="badgeMetricSelect" title="Métrica automática"><option value="monthlyRevenue" ${def.metric==='monthlyRevenue'?'selected':''}>Faturamento mensal</option><option value="monthlySales" ${def.metric==='monthlySales'?'selected':''}>Qtd. vendas</option><option value="conversion" ${def.metric==='conversion'?'selected':''}>Conversão</option><option value="pa" ${def.metric==='pa'?'selected':''}>P.A.</option><option value="ticket" ${def.metric==='ticket'?'selected':''}>Ticket médio</option><option value="bestSale" ${def.metric==='bestSale'?'selected':''}>Melhor venda</option><option value="goalPct" ${def.metric==='goalPct'?'selected':''}>% da meta</option><option value="tva" ${def.metric==='tva'?'selected':''}>TVA</option><option value="saleValue" ${def.metric==='saleValue'?'selected':''}>Valor da venda</option></select>`:''}
           <label style="display:flex;gap:4px;align-items:center;font-size:12px;cursor:pointer;white-space:nowrap">
             <input type="checkbox" data-k="${key}" data-f="enabled" ${enabled?'checked':''}/> Ativo
           </label>
+          <button type="button" class="btn bad badgeDeleteBtn" data-delete-badge="${key}" title="Excluir selo">🗑 Excluir</button>
         </div>`;
     }
 
+    const missionCfg = getWeeklyMissionConfig();
+    const metricOptions = [
+      ["weekGoal","Meta semanal (R$)"],["monthGoal","Meta mensal (R$)"],["conversion","Conversão (%)"],
+      ["pa","P.A."],["ticket","Ticket médio (R$)"],["bestSale","Melhor venda (R$)"],["salesCount","Quantidade de vendas"],["goalPct","Percentual da meta (%)"]
+    ];
+    function linhaMissao(m,index){
+      const badge=getBadgeDef(m.badge||'');
+      const autoTarget=['weekGoal','monthGoal'].includes(m.metric);
+      const defaultTarget = m.target ?? badge.val ?? badge.min ?? '';
+      return `<div class="ligaMissionEditorRow">
+        <input class="missionEnabled" type="checkbox" data-mi="${index}" ${m.enabled!==false?'checked':''} title="Ativar missão">
+        <input class="missionIcon" type="text" data-mi="${index}" value="${escapeEditorText(m.icon||badge.icon||'🎯')}" title="Ícone">
+        <div class="missionMain"><input class="missionTitle" type="text" data-mi="${index}" value="${escapeEditorText(m.title||badge.title||'Missão')}" placeholder="Nome da missão"><select class="missionBadge" data-mi="${index}">${ordem.map(k=>`<option value="${k}" ${k===(m.badge||'')?'selected':''}>${escapeEditorText(getBadgeDef(k).title||k)}</option>`).join('')}</select></div>
+        <select class="missionMetric" data-mi="${index}">${metricOptions.map(([v,l])=>`<option value="${v}" ${v===m.metric?'selected':''}>${l}</option>`).join('')}</select>
+        <input class="missionTarget" type="text" data-mi="${index}" value="${autoTarget?'':defaultTarget}" placeholder="${autoTarget?'Automático':'Alvo'}" ${autoTarget?'disabled':''}>
+        <input class="missionPoints" type="text" data-mi="${index}" value="${Number(m.points??badge.points??100)}" placeholder="XP">
+      </div>`;
+    }
+
     back.innerHTML = `
-      <div style="background:#0f141c;border:1px solid rgba(255,255,255,.12);border-radius:18px;max-width:760px;width:100%;padding:24px;">
+      <div style="background:var(--ondis-surface);color:var(--ondis-text);border:1px solid var(--ondis-line);border-radius:18px;max-width:960px;width:100%;padding:24px;box-shadow:var(--ondis-shadow-lg);">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-          <h2 style="font-size:18px;font-weight:900">⚙️ Editar selos da loja</h2>
+          <h2 style="font-size:18px;font-weight:900">⚙️ Configurar Liga ONDIS</h2>
           <button class="btn" id="selosFechar">✕ Fechar</button>
         </div>
-        <p style="color:#9db0d0;font-size:13px;margin-bottom:18px">Edite ícone, título, descrição e os valores. Desmarque "Ativo" para esconder um selo. Vale só para esta loja.</p>
+        <p style="color:var(--ondis-muted);font-size:13px;margin-bottom:18px">Edite conquistas, réguas, pontuação e prêmio coletivo da Liga. Conversão, P.A., ticket, metas, evolução e sequências podem ser ajustados pela gestão.</p>
+        <div class="teamRewardEditor">
+          <img src="./assets/liga/reward-chest.png" alt="Baú da recompensa coletiva"/>
+          <div>
+            <label>Prêmio do baú da equipe</label>
+            <input id="teamRewardTitle" type="text" value="${escapeEditorText(state.teamReward.title)}" placeholder="Ex.: Jantar especial para toda a equipe"/>
+            <textarea id="teamRewardDescription" rows="3" placeholder="Descreva como o prêmio será liberado">${escapeEditorText(state.teamReward.description)}</textarea>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <section class="ligaMissionEditor">
+          <div class="ligaConfigSectionHead"><div><span>🎯 MISSÕES DA SEMANA</span><h3>Desafios ativos da Liga</h3><p>Edite quais missões aparecem, a métrica, o alvo e o XP. Por padrão elas herdam os mesmos critérios dos selos.</p></div></div>
+          <div class="ligaMissionEditorHead"><span></span><span></span><b>Missão / selo base</b><b>Métrica</b><b>Alvo</b><b>XP</b></div>
+          <div id="missionEditorRows">${missionCfg.map(linhaMissao).join('')}</div>
+        </section>
+        <div class="divider"></div>
+        <div class="ligaConfigSectionHead"><div><span>🏅 CONQUISTAS</span><h3>Selos e badges</h3><p>Réguas, textos, pontuação e ativação das conquistas automáticas. Crie, escolha ícone, defina métrica e exclua selos personalizados.</p></div><button type="button" class="btn good" id="btnInserirSelo">＋ Inserir selo <span style="font-size:9px;opacity:.8">NOVO</span></button></div>
         <div id="selosLista">${ordem.map(linhaSelo).join('')}</div>
         <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px">
           <button class="btn" id="selosCancelar">Cancelar</button>
@@ -4705,8 +5254,51 @@ body{ background-attachment: fixed; }
 
     // estilo dos inputs internos
     back.querySelectorAll('input[type="text"]').forEach(inp=>{
-      inp.style.cssText += "padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:13px;";
+      inp.style.cssText += "padding:8px 10px;border-radius:8px;border:1px solid var(--ondis-line);background:var(--ondis-surface);color:var(--ondis-text);font-size:13px;";
     });
+    const rewardDescription = document.getElementById('teamRewardDescription');
+    rewardDescription.style.cssText = "width:100%;padding:9px 10px;border-radius:8px;border:1px solid var(--ondis-line);background:var(--ondis-surface);color:var(--ondis-text);font:inherit;resize:vertical;";
+    back.querySelectorAll('.missionMetric').forEach(select=>{
+      const row=select.closest('.ligaMissionEditorRow');
+      const target=row?.querySelector('.missionTarget');
+      const sync=()=>{ const auto=['weekGoal','monthGoal'].includes(select.value); if(target){target.disabled=auto;target.placeholder=auto?'Automático':'Alvo';if(auto)target.value='';} };
+      select.addEventListener('change',sync); sync();
+    });
+
+    function bindDeleteBadges(){
+      back.querySelectorAll('[data-delete-badge]').forEach(btn=>btn.onclick=()=>{
+        const key=btn.dataset.deleteBadge;
+        const def=getBadgeDef(key);
+        if(!confirm(`Excluir o selo “${def.title||key}”? Conquistas já obtidas permanecem no histórico.`)) return;
+        state.badgeConfig=state.badgeConfig||{};
+        if(BADGE_DEFS[key]) state.badgeConfig[key]={...(state.badgeConfig[key]||{}),deleted:true,enabled:false};
+        else { delete state.badgeConfig[key]; state.customBadgeKeys=(state.customBadgeKeys||[]).filter(k=>k!==key); }
+        save(state); abrirEditorSelos();
+      });
+    }
+    function abrirCriadorSelo(){
+      let modal=document.getElementById('novoSeloBack'); if(modal)modal.remove();
+      modal=document.createElement('div'); modal.id='novoSeloBack'; modal.className='ligaIconBankBack';
+      const tmpKey='CUSTOM_'+Date.now();
+      modal.innerHTML=`<div class="ligaIconBank" style="max-width:620px"><div class="ligaIconBankHead"><div><b>＋ Criar novo selo</b><span>Defina a regra automática, XP e o visual da conquista.</span></div><button type="button" class="btn" data-close>Fechar</button></div><div style="display:grid;gap:12px;padding-top:6px"><label>Nome do selo<input id="novoSeloTitle" class="input" placeholder="Ex.: Mestre do Ticket"></label><label>Descrição<input id="novoSeloDesc" class="input" placeholder="Ex.: Ultrapassou R$ 1.200 de ticket médio"></label><div style="display:grid;grid-template-columns:1.4fr .8fr .7fr;gap:10px"><label>Métrica<select id="novoSeloMetric" class="input"><option value="monthlyRevenue">Faturamento mensal</option><option value="monthlySales">Quantidade de vendas</option><option value="conversion">Conversão (%)</option><option value="pa">P.A.</option><option value="ticket">Ticket médio</option><option value="bestSale">Melhor venda</option><option value="goalPct">Percentual da meta</option><option value="tva">TVA (%)</option><option value="saleValue">Valor da venda</option></select></label><label>Alvo<input id="novoSeloTarget" class="input" type="number" step="0.01" value="100"></label><label>XP<input id="novoSeloPoints" class="input" type="number" value="100"></label></div><div><b style="display:block;margin-bottom:8px">Escolha o ícone</b><div class="ligaIconBankGrid" style="max-height:260px">${Array.from({length:172},(_,i)=>{const id=i+1;return `<button type="button" data-new-icon="${id}" class="${id===1?'selected':''}"><img src="${achievementIconPath(id)}" alt="Ícone ${id}"><span>${String(id).padStart(2,'0')}</span></button>`}).join('')}</div></div><div style="display:flex;justify-content:flex-end;gap:10px"><button class="btn" data-close>Cancelar</button><button class="btn good" id="confirmNovoSelo">Criar selo</button></div></div></div>`;
+      document.body.appendChild(modal); let iconId=1;
+      modal.querySelectorAll('[data-new-icon]').forEach(b=>b.onclick=()=>{modal.querySelectorAll('[data-new-icon]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');iconId=Number(b.dataset.newIcon)});
+      const close=()=>modal.remove(); modal.querySelectorAll('[data-close]').forEach(b=>b.onclick=close); modal.addEventListener('click',e=>{if(e.target===modal)close()});
+      modal.querySelector('#confirmNovoSelo').onclick=()=>{const title=modal.querySelector('#novoSeloTitle').value.trim(),desc=modal.querySelector('#novoSeloDesc').value.trim(),metric=modal.querySelector('#novoSeloMetric').value,val=Number(modal.querySelector('#novoSeloTarget').value||0),points=Number(modal.querySelector('#novoSeloPoints').value||0);if(!title)return alert('Informe o nome do selo.');state.badgeConfig=state.badgeConfig||{};state.customBadgeKeys=Array.isArray(state.customBadgeKeys)?state.customBadgeKeys:[];state.customBadgeKeys.push(tmpKey);state.badgeConfig[tmpKey]={title,desc,metric,val,points,iconId,enabled:true,custom:true};save(state);close();abrirEditorSelos();};
+    }
+    document.getElementById('btnInserirSelo').onclick=abrirCriadorSelo;
+    bindDeleteBadges();
+    function abrirBancoIcones(key){
+      const hidden=back.querySelector(`input[data-k="${key}"][data-f="iconId"]`);
+      const current=Number(hidden?.value||badgeIconId(key));
+      let pick=document.getElementById('ligaIconBankBack'); if(pick)pick.remove();
+      pick=document.createElement('div'); pick.id='ligaIconBankBack'; pick.className='ligaIconBankBack';
+      pick.innerHTML=`<div class="ligaIconBank"><div class="ligaIconBankHead"><div><b>Banco de ícones ONDIS</b><span>172 ícones gamer disponíveis</span></div><button type="button" class="btn">Fechar</button></div><div class="ligaIconBankGrid">${Array.from({length:172},(_,i)=>{const id=i+1;return `<button type="button" data-icon-id="${id}" class="${id===current?'selected':''}"><img src="${achievementIconPath(id)}" alt="Ícone ${id}"><span>${String(id).padStart(2,'0')}</span></button>`}).join('')}</div></div>`;
+      document.body.appendChild(pick);
+      const close=()=>pick.remove(); pick.querySelector('.ligaIconBankHead .btn').onclick=close; pick.addEventListener('click',e=>{if(e.target===pick)close()});
+      pick.querySelectorAll('[data-icon-id]').forEach(btn=>btn.onclick=()=>{const id=Number(btn.dataset.iconId);if(hidden)hidden.value=id;const trigger=back.querySelector(`[data-icon-key="${key}"]`);if(trigger)trigger.innerHTML=`<img class="ligaBadgeArt" src="${achievementIconPath(id)}" alt="">`;close();});
+    }
+    back.querySelectorAll('.ligaIconPickerTrigger').forEach(btn=>btn.onclick=()=>abrirBancoIcones(btn.dataset.iconKey));
 
     function fechar(){ back.remove(); }
     document.getElementById('selosFechar').onclick = fechar;
@@ -4715,6 +5307,10 @@ body{ background-attachment: fixed; }
 
     document.getElementById('selosSalvar').onclick = ()=>{
       const novo = state.badgeConfig || {};
+      state.teamReward = {
+        title: document.getElementById('teamRewardTitle').value.trim() || "Prêmio coletivo da equipe",
+        description: document.getElementById('teamRewardDescription').value.trim() || "Conquista liberada ao alcançar a meta da loja."
+      };
       ordem.forEach(key=>{
         novo[key] = novo[key] || {};
       });
@@ -4722,7 +5318,7 @@ body{ background-attachment: fixed; }
         const k = inp.dataset.k, f = inp.dataset.f;
         novo[k] = novo[k] || {};
         if(f==='enabled'){ novo[k].enabled = inp.checked; }
-        else if(f==='min' || f==='max' || f==='val'){
+        else if(f==='min' || f==='max' || f==='val' || f==='points' || f==='iconId'){
           const n = parseBRNumber(inp.value);
           if(inp.value.trim()==='') delete novo[k][f];
           else novo[k][f] = n;
@@ -4732,10 +5328,30 @@ body{ background-attachment: fixed; }
           else novo[k][f] = inp.value.trim();
         }
       });
+      back.querySelectorAll('select[data-k]').forEach(sel=>{
+        const k=sel.dataset.k,f=sel.dataset.f; novo[k]=novo[k]||{}; if(f==='metric') novo[k].metric=sel.value;
+      });
+      const missionRows = Array.from(back.querySelectorAll('.ligaMissionEditorRow'));
+      state.weeklyChallengeConfig = state.weeklyChallengeConfig || {};
+      state.weeklyChallengeConfig.missions = missionRows.map((row,index)=>{
+        const base = missionCfg[index] || DEFAULT_WEEKLY_MISSIONS[index] || {};
+        const metric = row.querySelector('.missionMetric')?.value || base.metric || 'weekGoal';
+        const targetRaw = row.querySelector('.missionTarget')?.value?.trim() || '';
+        return {
+          ...base,
+          enabled: !!row.querySelector('.missionEnabled')?.checked,
+          icon: row.querySelector('.missionIcon')?.value?.trim() || base.icon || '🎯',
+          title: row.querySelector('.missionTitle')?.value?.trim() || base.title || 'Missão',
+          badge: row.querySelector('.missionBadge')?.value || base.badge || 'WEEK_GOAL',
+          metric,
+          points: Number(parseBRNumber(row.querySelector('.missionPoints')?.value||'0')||0),
+          ...(targetRaw && !['weekGoal','monthGoal'].includes(metric) ? {target:Number(parseBRNumber(targetRaw)||0)} : {})
+        };
+      });
       state.badgeConfig = novo;
       save(state);
       fechar();
-      alert("Selos atualizados! ✅ As mudanças valem para as próximas avaliações.");
+      alert("Gamificação atualizada! ✅ Conquistas, missões e XP já estão valendo para a Liga.");
       try{ if(window.OMNIA_RENDER) window.OMNIA_RENDER(); }catch(e){}
       try{ renderSellerView(); }catch(e){}
     };
@@ -4803,6 +5419,7 @@ body{ background-attachment: fixed; }
 
   // Tabs/views
   function setTab(tab){
+    document.body.classList.toggle("rankViewActive", tab === "metasRank");
     const viewIds = ["viewOps","viewDados","viewMetas","viewMetasRank","viewNoConv","viewDashboard","viewSeller"];
     const tabIds  = ["tabOps","tabDados","tabMetas","tabMetasRank","tabNoConv","tabDashboard","tabSeller"];
 
@@ -4817,7 +5434,7 @@ body{ background-attachment: fixed; }
       if(el) el.classList.remove("active");
     }
 
-    const titulos = { ops:"Operação", dados:"Dados", metas:"Metas", metasRank:"Ranking de Metas", noConv:"Não Convertidos", dashboard:"Dashboard", seller:"Arena de Resultados" };
+    const titulos = { ops:"Operação", dados:"Dados", metas:"Metas", metasRank:"Ranking de Metas", noConv:"Não Convertidos", dashboard:"Dashboard", seller:"Liga ONDIS" };
     const show = (vid, tid) => {
       const v = document.getElementById(vid);
       if(v) v.style.display = "block";
@@ -4840,6 +5457,7 @@ body{ background-attachment: fixed; }
     }catch(err){
       console.error("setTab failed", err);
       // Never leave the user with a blank screen
+      document.body.classList.remove("rankViewActive");
       show("viewOps","tabOps");
     }
   }
@@ -4850,14 +5468,44 @@ body{ background-attachment: fixed; }
   $("tabMetasRank").addEventListener("click", ()=> setTab("metasRank"));
   $("tabNoConv").addEventListener("click", ()=> setTab("noConv"));
   $("tabDashboard")?.addEventListener("click", ()=> setTab("dashboard"));
-  $("dashMonth")?.addEventListener("change", ()=>{ try{ renderDashboard(); }catch(e){} });
+  ["dashDate","dashMonth","dashYear"].forEach(id=>$(id)?.addEventListener("change", ()=>{ try{ renderDashboard(); }catch(e){} }));
+  document.querySelectorAll("[data-dash-period]").forEach(btn=>btn.addEventListener("click", ()=>{
+    dashPeriodMode=btn.dataset.dashPeriod||"month";
+    document.querySelectorAll("[data-dash-period]").forEach(b=>b.classList.toggle("active",b===btn));
+    const d=$("dashDate"),m=$("dashMonth"),y=$("dashYear"),lab=$("dashDateLabel");
+    if(d)d.style.display=dashPeriodMode==="day"?"block":"none";
+    if(m)m.style.display=dashPeriodMode==="month"?"block":"none";
+    if(y)y.style.display=dashPeriodMode==="year"?"block":"none";
+    if(lab)lab.textContent=dashPeriodMode==="day"?"Data":dashPeriodMode==="year"?"Ano":"Mês";
+    try{ renderDashboard(); }catch(e){ console.error(e); }
+  }));
+  $("btnDashboardCRM")?.addEventListener("click", ()=>{
+    const commercial=$("dashCommercialPanel"), crm=$("dashCrmPanel"), frame=$("dashCrmFrame");
+    if(commercial) commercial.style.display="none";
+    if(crm) crm.style.display="block";
+    if(frame && !frame.src) frame.src="./crm-completo.html?view=metricas&embed=1";
+  });
+  $("btnDashBackCommercial")?.addEventListener("click", ()=>{
+    const commercial=$("dashCommercialPanel"), crm=$("dashCrmPanel");
+    if(crm) crm.style.display="none";
+    if(commercial) commercial.style.display="block";
+  });
   $("tabSeller").addEventListener("click", ()=> setTab("seller"));
+  try{ if(location.hash==="#liga" || location.hash==="#liga-ondis") setTimeout(()=>setTab("seller"),0); }catch(e){}
 
   $("btnData")?.addEventListener("click", ()=> setTab("dados"));
   $("btnGoals")?.addEventListener("click", ()=> setTab("metas"));
   $("btnGoalRank")?.addEventListener("click", ()=> setTab("metasRank"));
   $("btnNoConv")?.addEventListener("click", ()=> setTab("noConv"));
   $("btnSeller")?.addEventListener("click", ()=> setTab("seller"));
+
+  let metaRankResizeTimer = 0;
+  window.addEventListener("resize", ()=>{
+    clearTimeout(metaRankResizeTimer);
+    metaRankResizeTimer = setTimeout(()=>{
+      try{ if($("viewMetasRank").style.display !== "none") renderMetaRank(); }catch(e){}
+    }, 160);
+  });
 
   // Data inputs
   $("dataView").addEventListener("change", renderData);
@@ -4872,7 +5520,6 @@ body{ background-attachment: fixed; }
   ["pW1","pW2","pW3","pW4"].forEach(id=>{
     $(id).addEventListener("input", ()=> { saveGoalsDraftAndAuto(); });
   });
-
   // Vendor goals
   $("goalVendorDivisor").addEventListener("input", ()=>{
     const raw = ($("goalVendorDivisor").value||"").trim();
@@ -4891,6 +5538,14 @@ body{ background-attachment: fixed; }
     const mk = $("goalMonth").value || monthKey();
     const g = getGoalsForMonth(mk);
     g.monthly = parseBRNumber($("goalMonthly").value);
+    const draftLevels = {
+      basePct: 100,
+      superPct: parseBRNumber($("goalSuperPct").value),
+      diamondPct: parseBRNumber($("goalDiamondPct").value)
+    };
+    if(draftLevels.superPct > draftLevels.basePct && draftLevels.diamondPct > draftLevels.superPct){
+      g.levels = draftLevels;
+    }
     g.basePercents = [
       parseBRNumber($("pW1").value),
       parseBRNumber($("pW2").value),
@@ -4979,11 +5634,167 @@ body{ background-attachment: fixed; }
     });
   }
 
+  function imageToOptimizedDataUrl(file, maxSize=1600, quality=.74){
+    return new Promise((resolve, reject)=>{
+      const reader = new FileReader();
+      reader.onerror = reject;
+      reader.onload = ()=>{
+        const img = new Image();
+        img.onerror = reject;
+        img.onload = ()=>{
+          const ratio = Math.min(1, maxSize / Math.max(img.width, img.height));
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.max(1, Math.round(img.width * ratio));
+          canvas.height = Math.max(1, Math.round(img.height * ratio));
+          canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL("image/jpeg", quality));
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function ensureAppearanceState(){
+    state.ui = state.ui || {};
+    const normalized = window.ONDIS_THEME
+      ? window.ONDIS_THEME.normalize(state)
+      : { theme:"executive", custom:{} };
+    state.ui.theme = normalized.theme;
+    state.ui.themeCustom = Object.assign({}, window.ONDIS_THEME?.DEFAULT_CUSTOM || {}, normalized.custom || {});
+    return state.ui;
+  }
+
+  function syncAppearanceUI(){
+    const ui = ensureAppearanceState();
+    const custom = ui.themeCustom;
+    document.querySelectorAll(".themePreset").forEach(button=>{
+      button.classList.toggle("isActive", button.dataset.themeValue === ui.theme);
+    });
+
+    const fields = {
+      themePrimary: ["themePrimaryText", "primary"],
+      themeAccent: ["themeAccentText", "accent"],
+      themeBackground: ["themeBackgroundText", "background"],
+      themeSurface: ["themeSurfaceText", "surface"],
+      themeText: ["themeTextText", "text"]
+    };
+    Object.entries(fields).forEach(([colorId, [textId, key]])=>{
+      const color = document.getElementById(colorId);
+      const text = document.getElementById(textId);
+      if(color) color.value = custom[key];
+      if(text) text.value = custom[key];
+    });
+    if($("themeBackgroundType")) $("themeBackgroundType").value = custom.backgroundType || "gradient";
+    if($("themeFont")) $("themeFont").value = custom.font || "Inter";
+    if($("themeRadius")) $("themeRadius").value = Number(custom.radius || 15);
+    if($("themeContrast")) $("themeContrast").value = custom.highContrast ? "high" : "normal";
+  }
+  window.ONDIS_SYNC_APPEARANCE = syncAppearanceUI;
+
+  function applyAppearanceChange(){
+    const ui = ensureAppearanceState();
+    ui.theme = "custom";
+    if(window.ONDIS_THEME) window.ONDIS_THEME.applyFromState(state);
+    save(state);
+    syncAppearanceUI();
+  }
+
+  document.querySelectorAll(".themePreset").forEach(button=>{
+    button.addEventListener("click", ()=>{
+      const ui = ensureAppearanceState();
+      ui.theme = button.dataset.themeValue || "executive";
+      if(window.ONDIS_THEME) window.ONDIS_THEME.applyFromState(state);
+      save(state);
+      syncAppearanceUI();
+    });
+  });
+
+  const colorFields = {
+    themePrimary: ["themePrimaryText", "primary"],
+    themeAccent: ["themeAccentText", "accent"],
+    themeBackground: ["themeBackgroundText", "background"],
+    themeSurface: ["themeSurfaceText", "surface"],
+    themeText: ["themeTextText", "text"]
+  };
+  Object.entries(colorFields).forEach(([colorId, [textId, key]])=>{
+    const color = $(colorId), text = $(textId);
+    if(color){
+      color.addEventListener("input", ()=>{
+        ensureAppearanceState().themeCustom[key] = color.value;
+        if(text) text.value = color.value;
+        applyAppearanceChange();
+      });
+    }
+    if(text){
+      text.addEventListener("change", ()=>{
+        const value = text.value.trim();
+        if(!/^#[0-9a-f]{6}$/i.test(value)){
+          text.value = ensureAppearanceState().themeCustom[key];
+          alert("Informe uma cor hexadecimal válida, por exemplo #2457e6.");
+          return;
+        }
+        ensureAppearanceState().themeCustom[key] = value;
+        if(color) color.value = value;
+        applyAppearanceChange();
+      });
+    }
+  });
+
+  $("themeBackgroundType")?.addEventListener("change", (event)=>{
+    ensureAppearanceState().themeCustom.backgroundType = event.target.value;
+    applyAppearanceChange();
+  });
+  $("themeFont")?.addEventListener("change", (event)=>{
+    ensureAppearanceState().themeCustom.font = event.target.value;
+    applyAppearanceChange();
+  });
+  $("themeRadius")?.addEventListener("input", (event)=>{
+    ensureAppearanceState().themeCustom.radius = Number(event.target.value || 15);
+    applyAppearanceChange();
+  });
+  $("themeContrast")?.addEventListener("change", (event)=>{
+    ensureAppearanceState().themeCustom.highContrast = event.target.value === "high";
+    applyAppearanceChange();
+  });
+  $("themeBackgroundImage")?.addEventListener("change", async (event)=>{
+    const file = event.target.files?.[0];
+    if(!file) return;
+    if(file.size > 8 * 1024 * 1024){
+      alert("Escolha uma imagem com até 8 MB.");
+      event.target.value = "";
+      return;
+    }
+    try{
+      const ui = ensureAppearanceState();
+      ui.themeCustom.backgroundImage = await imageToOptimizedDataUrl(file);
+      ui.themeCustom.backgroundType = "image";
+      applyAppearanceChange();
+    }catch(e){
+      console.error(e);
+      alert("Não foi possível processar a imagem de fundo.");
+    }
+  });
+  $("btnRestoreTheme")?.addEventListener("click", ()=>{
+    state.ui = state.ui || {};
+    state.ui.theme = "executive";
+    state.ui.themeCustom = Object.assign({}, window.ONDIS_THEME?.DEFAULT_CUSTOM || {});
+    if(window.ONDIS_THEME) window.ONDIS_THEME.applyFromState(state);
+    save(state);
+    syncAppearanceUI();
+  });
+  $("btnApplyTheme")?.addEventListener("click", ()=>{
+    if(window.ONDIS_THEME) window.ONDIS_THEME.applyFromState(state);
+    save(state);
+    alert("A identidade visual foi aplicada a esta loja.");
+  });
+
   $("btnSettings").addEventListener("click", ()=>{
     $("storeName").value = state.store.name || "";
     $("storeStatus").value = state.store.status || "Online";
     $("optValue").value = state.options.askValue ? "yes" : "no";
     $("optPieces").value = state.options.askPieces ? "yes" : "no";
+    syncAppearanceUI();
     openModal($("settingsBack"));
   });
   $("closeSettings").addEventListener("click", ()=> closeModal($("settingsBack")));
@@ -5046,7 +5857,10 @@ body{ background-attachment: fixed; }
     state.current = null;
     state.records = [];
     state.goalsByMonth = {};
-    state.ui = { theme: "default" };
+    state.ui = {
+      theme: "executive",
+      themeCustom: Object.assign({}, window.ONDIS_THEME?.DEFAULT_CUSTOM || {})
+    };
     save(state);
     renderAll();
     closeModal($("settingsBack"));
@@ -5145,6 +5959,7 @@ body{ background-attachment: fixed; }
         document.getElementById('storeStatus').value = state.store.status || 'Online';
         document.getElementById('optValue').value = state.options.askValue ? 'yes':'no';
         document.getElementById('optPieces').value = state.options.askPieces ? 'yes':'no';
+        window.ONDIS_SYNC_APPEARANCE?.();
       }catch{}
       openModal(document.getElementById('settingsBack'));
     });
@@ -5166,12 +5981,8 @@ body{ background-attachment: fixed; }
 
 
     // Aba Vendedor (fallback seguro)
-    bindSafeClick(document.getElementById('btnSeller'), ()=>{
-      try{ setTab('seller'); }catch(err){ console.error(err); try{ document.getElementById('viewSeller').style.display=''; }catch{} }
-    });
-    bindSafeClick(document.getElementById('tabSeller'), ()=>{
-      try{ setTab('seller'); }catch(err){ console.error(err); try{ document.getElementById('viewSeller').style.display=''; }catch{} }
-    });
+    bindSafeClick(document.getElementById('btnSeller'), ()=>{ setTab('seller'); });
+    bindSafeClick(document.getElementById('tabSeller'), ()=>{ setTab('seller'); });
   });
 
   // Captura erros não tratados (para não “morrer” sem aviso)
@@ -5207,6 +6018,7 @@ body{ background-attachment: fixed; }
       try{
         if(document.getElementById('storeName')) document.getElementById('storeName').value = state?.store?.name || '';
         if(document.getElementById('storeStatus')) document.getElementById('storeStatus').value = state?.store?.status || 'Online';
+        window.ONDIS_SYNC_APPEARANCE?.();
       }catch{}
       safeOpenById('settingsBack');
       return;
@@ -5513,7 +6325,7 @@ body{ background-attachment: fixed; }
   async function iniciarSyncLoja(profile){
     const storeId = getStoreIdAtual(profile);
     if(!storeId){
-      console.warn("Usuario sem loja vinculada. Usando dados locais.");
+      console.warn("Usuário sem loja vinculada. Usando dados locais.");
       return;
     }
     OMNIA_STORE_ID = storeId;
@@ -5537,9 +6349,17 @@ body{ background-attachment: fixed; }
         const limpo = {
           store: { name:"Sua loja", status:"Online", logoDataUrl:"" },
           options: { askValue:true, askPieces:true, vendorDivisor: 0 },
-          ui: { theme: (window.OMNIA_GET_STATE && window.OMNIA_GET_STATE().ui) ? window.OMNIA_GET_STATE().ui.theme : "default" },
+          ui: {
+            theme: "executive",
+            themeCustom: Object.assign({}, window.ONDIS_THEME?.DEFAULT_CUSTOM || {})
+          },
           sellers: [], queue: [], pool: [], currents: [], current: null,
-          records: [], badges: { earned: [] }, goalsByMonth: {}, vendorGoalsByMonth: {}, badgeConfig: {}
+          records: [], badges: { earned: [] },
+          teamReward: {
+            title:"Experiência especial para a equipe",
+            description:"Prêmio coletivo liberado quando a meta principal da loja for conquistada."
+          },
+          goalsByMonth: {}, vendorGoalsByMonth: {}, badgeConfig: {}
         };
         aplicandoRemoto = true;
         window.OMNIA_SET_STATE(limpo);
@@ -5686,6 +6506,10 @@ body{ background-attachment: fixed; }
     const isSuper = role === "superadmin";
     const isAdmin = (role === "admin") || isSuper; // super admin tem todos os poderes de admin
 
+    // Identidade visual e configurações da loja são exclusivas da administração.
+    const settingsButton = document.getElementById("btnSettings");
+    if(settingsButton) settingsButton.style.display = isAdmin ? "block" : "none";
+
     // ===== MÓDULOS (vão para a seção "Módulos" da navegação) =====
     const grupoModulos = document.getElementById("modulosGroup");
     function addModulo(id, ico, label, destino, extraClass){
@@ -5699,10 +6523,22 @@ body{ background-attachment: fixed; }
       grupoModulos.appendChild(b);
     }
 
-    addModulo("btnCRM", "📇", "CRM", "./crm.html");
+    // Mantém o CRM original disponível e adiciona o módulo completo separadamente.
+    // Assim nenhuma rotina legada é substituída e a equipe pode escolher a camada adequada.
+    addModulo("btnCRMSimples", "📇", "CRM Simplificado", "./crm.html");
+    addModulo("btnCRMCompleto", "◉", "CRM Completo", "./crm-completo.html?v=10");
     addModulo("btnPonto", "🕐", "Ponto", "./ponto.html");
     addModulo("btnCatalogo", "🛍️", "Catálogo", "./catalogo.html");
+    addModulo("btnCaixa", "▣", "ONDIS Finance", "./caixa.html");
     addModulo("btnComissao", "💰", "Comissão", "./comissao.html");
+    addModulo("btnComprasIntel", "📦", "Compras Inteligentes", "./compras-inteligentes.html");
+    addModulo("btnCollections", "◫", "Collections", "./collections.html");
+    addModulo("btnMarketingIntel", "📣", "Marketing Intelligence", "./marketing.html");
+    addModulo("btnFidelidade", "◆", "ONDIS Club", "./fidelidade.html");
+    addModulo("btnEquipe360", "👥", "Equipe 360°", "./equipe-360.html");
+    addModulo("btnAuditoria", "🛡", "Auditoria & Perdas", "./auditoria.html");
+    addModulo("btnOmnichannel", "⇄", "Omnichannel", "./omnichannel.html");
+    addModulo("btnAutopilot", "✦", "ONDIS Autopilot", "./autopilot.html");
     if(isAdmin) addModulo("btnAdminPanel", "👑", "Gerenciar", "./admin.html", "modAdmin");
 
     // Botão "Editar selos" (dentro do menu de conta) — só para admin

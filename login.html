@@ -37,8 +37,67 @@
   .spinner{width:36px;height:36px;border:3px solid rgba(255,255,255,.12);border-top-color:#62a8ff;border-radius:50%;animation:spin .7s linear infinite;}
   @keyframes spin{to{transform:rotate(360deg)}}
 </style>
+<link href="./ondis-premium.css" rel="stylesheet"/>
+<script src="./ondis-premium.js"></script>
+<link rel="stylesheet" href="./ondis-v9.css">
+<script src="./ondis-v9.js" defer></script>
 </head>
-<body>
+<body class="loginPage introPlaying">
+
+<div class="systemIntro" id="systemIntro" aria-label="Vídeo de abertura do ONDIS">
+  <video id="introVideo" autoplay playsinline preload="auto" poster="./assets/ondis-abertura-poster.jpg">
+    <source src="./assets/ondis-abertura.mp4?v=11" type="video/mp4"/>
+  </video>
+  <div class="introStartGate" id="introStartGate" hidden>
+    <div class="introStartCard">
+      <button class="introStartButton" id="introStart" type="button">▶ Entrar no ONDIS</button>
+      <span>A abertura será reproduzida em tela cheia com música.</span>
+    </div>
+  </div>
+  <div class="introControls">
+    <button class="introControl" id="introSound" type="button" hidden>🔇 Desativar som</button>
+    <button class="introControl" id="introSkip" type="button">Pular abertura</button>
+  </div>
+</div>
+<script>
+  (()=>{
+    const intro = document.getElementById('systemIntro');
+    const video = document.getElementById('introVideo');
+    const gate = document.getElementById('introStartGate');
+    const startBtn = document.getElementById('introStart');
+    let finished = false;
+    window.ONDIS_INTRO_DONE = false;
+    const finish = ()=>{
+      if(finished) return;
+      finished = true;
+      window.ONDIS_INTRO_DONE = true;
+      document.body.classList.remove('introPlaying');
+      intro.classList.add('isLeaving');
+      window.dispatchEvent(new CustomEvent('ondis:intro-ended'));
+      setTimeout(()=> intro.remove(), 520);
+    };
+    video.addEventListener('ended', finish);
+    video.addEventListener('error', ()=>{ gate.hidden = false; });
+
+    async function playWithSound(){
+      try{
+        video.currentTime = 0;
+        video.muted = false;
+        video.volume = 1;
+        await video.play();
+        gate.hidden = true;
+        return true;
+      }catch(error){
+        gate.hidden = false;
+        return false;
+      }
+    }
+    // Tenta iniciar com música. Navegadores que bloqueiam autoplay com áudio
+    // exibem um único botão de entrada; ao clicar, o vídeo começa do início com som.
+    requestAnimationFrame(playWithSound);
+    if(startBtn) startBtn.addEventListener('click', playWithSound);
+  })();
+</script>
 
 <div class="loading" id="loadingScreen">
   <div class="spinner"></div>
@@ -67,13 +126,13 @@
   </div>
 
   <div id="formCadastro" style="display:none">
-    <div class="field"><label>Codigo da loja</label><input id="cadCodigo" type="text" placeholder="Ex: TXC2024" style="text-transform:uppercase"/></div>
+    <div class="field"><label>Código da loja</label><input id="cadCodigo" type="text" placeholder="Ex: TXC2024" style="text-transform:uppercase"/></div>
     <div class="field"><label>Nome completo</label><input id="cadNome" type="text" placeholder="Ex: Camila Souza"/></div>
     <div class="field"><label>E-mail</label><input id="cadEmail" type="email" placeholder="seu@email.com"/></div>
-    <div class="field"><label>Senha</label><input id="cadSenha" type="password" placeholder="Minimo 6 caracteres"/></div>
+    <div class="field"><label>Senha</label><input id="cadSenha" type="password" placeholder="Mínimo de 6 caracteres"/></div>
     <button class="btn" id="btnCadastro" onclick="fazerCadastro()">Criar conta</button>
     <div class="msg" id="cadMsg"></div>
-    <div class="hint">Voce entra como <b>vendedor</b> da loja informada.<br>Peca o codigo da loja ao seu gestor.</div>
+    <div class="hint">Você entra como <b>vendedor</b> da loja informada.<br>Peça o código da loja ao seu gestor.</div>
   </div>
 </div>
 
@@ -100,10 +159,10 @@
   const db   = getFirestore(app);
 
   onAuthStateChanged(auth, async (user)=>{
-    if(user){
-      showLoading("Verificando acesso...");
-      await redirectByUser(user);
-    }
+    if(!user) return;
+    const continueLogin=async()=>{ showLoading("Verificando acesso..."); await redirectByUser(user); };
+    if(window.ONDIS_INTRO_DONE) await continueLogin();
+    else window.addEventListener('ondis:intro-ended', continueLogin, {once:true});
   });
 
   async function getProfile(uid){
@@ -141,7 +200,7 @@
       await redirectByUser(cred.user);
     }catch(e){
       hideLoading(); btn.disabled=false;
-      const msgs={"auth/user-not-found":"Usuario nao encontrado.","auth/wrong-password":"Senha incorreta.","auth/invalid-email":"E-mail invalido.","auth/invalid-credential":"E-mail ou senha incorretos.","auth/too-many-requests":"Muitas tentativas. Tente mais tarde."};
+      const msgs={"auth/user-not-found":"Usuário não encontrado.","auth/wrong-password":"Senha incorreta.","auth/invalid-email":"E-mail inválido.","auth/invalid-credential":"E-mail ou senha incorretos.","auth/too-many-requests":"Muitas tentativas. Tente mais tarde."};
       showMsg("loginMsg", msgs[e.code]||"Erro ao entrar. Tente novamente.","error");
     }
   };
@@ -152,16 +211,16 @@
     const email  = document.getElementById("cadEmail").value.trim();
     const senha  = document.getElementById("cadSenha").value;
 
-    if(!codigo)        { showMsg("cadMsg","Digite o codigo da loja.","error"); return; }
+    if(!codigo)        { showMsg("cadMsg","Digite o código da loja.","error"); return; }
     if(!nome)          { showMsg("cadMsg","Digite seu nome.","error"); return; }
     if(!email)         { showMsg("cadMsg","Digite seu e-mail.","error"); return; }
     if(senha.length<6) { showMsg("cadMsg","Senha deve ter pelo menos 6 caracteres.","error"); return; }
 
-    const btn=document.getElementById("btnCadastro"); btn.disabled=true; showLoading("Verificando codigo da loja...");
+    const btn=document.getElementById("btnCadastro"); btn.disabled=true; showLoading("Verificando código da loja...");
     let store;
     try{ store = await findStoreByCode(codigo); }
-    catch(e){ hideLoading(); btn.disabled=false; showMsg("cadMsg","Erro ao verificar o codigo. Tente novamente.","error"); return; }
-    if(!store){ hideLoading(); btn.disabled=false; showMsg("cadMsg","Codigo de loja invalido. Confira com seu gestor.","error"); return; }
+    catch(e){ hideLoading(); btn.disabled=false; showMsg("cadMsg","Erro ao verificar o código. Tente novamente.","error"); return; }
+    if(!store){ hideLoading(); btn.disabled=false; showMsg("cadMsg","Código de loja inválido. Confira com seu gestor.","error"); return; }
 
     showLoading("Criando conta...");
     try{
@@ -174,7 +233,7 @@
       setTimeout(()=> window.location.href="./index.html", 1000);
     }catch(e){
       hideLoading(); btn.disabled=false;
-      const msgs={"auth/email-already-in-use":"Este e-mail ja esta cadastrado.","auth/invalid-email":"E-mail invalido.","auth/weak-password":"Senha muito fraca."};
+      const msgs={"auth/email-already-in-use":"Este e-mail já está cadastrado.","auth/invalid-email":"E-mail inválido.","auth/weak-password":"Senha muito fraca."};
       showMsg("cadMsg", msgs[e.code]||"Erro ao cadastrar. Tente novamente.","error");
     }
   };
@@ -184,15 +243,15 @@
     if(!email){ showMsg("loginMsg","Digite seu e-mail no campo acima e clique novamente.","error"); return; }
     try{
       await sendPasswordResetEmail(auth, email);
-      showMsg("loginMsg","Link de redefinicao enviado! Confira seu e-mail (e o spam).","success");
+      showMsg("loginMsg","Link de redefinição enviado! Confira seu e-mail (e o spam).","success");
     }catch(e){
       console.error("Erro esqueciSenha:", e.code, e.message);
       const msgs={
-        "auth/user-not-found":"Nao existe conta com este e-mail. Verifique se digitou igual ao cadastrado.",
-        "auth/invalid-email":"E-mail invalido. Confira a digitacao.",
+        "auth/user-not-found":"Não existe conta com este e-mail. Verifique se digitou igual ao cadastrado.",
+        "auth/invalid-email":"E-mail inválido. Confira a digitação.",
         "auth/too-many-requests":"Muitas tentativas. Aguarde alguns minutos e tente de novo.",
         "auth/missing-email":"Digite o e-mail no campo acima.",
-        "auth/network-request-failed":"Falha de conexao. Verifique sua internet."
+        "auth/network-request-failed":"Falha de conexão. Verifique sua internet."
       };
       showMsg("loginMsg", (msgs[e.code] || ("Erro ao enviar: "+e.code)), "error");
     }

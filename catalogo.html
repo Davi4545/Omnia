@@ -68,8 +68,48 @@
   .qtd button{width:26px;height:26px;border-radius:7px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:#e7eefc;font-size:15px;font-weight:800;cursor:pointer;}
   .fotoPreview{width:120px;height:120px;object-fit:cover;border-radius:12px;border:1px solid rgba(255,255,255,.12);display:none;margin-bottom:8px;}
   @media(max-width:600px){ .grid2{grid-template-columns:1fr;} }
+
+  /* ===== CATÁLOGO ONDIS 2026 ===== */
+  body{background:#f5f8fd!important;color:#15223b!important}
+  header{background:rgba(255,255,255,.94)!important;border-bottom:1px solid #dfe7f2!important;color:#15223b!important}
+  .wrap{max-width:1500px;padding:18px 22px 36px}
+  .tabs{position:sticky;top:67px;z-index:16;background:rgba(255,255,255,.96);margin:-18px -22px 18px;padding:0 22px;border-bottom:1px solid #e4eaf3;box-shadow:0 5px 18px rgba(25,55,95,.035)}
+  .tab{border:0!important;border-bottom:3px solid transparent!important;border-radius:0!important;background:transparent!important;color:#34425b!important;padding:14px 18px!important}
+  .tab.active{color:#2468e8!important;border-bottom-color:#2468e8!important;background:#eef5ff!important}
+  .catalog-shell{display:grid;grid-template-columns:278px minmax(0,1fr);gap:20px;align-items:start}
+  .catalog-side{display:grid;gap:16px}
+  .catalog-hero{min-height:222px;padding:26px 22px;border-radius:18px;background:radial-gradient(circle at 82% 20%,rgba(33,145,255,.27),transparent 28%),linear-gradient(145deg,#102a57,#071833);color:#fff;box-shadow:0 14px 34px rgba(20,48,90,.14);position:relative;overflow:hidden}
+  .catalog-hero:after{content:"";position:absolute;width:150px;height:150px;border:2px solid rgba(74,185,255,.5);border-radius:34px;right:-45px;bottom:-58px;transform:rotate(20deg);box-shadow:0 0 45px rgba(23,144,255,.35)}
+  .catalog-hero h2{font-size:22px;margin-bottom:6px}.catalog-hero p{font-size:12px;line-height:1.55;color:#c7d7f0;max-width:190px}.catalog-hero .btn{margin-top:28px;width:100%;background:#0b356c!important;border:1px solid #3ba5ff!important;color:#fff!important;box-shadow:0 0 22px rgba(37,146,255,.24)}
+  .catalog-filter-card{background:#fff;border:1px solid #e2e9f3;border-radius:16px;padding:18px;box-shadow:0 8px 26px rgba(25,58,95,.045)}
+  .catalog-filter-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}.catalog-filter-title strong{font-size:15px}.catalog-filter-title button{border:0;background:transparent;color:#e34f54;font-size:11px;font-weight:700;cursor:pointer}
+  .filter-section{padding:14px 0;border-top:1px solid #edf1f6}.filter-section:first-of-type{border-top:0;padding-top:0}.filter-section>strong{display:block;font-size:11px;margin-bottom:11px}
+  .catChecks{display:grid;gap:8px}.catCheck{display:flex;align-items:center;gap:8px;font-size:12px;color:#465570;cursor:pointer}.catCheck input{accent-color:#2468e8}
+  .priceInputs{display:grid;grid-template-columns:1fr 1fr;gap:8px}.priceInputs input{width:100%;min-width:0;background:#f7f9fc!important;color:#1c2940!important;border:1px solid #dde6f1!important;border-radius:10px;padding:9px}
+  .sizeButtons{display:flex;gap:7px;flex-wrap:wrap}.sizeButtons button{min-width:42px;padding:8px 10px;border-radius:9px;border:1px solid #dbe4f0;background:#fff;color:#56647a;cursor:pointer}.sizeButtons button.active{background:#eaf3ff;border-color:#75a9f6;color:#1462d3}
+  .catalog-main{min-width:0}.catalog-tools-card{background:#fff;border:1px solid #e2e9f3;border-radius:17px;padding:15px;margin-bottom:16px;box-shadow:0 8px 26px rgba(25,58,95,.045)}
+  .searchRow{display:flex;align-items:center;gap:12px}.searchBox{position:relative;flex:1}.searchBox input{width:100%;height:44px;border:1px solid #dfe7f1!important;border-radius:12px!important;background:#fff!important;color:#1d2a42!important;padding:0 44px 0 14px!important;font-size:13px}.searchBox span{position:absolute;right:15px;top:50%;transform:translateY(-50%);color:#64748b}
+  .viewToggle{display:flex;border:1px solid #e0e7f1;border-radius:10px;overflow:hidden}.viewToggle button{height:40px;padding:0 15px;border:0;background:#fff;color:#607089;cursor:pointer}.viewToggle button.active{background:#edf5ff;color:#1769e8;font-weight:800}
+  .toolbar{margin:12px 0 0!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr)) auto;gap:10px!important}.toolbar input{display:none}.toolbar select{min-height:42px;background:#fff!important;color:#334155!important;border:1px solid #dfe7f1!important;border-radius:11px!important}
+  .clearFiltersBtn{min-height:42px;background:#fff!important;color:#44536a!important;border:1px solid #dfe7f1!important}
+  .catalogStats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:13px}.catalogStat{display:flex;align-items:center;gap:12px;border:1px solid #e4eaf2;border-radius:13px;padding:13px;background:#fff}.catalogStat i{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:18px}.catalogStat.blue i{background:#eaf3ff;color:#2474f2}.catalogStat.orange i{background:#fff4e8;color:#ff7b25}.catalogStat.green i{background:#e9fbf0;color:#15a962}.catalogStat.purple i{background:#f3ecff;color:#8b5cf6}.catalogStat small{display:block;color:#7d8aa0;font-size:10px}.catalogStat b{display:block;font-size:17px;margin-top:2px}
+  .grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.prod{background:#fff!important;border:1px solid #e2e8f1!important;border-radius:17px!important;box-shadow:0 9px 26px rgba(28,58,94,.055);overflow:hidden;transition:.18s}.prod:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(28,58,94,.10)}
+  .prod .photoWrap{position:relative;background:#f2f6fb}.prod .foto,.prod .semFoto{aspect-ratio:1.08/1!important;background:#f3f6fa!important}.prod .foto{object-fit:cover!important}
+  .productBadge{position:absolute;left:10px;top:10px;border-radius:6px;padding:4px 7px;font-size:9px;font-weight:900;color:#fff;z-index:2}.productBadge.sale{background:#68dc88}.productBadge.new{background:#69a8f5}.productBadge.hot{background:#ff9564}.productBadge.premium{background:#a46df3}
+  .prod .body{padding:12px 13px!important;gap:5px!important}.prod .nome{font-size:13px!important;color:#1e293b!important}.prod .desc,.prod .ref{color:#8491a4!important}.prod .preco{color:#13a963!important;font-size:16px!important}.prod .acts{padding:0 13px 13px!important;display:grid!important;grid-template-columns:44px 1fr;gap:8px!important}.prod .acts .btn{min-height:36px;border-radius:10px!important;background:#fff!important;color:#45536b!important;border:1px solid #dfe7f1!important}.prod .acts .btn.good{background:#116ee8!important;color:#fff!important;border-color:#116ee8!important}
+  #gridVitrine.listView{grid-template-columns:1fr}.listView .prod{display:grid;grid-template-columns:170px 1fr 180px;align-items:center}.listView .prod .photoWrap,.listView .prod .foto,.listView .prod .semFoto{height:145px;aspect-ratio:auto!important}.listView .prod .acts{grid-template-columns:1fr;padding:13px!important}
+  .modal{background:#fff!important;color:#1e293b!important;border:1px solid #dfe7f1!important;box-shadow:0 26px 80px rgba(15,35,65,.2)}.field label{color:#65748a!important}.field input,.field select,.field textarea{background:#f8fafc!important;color:#1e293b!important;border:1px solid #dce5f0!important}
+  .photoSlots{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}.photoSlot{position:relative;aspect-ratio:1/1;border:1px dashed #b9c8da;border-radius:13px;background:#f7f9fc;display:grid;place-items:center;overflow:hidden}.photoSlot img{width:100%;height:100%;object-fit:cover}.photoSlot button{position:absolute;right:6px;top:6px;width:26px;height:26px;border:0;border-radius:50%;background:rgba(15,23,42,.72);color:#fff;cursor:pointer}.photoSlot .empty{font-size:11px;color:#7c899b;text-align:center}
+  @media(max-width:1150px){.grid{grid-template-columns:repeat(3,1fr)}.catalogStats{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:900px){.catalog-shell{grid-template-columns:1fr}.catalog-side{grid-template-columns:1fr 1fr}.grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:650px){.catalog-side{grid-template-columns:1fr}.toolbar{grid-template-columns:1fr 1fr}.catalogStats{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.listView .prod{display:flex}.tabs{top:60px;overflow:auto;flex-wrap:nowrap}}
+
 </style>
-</head>
+<link href="./ondis-premium.css" rel="stylesheet"/>
+<script src="./ondis-premium.js"></script>
+<link rel="stylesheet" href="./ondis-v9.css">
+<script src="./ondis-v9.js" defer></script>
+<link rel="stylesheet" href="./ondis-v11.css?v=12.3.0"><script src="./ondis-v11.js?v=12.3.0" defer></script></head>
 <body>
 
 <div class="loading show" id="loadingScreen"><div class="spinner"></div><div id="loadingMsg">Carregando...</div></div>
@@ -96,32 +136,43 @@
 
   <!-- VITRINE (cliente e funcionário) -->
   <div id="viewVitrine">
-    <div id="barraVendedorTopo" style="display:none;margin-bottom:12px">
-      <button class="btn warn" id="btnModoSelecao" onclick="toggleModoSelecao()">🎯 Montar link p/ cliente</button>
-    </div>
-    <div id="barraSelecao" style="display:none;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:rgba(255,209,102,.1);border:1px solid rgba(255,209,102,.3);border-radius:12px;padding:12px 14px;margin-bottom:14px">
-      <span style="font-size:14px;font-weight:700;color:#ffd166">🎯 Selecionando peças para um cliente — <span id="selCount">0</span> escolhida(s)</span>
+    <div id="barraSelecao" style="display:none;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:#fff8e8;border:1px solid #f3d784;border-radius:12px;padding:12px 14px;margin-bottom:14px">
+      <span style="font-size:14px;font-weight:700;color:#9a6a00">🎯 Selecionando peças para um cliente — <span id="selCount">0</span> escolhida(s)</span>
       <button class="btn good" onclick="gerarLinkSelecao()">🔗 Gerar link personalizado</button>
     </div>
-    <div class="toolbar">
-      <input id="busca" placeholder="Buscar produto..." oninput="renderVitrine()"/>
-      <select id="filtroCategoria" onchange="renderVitrine()"><option value="">Todas categorias</option></select>
-      <select id="filtroGenero" onchange="renderVitrine()">
-        <option value="">Todos os gêneros</option>
-        <option value="feminino">Feminino</option>
-        <option value="masculino">Masculino</option>
-        <option value="unissex">Unissex</option>
-        <option value="infantil">Infantil</option>
-      </select>
-      <select id="filtroTamanho" onchange="renderVitrine()"><option value="">Todos os tamanhos</option></select>
-      <select id="ordenar" onchange="renderVitrine()">
-        <option value="nome">Nome (A-Z)</option>
-        <option value="menor">Menor preço</option>
-        <option value="maior">Maior preço</option>
-        <option value="promo">Só promoções</option>
-      </select>
+    <div class="catalog-shell">
+      <aside class="catalog-side">
+        <section class="catalog-hero">
+          <h2>Sua vitrine</h2>
+          <p>Organize e destaque os produtos da sua loja para seus clientes.</p>
+          <div id="barraVendedorTopo" style="display:none"><button class="btn" id="btnModoSelecao" onclick="toggleModoSelecao()">🔗 Montar link p/ cliente</button></div>
+        </section>
+        <section class="catalog-filter-card">
+          <div class="catalog-filter-title"><strong>Filtros</strong><button type="button" onclick="limparFiltrosCatalogo()">Limpar tudo</button></div>
+          <div class="filter-section"><strong>Categoria</strong><div class="catChecks" id="categoryChecks"></div></div>
+          <div class="filter-section"><strong>Faixa de preço</strong><div class="priceInputs"><input id="precoMin" inputmode="decimal" placeholder="R$ mín." oninput="renderVitrine()"><input id="precoMax" inputmode="decimal" placeholder="R$ máx." oninput="renderVitrine()"></div></div>
+          <div class="filter-section"><strong>Tamanho</strong><div class="sizeButtons" id="sizeButtons"></div></div>
+          <button class="btn" style="width:100%;background:#eaf3ff!important;color:#1769e8!important;border-color:#b9d4fb!important" type="button" onclick="renderVitrine()">⌁ Aplicar filtros</button>
+        </section>
+      </aside>
+      <main class="catalog-main">
+        <section class="catalog-tools-card">
+          <div class="searchRow">
+            <div class="searchBox"><input id="busca" placeholder="Buscar produto..." oninput="renderVitrine()"/><span>⌕</span></div>
+            <div class="viewToggle"><button id="viewGridBtn" class="active" type="button" onclick="setCatalogView('grid')">▦ Grade</button><button id="viewListBtn" type="button" onclick="setCatalogView('list')">☷ Lista</button></div>
+          </div>
+          <div class="toolbar">
+            <select id="filtroCategoria" onchange="syncCategoryFromSelect();renderVitrine()"><option value="">Todas categorias</option></select>
+            <select id="filtroGenero" onchange="renderVitrine()"><option value="">Todos os gêneros</option><option value="feminino">Feminino</option><option value="masculino">Masculino</option><option value="unissex">Unissex</option><option value="infantil">Infantil</option></select>
+            <select id="filtroTamanho" onchange="syncSizeFromSelect();renderVitrine()"><option value="">Todos os tamanhos</option></select>
+            <select id="ordenar" onchange="renderVitrine()"><option value="nome">Ordenar: Nome (A-Z)</option><option value="menor">Menor preço</option><option value="maior">Maior preço</option><option value="promo">Só promoções</option></select>
+            <button class="btn clearFiltersBtn" type="button" onclick="limparFiltrosCatalogo()">⌫ Limpar filtros</button>
+          </div>
+          <div class="catalogStats" id="catalogStats"></div>
+        </section>
+        <div class="grid" id="gridVitrine"><div class="hint">Carregando produtos...</div></div>
+      </main>
     </div>
-    <div class="grid" id="gridVitrine"><div class="hint">Carregando produtos...</div></div>
   </div>
 
   <!-- GERENCIAR (funcionário) -->
@@ -177,13 +228,11 @@
       <button class="btn" onclick="fecharProduto()">✕</button>
     </div>
     <input type="hidden" id="prodId"/>
-    <div style="text-align:center">
-      <img id="prodFotoPreview" class="fotoPreview" src="" alt="" style="margin:0 auto 8px"/>
-    </div>
     <div class="field">
-      <label>Foto do produto</label>
-      <input id="prodFotoInput" type="file" accept="image/*" onchange="onFotoProduto(this)" style="display:none"/>
-      <button class="btn" onclick="document.getElementById('prodFotoInput').click()" type="button">📷 Adicionar foto</button>
+      <label>Fotos do produto <span style="font-weight:500;text-transform:none">(até 3 imagens)</span></label>
+      <div class="photoSlots" id="photoSlots"></div>
+      <input id="prodFotoInput" type="file" accept="image/*" multiple onchange="onFotosProduto(this)" style="display:none"/>
+      <button class="btn" onclick="document.getElementById('prodFotoInput').click()" type="button">📷 Adicionar fotos</button>
     </div>
     <div class="grid2">
       <div class="field"><label>Referência</label><input id="prodRef" placeholder="Ex: TXC-1234"/></div>
@@ -266,7 +315,8 @@
   const VEND_PARAM = params.get("vend");
   const SEL_PARAM = (params.get("sel")||"").split(",").filter(Boolean); // peças selecionadas pelo vendedor
 
-  let MY=null, STORE_ID=null, LOJA_NOME="", PRODUTOS=[], produtosRef=null;
+  let MY=null, STORE_ID=null, LOJA_NOME="", LOJA_INFO={}, PRODUTOS=[], produtosRef=null;
+  let CAT_SELECTED="", SIZE_SELECTED="", CATALOG_VIEW="grid";
   let MODO="cliente"; // "cliente" ou "funcionario"
   let VENDEDOR=null;   // dados do vendedor do link (nome + whats)
   let CART={};         // { produtoId: quantidade }
@@ -281,10 +331,10 @@
   function hideLoading(){ document.getElementById("loadingScreen").classList.remove("show"); }
   function msgErro(e, oQueTentava){
     const code = (e && (e.code||e.message||"")) + "";
-    if(/permission|insufficient|PERMISSION/i.test(code)) return "Sem permissao para "+(oQueTentava||"esta acao")+". Faca login de novo ou fale com o administrador.";
-    if(/network|unavailable|offline|failed to get|deadline/i.test(code)) return "Parece que voce esta sem internet. Verifique a conexao e tente de novo.";
-    if(/quota|resource-exhausted/i.test(code)) return "O sistema esta sobrecarregado. Aguarde e tente de novo.";
-    return "Nao foi possivel "+(oQueTentava||"concluir")+". Verifique sua internet e tente de novo.";
+    if(/permission|insufficient|PERMISSION/i.test(code)) return "Sem permissão para "+(oQueTentava||"esta ação")+". Faça login novamente ou fale com o administrador.";
+    if(/network|unavailable|offline|failed to get|deadline/i.test(code)) return "Parece que você está sem internet. Verifique a conexão e tente novamente.";
+    if(/quota|resource-exhausted/i.test(code)) return "O sistema está sobrecarregado. Aguarde e tente novamente.";
+    return "Não foi possível "+(oQueTentava||"concluir")+". Verifique sua internet e tente novamente.";
   }
   function estadoVazio(ico, tit, txt){
     return `<div class="vazio"><div class="ico">${ico}</div><div class="tit">${tit}</div><div class="txt">${txt||""}</div></div>`;
@@ -316,8 +366,8 @@
   });
 
   async function carregarNomeLoja(){
-    LOJA_NOME=STORE_ID;
-    try{ const ls=await getDoc(doc(db,"stores",STORE_ID)); if(ls.exists()) LOJA_NOME=ls.data().name||ls.data().code||STORE_ID; }catch(e){}
+    LOJA_NOME=STORE_ID; LOJA_INFO={};
+    try{ const ls=await getDoc(doc(db,"stores",STORE_ID)); if(ls.exists()){ LOJA_INFO=ls.data()||{}; LOJA_NOME=LOJA_INFO.name||LOJA_INFO.code||STORE_ID; } }catch(e){}
     document.getElementById("lojaTitulo").textContent = LOJA_NOME;
   }
 
@@ -328,8 +378,31 @@
       atualizarCategorias();
       renderVitrine();
       if(MODO==="funcionario") renderGerenciar();
+      if(MODO==="funcionario") tentarCriarDemoLojaTeste();
       hideLoading();
     },(err)=>{ console.error(err); hideLoading(); document.getElementById("gridVitrine").innerHTML='<div class="hint">Erro ao carregar. Verifique as regras do Firestore.</div>'; });
+  }
+
+
+  const DEMO_PRODUCTS=[
+    {id:"demo_camisa_xadrez",nome:"Camisa Xadrez",ref:"OND-XD01",categoria:"Camisas",genero:"masculino",tamanhos:["P","M","G","GG"],descricao:"Algodão Premium",preco:499.90,promo:0,disponivel:"sim",foto:"./assets/catalogo-demo/camisa-xadrez.svg",fotos:["./assets/catalogo-demo/camisa-xadrez.svg"],destaque:"Mais vendido"},
+    {id:"demo_camiseta_branca",nome:"Camiseta Branca",ref:"OND-BR02",categoria:"Camisetas",genero:"masculino",tamanhos:["P","M","G","GG"],descricao:"Algodão Pima",preco:299.90,promo:269.90,disponivel:"sim",foto:"./assets/catalogo-demo/camiseta-branca.svg",fotos:["./assets/catalogo-demo/camiseta-branca.svg"],destaque:"-10%"},
+    {id:"demo_camiseta_preta",nome:"Camiseta Preta",ref:"OND-PT03",categoria:"Camisetas",genero:"masculino",tamanhos:["P","M","G","GG"],descricao:"Algodão Pima",preco:269.90,promo:0,disponivel:"sim",foto:"./assets/catalogo-demo/camiseta-preta.svg",fotos:["./assets/catalogo-demo/camiseta-preta.svg"],destaque:"Novidade"},
+    {id:"demo_polo_classic",nome:"Polo Classic",ref:"OND-PC04",categoria:"Polos",genero:"masculino",tamanhos:["P","M","G","GG"],descricao:"Piquet Premium",preco:359.90,promo:0,disponivel:"sim",foto:"./assets/catalogo-demo/polo-classic.svg",fotos:["./assets/catalogo-demo/polo-classic.svg"],destaque:"Premium"},
+    {id:"demo_camiseta_verde",nome:"Camiseta Verde",ref:"OND-VD05",categoria:"Camisetas",genero:"masculino",tamanhos:["P","M","G","GG"],descricao:"Malha premium",preco:249.90,promo:0,disponivel:"sim",foto:"./assets/catalogo-demo/camiseta-verde.svg",fotos:["./assets/catalogo-demo/camiseta-verde.svg"],destaque:"Novo"},
+    {id:"demo_camiseta_marinho",nome:"Camiseta Marinho",ref:"OND-MA06",categoria:"Camisetas",genero:"masculino",tamanhos:["P","M","G","GG"],descricao:"Malha premium",preco:289.90,promo:249.90,disponivel:"sim",foto:"./assets/catalogo-demo/camiseta-marinho.svg",fotos:["./assets/catalogo-demo/camiseta-marinho.svg"],destaque:"-15%"},
+    {id:"demo_camiseta_azul",nome:"Camiseta Azul",ref:"OND-AZ07",categoria:"Camisetas",genero:"masculino",tamanhos:["P","M","G","GG"],descricao:"Cotton leve",preco:239.90,promo:0,disponivel:"sim",foto:"./assets/catalogo-demo/camiseta-azul.svg",fotos:["./assets/catalogo-demo/camiseta-azul.svg"],destaque:"Mais vendido"},
+    {id:"demo_camiseta_rosa",nome:"Camiseta Rosa",ref:"OND-RS08",categoria:"Camisetas",genero:"unissex",tamanhos:["P","M","G","GG"],descricao:"Cotton premium",preco:259.90,promo:0,disponivel:"sim",foto:"./assets/catalogo-demo/camiseta-rosa.svg",fotos:["./assets/catalogo-demo/camiseta-rosa.svg"],destaque:"Novidade"}
+  ];
+  let DEMO_SEEDED=false;
+  async function tentarCriarDemoLojaTeste(){
+    if(DEMO_SEEDED || PRODUTOS.length || !MY || !(MY.role==="admin"||MY.role==="superadmin")) return;
+    const chave=`${STORE_ID} ${LOJA_NOME} ${LOJA_INFO.code||""}`.toLowerCase();
+    if(!/teste|test|demo|demonstra/.test(chave)) return;
+    DEMO_SEEDED=true;
+    try{
+      await Promise.all(DEMO_PRODUCTS.map(p=>setDoc(doc(produtosRef,p.id),{...p,criadoEm:new Date().toISOString(),atualizadoEm:new Date().toISOString(),demo:true})));
+    }catch(e){ console.warn("Não foi possível criar catálogo demo:",e); }
   }
 
   async function iniciarModoCliente(){
@@ -383,44 +456,68 @@
   function atualizarCategorias(){
     const cats=[...new Set(PRODUTOS.map(p=>p.categoria).filter(Boolean))].sort();
     const sel=document.getElementById("filtroCategoria");
-    const atual=sel.value;
+    const atual=CAT_SELECTED||sel.value;
     sel.innerHTML='<option value="">Todas categorias</option>'+cats.map(c=>`<option value="${c}">${c}</option>`).join("");
     sel.value=atual;
     const dl=document.getElementById("catList");
     if(dl) dl.innerHTML=cats.map(c=>`<option value="${c}">`).join("");
-
-    // popula tamanhos únicos de todos os produtos
+    const checks=document.getElementById("categoryChecks");
+    if(checks) checks.innerHTML=[`<label class="catCheck"><input type="radio" name="catSide" value="" ${!CAT_SELECTED?"checked":""} onchange="setCategoryFilter('')"> Todas as categorias</label>`]
+      .concat(cats.map(c=>`<label class="catCheck"><input type="radio" name="catSide" value="${c}" ${CAT_SELECTED===c?"checked":""} onchange="setCategoryFilter('${String(c).replace(/'/g,"\'")}')"> ${c}</label>`)).join("");
     const tams=[...new Set(PRODUTOS.flatMap(p=>p.tamanhos||[]).filter(Boolean))].sort((a,b)=>{
-      const na=parseFloat(a), nb=parseFloat(b);
-      if(!isNaN(na)&&!isNaN(nb)) return na-nb;
-      return String(a).localeCompare(String(b));
+      const ordem=["PP","P","M","G","GG","XG","XGG"]; const ia=ordem.indexOf(String(a).toUpperCase()),ib=ordem.indexOf(String(b).toUpperCase());
+      if(ia>=0||ib>=0) return (ia<0?99:ia)-(ib<0?99:ib);
+      const na=parseFloat(a), nb=parseFloat(b); if(!isNaN(na)&&!isNaN(nb)) return na-nb; return String(a).localeCompare(String(b));
     });
     const selT=document.getElementById("filtroTamanho");
-    if(selT){ const at=selT.value; selT.innerHTML='<option value="">Todos os tamanhos</option>'+tams.map(t=>`<option value="${t}">${t}</option>`).join(""); selT.value=at; }
+    if(selT){ selT.innerHTML='<option value="">Todos os tamanhos</option>'+tams.map(t=>`<option value="${t}">${t}</option>`).join(""); selT.value=SIZE_SELECTED; }
+    const sizeWrap=document.getElementById("sizeButtons");
+    if(sizeWrap) sizeWrap.innerHTML=tams.slice(0,10).map(t=>`<button type="button" class="${SIZE_SELECTED===t?"active":""}" onclick="setSizeFilter('${String(t).replace(/'/g,"\'")}')">${t}</button>`).join("")+`<button type="button" class="${!SIZE_SELECTED?"active":""}" onclick="setSizeFilter('')">Todos</button>`;
   }
+
+  window.setCategoryFilter=function(v){ CAT_SELECTED=v||""; const s=document.getElementById("filtroCategoria"); if(s)s.value=CAT_SELECTED; atualizarCategorias(); renderVitrine(); };
+  window.setSizeFilter=function(v){ SIZE_SELECTED=v||""; const s=document.getElementById("filtroTamanho"); if(s)s.value=SIZE_SELECTED; atualizarCategorias(); renderVitrine(); };
+  window.syncCategoryFromSelect=function(){CAT_SELECTED=document.getElementById("filtroCategoria").value||""; atualizarCategorias();};
+  window.syncSizeFromSelect=function(){SIZE_SELECTED=document.getElementById("filtroTamanho").value||""; atualizarCategorias();};
+  window.setCatalogView=function(v){ CATALOG_VIEW=v==="list"?"list":"grid"; document.getElementById("gridVitrine")?.classList.toggle("listView",CATALOG_VIEW==="list"); document.getElementById("viewGridBtn")?.classList.toggle("active",CATALOG_VIEW==="grid"); document.getElementById("viewListBtn")?.classList.toggle("active",CATALOG_VIEW==="list"); };
+  window.limparFiltrosCatalogo=function(){ CAT_SELECTED="";SIZE_SELECTED=""; ["busca","precoMin","precoMax"].forEach(id=>{const e=document.getElementById(id);if(e)e.value="";}); ["filtroCategoria","filtroGenero","filtroTamanho"].forEach(id=>{const e=document.getElementById(id);if(e)e.value="";}); const o=document.getElementById("ordenar");if(o)o.value="nome"; atualizarCategorias();renderVitrine(); };
+  function firstPhoto(p){ return (Array.isArray(p.fotos)&&p.fotos.find(Boolean)) || p.foto || ""; }
 
   function precoFinal(p){ return (p.promo>0 && p.promo<p.preco) ? p.promo : p.preco; }
 
   // ===== VITRINE =====
   window.renderVitrine=function(){
     const busca=(document.getElementById("busca").value||"").toLowerCase();
-    const cat=document.getElementById("filtroCategoria").value||"";
+    const cat=CAT_SELECTED || document.getElementById("filtroCategoria").value||"";
     const gen=(document.getElementById("filtroGenero")||{}).value||"";
-    const tam=(document.getElementById("filtroTamanho")||{}).value||"";
+    const tam=SIZE_SELECTED || (document.getElementById("filtroTamanho")||{}).value||"";
     const ord=document.getElementById("ordenar").value||"nome";
+    const pmin=brNum((document.getElementById("precoMin")||{}).value||"");
+    const pmax=brNum((document.getElementById("precoMax")||{}).value||"");
     let lista=PRODUTOS.filter(p=>{
       const okB=!busca||(p.nome||"").toLowerCase().includes(busca)||(p.ref||"").toLowerCase().includes(busca)||(p.descricao||"").toLowerCase().includes(busca);
       const okC=!cat||p.categoria===cat;
       const okG=!gen||p.genero===gen;
       const okT=!tam||(p.tamanhos||[]).includes(tam);
+      const pf=precoFinal(p);
       const okPromo = ord!=="promo" || (p.promo>0 && p.promo<p.preco);
-      return okB && okC && okG && okT && okPromo;
+      const okPrice=(!pmin||pf>=pmin)&&(!pmax||pf<=pmax);
+      return okB && okC && okG && okT && okPromo && okPrice;
     });
     if(ord==="menor") lista.sort((a,b)=>precoFinal(a)-precoFinal(b));
     else if(ord==="maior") lista.sort((a,b)=>precoFinal(b)-precoFinal(a));
     else lista.sort((a,b)=>(a.nome||"").localeCompare(b.nome||""));
 
     const grid=document.getElementById("gridVitrine");
+    if(grid) grid.classList.toggle("listView",CATALOG_VIEW==="list");
+    const stats=document.getElementById("catalogStats");
+    if(stats){
+      const ativos=PRODUTOS.filter(p=>p.disponivel!=="nao").length;
+      const promos=PRODUTOS.filter(p=>p.promo>0&&p.promo<p.preco).length;
+      const novidades=PRODUTOS.filter(p=>/novo|novidade/i.test(p.destaque||"")).length;
+      const valor=PRODUTOS.reduce((s,p)=>s+precoFinal(p),0);
+      stats.innerHTML=`<article class="catalogStat blue"><i>♙</i><div><small>Total de produtos</small><b>${ativos}</b><small>ativos</small></div></article><article class="catalogStat orange"><i>↗</i><div><small>Promoções</small><b>${promos}</b><small>produtos</small></div></article><article class="catalogStat green"><i>✦</i><div><small>Novidades</small><b>${novidades}</b><small>produtos</small></div></article><article class="catalogStat purple"><i>▣</i><div><small>Valor da vitrine</small><b>${money(valor)}</b><small>seleção atual</small></div></article>`;
+    }
 
     // CLIENTE com link personalizado: separa "selecionadas para você" das demais
     const temSelecao = MODO==="cliente" && SEL_PARAM.length>0;
@@ -464,38 +561,26 @@
   function cardProduto(p){
     const temPromo=p.promo>0 && p.promo<p.preco;
     const esgotado=p.disponivel==="nao";
-    const foto=p.foto?`<img class="foto" src="${p.foto}" alt="${p.nome||""}"/>`:`<div class="semFoto">📦</div>`;
-    const infoTam=(p.tamanhos&&p.tamanhos.length)?`<div class="ref">Tam: ${p.tamanhos.join(", ")}</div>`:'';
-    const genLabel={feminino:"♀ Feminino",masculino:"♂ Masculino",unissex:"Unissex",infantil:"Infantil"}[p.genero]||"";
+    const src=firstPhoto(p);
+    const foto=src?`<img class="foto" src="${src}" alt="${p.nome||""}"/>`:`<div class="semFoto">📦</div>`;
+    const infoTam=(p.tamanhos&&p.tamanhos.length)?`<div class="ref">${p.tamanhos.join(", ")}</div>`:'';
+    const badge=(p.destaque||"").trim();
+    let badgeClass=/^-|%/.test(badge)?"sale":/novo/i.test(badge)?"new":/premium/i.test(badge)?"premium":/vendido/i.test(badge)?"hot":"";
     let acao;
     const ehGestor = MY && (MY.role==="admin" || MY.role==="superadmin");
-    if(SEL_MODE){
-      const on=!!SELECIONADAS[p.id];
-      acao=`<button class="btn sm ${on?'good':''}" style="flex:1" onclick="toggleSelecao('${p.id}')">${on?'✅ Selecionada':'+ Selecionar'}</button>`;
-    } else if(MODO==="cliente"){
-      acao=esgotado?'<button class="btn sm" disabled style="opacity:.5;flex:1">Esgotado</button>':`<button class="btn good sm" style="flex:1" onclick="addCart('${p.id}')">+ Adicionar</button>`;
-    } else if(ehGestor){
-      acao=`<button class="btn sm" style="flex:1" onclick="abrirEditarProduto('${p.id}')">✏️ Editar</button>`;
-    } else {
-      // vendedor no modo funcionário: sem botão (usa "Montar link" para selecionar)
-      acao=`<div style="flex:1"></div>`;
-    }
-    return `<div class="prod">
-      ${foto}
-      <div class="body">
-        <div style="display:flex;gap:6px;flex-wrap:wrap">${temPromo?'<span class="promoTag">PROMO</span>':''}${esgotado?'<span class="esgotado">ESGOTADO</span>':''}${genLabel?`<span class="ref">${genLabel}</span>`:''}</div>
-        ${p.ref?`<div class="ref">${p.ref}</div>`:''}
-        <div class="nome">${p.nome||"—"}</div>
-        ${p.descricao?`<div class="desc">${p.descricao}</div>`:'<div class="desc"></div>'}
-        ${infoTam}
-        <div class="precos">
-          <span class="preco">${money(precoFinal(p))}</span>
-          ${temPromo?`<span class="precoAntigo">${money(p.preco)}</span>`:''}
-        </div>
-      </div>
-      <div class="acts">${acao}</div>
-    </div>`;
+    if(SEL_MODE){ const on=!!SELECIONADAS[p.id]; acao=`<button class="btn sm ${on?'good':''}" style="grid-column:1/-1" onclick="toggleSelecao('${p.id}')">${on?'✅ Selecionada':'+ Selecionar'}</button>`; }
+    else if(MODO==="cliente"){ acao=esgotado?'<button class="btn sm" disabled style="opacity:.5;grid-column:1/-1">Esgotado</button>':`<button class="btn good sm" onclick="addCart('${p.id}')">🛒</button><button class="btn sm" onclick="abrirDetalhesProduto('${p.id}')">Detalhes</button>`; }
+    else if(ehGestor){ acao=`<button class="btn good sm" onclick="abrirEditarProduto('${p.id}')">✎</button><button class="btn sm" onclick="abrirDetalhesProduto('${p.id}')">Detalhes</button>`; }
+    else { acao=`<button class="btn good sm" onclick="toggleModoSelecao()">⌁</button><button class="btn sm" onclick="abrirDetalhesProduto('${p.id}')">Detalhes</button>`; }
+    return `<div class="prod"><div class="photoWrap">${badge?`<span class="productBadge ${badgeClass}">${badge}</span>`:""}${foto}</div><div class="body"><div class="nome">${p.nome||"—"}</div>${p.descricao?`<div class="desc">${p.descricao}</div>`:""}${infoTam}<div class="precos"><span class="preco">${money(precoFinal(p))}</span>${temPromo?`<span class="precoAntigo">${money(p.preco)}</span>`:""}</div></div><div class="acts">${acao}</div></div>`;
   }
+
+  window.abrirDetalhesProduto=function(id){
+    const p=PRODUTOS.find(x=>x.id===id); if(!p)return;
+    const fotos=(Array.isArray(p.fotos)&&p.fotos.length?p.fotos:[p.foto]).filter(Boolean);
+    const html=`<div class="modalBack show" id="modalDetalhesTemp"><div class="modal" style="max-width:760px"><div style="display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:14px"><h2>${p.nome||"Produto"}</h2><button class="btn" onclick="document.getElementById('modalDetalhesTemp').remove()">✕</button></div><div style="display:grid;grid-template-columns:minmax(260px,1fr) 1fr;gap:18px"><div><img id="detailMainImg" src="${fotos[0]||""}" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:15px;background:#f2f5f9">${fotos.length>1?`<div style="display:flex;gap:8px;margin-top:8px">${fotos.map(f=>`<img src="${f}" onclick="document.getElementById('detailMainImg').src=this.src" style="width:62px;height:62px;object-fit:cover;border-radius:9px;cursor:pointer;border:1px solid #dce5f0">`).join("")}</div>`:""}</div><div><div style="color:#7b8798;font-size:12px">${p.ref||""}</div><h3 style="font-size:22px;margin:6px 0">${p.nome||""}</h3><p style="color:#66758a;line-height:1.55">${p.descricao||"Produto disponível na vitrine ONDIS."}</p><div style="margin:18px 0;font-size:24px;font-weight:900;color:#10a765">${money(precoFinal(p))}</div><div style="font-size:12px;color:#66758a">Tamanhos: ${(p.tamanhos||[]).join(", ")||"—"}</div></div></div></div></div>`;
+    document.body.insertAdjacentHTML("beforeend",html);
+  };
 
   // ===== MODO SELEÇÃO (vendedor monta link personalizado) =====
   window.toggleModoSelecao=function(){
@@ -532,7 +617,7 @@
     const grid=document.getElementById("gridGerenciar");
     if(PRODUTOS.length===0){ grid.innerHTML=estadoVazio("📦","Nenhum produto cadastrado","Clique em “+ Novo produto” para adicionar a primeira peça: foto, referência, preço, tamanhos e gênero. Leva menos de um minuto."); return; }
     grid.innerHTML=PRODUTOS.slice().sort((a,b)=>(a.nome||"").localeCompare(b.nome||"")).map(p=>{
-      const foto=p.foto?`<img class="foto" src="${p.foto}"/>`:`<div class="semFoto">📦</div>`;
+      const src=firstPhoto(p); const foto=src?`<img class="foto" src="${src}"/>`:`<div class="semFoto">📦</div>`;
       const temPromo=p.promo>0 && p.promo<p.preco;
       return `<div class="prod">
         ${foto}
@@ -574,18 +659,21 @@
     });
   }
 
-  let fotoTemp="";
-  window.onFotoProduto=async function(input){
-    const f=input.files&&input.files[0];
-    if(!f) return;
-    showLoading("Processando foto...");
-    try{
-      fotoTemp=await comprimirImagem(f);
-      const prev=document.getElementById("prodFotoPreview");
-      prev.src=fotoTemp; prev.style.display="block";
-    }catch(e){ alert("Não foi possível carregar a foto."); }
-    hideLoading();
+  let fotosTemp=[];
+  function renderPhotoSlots(){
+    const wrap=document.getElementById("photoSlots"); if(!wrap)return;
+    const slots=[0,1,2].map(i=>fotosTemp[i]?`<div class="photoSlot"><img src="${fotosTemp[i]}" alt="Foto ${i+1}"><button type="button" onclick="removerFotoProduto(${i})">×</button></div>`:`<div class="photoSlot" onclick="document.getElementById('prodFotoInput').click()"><div class="empty">＋<br>Foto ${i+1}</div></div>`).join("");
+    wrap.innerHTML=slots;
+  }
+  window.onFotosProduto=async function(input){
+    const arquivos=Array.from(input.files||[]).slice(0,Math.max(0,3-fotosTemp.length));
+    if(!arquivos.length)return;
+    showLoading("Processando fotos...");
+    try{ for(const f of arquivos){ if(fotosTemp.length>=3)break; fotosTemp.push(await comprimirImagem(f)); } renderPhotoSlots(); }
+    catch(e){alert("Não foi possível carregar uma das fotos.");}
+    input.value=""; hideLoading();
   };
+  window.removerFotoProduto=function(i){ fotosTemp.splice(i,1); renderPhotoSlots(); };
 
   window.abrirNovoProduto=function(){
     document.getElementById("prodTitulo").textContent="Novo produto";
@@ -593,8 +681,7 @@
     ["prodRef","prodCat","prodNome","prodDesc","prodPreco","prodPromo","prodTamanhos"].forEach(id=>document.getElementById(id).value="");
     document.getElementById("prodGenero").value="";
     document.getElementById("prodDisp").value="sim";
-    fotoTemp="";
-    const prev=document.getElementById("prodFotoPreview"); prev.src=""; prev.style.display="none";
+    fotosTemp=[]; renderPhotoSlots();
     document.getElementById("btnExcluirProduto").style.display="none";
     document.getElementById("modalProduto").classList.add("show");
   };
@@ -612,9 +699,8 @@
     document.getElementById("prodPreco").value=p.preco?String(p.preco).replace(".",","):"";
     document.getElementById("prodPromo").value=p.promo?String(p.promo).replace(".",","):"";
     document.getElementById("prodDisp").value=p.disponivel||"sim";
-    fotoTemp=p.foto||"";
-    const prev=document.getElementById("prodFotoPreview");
-    if(fotoTemp){ prev.src=fotoTemp; prev.style.display="block"; } else { prev.src=""; prev.style.display="none"; }
+    fotosTemp=(Array.isArray(p.fotos)&&p.fotos.length?p.fotos:[p.foto]).filter(Boolean).slice(0,3);
+    renderPhotoSlots();
     document.getElementById("btnExcluirProduto").style.display="inline-block";
     document.getElementById("modalProduto").classList.add("show");
   };
@@ -650,7 +736,8 @@
       preco,
       promo:brNum(document.getElementById("prodPromo").value),
       disponivel:document.getElementById("prodDisp").value,
-      foto:fotoTemp||"",
+      fotos:fotosTemp.slice(0,3),
+      foto:fotosTemp[0]||"",
       criadoEm:existente?.criadoEm||new Date().toISOString(),
       atualizadoEm:new Date().toISOString()
     };
@@ -713,7 +800,7 @@
     lista.innerHTML=ids.map(id=>{
       const p=PRODUTOS.find(x=>x.id===id); if(!p) return "";
       const q=CART[id]; const sub=precoFinal(p)*q; total+=sub;
-      const foto=p.foto?`<img src="${p.foto}"/>`:'<div style="width:48px;height:48px;border-radius:8px;background:rgba(255,255,255,.05);display:grid;place-items:center">📦</div>';
+      const psrc=firstPhoto(p); const foto=psrc?`<img src="${psrc}"/>`:'<div style="width:48px;height:48px;border-radius:8px;background:rgba(255,255,255,.05);display:grid;place-items:center">📦</div>';
       return `<div class="cartItem">
         ${foto}
         <div style="flex:1;min-width:0">

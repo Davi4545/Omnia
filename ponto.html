@@ -67,7 +67,11 @@
   select option{background:#1a1f2b;color:#e7eefc;}
   @media(max-width:720px){ .pontoBtns{grid-template-columns:repeat(2,1fr);} }
 </style>
-</head>
+<link href="./ondis-premium.css" rel="stylesheet"/>
+<script src="./ondis-premium.js"></script>
+<link rel="stylesheet" href="./ondis-v9.css">
+<script src="./ondis-v9.js" defer></script>
+<link rel="stylesheet" href="./ondis-v11.css?v=12.3.0"><script src="./ondis-v11.js?v=12.3.0" defer></script></head>
 <body>
 
 <div class="loading show" id="loadingScreen"><div class="spinner"></div><div id="loadingMsg">Carregando...</div></div>
@@ -196,10 +200,10 @@
   function hideLoading(){ document.getElementById("loadingScreen").classList.remove("show"); }
   function msgErro(e, oQueTentava){
     const code = (e && (e.code||e.message||"")) + "";
-    if(/permission|insufficient|PERMISSION/i.test(code)) return "Sem permissao para "+(oQueTentava||"esta acao")+". Faca login de novo ou fale com o administrador.";
-    if(/network|unavailable|offline|failed to get|deadline/i.test(code)) return "Parece que voce esta sem internet. Verifique a conexao e tente de novo.";
-    if(/quota|resource-exhausted/i.test(code)) return "O sistema esta sobrecarregado. Aguarde e tente de novo.";
-    return "Nao foi possivel "+(oQueTentava||"concluir")+". Verifique sua internet e tente de novo.";
+    if(/permission|insufficient|PERMISSION/i.test(code)) return "Sem permissão para "+(oQueTentava||"esta ação")+". Faça login novamente ou fale com o administrador.";
+    if(/network|unavailable|offline|failed to get|deadline/i.test(code)) return "Parece que você está sem internet. Verifique a conexão e tente novamente.";
+    if(/quota|resource-exhausted/i.test(code)) return "O sistema está sobrecarregado. Aguarde e tente novamente.";
+    return "Não foi possível "+(oQueTentava||"concluir")+". Verifique sua internet e tente novamente.";
   }
   function estadoVazio(ico, tit, txt){
     return `<div class="vazio"><div class="ico">${ico}</div><div class="tit">${tit}</div><div class="txt">${txt||""}</div></div>`;
@@ -388,7 +392,7 @@
       <div class="kpi"><div class="t">Horas no mês</div><div class="v" style="font-size:18px">${fmtMin(totMin)}</div></div>
       <div class="kpi"><div class="t">Atrasos</div><div class="v">${atrasos}</div></div>
       <div class="kpi"><div class="t">Hora extra</div><div class="v" style="font-size:18px">${fmtMin(extraMin)}</div></div>`;
-    if(meus.length===0){ document.getElementById("histTabela").innerHTML=estadoVazio("📅","Nenhum ponto neste mÃªs","Quando vocÃª bater o ponto (entrada, intervalo, retorno e saÃ­da), seus dias aparecem aqui com as horas trabalhadas."); return; }
+    if(meus.length===0){ document.getElementById("histTabela").innerHTML=estadoVazio("📅","Nenhum ponto neste mês","Quando você bater o ponto (entrada, intervalo, retorno e saída), seus dias aparecerão aqui com as horas trabalhadas."); return; }
     const rows=meus.map(r=>{
       const m=r.marcacoes||{}; const s=statusDoDia(r);
       return `<tr><td>${(r.data||"").split("-").reverse().join("/")}</td>
@@ -410,7 +414,7 @@
       <div class="kpi"><div class="t">Presentes</div><div class="v">${presentes}</div></div>
       <div class="kpi"><div class="t">Atrasados</div><div class="v">${atrasados}</div></div>
       <div class="kpi"><div class="t">Registros no dia</div><div class="v">${doDia.length}</div></div>`;
-    if(doDia.length===0){ document.getElementById("equipeTabela").innerHTML=estadoVazio("👥","NinguÃ©m bateu ponto neste dia","Escolha outra data ou aguarde a equipe registrar o ponto. Os registros aparecem aqui em tempo real."); return; }
+    if(doDia.length===0){ document.getElementById("equipeTabela").innerHTML=estadoVazio("👥","Ninguém bateu ponto neste dia","Escolha outra data ou aguarde a equipe registrar o ponto. Os registros aparecem aqui em tempo real."); return; }
     const rows=doDia.sort((a,b)=>(a.nome||"").localeCompare(b.nome||"")).map(r=>{
       const m=r.marcacoes||{}; const s=statusDoDia(r);
       return `<tr><td><b>${r.nome||"—"}</b></td><td>${m.entrada?m.entrada.hora:"--"}</td>
@@ -549,7 +553,7 @@
       const ex=minutosTrabalhados(r)-CONFIG.carga*60; if(r.marcacoes&&r.marcacoes.saida&&ex>0) porPessoa[k].extra+=ex;
     });
     const arr=Object.values(porPessoa).sort((a,b)=>(a.nome||"").localeCompare(b.nome||""));
-    if(arr.length===0){ document.getElementById("relTabela").innerHTML=estadoVazio("📊","Sem dados neste mÃªs","Assim que a equipe registrar pontos, o resumo por colaborador (horas, atrasos, extras) aparece aqui."); return; }
+    if(arr.length===0){ document.getElementById("relTabela").innerHTML=estadoVazio("📊","Sem dados neste mês","Assim que a equipe registrar pontos, o resumo por colaborador (horas, atrasos e extras) aparecerá aqui."); return; }
     const rows=arr.map(p=>`<tr><td><b>${p.nome||"—"}</b></td><td>${p.dias}</td><td>${fmtMin(p.min)}</td><td>${p.atrasos}</td><td>${fmtMin(p.extra)}</td></tr>`).join("");
     document.getElementById("relTabela").innerHTML=`<table><thead><tr><th>Colaborador</th><th>Dias</th><th>Horas totais</th><th>Atrasos</th><th>Hora extra</th></tr></thead><tbody>${rows}</tbody></table>`;
   };
@@ -582,7 +586,7 @@
     };
     showLoading("Salvando...");
     try{ await setDoc(doc(db,"stores",STORE_ID,"pontoConfig","jornada"), CONFIG); alert("Configuração salva!"); renderTudo(); }
-    catch(e){ console.error(e); alert(msgErro(e,"salvar a configuracao")); }
+    catch(e){ console.error(e); alert(msgErro(e,"salvar a configuração")); }
     hideLoading();
   };
 </script>

@@ -84,7 +84,11 @@
   .compraItem{display:flex;justify-content:space-between;gap:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px 12px;margin-bottom:6px;font-size:13px;}
   @media(max-width:720px){ .grid2{grid-template-columns:1fr;} .funil{grid-template-columns:1fr;} .fichaCol{grid-template-columns:1fr;} }
 </style>
-</head>
+<link href="./ondis-premium.css" rel="stylesheet"/>
+<script src="./ondis-premium.js"></script>
+<link rel="stylesheet" href="./ondis-v9.css">
+<script src="./ondis-v9.js" defer></script>
+<link rel="stylesheet" href="./ondis-v11.css?v=12.3.0"><script src="./ondis-v11.js?v=12.3.0" defer></script></head>
 <body>
 
 <div class="loading show" id="loadingScreen"><div class="spinner"></div><div id="loadingMsg">Carregando...</div></div>
@@ -405,14 +409,14 @@
     const code = (e && (e.code||e.message||"")) + "";
     const acao = oQueTentava ? (oQueTentava+" ") : "";
     if(/permission|insufficient|PERMISSION/i.test(code))
-      return "Sem permissão para "+(oQueTentava||"esta ação")+". Faça login de novo ou fale com o administrador.";
+      return "Sem permissão para "+(oQueTentava||"esta ação")+". Faça login novamente ou fale com o administrador.";
     if(/network|unavailable|offline|failed to get|deadline/i.test(code))
-      return "Parece que você está sem internet. Verifique a conexão e tente de novo.";
+      return "Parece que você está sem internet. Verifique a conexão e tente novamente.";
     if(/not-found|no document/i.test(code))
       return "Item não encontrado. Ele pode ter sido removido. Atualize a página.";
     if(/quota|resource-exhausted/i.test(code))
       return "O sistema está sobrecarregado no momento. Aguarde alguns instantes e tente de novo.";
-    return "Não foi possível "+(oQueTentava||"concluir")+". Verifique sua internet e tente de novo. Se continuar, avise o suporte.";
+    return "Não foi possível "+(oQueTentava||"concluir")+". Verifique sua internet e tente novamente. Se o problema continuar, avise o suporte.";
   }
   function estadoVazio(ico, tit, txt){
     return `<div class="vazio"><div class="ico">${ico}</div><div class="tit">${tit}</div><div class="txt">${txt||""}</div></div>`;
@@ -665,7 +669,7 @@
   window.exportarCSV=function(){
     const lista=clientesVisiveis();
     if(lista.length===0){ alert("Nenhum cliente para exportar."); return; }
-    const cab=["Nome","Telefone","Email","CPF","Aniversario","Etapa","Tags","Total gasto","Num compras","Ultima atualizacao","Responsavel"];
+    const cab=["Nome","Telefone","E-mail","CPF","Aniversário","Etapa","Tags","Total gasto","Nº de compras","Última atualização","Responsável"];
     const linhas=lista.map(c=>[
       c.nome||"", c.telefone||"", c.email||"", c.cpf||"", c.nascimento||"",
       c.etapa||"", (c.tags||[]).join("|"), totalGasto(c).toFixed(2).replace(".",","),
