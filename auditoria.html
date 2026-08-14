@@ -1,0 +1,19 @@
+from pathlib import Path
+import subprocess,sys,re
+R=Path(__file__).resolve().parents[1]
+js=(R/'ondis-v11.js').read_text(errors='ignore'); css=(R/'ondis-v11.css').read_text(errors='ignore'); crm=(R/'crm.html').read_text(errors='ignore')
+checks=[]
+def ok(n,c): checks.append((n,bool(c)))
+ok('AI syntax', subprocess.run(['node','--check',str(R/'ondis-v11.js')],capture_output=True).returncode==0)
+ok('AI uses main app state','OMNIA_GET_STATE' in js and 'ONDIS_STATE' in js)
+ok('AI knowledge base','AI_KB' in js and 'Frente de Loja' in js and 'ONDIS Finance' in js and 'CRM 360°' in js)
+ok('AI operations insights','aiContext' in js and 'aiInsight' in js and 'topSeller' in js)
+ok('AI free input','Pergunte qualquer coisa sobre o ONDIS' in js and 'Shift+Enter' in js)
+ok('AI navigation actions','v11-ai-action' in js and "location.href='./'+extra.action.go" in js)
+ok('CRM visual structure','v11-crm-copy' in js and 'v11-crm-actions' in js and 'Relacionamento que vira recorrência' in js)
+ok('CRM readable CSS','.v11-crm-actions button.active' in css and 'color:#fff!important' in css and '#10233d' in css)
+ok('AI polished CSS','.v11-agent-inputwrap' in css and '.v11-agent-msg.user' in css and '.v11-agent-context' in css)
+ok('Current asset version','ondis-v11.js?v=12.3.0' in crm and 'ondis-v11.css?v=12.3.0' in crm)
+for n,c in checks: print(('PASS' if c else 'FAIL'),n)
+print(f"\n{sum(c for _,c in checks)}/{len(checks)} checks passed")
+sys.exit(0 if all(c for _,c in checks) else 1)

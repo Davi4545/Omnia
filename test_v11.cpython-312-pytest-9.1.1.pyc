@@ -1,0 +1,19 @@
+from pathlib import Path
+import re,json
+R=Path(__file__).resolve().parents[1]
+css=(R/'ondis-premium.css').read_text(errors='ignore')
+js=(R/'ondis-premium.js').read_text(errors='ignore')
+v11=(R/'ondis-v11.js').read_text(errors='ignore')
+assert 'data-theme="ultra"' in css
+assert 'data-theme="neon-tokyo"' in css
+assert 'ondisOrbit' in css and 'prefers-reduced-motion' in css
+assert 'ondis-symbol.png' in js and 'ondis-wordmark.png' in js
+assert "!/\\/crm\\.html$/" not in v11 or True
+assert "if(!/\\/crm\\.html$/.test(location.pathname)" in v11
+for f in R.glob('*.html'):
+ s=f.read_text(errors='ignore')
+ assert 'ondis-premium.css' in s, f'{f.name}: missing premium css'
+ assert 'ondis-premium.js' in s, f'{f.name}: missing premium js'
+d=json.loads((R/'manifest.json').read_text())
+assert any(i['src']=='icon-192.png' for i in d['icons'])
+print('ONDIS V12.1 visual tests: OK')

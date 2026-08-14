@@ -1,0 +1,80 @@
+
+:root[data-theme="vintage"]{--bg:#efe5d2;--panel:#fffaf0;--panel2:#f5ead7;--line:#d8c3a4;--text:#2e251b;--muted:#796a57;--brand:#815b32;--brand2:#5f3d20;--good:#55745b;--warn:#a87524;--bad:#a94e43;--purple:#8f6846;--shadow:0 13px 28px rgba(71,50,27,.11);--v9-bg:#efe5d2;--v9-card:#fffaf0;--v9-soft:#f5ead7;--v9-ink:#2e251b;--v9-muted:#796a57;--v9-line:#d8c3a4;--v9-primary:#815b32;--v9-accent:#b9874a}
+:root[data-theme="vintage"] body{background:repeating-linear-gradient(0deg,rgba(82,59,32,.018) 0 1px,transparent 1px 4px),radial-gradient(circle at 16% 10%,rgba(255,255,255,.68),transparent 30%),linear-gradient(135deg,#f5eddc,#e8dac1)!important}
+:root[data-theme="vintage"] .panel,:root[data-theme="vintage"] .kpi{background:linear-gradient(180deg,#fffaf0,#f7ead5)!important;border-color:#d4bea0!important;box-shadow:0 10px 24px rgba(73,50,25,.08),inset 0 1px 0 rgba(255,255,255,.85)!important}
+:root[data-theme="vintage"] .btn.primary{background:linear-gradient(180deg,#a97c47,#765027)!important;border-color:#6f4a24!important;color:#fffaf0!important}
+/* ONDIS V10 — Financeiro 3.0 + Frente de Loja 2.0 */
+.navSectionLabel{font-size:9px;letter-spacing:.14em;color:var(--muted);font-weight:900;padding:15px 12px 5px;text-transform:uppercase;border-top:1px solid var(--line);margin-top:8px}
+.finEyebrow{font-size:10px;letter-spacing:.18em;font-weight:900;color:var(--brand);margin-bottom:6px}.fin3Hero{display:grid;grid-template-columns:1fr 250px;gap:14px;background:linear-gradient(135deg,color-mix(in srgb,var(--brand) 8%,var(--panel)),var(--panel));border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:var(--shadow);margin-bottom:14px}.fin3Live{display:inline-flex;padding:6px 9px;border-radius:999px;background:color-mix(in srgb,var(--good) 12%,var(--panel));color:var(--good);font-size:10px;font-weight:850}.fin3Hero h3{font-size:24px;margin:12px 0 6px}.fin3Hero p{color:var(--muted);margin:0}.fin3MetricRow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:18px}.fin3Metric{padding:11px;border:1px solid var(--line);background:color-mix(in srgb,var(--panel) 88%,transparent);border-radius:13px}.fin3Metric small{display:block;color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.06em}.fin3Metric b{display:block;margin-top:5px;font-size:16px}.fin3Gauge{border:1px solid color-mix(in srgb,var(--brand) 16%,var(--line));border-radius:18px;padding:18px;background:color-mix(in srgb,var(--brand) 5%,var(--panel));text-align:center}.fin3Gauge>small{font-size:9px;letter-spacing:.13em;font-weight:850;color:var(--muted)}.fin3Gauge strong{display:inline-block;font-size:48px;margin-top:10px}.fin3Gauge>span{font-weight:800;color:var(--muted)}.fin3GaugeTrack{height:9px;border-radius:999px;background:var(--panel2);overflow:hidden;margin:10px 0}.fin3GaugeTrack i{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,var(--bad),var(--warn),var(--good));transition:width .5s ease}.fin3Gauge p{font-size:11px!important}.fin3Nav{display:flex;gap:6px;overflow:auto;padding:5px 0 12px}.fin3Nav button,.fin3Range button{white-space:nowrap;border:1px solid var(--line);background:var(--panel);color:var(--muted);padding:9px 12px;border-radius:999px;font-weight:800;cursor:pointer}.fin3Nav button.active,.fin3Range button.active{background:var(--brand);color:#fff;border-color:var(--brand)}.fin3Pane{display:none}.fin3Pane.active{display:block}.fin3ExecutiveGrid,.fin3Two{display:grid;grid-template-columns:1.35fr .65fr;gap:14px;margin-top:14px}.fin3InsightList{display:grid;gap:9px}.fin3Insight{display:grid;grid-template-columns:34px 1fr;gap:9px;padding:11px;border-radius:13px;border:1px solid var(--line);background:var(--panel2)}.fin3Insight i{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:color-mix(in srgb,var(--brand) 10%,var(--panel));font-style:normal}.fin3Insight b{display:block;font-size:11px}.fin3Insight small{display:block;color:var(--muted);margin-top:3px}.fin3Capital{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.fin3CapitalCard{padding:14px;border-radius:14px;background:var(--panel2);border:1px solid var(--line)}.fin3CapitalCard small{color:var(--muted);display:block}.fin3CapitalCard b{display:block;font-size:18px;margin-top:5px}.fin3FilterBar{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;margin-bottom:12px}.fin3Range{display:flex;gap:5px}.fin3CashCards{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:14px}.fin3CashChart{height:260px;border:1px solid var(--line);border-radius:15px;padding:12px;background:linear-gradient(180deg,var(--panel),var(--panel2));overflow:hidden}.fin3CashChart svg{width:100%;height:100%}.budgetInput{width:120px!important;text-align:right}.budgetDelta.good{color:var(--good)}.budgetDelta.bad{color:var(--bad)}.costCenterChip{display:flex;align-items:center;justify-content:space-between;gap:9px;border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:7px;background:var(--panel2)}.fin3GoalResult,.fin3ScenarioResult{margin-top:14px;padding:16px;border-radius:15px;background:linear-gradient(135deg,color-mix(in srgb,var(--brand) 9%,var(--panel)),var(--panel2));border:1px solid color-mix(in srgb,var(--brand) 16%,var(--line))}.fin3GoalResult strong,.fin3ScenarioResult strong{font-size:24px}.scenarioGrid{display:grid;gap:13px}.scenarioGrid label{font-size:11px;font-weight:800}.scenarioGrid input{width:100%;margin:7px 0 3px}.scenarioGrid span{color:var(--brand);font-weight:900}.profitBar{height:7px;background:var(--panel2);border-radius:999px;overflow:hidden;min-width:100px}.profitBar i{display:block;height:100%;background:var(--brand);border-radius:inherit}.financeRiskHigh{color:var(--bad);font-weight:850}.financeRiskLow{color:var(--good);font-weight:850}
+/* Frente de loja isolada */
+body.ondis-front .app{display:block!important;background:#f7f9fc}body.ondis-front .side{display:none!important}body.ondis-front .main{width:100%}body.ondis-front .content{padding:12px 14px 18px;max-width:1600px;margin:0 auto}body.ondis-front .top.posTop{height:64px;padding:0 18px;background:rgba(255,255,255,.94);border-bottom:1px solid #e8edf5}.posTitleWrap{display:flex;align-items:center;gap:12px}.posBack{width:35px;height:35px;border-radius:10px;border:1px solid var(--line);background:var(--panel);cursor:pointer;font-size:18px}.posView{display:block!important}.posStatusStrip{display:grid;grid-template-columns:1.65fr .8fr .8fr .8fr;gap:9px;margin-bottom:10px}.posCashState,.posMiniStat{border:1px solid #e7edf5;background:#fff;border-radius:13px;min-height:72px;padding:11px;display:flex;align-items:center;gap:10px}.posCashState{justify-content:flex-start}.posCashState .cashDeskActions{margin-left:auto}.posStatusIcon,.posMiniStat>span{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:#edf4ff;color:var(--brand);flex:0 0 auto}.posStateLine{display:flex;align-items:center;gap:8px}.posCashState small,.posMiniStat small,.posMiniStat em{display:block;color:var(--muted);font-size:9px;font-style:normal}.posMiniStat b{display:block;font-size:13px;margin:2px 0}.posWorkspace{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(320px,.62fr);gap:10px}.posCatalog,.posCart{box-shadow:none;border-color:#e7edf5;border-radius:14px}.posProductTabs{display:flex;border-bottom:1px solid #edf1f6;padding:0 12px;gap:7px}.posProductTabs button{border:0;background:transparent;padding:13px 12px 11px;color:#62748c;font-size:10px;font-weight:800;cursor:pointer;border-bottom:2px solid transparent}.posProductTabs button.active{color:var(--brand);border-bottom-color:var(--brand)}.posSearchRow{display:grid;grid-template-columns:1fr auto;gap:8px;padding:12px 12px 0}.posSearchField{position:relative}.posSearchField span{position:absolute;left:12px;top:10px;color:#8493a6}.posSearchField input{padding-left:34px}.posHighlights{display:flex;justify-content:space-between;align-items:center;padding:12px 12px 4px}.posHighlights>div{display:flex;gap:8px;align-items:center}.posHighlights select{width:auto;min-width:150px;padding:7px 10px;font-size:10px}.posProductGrid{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:0 12px 12px;margin-top:4px}.posProductGrid .product{border-radius:11px;box-shadow:none}.posProductGrid .productImg{height:120px}.posProductGrid .productInfo{padding:8px}.posProductGrid .productInfo b{font-size:10px}.posProductGrid .productInfo small{font-size:9px}.posProductGrid .price{font-size:11px}.posCart{position:relative!important;top:auto!important}.posCart .panelBody{padding:12px}.posCart .cartList{min-height:170px;max-height:330px}.posClear{border:0;background:transparent;color:var(--bad);font-size:10px;cursor:pointer}.posObservation{width:100%;border:1px dashed var(--line);background:var(--panel);border-radius:10px;padding:9px;color:var(--brand);font-weight:800;cursor:pointer;margin-top:8px}.posFinish{width:100%;margin-top:14px;padding:13px;display:flex;justify-content:center;gap:16px}.posBottomGrid{display:grid;grid-template-columns:1.4fr .8fr;gap:10px;margin-top:10px}.posBottomGrid .panel{box-shadow:none;border-color:#e7edf5}.posBottomGrid .panelHead{padding:10px 12px}.posQuickActions,.posQuickPay{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;padding:0 10px 10px}.posQuickPay{grid-template-columns:repeat(5,1fr)}.posQuickActions button,.posQuickPay button{border:1px solid #e7edf5;background:#fff;border-radius:10px;padding:10px 4px;color:var(--brand);font-size:15px;cursor:pointer}.posQuickActions button span,.posQuickPay button span{display:block;margin-top:5px;color:#53667d;font-size:8px;font-weight:750}.posQuickPay button:hover,.posQuickActions button:hover{border-color:#bcd2fa;background:#f5f8ff}.posCart .cartItem{background:#fff;border:0;border-bottom:1px solid #edf1f6;border-radius:0}.posCart .totalLine.grand{padding-top:8px;border-top:1px solid #edf1f6;font-size:20px}.posCart .totalLine.grand b{color:var(--brand)}
+@media(max-width:1100px){.fin3Hero{grid-template-columns:1fr}.fin3ExecutiveGrid,.fin3Two{grid-template-columns:1fr}.fin3MetricRow,.fin3Capital,.fin3CashCards{grid-template-columns:repeat(2,1fr)}.posStatusStrip{grid-template-columns:1fr 1fr}.posWorkspace{grid-template-columns:1fr}.posProductGrid{grid-template-columns:repeat(3,1fr)}.posCart{position:static!important}.posBottomGrid{grid-template-columns:1fr}.posQuickActions{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:680px){.fin3MetricRow,.fin3Capital,.fin3CashCards{grid-template-columns:1fr 1fr}.fin3FilterBar{grid-template-columns:1fr}.posStatusStrip{grid-template-columns:1fr}.posProductGrid{grid-template-columns:repeat(2,1fr)}.posTop .badgeFiscal,.posTop .topActions>.btn:not(.primary){display:none}.posQuickActions{grid-template-columns:repeat(3,1fr)}}
+
+/* ONDIS V10.1 — correção responsiva da Frente de Loja */
+body.ondis-front{min-width:0;overflow-x:hidden}
+body.ondis-front .main{min-width:0;overflow:visible}
+body.ondis-front .content{width:100%;max-width:none;padding:12px 16px 14px}
+body.ondis-front .posView{width:100%;min-width:0}
+body.ondis-front .posStatusStrip{display:grid!important;visibility:visible!important;opacity:1!important;grid-template-columns:minmax(360px,1.7fr) repeat(3,minmax(150px,.72fr));gap:10px;align-items:stretch;margin:0 0 10px}
+body.ondis-front .posCashState,body.ondis-front .posMiniStat{min-width:0;min-height:66px;padding:10px 12px}
+body.ondis-front .posCashState>div:nth-child(2),body.ondis-front .posMiniStat>div{min-width:0}
+body.ondis-front .posCashState small{white-space:normal;line-height:1.35}
+body.ondis-front .posWorkspace{grid-template-columns:minmax(0,1fr) clamp(360px,28vw,470px);gap:12px;align-items:start}
+body.ondis-front .posCatalog,body.ondis-front .posCart{min-width:0;overflow:hidden}
+body.ondis-front .posCatalog{min-height:0}
+body.ondis-front .posCart{position:sticky!important;top:76px!important;align-self:start}
+body.ondis-front .posCart .panelBody{display:flex;flex-direction:column;min-height:0;padding:12px}
+body.ondis-front .posCart .cartList{min-height:120px;max-height:min(34vh,310px);overflow-y:auto;overscroll-behavior:contain}
+body.ondis-front .posProductGrid{grid-template-columns:repeat(4,minmax(150px,1fr));align-content:start;min-height:320px}
+body.ondis-front .posProductGrid>.empty{grid-column:1/-1;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px dashed var(--line);border-radius:14px;background:linear-gradient(180deg,color-mix(in srgb,var(--brand) 2%,var(--panel)),var(--panel));margin:2px 0 0}
+body.ondis-front .posProductGrid>.empty .big{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:color-mix(in srgb,var(--brand) 9%,var(--panel));color:var(--brand);font-size:24px;margin-bottom:10px}
+body.ondis-front .posBottomGrid{grid-template-columns:minmax(0,1.55fr) minmax(380px,.85fr);gap:12px;margin-top:12px}
+body.ondis-front .posQuickActions,body.ondis-front .posQuickPay{align-items:stretch}
+body.ondis-front .posQuickActions button,body.ondis-front .posQuickPay button{min-height:58px}
+body.ondis-front .posTop{gap:12px}
+body.ondis-front .posTop .topActions{min-width:0;flex-wrap:wrap;justify-content:flex-end}
+
+@media (max-height:900px) and (min-width:1101px){
+ body.ondis-front .top.posTop{height:58px}
+ body.ondis-front .content{padding-top:9px;padding-bottom:9px}
+ body.ondis-front .posStatusStrip{margin-bottom:8px}
+ body.ondis-front .posCashState,body.ondis-front .posMiniStat{min-height:58px;padding:8px 10px}
+ body.ondis-front .posStatusIcon,body.ondis-front .posMiniStat>span{width:32px;height:32px;border-radius:10px}
+ body.ondis-front .posProductTabs button{padding:10px 11px 9px}
+ body.ondis-front .posSearchRow{padding-top:9px}
+ body.ondis-front .posHighlights{padding-top:9px}
+ body.ondis-front .posProductGrid{min-height:260px}
+ body.ondis-front .posProductGrid>.empty{min-height:250px}
+ body.ondis-front .posProductGrid .productImg{height:104px}
+ body.ondis-front .posCart{top:67px!important}
+ body.ondis-front .posCart .cartList{max-height:min(28vh,240px);min-height:92px}
+ body.ondis-front .posBottomGrid{margin-top:8px}
+ body.ondis-front .posBottomGrid .panelHead{padding:7px 11px}
+ body.ondis-front .posQuickActions,body.ondis-front .posQuickPay{padding-bottom:7px}
+ body.ondis-front .posQuickActions button,body.ondis-front .posQuickPay button{min-height:48px;padding:7px 3px}
+}
+@media (max-width:1380px){
+ body.ondis-front .posStatusStrip{grid-template-columns:minmax(320px,1.4fr) repeat(3,minmax(130px,.7fr))}
+ body.ondis-front .posWorkspace{grid-template-columns:minmax(0,1fr) minmax(340px,32vw)}
+ body.ondis-front .posProductGrid{grid-template-columns:repeat(3,minmax(140px,1fr))}
+ body.ondis-front .posBottomGrid{grid-template-columns:1fr}
+}
+@media (max-width:1100px){
+ body.ondis-front .posStatusStrip{grid-template-columns:1fr 1fr!important}
+ body.ondis-front .posWorkspace{grid-template-columns:1fr}
+ body.ondis-front .posCart{position:static!important}
+ body.ondis-front .posCart .cartList{max-height:280px}
+ body.ondis-front .posProductGrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (max-width:720px){
+ body.ondis-front .content{padding:9px}
+ body.ondis-front .posStatusStrip{grid-template-columns:1fr!important}
+ body.ondis-front .posCashState .cashDeskActions{width:100%;margin-left:0;margin-top:8px}
+ body.ondis-front .posCashState{flex-wrap:wrap}
+ body.ondis-front .posProductGrid{grid-template-columns:repeat(2,minmax(0,1fr));padding-left:8px;padding-right:8px}
+ body.ondis-front .posSearchRow{grid-template-columns:1fr}
+ body.ondis-front .posHighlights{align-items:flex-start;gap:8px;flex-direction:column}
+ body.ondis-front .posHighlights select{width:100%}
+ body.ondis-front .posQuickPay{grid-template-columns:repeat(3,1fr)}
+}

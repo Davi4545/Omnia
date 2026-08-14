@@ -1,0 +1,34 @@
+from pathlib import Path
+import re, sys, zipfile
+R=Path(__file__).resolve().parents[1]
+fail=[]
+def text(f): return (R/f).read_text(encoding='utf-8',errors='ignore')
+def ok(name,cond):
+    print(('PASS' if cond else 'FAIL'),name)
+    if not cond: fail.append(name)
+idx=text('index.html'); liga=text('index-liga-ondis.html'); pos=text('frente-loja.html'); css=text('ondis-v11.css'); js=text('ondis-v11.js'); sw=text('sw.js')
+ok('Build 11.3', "ondisBuild='11.3.0'" in js)
+ok('POS compact CSS', 'PDV compact + Lista da Vez faithful redesign' in css and 'min-height:64px!important' in css)
+ok('5 KPI Lista da Vez', 'Tempo médio' in idx and 'grid-template-columns:repeat(5' in css)
+ok('Fila visual', 'Fila de atendimento' in idx and 'queueStats' in idx and 'PRÓXIMO' in css)
+ok('Ações preservadas', all(x in idx for x in ['data-act="up"','data-act="down"','data-act="pause"','data-act="remove"']))
+ok('Atendimento visual', 'attHero' in idx and 'VENDEU' in idx and 'NÃO VENDEU' in idx)
+ok('Finalização preservada', all(x in idx for x in ['saleValue_${cid}','salePieces_${cid}','nsReason_${cid}','saleObs_${cid}']))
+ok('Últimos atendimentos', 'attRecent' in idx)
+ok('Index Liga atualizado', 'Fila de atendimento' in liga and 'queueStats' in liga and 'attHero' in liga)
+ok('Single V11 load index', idx.count('ondis-v11.js?v=11.3.0')==1)
+ok('Single V11 load liga', liga.count('ondis-v11.js?v=11.3.0')==1)
+ok('Single V11 load POS', pos.count('ondis-v11.js?v=11.3.0')==1)
+ok('Service worker bumped', 'v11-2-lista-fiel' in sw)
+# duplicate static ids in key screens
+for name,src in [('index',idx),('liga',liga),('pos',pos)]:
+    ids=re.findall(r'\bid=["\']([^"\']+)["\']',src)
+    # ignore template literal dynamic ids containing ${...}
+    static=[i for i in ids if '${' not in i]
+    dup={i for i in static if static.count(i)>1}
+    known={'btnSellerDownloadBadges','sellerViewSelect','sellerViewMonth','sellerBadges'}
+    dup=dup-known
+    ok(f'No new duplicate static ids {name}',not dup)
+if fail:
+    print('\nFailed:',', '.join(fail));sys.exit(1)
+print('\nAll V11.3 structural checks passed.')
