@@ -77,9 +77,16 @@
       setTimeout(()=> intro.remove(), 520);
     };
     video.addEventListener('ended', finish);
-    video.addEventListener('error', ()=>{ gate.hidden = false; });
+
+    // Se o vídeo falhar (arquivo ausente, rede, codec), NUNCA prender o usuário:
+    // pula a abertura e vai direto para o login.
+    let videoBroken = false;
+    video.addEventListener('error', ()=>{ videoBroken = true; finish(); });
+    const src = video.querySelector('source');
+    if(src) src.addEventListener('error', ()=>{ videoBroken = true; finish(); });
 
     async function playWithSound(){
+      if(videoBroken){ finish(); return false; }
       try{
         video.currentTime = 0;
         video.muted = false;
@@ -88,6 +95,9 @@
         gate.hidden = true;
         return true;
       }catch(error){
+        // Autoplay bloqueado: mostra o botão. Mas se o clique manual também
+        // falhar (vídeo inválido), entra direto em vez de travar.
+        if(gate.hidden === false){ finish(); return false; }
         gate.hidden = false;
         return false;
       }
@@ -96,6 +106,13 @@
     // exibem um único botão de entrada; ao clicar, o vídeo começa do início com som.
     requestAnimationFrame(playWithSound);
     if(startBtn) startBtn.addEventListener('click', playWithSound);
+
+    // Botão "Pular abertura" — sempre funcional
+    const skipBtn = document.getElementById('introSkip');
+    if(skipBtn) skipBtn.addEventListener('click', ()=>{ try{ video.pause(); }catch(e){} finish(); });
+
+    // Cinto de segurança: se em 6s o vídeo não começou a rodar, libera o acesso
+    setTimeout(()=>{ if(!finished && (video.readyState < 2 || video.paused) && gate.hidden){ finish(); } }, 6000);
   })();
 </script>
 
