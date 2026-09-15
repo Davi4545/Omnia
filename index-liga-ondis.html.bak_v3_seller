@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>ONDIS — Gestão comercial · 10.3</title>
+<title>ONDIS — Gestão comercial</title>
 <!-- PWA (instalar como app) -->
 <meta content="#0b0f14" name="theme-color"/>
 <meta content="yes" name="apple-mobile-web-app-capable"/>
@@ -1064,9 +1064,7 @@ body{ background-attachment: fixed; }
 <style id="ondis-race2d-style">
 .race2d{padding:18px;background:var(--panel);border-radius:18px}.race2dHead{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}.race2dHead b{display:block;font-size:14px}.race2dHead span{font-size:11px;color:var(--muted)}.race2dLegend{display:flex;gap:10px;flex-wrap:wrap}.race2dLegend span{display:flex;align-items:center;gap:4px}.race2dLegend i{width:7px;height:7px;border-radius:50%;background:var(--brand)}.race2dAxis{height:44px;margin:18px 120px 0 180px;position:relative;border-bottom:1px dashed var(--line)}.race2dAxis>span{position:absolute;bottom:5px;transform:translateX(-50%);text-align:center}.race2dAxis b{display:block;font-size:10px}.race2dAxis em{font-size:8px;color:var(--muted);font-style:normal}.race2dRows{display:grid;gap:10px;margin-top:10px}.race2dRow{display:grid;grid-template-columns:170px 1fr;gap:12px;align-items:center}.race2dSeller{display:flex;gap:8px;align-items:center;min-width:0}.race2dAvatar{width:32px;height:32px;flex:0 0 32px;border-radius:50%;display:grid;place-items:center;background:var(--panel2);overflow:hidden;border:1px solid var(--line)}.race2dAvatar img{width:100%;height:100%;object-fit:cover}.race2dSeller strong{display:block;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.race2dSeller small{display:block;font-size:9px;color:var(--muted)}.race2dTrack{height:14px;border-radius:999px;background:color-mix(in srgb,var(--panel2) 84%,transparent);position:relative;box-shadow:inset 0 0 0 1px var(--line)}.race2dTrack>i{position:absolute;inset:0 auto 0 0;border-radius:999px;background:linear-gradient(90deg,var(--brand),var(--good));box-shadow:0 0 12px color-mix(in srgb,var(--brand) 32%,transparent)}.race2dStop{position:absolute;top:50%;width:8px;height:8px;border-radius:50%;background:var(--panel2);border:1px solid var(--muted);transform:translate(-50%,-50%)}.race2dStop.done{background:var(--good);border-color:var(--good);box-shadow:0 0 9px color-mix(in srgb,var(--good) 55%,transparent)}.race2dMarker{position:absolute;top:-18px;transform:translateX(-50%);font-size:8px;background:var(--text);color:var(--bg);padding:2px 5px;border-radius:6px}.rankSpacePanel{overflow:visible!important}@media(max-width:720px){.race2dHead{display:block}.race2dLegend{margin-top:8px}.race2dAxis{margin-left:0;margin-right:0}.race2dRow{grid-template-columns:1fr}.race2dTrack{margin-bottom:12px}}
 </style>
-<link rel="stylesheet" href="./ondis-v9.css">
-<script src="./ondis-v9.js" defer></script>
-<link rel="stylesheet" href="./ondis-v11.css?v=11.3.0"><script src="./ondis-v11.js?v=11.3.0" defer></script></head>
+</head>
 <body>
 <div class="appShell" id="appShell">
 <div class="mobileMask" onclick="toggleSidebar()"></div>
@@ -1125,7 +1123,7 @@ body{ background-attachment: fixed; }
 <div class="grid">
 <section class="card">
 <div class="cardHeader">
-<h2>👥 Fila de atendimento <span class="opsSubtitle">Atendimento só finaliza quando você registrar vendeu ou não vendeu.</span></h2>
+<h2>Lista da vez</h2>
 <div class="rowRight">
 <button class="btn" id="btnPreference">Preferência</button>
 <button class="btn warn" id="btnCallNext">Chamar próximo</button>
@@ -1133,14 +1131,14 @@ body{ background-attachment: fixed; }
 </div>
 </div>
 <div class="cardBody">
-<div class="hint opsIntro">Regra ONDIS: atendimento só termina quando você <b>finalizar</b> (vendeu / não vendeu). Isso garante conversão real.</div>
+<div class="hint">Regra ONDIS: atendimento só termina quando você <b>finalizar</b> (vendeu / não vendeu). Isso garante conversão real.</div>
 <div class="divider"></div>
 <div class="kpis" id="kpis"></div>
 <div class="divider"></div>
 <div class="list" id="queueList"></div>
 <div class="divider"></div>
-<div class="row poolHeaderRow" style="justify-content:space-between">
-<div class="tiny">👥 Vendedor(es) fora da fila</div>
+<div class="row" style="justify-content:space-between">
+<div class="tiny">Vendedores fora da fila</div>
 <div class="tiny">Clique para entrar / retomar</div>
 </div>
 <div class="list" id="poolList" style="margin-top:10px"></div>
@@ -2259,23 +2257,20 @@ body{ background-attachment: fixed; }
     const tk = todayKey();
     const recsToday = state.records.filter(r => r.dateKey === tk);
     const a = agg(recsToday);
-    const durations = recsToday.filter(r=>r.tsStart&&r.tsEnd).map(r=>Math.max(0,(r.tsEnd-r.tsStart)/1000));
-    const avgSec = durations.length ? durations.reduce((x,y)=>x+y,0)/durations.length : 0;
-    const fmtDur = (sec)=>{sec=Math.round(sec||0);const m=Math.floor(sec/60),ss=sec%60;return m?`${m}m ${String(ss).padStart(2,'0')}s`:`${ss}s`;};
-    const spark=(cls)=>`<svg class="miniSpark" viewBox="0 0 48 30" aria-hidden="true"><path d="M2 24 L8 22 L13 18 L18 20 L24 12 L30 15 L36 7 L41 10 L46 3"/></svg>`;
+    const tm = a.sales>0 ? a.revenue/a.sales : 0;
+
     const kpis = [
-      { t:"Atendimentos hoje", v: formatNum(a.atend), ico:"👥", cor:"blue", trend:"↑ ritmo do dia" },
-      { t:"Vendas", v: formatNum(a.sales), ico:"▣", cor:"violet", trend:"↑ desempenho" },
-      { t:"Conversão", v: a.conv.toFixed(1) + "%", ico:"🎯", cor:"pink", trend:"↑ eficiência" },
-      { t:"Faturamento", v: formatMoney(a.revenue), ico:"$", cor:"green", trend:"↑ resultado" },
-      { t:"Tempo médio", v: fmtDur(avgSec), ico:"◷", cor:"cyan", trend: avgSec?"tempo por atendimento":"aguardando dados" },
+      { t:"Atendimentos", v: formatNum(a.atend), ico:"👋", cor:"blue" },
+      { t:"Vendas", v: formatNum(a.sales), ico:"🛍️", cor:"blue" },
+      { t:"Conversão", v: a.conv.toFixed(1) + "%", ico:"🎯", cor:"green" },
+      { t:"Faturamento", v: formatMoney(a.revenue), ico:"💰", cor:"gold" },
     ];
     const el = $("kpis");
     el.innerHTML = "";
     for(const k of kpis){
       const div = document.createElement("div");
       div.className = "kpi kpi-"+(k.cor||"blue");
-      div.innerHTML = `<span class="kpiIco">${k.ico||""}</span><div><span class="t">${k.t}</span><div class="v">${k.v}</div><div class="kpiTrend">${k.trend}</div></div>${spark(k.cor)}`;
+      div.innerHTML = `<div class="kpiTop"><span class="kpiIco">${k.ico||""}</span><span class="t">${k.t}</span></div><div class="v">${k.v}</div>`;
       el.appendChild(div);
     }
   }
@@ -2310,30 +2305,19 @@ body{ background-attachment: fixed; }
       item.innerHTML = `
         <div class="leftItem">
           <div class="pos">${idx+1}</div>
-          <div class="avatar">${s.photo ? `<img src="${s.photo}">` : `<span style="color:#71839d;font-weight:900">${(s.name||"?")[0].toUpperCase()}</span>`}</div>
+          <div class="avatar">${s.photo ? `<img src="${s.photo}">` : `<span style="color:var(--muted);font-weight:900">${(s.name||"?")[0].toUpperCase()}</span>`}</div>
           <div class="nameBlock">
             <div class="name">${s.name}</div>
-            <div class="queueStatus">${idx===0 ? "Aguardando atendimento" : "Na fila"}</div>
-            <div class="queueStats">
-              <span>♙ ${st.atend} atend.</span>
-              <span>⌑ ${st.sales} vendas</span>
-              <span>◎ ${st.conv.toFixed(1)}% conv.</span>
-              <span>◇ PA ${st.paPerSale.toFixed(1)}</span>
-            </div>
+            <div class="meta">${st.atend} atend · ${st.sales} vendas · ${st.conv.toFixed(1)}% conv · PA(venda) ${st.paPerSale.toFixed(2)}</div>
           </div>
         </div>
         <div class="actions">
-          <details class="queueMenu">
-            <summary title="Ações">⋮</summary>
-            <div class="queueMenuPanel">
-              <button class="btn" data-act="up" data-id="${sid}">↑ Subir na fila</button>
-              <button class="btn" data-act="down" data-id="${sid}">↓ Descer na fila</button>
-              <button class="btn warn" data-act="pause" data-id="${sid}">${s.paused ? "▶ Retomar" : "⏸ Pausar"}</button>
-              <button class="btn bad" data-act="remove" data-id="${sid}">↪ Tirar da fila</button>
-              ${(window.OMNIA_USER && (window.OMNIA_USER.role==="admin"||window.OMNIA_USER.role==="superadmin")) ? `<button class="btn" data-act="edit" data-id="${sid}">✏️ Editar vendedor</button>` : ""}
-              ${(window.OMNIA_USER && (window.OMNIA_USER.role==="admin"||window.OMNIA_USER.role==="superadmin")) ? `<button class="btn bad" data-act="delete" data-id="${sid}">🗑 Excluir vendedor</button>` : ""}
-            </div>
-          </details>
+          <button class="btn" data-act="up" data-id="${sid}">↑</button>
+          <button class="btn" data-act="down" data-id="${sid}">↓</button>
+          <button class="btn warn" data-act="pause" data-id="${sid}">${s.paused ? "Retomar" : "Pausar"}</button>
+          <button class="btn bad" data-act="remove" data-id="${sid}">Tirar</button>
+          ${(window.OMNIA_USER && (window.OMNIA_USER.role==="admin"||window.OMNIA_USER.role==="superadmin")) ? `<button class="btn" data-act="edit" data-id="${sid}" title="Editar nome e foto do vendedor">✏️</button>` : ""}
+          ${(window.OMNIA_USER && (window.OMNIA_USER.role==="admin"||window.OMNIA_USER.role==="superadmin")) ? `<button class="btn bad" data-act="delete" data-id="${sid}" title="Excluir vendedor da operação">🗑</button>` : ""}
         </div>
       `;
       q.appendChild(item);
@@ -2428,60 +2412,105 @@ body{ background-attachment: fixed; }
 
       const wrap = document.createElement('div');
       wrap.className = 'attCard';
-      wrap.innerHTML = `
-        <div class="attHero">
-          <div class="avatar attAvatar">${s.photo ? `<img src="${s.photo}">` : `<span style="color:#71839d;font-weight:900;font-size:18px">${(s.name||"?")[0].toUpperCase()}</span>`}</div>
-          <div>
-            <div><span class="name">${s.name}</span><span class="sellerHighlight">♛ Vendedor destaque</span></div>
-            <div class="attLive">Atendendo agora · <b id="timer_${cid}">${elapsedSec}s</b></div>
+            wrap.innerHTML = `
+        <div class="leftItem">
+          <div class="avatar attAvatar">
+            ${s.photo ? `<img src="${s.photo}">` : `<span style="color:var(--muted);font-weight:900;font-size:18px">${(s.name||"?")[0].toUpperCase()}</span>`}
+          </div>
+          <div class="nameBlock">
+            <div class="name" style="font-size:16px">${s.name}</div>
+            <div class="meta">Atendendo agora · <b id="timer_${cid}">${elapsedSec}s</b></div>
+            <div class="meta">${st.atend} atend · ${st.sales} vendas · ${st.conv.toFixed(1)}% conv · PA(venda) ${st.paPerSale.toFixed(2)}</div>
           </div>
         </div>
-        <div class="attStatsGrid">
-          <div class="attStat"><small>Atendimentos</small><b>${st.atend} hoje</b></div>
-          <div class="attStat"><small>Vendas</small><b>${st.sales} hoje</b></div>
-          <div class="attStat"><small>Conversão</small><b>${st.conv.toFixed(1)}%</b></div>
-          <div class="attStat"><small>PA (venda)</small><b>${st.paPerSale.toFixed(2)}</b></div>
+        <div class="actions" style="gap:8px; align-items:center">
+          <span class="tag good">Em atendimento</span>
+          <button class="btn warn" data-act="cancelAttend" data-cid="${cid}" title="Cancelar este atendimento e voltar o vendedor para a vez">↩ Cancelar atendimento</button>
         </div>
-        <div class="attInfoBox"><b>▱ Informações da venda</b>Atendimento em andamento. Registre o resultado para alimentar conversão, ranking, CRM e Lista da Vez.</div>
-        <button class="cancelAttendSmall" data-act="cancelAttend" data-cid="${cid}">↩ Cancelar atendimento</button>
-        <div class="attDecision">
-          <button class="btn good" data-act="sold" data-cid="${cid}">✓ VENDEU</button>
-          <button class="btn bad" data-act="nosold" data-cid="${cid}">✕ NÃO VENDEU</button>
+
+        <div class="divider"></div>
+
+        <div class="big">
+          <button class="btn good" data-act="sold" data-cid="${cid}">✅ Vendeu</button>
+          <button class="btn bad" data-act="nosold" data-cid="${cid}">❌ Não vendeu</button>
         </div>
-        <div id="finalizeForm_${cid}" style="display:none;margin-top:10px">
+
+        <div class="divider"></div>
+
+        <div id="finalizeForm_${cid}" style="display:none">
           <div id="soldFields_${cid}" style="display:none">
             <div class="row">
-              <div class="field" style="min-width:220px; display:${state.options.askValue ? "flex":"none"}"><label>Valor (R$)</label><input id="saleValue_${cid}" inputmode="decimal" placeholder="Ex: 399,90" /></div>
-              <div class="field" style="min-width:220px; display:${state.options.askPieces ? "flex":"none"}"><label>Peças (P.A.)</label><input id="salePieces_${cid}" inputmode="numeric" placeholder="Ex: 3" /></div>
+              <div class="field" style="min-width:220px; display:${state.options.askValue ? "flex":"none"}">
+                <label>Valor (R$)</label>
+                <input id="saleValue_${cid}" inputmode="decimal" placeholder="Ex: 399,90" />
+              </div>
+              <div class="field" style="min-width:220px; display:${state.options.askPieces ? "flex":"none"}">
+                <label>Peças (P.A.)</label>
+                <input id="salePieces_${cid}" inputmode="numeric" placeholder="Ex: 3" />
+              </div>
             </div>
-            <div class="row" style="margin-top:6px;padding-top:10px;border-top:1px dashed #dfe7f2">
-              <div class="field" style="min-width:220px"><label>👤 Cliente (opcional — vai pro CRM)</label><input id="cliNome_${cid}" placeholder="Nome do cliente" /></div>
-              <div class="field" style="min-width:220px"><label>📱 WhatsApp / telefone</label><input id="cliTel_${cid}" placeholder="(63) 99999-9999" /></div>
-              <div class="field" style="min-width:180px"><label>🎂 Nascimento</label><input id="cliNasc_${cid}" type="date" /></div>
+            <div class="row" style="margin-top:6px;padding-top:10px;border-top:1px dashed rgba(255,255,255,.12)">
+              <div class="field" style="min-width:220px">
+                <label>👤 Cliente (opcional — vai pro CRM)</label>
+                <input id="cliNome_${cid}" placeholder="Nome do cliente" />
+              </div>
+              <div class="field" style="min-width:200px">
+                <label>📱 Telefone do cliente</label>
+                <input id="cliTel_${cid}" inputmode="tel" placeholder="(00) 00000-0000" />
+              </div>
+              <div class="field" style="min-width:170px">
+                <label>🎂 Aniversário</label>
+                <input id="cliNasc_${cid}" type="date" />
+              </div>
             </div>
           </div>
+
           <div id="nosoldFields_${cid}" style="display:none">
             <div class="row">
-              <div class="field" style="min-width:220px"><label>Motivo</label><select id="nsReason_${cid}"><option>Preço</option><option>Não encontrou o produto</option><option>Tamanho/numeração</option><option>Modelo/cor</option><option>Só pesquisando</option><option>Outro</option></select></div>
-              <div class="field" style="min-width:180px"><label>Gênero</label><select id="nsGender_${cid}"><option value="">Não informar</option><option value="Masculino">Masculino</option><option value="Feminino">Feminino</option></select></div>
-              <div class="field" style="min-width:220px"><label>Tipo de peça</label><select id="nsItemType_${cid}">${ITEM_TYPES.map(i=>`<option value="${i}">${i}</option>`).join("")}</select></div>
-              <div class="field" style="min-width:180px"><label>Numeração</label><input id="nsSize_${cid}" placeholder="Ex: 42, G, 38" /></div>
+              <div class="field" style="min-width:240px">
+                <label>Motivo</label>
+                <select id="nsReason_${cid}">
+                  ${NOSOLD_REASONS.map(r=>`<option value="${r}">${r}</option>`).join("")}
+                </select>
+              </div>
+
+              <div class="field" style="min-width:220px">
+                <label>Gênero</label>
+                <select id="nsGender_${cid}">
+                  <option value="Masculino">Masculino</option>
+                  <option value="Feminino">Feminino</option>
+                </select>
+              </div>
+
+              <div class="field" style="min-width:260px">
+                <label>Tipo de peça</label>
+                <select id="nsItemType_${cid}">
+                  ${ITEM_TYPES.map(i=>`<option value="${i}">${i}</option>`).join("")}
+                </select>
+              </div>
+
+              <div class="field" style="min-width:220px">
+                <label>Numeração (se aplicável)</label>
+                <input id="nsSize_${cid}" placeholder="Ex: 42, G, 38, 44" />
+              </div>
             </div>
           </div>
-          <div class="field" style="min-width:100%;margin-top:8px"><label>Observação (opcional)</label><input id="saleObs_${cid}" placeholder="Ex: cliente só pesquisando / voltou depois" /></div>
-          <div class="actions" style="margin-top:9px"><button class="btn good" data-act="finalize" data-cid="${cid}">Finalizar</button><button class="btn" data-act="cancel" data-cid="${cid}">Cancelar</button></div>
+
+          <div class="field" style="min-width:100%">
+            <label>Observação (opcional)</label>
+            <input id="saleObs_${cid}" placeholder="Ex: cliente só pesquisando / voltou depois / etc" />
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="actions">
+            <button class="btn good" data-act="finalize" data-cid="${cid}">Finalizar</button>
+            <button class="btn" data-act="cancel" data-cid="${cid}">Cancelar</button>
+          </div>
         </div>
       `;
 
       panel.appendChild(wrap);
-    }
-
-
-    const recent = (state.records||[]).filter(r=>r && r.sellerId).slice().sort((a,b)=>(b.tsEnd||0)-(a.tsEnd||0)).slice(0,4);
-    if(recent.length){
-      const recentBox=document.createElement('div');recentBox.className='attRecent';
-      recentBox.innerHTML=`<div class="attRecentHead"><b>Últimos atendimentos</b><span>Ver todos</span></div><div class="attRecentList">${recent.map(r=>{const rs=getSeller(r.sellerId),nm=(r.clientName||rs?.name||'Atendimento'),ok=r.outcome==='sold';return `<div class="attRecentOne"><span class="attRecentAvatar">${rs?.photo?`<img src="${rs.photo}">`:(nm[0]||'?')}</span><b>${nm}</b><em>${ok?'✓':'✕'}</em></div>`}).join('')}</div>`;
-      panel.appendChild(recentBox);
     }
 
     // delegation within panel
@@ -4086,7 +4115,7 @@ body{ background-attachment: fixed; }
       clientBirth: ($("cliNasc_"+cid)?.value || "").trim()
     } : { clientName:"", clientPhone:"", clientBirth:"" };
 
-    let newRec = {
+    const newRec = {
       id: uid(),
       tsStart: c.startTs,
       tsEnd: endTs,
@@ -4100,35 +4129,8 @@ body{ background-attachment: fixed; }
       obs,
       ...clientRef
     };
-
-    // CAIXA ONDIS × LISTA DA VEZ
-    // Se a venda já passou no Caixa, ele criou um registro provisório no ranking.
-    // Ao finalizar aqui, reaproveitamos o MESMO registro para não contar a venda duas vezes.
-    let caixaMatch = null;
-    if(outcome === "sold"){
-      caixaMatch = (state.records||[]).find(r => r && r.source === "caixa" && r.listaDeVez !== true &&
-        r.outcome === "sold" && r.sellerId === sid && r.dateKey === tk &&
-        Math.abs(Number(r.value||0) - Number(value||0)) < 0.02);
-    }
-    if(caixaMatch){
-      newRec = {
-        ...caixaMatch,
-        ...newRec,
-        id: caixaMatch.id,
-        caixaSaleId: caixaMatch.caixaSaleId || "",
-        caixa: true,
-        listaDeVez: true,
-        source: "lista+caixa",
-        listaMatchedAt: new Date().toISOString()
-      };
-      const idx = state.records.findIndex(r=>r && r.id===caixaMatch.id);
-      if(idx>=0) state.records[idx] = newRec; else state.records.push(newRec);
-    } else {
-      newRec.listaDeVez = true;
-      newRec.source = newRec.source || "lista";
-      state.records.push(newRec);
-    }
-    // Grava/atualiza a venda como registro SEPARADO no Firebase (robusto, sem conflito)
+    state.records.push(newRec);
+    // Grava a venda como registro SEPARADO no Firebase (robusto, sem conflito)
     try{ if(window.OMNIA_ADD_RECORD) window.OMNIA_ADD_RECORD(newRec); }catch(e){ console.error("add record:",e); }
 
     // INTEGRAÇÃO CRM: se vendeu e informou cliente, cria/atualiza no CRM da loja
@@ -4210,15 +4212,6 @@ body{ background-attachment: fixed; }
 
 
   const BADGE_ICON_DEFAULTS = {DAY_GOAL:1,WEEK_GOAL:2,MONTH_GOAL:3,TVA_COMBO:4,PA_BRONZE:5,PA_SILVER:6,PA_GOLD:7,TM_SILVER:10,TM_GOLD:11,TM_SUPREME:12,SALE_TOP:13,SALE_RESPECT:14,BIG_SALE:20,BIGGEST_SALE:40,TOP_CONV:19,MAGIC_5:84,SUPREME_12:92,GOAL_80:82,GOAL_120:41,GOAL_150:88,CONV_EVOLUTION:42,GOAL_STREAK_2:41,GOAL_STREAK_3:87,EVOLUTION_GOAL:42,EXTRA_BONUS:16};
-  function allBadgeKeys(){
-    const custom=Array.isArray(state.customBadgeKeys)?state.customBadgeKeys:[];
-    return [...Object.keys(BADGE_DEFS),...custom.filter(k=>!BADGE_DEFS[k])].filter(k=>!state.badgeConfig?.[k]?.deleted);
-  }
-  function customBadgeMetricValue(metric,{sid,mk,rec,a,mRev,mGoal,tva,tm}){
-    const sold=sellerSoldInMonth(sid,mk);
-    const vals={monthlyRevenue:mRev,monthlySales:sold.length,conversion:a?.conv||0,pa:a?.paPerSale||0,ticket:tm||0,bestSale:sold.reduce((m,r)=>Math.max(m,Number(r.value||0)),0),goalPct:mGoal>0?(mRev/mGoal)*100:0,tva:tva||0,saleValue:Number(rec?.value||0)};
-    return Number(vals[metric]||0);
-  }
   function achievementIconPath(iconId){
     const id=Math.max(1,Math.min(172,Number(iconId)||1));
     return `./assets/liga/icons/icon-${String(id).padStart(3,'0')}.png`;
@@ -4483,19 +4476,6 @@ body{ background-attachment: fixed; }
     const dM5 = getBadgeDef('MAGIC_5'), dS12 = getBadgeDef('SUPREME_12');
     if(monthWins >= (dM5.val??5)) award(`SELLER_${sid}_MAGIC_5`, 'MAGIC_5');
     if(monthWins >= (dS12.val??12)) award(`SELLER_${sid}_SUPREME_12`, 'SUPREME_12');
-
-    // Selos personalizados criados pela gestão
-    for(const customKey of (state.customBadgeKeys||[])){
-      if(!isBadgeEnabled(customKey)) continue;
-      const cd=getBadgeDef(customKey); if(!cd || cd.deleted) continue;
-      const metric=cd.metric||'monthlyRevenue';
-      const current=customBadgeMetricValue(metric,{sid,mk,rec,a,mRev,mGoal,tva,tm});
-      const target=Number(cd.val||0);
-      if(target>0 && current>=target){
-        const suffix=metric==='saleValue'?rec.id:mk;
-        award(`SELLER_${sid}_${suffix}_${customKey}`, customKey, {metric,current,target});
-      }
-    }
 
   }
 
@@ -4995,7 +4975,13 @@ body{ background-attachment: fixed; }
         earnedByDef.get(d).push(e);
       }
 
-      const badgeOrder = allBadgeKeys();
+      const badgeOrder = [
+        'DAY_GOAL','WEEK_GOAL','MONTH_GOAL',
+        'TVA_COMBO','PA_BRONZE','PA_SILVER','PA_GOLD',
+        'TM_SILVER','TM_GOLD','TM_SUPREME',
+        'SALE_TOP','SALE_RESPECT','BIG_SALE','BIGGEST_SALE',
+        'TOP_CONV','MAGIC_5','SUPREME_12'
+      ];
 
       const cards = [];
       for(const defKey of badgeOrder){
@@ -5080,7 +5066,12 @@ body{ background-attachment: fixed; }
       description:"Prêmio coletivo liberado quando a meta principal da loja for conquistada."
     }, state.teamReward || {});
 
-    let ordem = allBadgeKeys();
+    const ordem = [
+      'DAY_GOAL','WEEK_GOAL','MONTH_GOAL','GOAL_80','GOAL_120','GOAL_150',
+      'TOP_CONV','CONV_EVOLUTION','TVA_COMBO','PA_BRONZE','PA_SILVER','PA_GOLD',
+      'TM_SILVER','TM_GOLD','TM_SUPREME','SALE_TOP','SALE_RESPECT','BIG_SALE','BIGGEST_SALE',
+      'EVOLUTION_GOAL','GOAL_STREAK_2','GOAL_STREAK_3','MAGIC_5','SUPREME_12','EXTRA_BONUS'
+    ];
 
     // cria overlay
     let back = document.getElementById('selosEditorBack');
@@ -5100,9 +5091,8 @@ body{ background-attachment: fixed; }
       const cfg = state.badgeConfig[key] || {};
       const def = { ...base, ...cfg };
       const enabled = cfg.enabled !== false;
-      const isCustom = !BADGE_DEFS[key];
-      const temFaixa = (base.min !== undefined || cfg.min !== undefined);
-      const temVal = (base.val !== undefined || cfg.val !== undefined || isCustom);
+      const temFaixa = (base.min !== undefined);
+      const temVal = (base.val !== undefined);
 
       let camposValor = "";
       if(temFaixa){
@@ -5123,11 +5113,9 @@ body{ background-attachment: fixed; }
             <input type="text" data-k="${key}" data-f="desc" value="${(def.desc||'').replace(/"/g,'&quot;')}" placeholder="Descrição"/>
           </div>
           <div style="display:flex;gap:6px;align-items:center">${camposValor}<input type="text" data-k="${key}" data-f="points" value="${def.points ?? 0}" placeholder="pts" style="width:72px" title="Pontos da conquista"/></div>
-          ${isCustom?`<select data-k="${key}" data-f="metric" class="badgeMetricSelect" title="Métrica automática"><option value="monthlyRevenue" ${def.metric==='monthlyRevenue'?'selected':''}>Faturamento mensal</option><option value="monthlySales" ${def.metric==='monthlySales'?'selected':''}>Qtd. vendas</option><option value="conversion" ${def.metric==='conversion'?'selected':''}>Conversão</option><option value="pa" ${def.metric==='pa'?'selected':''}>P.A.</option><option value="ticket" ${def.metric==='ticket'?'selected':''}>Ticket médio</option><option value="bestSale" ${def.metric==='bestSale'?'selected':''}>Melhor venda</option><option value="goalPct" ${def.metric==='goalPct'?'selected':''}>% da meta</option><option value="tva" ${def.metric==='tva'?'selected':''}>TVA</option><option value="saleValue" ${def.metric==='saleValue'?'selected':''}>Valor da venda</option></select>`:''}
           <label style="display:flex;gap:4px;align-items:center;font-size:12px;cursor:pointer;white-space:nowrap">
             <input type="checkbox" data-k="${key}" data-f="enabled" ${enabled?'checked':''}/> Ativo
           </label>
-          <button type="button" class="btn bad badgeDeleteBtn" data-delete-badge="${key}" title="Excluir selo">🗑 Excluir</button>
         </div>`;
     }
 
@@ -5172,7 +5160,7 @@ body{ background-attachment: fixed; }
           <div id="missionEditorRows">${missionCfg.map(linhaMissao).join('')}</div>
         </section>
         <div class="divider"></div>
-        <div class="ligaConfigSectionHead"><div><span>🏅 CONQUISTAS</span><h3>Selos e badges</h3><p>Réguas, textos, pontuação e ativação das conquistas automáticas. Crie, escolha ícone, defina métrica e exclua selos personalizados.</p></div><button type="button" class="btn good" id="btnInserirSelo">＋ Inserir selo <span style="font-size:9px;opacity:.8">NOVO</span></button></div>
+        <div class="ligaConfigSectionHead"><div><span>🏅 CONQUISTAS</span><h3>Selos e badges</h3><p>Réguas, textos, pontuação e ativação das conquistas automáticas.</p></div></div>
         <div id="selosLista">${ordem.map(linhaSelo).join('')}</div>
         <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px">
           <button class="btn" id="selosCancelar">Cancelar</button>
@@ -5195,29 +5183,6 @@ body{ background-attachment: fixed; }
       select.addEventListener('change',sync); sync();
     });
 
-    function bindDeleteBadges(){
-      back.querySelectorAll('[data-delete-badge]').forEach(btn=>btn.onclick=()=>{
-        const key=btn.dataset.deleteBadge;
-        const def=getBadgeDef(key);
-        if(!confirm(`Excluir o selo “${def.title||key}”? Conquistas já obtidas permanecem no histórico.`)) return;
-        state.badgeConfig=state.badgeConfig||{};
-        if(BADGE_DEFS[key]) state.badgeConfig[key]={...(state.badgeConfig[key]||{}),deleted:true,enabled:false};
-        else { delete state.badgeConfig[key]; state.customBadgeKeys=(state.customBadgeKeys||[]).filter(k=>k!==key); }
-        save(state); abrirEditorSelos();
-      });
-    }
-    function abrirCriadorSelo(){
-      let modal=document.getElementById('novoSeloBack'); if(modal)modal.remove();
-      modal=document.createElement('div'); modal.id='novoSeloBack'; modal.className='ligaIconBankBack';
-      const tmpKey='CUSTOM_'+Date.now();
-      modal.innerHTML=`<div class="ligaIconBank" style="max-width:620px"><div class="ligaIconBankHead"><div><b>＋ Criar novo selo</b><span>Defina a regra automática, XP e o visual da conquista.</span></div><button type="button" class="btn" data-close>Fechar</button></div><div style="display:grid;gap:12px;padding-top:6px"><label>Nome do selo<input id="novoSeloTitle" class="input" placeholder="Ex.: Mestre do Ticket"></label><label>Descrição<input id="novoSeloDesc" class="input" placeholder="Ex.: Ultrapassou R$ 1.200 de ticket médio"></label><div style="display:grid;grid-template-columns:1.4fr .8fr .7fr;gap:10px"><label>Métrica<select id="novoSeloMetric" class="input"><option value="monthlyRevenue">Faturamento mensal</option><option value="monthlySales">Quantidade de vendas</option><option value="conversion">Conversão (%)</option><option value="pa">P.A.</option><option value="ticket">Ticket médio</option><option value="bestSale">Melhor venda</option><option value="goalPct">Percentual da meta</option><option value="tva">TVA (%)</option><option value="saleValue">Valor da venda</option></select></label><label>Alvo<input id="novoSeloTarget" class="input" type="number" step="0.01" value="100"></label><label>XP<input id="novoSeloPoints" class="input" type="number" value="100"></label></div><div><b style="display:block;margin-bottom:8px">Escolha o ícone</b><div class="ligaIconBankGrid" style="max-height:260px">${Array.from({length:172},(_,i)=>{const id=i+1;return `<button type="button" data-new-icon="${id}" class="${id===1?'selected':''}"><img src="${achievementIconPath(id)}" alt="Ícone ${id}"><span>${String(id).padStart(2,'0')}</span></button>`}).join('')}</div></div><div style="display:flex;justify-content:flex-end;gap:10px"><button class="btn" data-close>Cancelar</button><button class="btn good" id="confirmNovoSelo">Criar selo</button></div></div></div>`;
-      document.body.appendChild(modal); let iconId=1;
-      modal.querySelectorAll('[data-new-icon]').forEach(b=>b.onclick=()=>{modal.querySelectorAll('[data-new-icon]').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');iconId=Number(b.dataset.newIcon)});
-      const close=()=>modal.remove(); modal.querySelectorAll('[data-close]').forEach(b=>b.onclick=close); modal.addEventListener('click',e=>{if(e.target===modal)close()});
-      modal.querySelector('#confirmNovoSelo').onclick=()=>{const title=modal.querySelector('#novoSeloTitle').value.trim(),desc=modal.querySelector('#novoSeloDesc').value.trim(),metric=modal.querySelector('#novoSeloMetric').value,val=Number(modal.querySelector('#novoSeloTarget').value||0),points=Number(modal.querySelector('#novoSeloPoints').value||0);if(!title)return alert('Informe o nome do selo.');state.badgeConfig=state.badgeConfig||{};state.customBadgeKeys=Array.isArray(state.customBadgeKeys)?state.customBadgeKeys:[];state.customBadgeKeys.push(tmpKey);state.badgeConfig[tmpKey]={title,desc,metric,val,points,iconId,enabled:true,custom:true};save(state);close();abrirEditorSelos();};
-    }
-    document.getElementById('btnInserirSelo').onclick=abrirCriadorSelo;
-    bindDeleteBadges();
     function abrirBancoIcones(key){
       const hidden=back.querySelector(`input[data-k="${key}"][data-f="iconId"]`);
       const current=Number(hidden?.value||badgeIconId(key));
@@ -5257,9 +5222,6 @@ body{ background-attachment: fixed; }
           if(inp.value.trim()==='') delete novo[k][f];
           else novo[k][f] = inp.value.trim();
         }
-      });
-      back.querySelectorAll('select[data-k]').forEach(sel=>{
-        const k=sel.dataset.k,f=sel.dataset.f; novo[k]=novo[k]||{}; if(f==='metric') novo[k].metric=sel.value;
       });
       const missionRows = Array.from(back.querySelectorAll('.ligaMissionEditorRow'));
       state.weeklyChallengeConfig = state.weeklyChallengeConfig || {};
@@ -6451,14 +6413,6 @@ body{ background-attachment: fixed; }
     addModulo("btnCatalogo", "🛍️", "Catálogo", "./catalogo.html");
     addModulo("btnCaixa", "▣", "Caixa ONDIS", "./caixa.html");
     addModulo("btnComissao", "💰", "Comissão", "./comissao.html");
-    addModulo("btnComprasIntel", "📦", "Compras Inteligentes", "./compras-inteligentes.html");
-    addModulo("btnCollections", "◫", "Collections", "./collections.html");
-    addModulo("btnMarketingIntel", "📣", "Marketing Intelligence", "./marketing.html");
-    addModulo("btnFidelidade", "◆", "ONDIS Club", "./fidelidade.html");
-    addModulo("btnEquipe360", "👥", "Equipe 360°", "./equipe-360.html");
-    addModulo("btnAuditoria", "🛡", "Auditoria & Perdas", "./auditoria.html");
-    addModulo("btnOmnichannel", "⇄", "Omnichannel", "./omnichannel.html");
-    addModulo("btnAutopilot", "✦", "ONDIS Autopilot", "./autopilot.html");
     if(isAdmin) addModulo("btnAdminPanel", "👑", "Gerenciar", "./admin.html", "modAdmin");
 
     // Botão "Editar selos" (dentro do menu de conta) — só para admin

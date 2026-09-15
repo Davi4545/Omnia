@@ -39,17 +39,19 @@
 </style>
 <link href="./ondis-premium.css" rel="stylesheet"/>
 <script src="./ondis-premium.js"></script>
+<link rel="stylesheet" href="./ondis-v9.css">
+<script src="./ondis-v9.js" defer></script>
 </head>
-<body class="loginPage">
+<body class="loginPage introPlaying">
 
 <div class="systemIntro" id="systemIntro" aria-label="Vídeo de abertura do ONDIS">
   <video id="introVideo" autoplay playsinline preload="auto" poster="./assets/ondis-abertura-poster.jpg">
-    <source src="./assets/ondis-abertura.mp4?v=4" type="video/mp4"/>
+    <source src="./assets/ondis-abertura.mp4?v=11" type="video/mp4"/>
   </video>
   <div class="introStartGate" id="introStartGate" hidden>
     <div class="introStartCard">
-      <button class="introStartButton" id="introStart" type="button">▶ Iniciar abertura com som</button>
-      <span>O vídeo será reproduzido completo, desde o início.</span>
+      <button class="introStartButton" id="introStart" type="button">▶ Entrar no ONDIS</button>
+      <span>A abertura será reproduzida em tela cheia com música.</span>
     </div>
   </div>
   <div class="introControls">
@@ -61,54 +63,39 @@
   (()=>{
     const intro = document.getElementById('systemIntro');
     const video = document.getElementById('introVideo');
-    const sound = document.getElementById('introSound');
-    const skip = document.getElementById('introSkip');
     const gate = document.getElementById('introStartGate');
-    const start = document.getElementById('introStart');
+    const startBtn = document.getElementById('introStart');
     let finished = false;
+    window.ONDIS_INTRO_DONE = false;
     const finish = ()=>{
       if(finished) return;
       finished = true;
+      window.ONDIS_INTRO_DONE = true;
+      document.body.classList.remove('introPlaying');
       intro.classList.add('isLeaving');
-      setTimeout(()=> intro.remove(), 600);
+      window.dispatchEvent(new CustomEvent('ondis:intro-ended'));
+      setTimeout(()=> intro.remove(), 520);
     };
     video.addEventListener('ended', finish);
-    video.addEventListener('error', finish);
-    skip.addEventListener('click', finish);
-    sound.addEventListener('click', async ()=>{
-      video.muted = !video.muted;
-      try{ await video.play(); }catch(e){}
-      sound.textContent = video.muted ? '🔊 Ativar som' : '🔇 Desativar som';
-    });
+    video.addEventListener('error', ()=>{ gate.hidden = false; });
 
-    const playCompleteWithSound = async ()=>{
-      video.pause();
-      video.currentTime = 0;
-      video.defaultMuted = false;
-      video.muted = false;
-      video.volume = 1;
-      await video.play();
-      gate.hidden = true;
-      sound.hidden = false;
-      sound.textContent = '🔇 Desativar som';
-    };
-
-    start.addEventListener('click', async ()=>{
-      try{ await playCompleteWithSound(); }
-      catch(e){ start.textContent = 'Tentar iniciar novamente'; }
-    });
-
-    // Alguns navegadores bloqueiam reprodução automática com áudio. Nesse caso,
-    // o vídeo permanece parado em 0:00 até o usuário iniciar, sem perder nenhum trecho.
-    requestAnimationFrame(async ()=>{
-      try{ await playCompleteWithSound(); }
-      catch(e){
-        video.pause();
-        try{ video.currentTime = 0; }catch(err){}
+    async function playWithSound(){
+      try{
+        video.currentTime = 0;
+        video.muted = false;
+        video.volume = 1;
+        await video.play();
+        gate.hidden = true;
+        return true;
+      }catch(error){
         gate.hidden = false;
-        sound.hidden = true;
+        return false;
       }
-    });
+    }
+    // Tenta iniciar com música. Navegadores que bloqueiam autoplay com áudio
+    // exibem um único botão de entrada; ao clicar, o vídeo começa do início com som.
+    requestAnimationFrame(playWithSound);
+    if(startBtn) startBtn.addEventListener('click', playWithSound);
   })();
 </script>
 
@@ -172,10 +159,10 @@
   const db   = getFirestore(app);
 
   onAuthStateChanged(auth, async (user)=>{
-    if(user){
-      showLoading("Verificando acesso...");
-      await redirectByUser(user);
-    }
+    if(!user) return;
+    const continueLogin=async()=>{ showLoading("Verificando acesso..."); await redirectByUser(user); };
+    if(window.ONDIS_INTRO_DONE) await continueLogin();
+    else window.addEventListener('ondis:intro-ended', continueLogin, {once:true});
   });
 
   async function getProfile(uid){

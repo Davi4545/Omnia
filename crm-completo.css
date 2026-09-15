@@ -19,3 +19,10 @@
 .permission-actions{display:flex;gap:8px;flex-wrap:wrap}
 .permission-actions a{text-decoration:none}
 @media(max-width:760px){.permission-banner{margin:14px 14px 0;align-items:stretch;flex-direction:column}.permission-actions .btn{flex:1}}
+
+/* Embedded CRM dashboard inside ONDIS commercial dashboard */
+body.crm-embed .crm-sidebar,body.crm-embed .crm-topbar{display:none!important}
+body.crm-embed .crm-main{margin-left:0!important;min-height:100vh!important}
+body.crm-embed .crm-content{padding:20px!important;max-width:none!important}
+body.crm-embed .view-head{padding-top:0!important}
+body.crm-embed{background:#fff!important}
