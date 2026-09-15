@@ -2,7 +2,7 @@
   "use strict";
 
   const CACHE_KEY = "ondis_visual_config_v1";
-  const VALID_THEMES = ["executive", "sapphire", "carbon", "emerald", "amethyst", "vintage", "custom"];
+  const VALID_THEMES = ["executive", "sapphire", "carbon", "emerald", "amethyst", "custom"];
   const LEGACY_MAP = {
     default: "executive",
     spacewhite: "executive",
@@ -10,7 +10,10 @@
     neon: "carbon",
     textured: "carbon",
     purple: "amethyst",
-    sunset: "amethyst"
+    sunset: "amethyst",
+    vintage: "executive",
+    ultra: "executive",
+    "neon-tokyo": "executive"
   };
 
   const DEFAULT_CUSTOM = {
@@ -93,7 +96,7 @@
   if(window.__ONDIS_COMMAND_V8__) return; window.__ONDIS_COMMAND_V8__=true;
   const items=[
     ["⚡","Frente de Loja","Venda rápida, abertura e fechamento","./frente-loja.html?view=venda"],
-    ["▣","Caixa ONDIS","Operação, estoque, financeiro e DRE","./caixa.html"],
+    ["▣","ONDIS Finance","Operação, estoque, financeiro e DRE","./caixa.html"],
     ["◎","CRM Simplificado","Clientes e oportunidades do dia","./crm.html"],
     ["◉","CRM Completo","Pipeline, métricas e relacionamento","./crm-completo.html?v=10"],
     ["🛍","Catálogo","Produtos, vitrine e estoque","./catalogo.html"],
@@ -122,4 +125,31 @@
     document.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();overlay.classList.contains("open")?close():open()}else if(e.key==="Escape"&&overlay.classList.contains("open"))close()});
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",build);else build();
+})();
+
+/* ONDIS V12.1 — global identity upgrade */
+(function(){
+  'use strict';
+  function cleanupThemeUI(){
+    document.querySelectorAll('[data-theme-value="ultra"],[data-theme-value="neon-tokyo"],[data-theme-value="vintage"]').forEach(el=>el.remove());
+    try{
+      const raw=JSON.parse(localStorage.getItem('ondis_visual_config_v1')||'null');
+      if(raw && ['ultra','neon-tokyo','vintage'].includes(raw.theme)){ raw.theme='executive'; localStorage.setItem('ondis_visual_config_v1',JSON.stringify(raw)); window.ONDIS_THEME?.apply(raw,true); }
+    }catch(e){}
+  }
+  function modernBrand(){
+    const selectors=['.sidebar .brand','.sidebarBrand','.mainSidebar .brand','.crm-brand','.caixa-brand'];
+    const seen=new Set();
+    selectors.flatMap(sel=>[...document.querySelectorAll(sel)]).forEach(t=>{
+      if(!t || seen.has(t)) return; seen.add(t);
+      if(t.querySelector('.ondisBrandModern')) return;
+      const close=t.querySelector('button,.sidebarClose,.collapseBtn');
+      const wrap=document.createElement('div'); wrap.className='ondisBrandModern';
+      wrap.innerHTML='<img class="ondisBrandSymbol" src="./ondis-symbol.png?v=12.2" alt="Símbolo ONDIS"><span class="ondisBrandCopy"><b>ONDIS</b><small>Sua loja</small></span>';
+      [...t.children].forEach(x=>{if(x!==close)x.style.display='none'}); t.insertBefore(wrap,close||null);
+    });
+  }
+  function fav(){let l=document.querySelector('link[rel~="icon"]');if(!l){l=document.createElement('link');l.rel='icon';document.head.appendChild(l)}l.href='./favicon.png?v=12.2'}
+  function init(){cleanupThemeUI();modernBrand();fav()}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();

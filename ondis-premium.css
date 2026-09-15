@@ -1856,37 +1856,66 @@ body:has(.wrap .tabs) .tab.active{box-shadow:0 5px 14px color-mix(in srgb,var(--
 @media(max-width:760px){.ondisQuickHint{display:none}.catalog-side{position:static}.ondisCommandOverlay{padding-top:7vh}.ondisCommand{border-radius:18px}}
 
 
-/* ONDIS Vintage Atelier — couro, papel, latão e movimentos mecânicos suaves */
-:root[data-theme="vintage"] {
-  --ondis-primary:#815b32; --ondis-accent:#b9874a; --ondis-bg:#efe5d2; --ondis-surface:#fffaf0;
-  --ondis-surface-soft:#f5ead7; --ondis-text:#2e251b; --ondis-muted:#796a57; --ondis-line:#d9c6a6;
-  --ondis-danger:#a94e43; --ondis-warning:#a87524; --ondis-success:#55745b; --ondis-radius:11px;
-  --ondis-shadow:0 13px 28px rgba(71,50,27,.11); --ondis-shadow-lg:0 28px 64px rgba(58,39,20,.19);
-  --ondis-app-background:
-    repeating-linear-gradient(0deg,rgba(82,59,32,.018) 0 1px,transparent 1px 4px),
-    radial-gradient(circle at 16% 10%,rgba(255,255,255,.68),transparent 30%),
-    linear-gradient(135deg,#f5eddc,#e8dac1);
-}
-:root[data-theme="vintage"] body{background-blend-mode:multiply,normal,normal!important;}
-:root[data-theme="vintage"] .card,:root[data-theme="vintage"] .panel,:root[data-theme="vintage"] .metric-card{
-  background:linear-gradient(180deg,rgba(255,252,244,.96),rgba(249,239,220,.96))!important;
-  border-color:#d4bea0!important; box-shadow:0 10px 24px rgba(73,50,25,.08),inset 0 1px 0 rgba(255,255,255,.85)!important;
-}
-:root[data-theme="vintage"] .btn,:root[data-theme="vintage"] button{
-  transition:transform .18s ease,box-shadow .18s ease,background .18s ease;
-}
-:root[data-theme="vintage"] .btn:active,:root[data-theme="vintage"] button:active{transform:translateY(1px) scale(.99)}
-:root[data-theme="vintage"] .btn.primary,:root[data-theme="vintage"] .navItem.active{
-  background:linear-gradient(180deg,#a97c47,#765027)!important;color:#fffaf0!important;border-color:#6f4a24!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 4px 10px rgba(82,55,26,.18)!important;
-}
-:root[data-theme="vintage"] input,:root[data-theme="vintage"] select,:root[data-theme="vintage"] textarea{
-  background:#fffaf0!important;border-color:#d8c3a4!important;box-shadow:inset 0 1px 4px rgba(87,61,29,.045)!important;
-}
-:root[data-theme="vintage"] .sidebar{background:linear-gradient(180deg,#f6ecda,#eadbc2)!important;border-right-color:#cfb894!important;}
-:root[data-theme="vintage"] .contentTopbar,:root[data-theme="vintage"] header{background:rgba(251,244,230,.93)!important;}
-:root[data-theme="vintage"] ::selection{background:#c49a65;color:#241b12}
 
-.ondisSearchIcon{width:38px;height:38px;border:1px solid var(--ondis-line);border-radius:12px;background:var(--ondis-surface);color:var(--ondis-text);font-size:22px;display:grid;place-items:center;cursor:pointer;margin-left:8px;box-shadow:0 5px 14px rgba(15,23,42,.04)}
-.ondisSearchIcon:hover{color:var(--ondis-primary);border-color:color-mix(in srgb,var(--ondis-primary) 30%,var(--ondis-line));background:color-mix(in srgb,var(--ondis-primary) 5%,var(--ondis-surface))}
-.ondisQuickHint{display:none!important}
+
+/* ONDIS V12.2 — Navigation Identity System */
+:root{
+  --ondis-nav-ink:#142033;
+  --ondis-nav-muted:#8490aa;
+  --ondis-nav-purple:#6638ff;
+  --ondis-nav-pink:#dc2fc2;
+  --ondis-nav-blue:#367eff;
+  --ondis-nav-cyan:#1cbcc2;
+  --ondis-nav-line:#e8edf6;
+}
+
+/* Header brand: rotating transparent ONDIS symbol + word */
+.ondisBrandModern{display:flex!important;align-items:center;gap:12px;min-width:0;padding:2px 0}
+.ondisBrandSymbol{width:44px;height:44px;object-fit:contain;display:block;animation:ondisBrandSpin 28s linear infinite;filter:drop-shadow(0 5px 9px rgba(33,100,220,.14));transform-origin:50% 50%}
+.ondisBrandCopy{display:grid;line-height:1.05;gap:5px;min-width:0}
+.ondisBrandCopy b{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:800;font-size:18px;letter-spacing:.12em;color:#101b2d!important}
+.ondisBrandCopy small{font:500 12px/1.1 Inter,ui-sans-serif,system-ui;color:#8390a8!important;letter-spacing:.01em}
+.ondisBrandModern:hover .ondisBrandSymbol{animation-duration:9s;filter:drop-shadow(0 7px 14px rgba(40,118,240,.24))}
+@keyframes ondisBrandSpin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.ondisBrandSymbol{animation:none!important}}
+
+/* Main module index — faithful clean white reference */
+.sidebar,.mainSidebar,.sideNav,.appSidebar{
+  background:rgba(255,255,255,.98)!important;
+  border-right:1px solid var(--ondis-nav-line)!important;
+  box-shadow:10px 0 36px rgba(35,58,99,.045)!important;
+}
+.sidebar .brand,.mainSidebar .brand,.sidebarBrand{
+  min-height:92px!important;padding:20px 22px!important;border-bottom:1px solid #edf1f7!important;background:#fff!important;
+}
+.sidebar .navTitle,.sidebar .groupTitle,.sidebar .navSectionTitle,.sidebar .sectionTitle,.mainSidebar .navTitle{
+  color:#8b97b0!important;font-family:Inter,ui-sans-serif,system-ui!important;font-size:10px!important;font-weight:800!important;letter-spacing:.16em!important;text-transform:uppercase!important;margin:18px 22px 9px!important;
+}
+.sidebar nav,.sidebar .nav,.mainSidebar nav{padding:0 12px 18px!important}
+.sidebar nav button,.sidebar .nav button,.sidebar a.navItem,.mainSidebar nav button,.mainSidebar a{
+  position:relative!important;min-height:50px!important;margin:3px 0!important;padding:8px 12px!important;border:0!important;border-radius:13px!important;background:transparent!important;color:#142033!important;font-family:Inter,ui-sans-serif,system-ui!important;font-size:14px!important;font-weight:600!important;letter-spacing:-.01em!important;box-shadow:none!important;transition:background .16s ease,transform .16s ease,color .16s ease!important;
+}
+.sidebar nav button:hover,.sidebar .nav button:hover,.sidebar a.navItem:hover,.mainSidebar nav button:hover,.mainSidebar a:hover{background:#f7f5ff!important;transform:translateX(1px)!important}
+.sidebar nav button.active,.sidebar .nav button.active,.sidebar a.navItem.active,.mainSidebar nav button.active,.mainSidebar a.active{
+  color:#121e31!important;background:linear-gradient(90deg,rgba(239,242,255,.97),rgba(251,236,255,.9))!important;box-shadow:inset 0 0 0 1px rgba(114,68,255,.035)!important;
+}
+.sidebar nav button.active:before,.sidebar .nav button.active:before,.sidebar a.navItem.active:before,.mainSidebar nav button.active:before,.mainSidebar a.active:before{
+  content:"";position:absolute;left:-12px;top:9px;bottom:9px;width:3px;border-radius:99px;background:linear-gradient(180deg,#543cff,#a92cff);
+}
+.sidebar nav button .ico,.sidebar nav button .icon,.sidebar .navIcon,.sidebar a.navItem>span:first-child,.mainSidebar .navIcon{
+  width:34px!important;height:34px!important;min-width:34px!important;border-radius:10px!important;display:inline-grid!important;place-items:center!important;color:#6938ff!important;background:linear-gradient(145deg,#f2f5ff,#fff1ff)!important;font-size:18px!important;box-shadow:0 5px 13px rgba(91,69,218,.09)!important;
+}
+/* Preserve emoji/icon individual color while keeping premium tile */
+.sidebar nav button:nth-child(2n) .ico,.sidebar nav button:nth-child(2n) .icon{color:#2780ff!important}
+.sidebar nav button:nth-child(3n) .ico,.sidebar nav button:nth-child(3n) .icon{color:#d72bbd!important}
+.sidebar nav button:nth-child(5n) .ico,.sidebar nav button:nth-child(5n) .icon{color:#13b9a2!important}
+.sidebar .badge,.sidebar nav button .count,.mainSidebar .badge{background:linear-gradient(135deg,#6e3cff,#e12fb9)!important;color:white!important;border:0!important;box-shadow:0 5px 12px rgba(149,48,210,.22)!important}
+.sidebar hr,.sidebar .divider{border:0!important;border-top:1px solid #edf1f7!important;margin:14px 14px!important}
+
+/* ONDIS Finance sidebars use same family */
+.caixaShell .side,.caixa-sidebar,.financeSidebar,.finance-side{background:#fff!important;border-right:1px solid var(--ondis-nav-line)!important;box-shadow:8px 0 30px rgba(35,58,99,.035)!important}
+.caixaShell .side button,.caixa-sidebar button,.financeSidebar button,.finance-side button{border-radius:12px!important;color:#21304a!important;font-family:Inter,ui-sans-serif,system-ui!important;font-weight:600!important}
+.caixaShell .side button.active,.caixa-sidebar button.active,.financeSidebar button.active,.finance-side button.active{background:linear-gradient(90deg,#f0f3ff,#fbf0ff)!important;color:#2b56da!important;border-color:transparent!important}
+
+/* Prevent obsolete themes from surviving cached state visually */
+:root[data-theme="vintage"],:root[data-theme="ultra"],:root[data-theme="neon-tokyo"]{color-scheme:light}
