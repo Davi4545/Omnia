@@ -1,12 +1,91 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="900" height="900" viewBox="0 0 900 900">
-<defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fbfdff"/><stop offset="1" stop-color="#eef4fb"/></linearGradient>
-<linearGradient id="shirt" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f7f7f7"/><stop offset="1" stop-color="#e7e7e7"/></linearGradient>
-<filter id="shadow"><feDropShadow dx="0" dy="28" stdDeviation="24" flood-color="#25364d" flood-opacity=".18"/></filter></defs>
-<rect width="900" height="900" rx="48" fill="url(#bg)"/>
-<ellipse cx="450" cy="790" rx="270" ry="45" fill="#cfd9e7" opacity=".5"/>
-<g filter="url(#shadow)">
-<path d="M330 165c20 57 62 90 120 90s100-33 120-90l140 54-63 167-82-35v385H335V351l-82 35-63-167z" fill="url(#shirt)"/>
-<path d="M345 173c8 35 44 63 105 63s97-28 105-63" fill="none" stroke="#fff" stroke-opacity=".32" stroke-width="12"/>
-</g>
-<text x="450" y="846" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#41516b">CAMISETA BRANCA</text>
-</svg>
+
+// HARDEN_CRITICAL_BUTTONS
+(function(){
+  function $(id){return document.getElementById(id);} 
+  function safe(fn){try{fn();}catch(e){console.error(e);alert('Erro: '+(e?.message||e));}}
+  function openBack(id){const el=$(id); if(!el) return; el.style.display='flex';}
+  function closeBack(id){const el=$(id); if(!el) return; el.style.display='none';}
+  // fallback openers
+  window.openSettingsFallback=function(){openBack('settingsBack');};
+  window.openSellerFallback=function(){openBack('sellerBack');};
+  // ensure create seller always works
+  window.createSellerFallback=async function(){
+    safe(async ()=>{
+      const name=($('sellerName')?.value||'').trim();
+      if(!name){alert('Digite o nome do vendedor.');return;}
+      // use app helpers if present
+      const KEY=window.KEY||'nexxt_state_v4';
+      const state=window.state;
+      if(!state||!Array.isArray(state.sellers)) throw new Error('Estado não carregou. Recarregue a página.');
+      let photo='';
+      const file=$('sellerPhoto')?.files?.[0];
+      if(file && window.fileToDataUrl){photo=await window.fileToDataUrl(file);}
+      const uid=(window.uid?window.uid():('id_'+Math.random().toString(16).slice(2)));
+      state.sellers.push({id:uid,name,photo,paused:false,active:true});
+      state.pool.push(uid);
+      if(window.save) window.save(state); else localStorage.setItem(KEY, JSON.stringify(state));
+      if(window.renderAll) window.renderAll();
+      closeBack('sellerBack');
+    });
+  };
+  // bind after DOM ready
+  function bind(){
+    const bs=$('btnSettings'); if(bs){ bs.onclick=()=>safe(()=>{ if(window.openModal){
+        // sync fields if possible
+        try{ $('storeName').value=(window.state?.store?.name||''); $('storeStatus').value=(window.state?.store?.status||'Online'); $('optValue').value=(window.state?.options?.askValue?'yes':'no'); $('optPieces').value=(window.state?.options?.askPieces?'yes':'no'); }catch{}
+        window.openModal($('settingsBack'));
+      } else openBack('settingsBack');}); }
+    const ba=$('btnAddSeller'); if(ba){ ba.onclick=()=>safe(()=>{ try{ $('sellerName').value=''; $('sellerPhoto').value=''; }catch{}; if(window.openModal) window.openModal($('sellerBack')); else openBack('sellerBack');}); }
+    const bc=$('btnCreateSeller'); if(bc){ bc.onclick=()=>window.createSellerFallback(); }
+    const cs=$('closeSettings'); if(cs){ cs.onclick=()=>{ if(window.closeModal) window.closeModal($('settingsBack')); else closeBack('settingsBack'); }; }
+    const cl=$('closeSeller'); if(cl){ cl.onclick=()=>{ if(window.closeModal) window.closeModal($('sellerBack')); else closeBack('sellerBack'); }; }
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded', bind);} else bind();
+})();
+
+
+  // --- HARDEN: botões críticos sempre funcionam (PWA/cache/listeners) ---
+  (function hardenCriticalButtons(){
+    const byId=(id)=>document.getElementById(id);
+    function safe(fn){return function(e){try{fn(e)}catch(err){console.error(err); alert("Erro: "+(err?.message||err));}}}
+    // Settings
+    const bSet=byId("btnSettings");
+    if(bSet){ bSet.onclick = safe(()=>{
+      try{
+        byId("storeName").value = state?.store?.name || "";
+        byId("storeStatus").value = state?.store?.status || "Online";
+        byId("optValue").value = state?.options?.askValue ? "yes" : "no";
+        byId("optPieces").value = state?.options?.askPieces ? "yes" : "no";
+      }catch{}
+      openModal(byId("settingsBack"));
+    }); }
+    // Add seller
+    const bAdd=byId("btnAddSeller");
+    if(bAdd){ bAdd.onclick = safe(()=>{
+      byId("sellerName").value = "";
+      try{ byId("sellerPhoto").value = ""; }catch{}
+      openModal(byId("sellerBack"));
+    }); }
+    // Create seller
+    const bCreate=byId("btnCreateSeller");
+    if(bCreate){ bCreate.onclick = safe(async()=>{
+      const name = (byId("sellerName").value||"").trim();
+      if(!name){ alert("Digite o nome do vendedor."); return; }
+      let photo="";
+      const file = byId("sellerPhoto")?.files?.[0];
+      if(file){ photo = await fileToDataUrl(file); }
+      const id = uid();
+      state.sellers.push({ id, name, photo, paused:false, active:true });
+      state.pool.push(id);
+      save(state);
+      renderAll();
+      closeModal(byId("sellerBack"));
+    }); }
+  })();
+
+  window.addEventListener("error", (e)=>{
+    console.error(e.error||e.message);
+  });
+  window.addEventListener("unhandledrejection", (e)=>{
+    console.error(e.reason);
+  });
