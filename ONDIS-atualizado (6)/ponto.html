@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>ONDIS — Ponto Eletrônico</title>
+<meta content="#0b0f14" name="theme-color"/>
+<link href="./icon-192.png" rel="icon"/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:radial-gradient(900px 520px at 15% 5%, rgba(41,224,122,.12), transparent 60%),radial-gradient(800px 520px at 85% 10%, rgba(98,168,255,.12), transparent 55%),#0b0f14;color:#e7eefc;min-height:100vh;}
+  header{position:sticky;top:0;z-index:10;background:rgba(11,15,20,.85);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.10);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  .brand h1{font-size:18px;font-weight:900;}
+  .brand .sub{font-size:12px;color:#9db0d0;}
+  .chip{padding:5px 12px;border-radius:999px;background:rgba(41,224,122,.14);border:1px solid rgba(41,224,122,.30);color:#7fffc0;font-size:12px;font-weight:700;}
+  .wrap{max-width:1100px;margin:0 auto;padding:20px;}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+  .tab{padding:9px 16px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:#9db0d0;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;}
+  .tab.active{background:rgba(41,224,122,.18);color:#e7eefc;border-color:rgba(41,224,122,.35);}
+  .card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:20px;margin-bottom:18px;}
+  .cardHead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px;}
+  .cardHead h2{font-size:16px;font-weight:800;}
+  .btn{padding:8px 16px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#e7eefc;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;}
+  .btn:hover{background:rgba(255,255,255,.12);}
+  .btn.good{background:rgba(41,224,122,.14);border-color:rgba(41,224,122,.3);color:#7fffc0;}
+  .btn.bad{background:rgba(255,77,77,.12);border-color:rgba(255,77,77,.3);color:#ff9090;}
+  .btn.warn{background:rgba(255,209,102,.12);border-color:rgba(255,209,102,.28);color:#ffd166;}
+  .btn.sm{padding:5px 10px;font-size:12px;}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th{text-align:left;padding:8px 10px;color:#9db0d0;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid rgba(255,255,255,.08);}
+  td{padding:10px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:middle;}
+  tr:hover td{background:rgba(255,255,255,.03);}
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
+  .field label{font-size:11px;color:#9db0d0;text-transform:uppercase;letter-spacing:.05em;font-weight:700;}
+  .field input,.field select{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:14px;outline:none;}
+  .hint{font-size:13px;color:#9db0d0;padding:16px 0;text-align:center;}
+  .vazio{display:flex;flex-direction:column;align-items:center;gap:8px;padding:40px 20px;text-align:center;}
+  .vazio .ico{font-size:44px;opacity:.85;margin-bottom:4px;}
+  .vazio .tit{font-size:16px;font-weight:800;color:#e7eefc;}
+  .vazio .txt{font-size:13px;color:#9db0d0;max-width:340px;line-height:1.5;}
+  .tag{display:inline-flex;align-items:center;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:700;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);}
+  .tag.ok{background:rgba(41,224,122,.14);border-color:rgba(41,224,122,.3);color:#7fffc0;}
+  .tag.atraso{background:rgba(255,209,102,.14);border-color:rgba(255,209,102,.3);color:#ffd166;}
+  .tag.falta{background:rgba(255,77,77,.12);border-color:rgba(255,77,77,.3);color:#ff9090;}
+  .tag.extra{background:rgba(98,168,255,.14);border-color:rgba(98,168,255,.3);color:#a0c8ff;}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:18px;}
+  .kpi{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px;}
+  .kpi .t{font-size:11px;color:#9db0d0;text-transform:uppercase;margin-bottom:4px;}
+  .kpi .v{font-size:22px;font-weight:900;}
+  .relogio{font-size:52px;font-weight:900;letter-spacing:1px;color:#7fffc0;font-variant-numeric:tabular-nums;}
+  .pontoBtns{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px;}
+  .pontoBtn{padding:16px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:#e7eefc;font-size:14px;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;transition:all .2s;}
+  .pontoBtn:hover{background:rgba(255,255,255,.1);}
+  .pontoBtn.done{opacity:.5;cursor:not-allowed;}
+  .pontoBtn .ico{font-size:24px;}
+  .linha{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);margin-bottom:8px;}
+  .linha .pt{font-size:11px;color:#9db0d0;text-transform:uppercase;letter-spacing:.05em;}
+  .linha .hr{font-size:18px;font-weight:800;}
+  .loading{display:none;position:fixed;inset:0;background:rgba(11,15,20,.85);place-items:center;z-index:99999;font-size:16px;color:#e7eefc;gap:10px;flex-direction:column;}
+  .loading.show{display:flex;}
+  .spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,.12);border-top-color:#62a8ff;border-radius:50%;animation:spin .7s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .modalBack{display:none;position:fixed;inset:0;width:100%;height:100%;background:rgba(0,0,0,.7);z-index:9999;align-items:flex-start;justify-content:center;overflow-y:auto;overflow-x:hidden;padding:24px 14px;}
+  .modalBack.show{display:flex;}
+  .modal{background:#0f141c;border:1px solid rgba(255,255,255,.12);border-radius:18px;max-width:520px;width:100%;padding:22px;margin:auto;}
+  .modal *{max-width:100%;}
+  select option{background:#1a1f2b;color:#e7eefc;}
+  @media(max-width:720px){ .pontoBtns{grid-template-columns:repeat(2,1fr);} }
+</style>
+<link href="./ondis-premium.css" rel="stylesheet"/>
+<script src="./ondis-premium.js"></script>
+</head>
+<body>
+
+<div class="loading show" id="loadingScreen"><div class="spinner"></div><div id="loadingMsg">Carregando...</div></div>
+
+<header>
+  <div class="brand">
+    <h1>ONDIS <span style="color:#7fffc0">PONTO</span></h1>
+    <div class="sub" id="ctxInfo">—</div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+    <span class="chip" id="roleChip">—</span>
+    <button class="btn" onclick="window.location.href='./index.html'">← ONDIS</button>
+    <button class="btn bad" onclick="sair()">Sair</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="tabs">
+    <button class="tab active" id="tabBater" onclick="showTab('bater')">🕐 Bater ponto</button>
+    <button class="tab" id="tabHistorico" onclick="showTab('historico')">📅 Meu histórico</button>
+    <button class="tab" id="tabEquipe" onclick="showTab('equipe')" style="display:none">👥 Equipe</button>
+    <button class="tab" id="tabConfig" onclick="showTab('config')" style="display:none">⚙️ Config</button>
+  </div>
+
+  <!-- BATER PONTO -->
+  <div id="viewBater">
+    <div class="card" style="text-align:center">
+      <div id="saudacao" style="font-size:20px;font-weight:800;margin-bottom:4px">Olá! 👋</div>
+      <div id="dataHoje" class="hint" style="padding:2px 0 10px"></div>
+      <div class="relogio" id="relogio">00:00:00</div>
+      <div id="localStatus" class="hint" style="padding:8px 0">📍 Localização: aguardando...</div>
+      <div class="pontoBtns">
+        <button class="pontoBtn" id="btnEntrada" onclick="baterPonto('entrada')"><span class="ico">🟢</span>Entrada</button>
+        <button class="pontoBtn" id="btnIntervalo" onclick="baterPonto('intervalo')"><span class="ico">☕</span>Intervalo</button>
+        <button class="pontoBtn" id="btnRetorno" onclick="baterPonto('retorno')"><span class="ico">🔄</span>Retorno</button>
+        <button class="pontoBtn" id="btnSaida" onclick="baterPonto('saida')"><span class="ico">🔴</span>Saída</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cardHead"><h2>📋 Meu dia — <span id="hojeData"></span></h2><span class="tag" id="statusHoje">—</span></div>
+      <div id="registrosHoje"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08)">
+        <span class="hint" style="padding:0">Horas trabalhadas hoje</span>
+        <span style="font-size:24px;font-weight:900" id="horasHoje">00:00</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MEU HISTÓRICO -->
+  <div id="viewHistorico" style="display:none">
+    <div class="card">
+      <div class="cardHead">
+        <h2>📅 Meu histórico</h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <input id="histMes" type="month" style="padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:13px" onchange="renderHistorico()"/>
+        </div>
+      </div>
+      <div class="kpis" id="histKpis"></div>
+      <div id="histTabela"></div>
+    </div>
+  </div>
+
+  <!-- EQUIPE (admin) -->
+  <div id="viewEquipe" style="display:none">
+    <div class="card">
+      <div class="cardHead">
+        <h2>👥 Equipe — situação do dia</h2>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <button class="btn good" onclick="abrirAddPonto()">+ Adicionar ponto</button>
+          <input id="equipeData" type="date" style="padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:13px" onchange="renderEquipe()"/>
+        </div>
+      </div>
+      <div class="kpis" id="equipeKpis"></div>
+      <div id="equipeTabela"></div>
+    </div>
+    <div class="card">
+      <div class="cardHead"><h2>📊 Relatório por período</h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <input id="relMes" type="month" style="padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:13px" onchange="renderRelatorio()"/>
+          <button class="btn" onclick="exportarPontoCSV()">⬇️ Excel</button>
+        </div>
+      </div>
+      <div id="relTabela"></div>
+    </div>
+  </div>
+
+  <!-- CONFIG (admin) -->
+  <div id="viewConfig" style="display:none">
+    <div class="card" style="max-width:520px">
+      <div class="cardHead"><h2>⚙️ Configuração da jornada</h2></div>
+      <div class="field"><label>Horário de entrada</label><input id="cfgEntrada" type="time" value="08:00"/></div>
+      <div class="field"><label>Horário de saída</label><input id="cfgSaida" type="time" value="18:00"/></div>
+      <div class="field"><label>Tolerância de atraso (minutos)</label><input id="cfgTolerancia" type="number" value="10" min="0"/></div>
+      <div class="field"><label>Carga horária diária (horas) — acima disso = hora extra</label><input id="cfgCarga" type="number" value="8" min="1" step="0.5"/></div>
+      <button class="btn good" onclick="salvarConfig()">Salvar configuração</button>
+      <div class="hint" style="text-align:left;margin-top:10px">⚠️ Este é um controle interno de jornada para gestão. Não substitui ponto homologado para fins legais (CLT/Portaria 671), caso sua operação exija registro oficial.</div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut }
+    from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, onSnapshot }
+    from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCTjYwOpMpwhGbrsUFPOgO2V-GXAwfcubA",
+    authDomain: "omnia-3b32b.firebaseapp.com",
+    projectId: "omnia-3b32b",
+    storageBucket: "omnia-3b32b.firebasestorage.app",
+    messagingSenderId: "858764463578",
+    appId: "1:858764463578:web:1fabf841013e2053bd44e3"
+  };
+  const SUPER_ADMIN_EMAIL = "davi.vieira.each@gmail.com";
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  let MY=null, STORE_ID=null, LOJA_NOME="", PONTOS=[], pontoRef=null, CONFIG={entrada:"08:00",saida:"18:00",tolerancia:10,carga:8}, minhaLoc=null;
+
+  function showLoading(m){ document.getElementById("loadingScreen").classList.add("show"); document.getElementById("loadingMsg").textContent=m||"Carregando..."; }
+  function hideLoading(){ document.getElementById("loadingScreen").classList.remove("show"); }
+  function msgErro(e, oQueTentava){
+    const code = (e && (e.code||e.message||"")) + "";
+    if(/permission|insufficient|PERMISSION/i.test(code)) return "Sem permissão para "+(oQueTentava||"esta ação")+". Faça login novamente ou fale com o administrador.";
+    if(/network|unavailable|offline|failed to get|deadline/i.test(code)) return "Parece que você está sem internet. Verifique a conexão e tente novamente.";
+    if(/quota|resource-exhausted/i.test(code)) return "O sistema está sobrecarregado. Aguarde e tente novamente.";
+    return "Não foi possível "+(oQueTentava||"concluir")+". Verifique sua internet e tente novamente.";
+  }
+  function estadoVazio(ico, tit, txt){
+    return `<div class="vazio"><div class="ico">${ico}</div><div class="tit">${tit}</div><div class="txt">${txt||""}</div></div>`;
+  }
+  function hojeStr(){
+    // Data LOCAL (horário do dispositivo/Brasil), não UTC.
+    // Usar toISOString() causava bug: pontos batidos após 21h caíam no dia seguinte.
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,"0");
+    const dia = String(d.getDate()).padStart(2,"0");
+    return `${y}-${m}-${dia}`;
+  }
+  function pad(n){ return String(n).padStart(2,"0"); }
+  function hhmm(d){ return pad(d.getHours())+":"+pad(d.getMinutes()); }
+
+  // relógio
+  function tickRelogio(){
+    const d=new Date();
+    const el=document.getElementById("relogio");
+    if(el) el.textContent = pad(d.getHours())+":"+pad(d.getMinutes())+":"+pad(d.getSeconds());
+  }
+  setInterval(tickRelogio,1000); tickRelogio();
+
+  onAuthStateChanged(auth, async (user)=>{
+    if(!user){ window.location.href="./login.html"; return; }
+    let prof={ role:"seller", name:user.email, email:user.email };
+    try{ const s=await getDoc(doc(db,"users",user.uid)); if(s.exists()) prof={...prof, ...s.data()}; }catch(e){}
+    if((user.email||"").toLowerCase()===SUPER_ADMIN_EMAIL) prof.role="superadmin";
+    MY={ uid:user.uid, ...prof };
+    STORE_ID = sessionStorage.getItem("omnia_loja_ativa") || prof.storeId || (Array.isArray(prof.storeIds)&&prof.storeIds[0]) || null;
+
+    const ehAdmin = (MY.role==="admin"||MY.role==="superadmin");
+    if(ehAdmin){
+      document.getElementById("tabEquipe").style.display="inline-block";
+      document.getElementById("tabConfig").style.display="inline-block";
+    }
+
+    if(!STORE_ID){
+      hideLoading();
+      document.getElementById("registrosHoje").innerHTML='<div class="hint">Nenhuma loja vinculada. Acesse o ONDIS e selecione a loja primeiro.</div>';
+      document.getElementById("roleChip").textContent=prof.role; return;
+    }
+    LOJA_NOME=STORE_ID;
+    try{ const ls=await getDoc(doc(db,"stores",STORE_ID)); if(ls.exists()) LOJA_NOME=ls.data().name||ls.data().code||STORE_ID; }catch(e){}
+    document.getElementById("ctxInfo").textContent="Loja: "+LOJA_NOME+" · "+(prof.name||prof.email);
+    document.getElementById("roleChip").textContent=prof.role==="admin"?"👑 Admin":(prof.role==="superadmin"?"⚡ Super":"🧑 Vendedor");
+    document.getElementById("saudacao").textContent = saudacaoTexto()+", "+(prof.name||"").split(" ")[0]+"! 👋";
+    document.getElementById("dataHoje").textContent = new Date().toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"});
+    document.getElementById("hojeData").textContent = new Date().toLocaleDateString("pt-BR");
+
+    // mês atual nos filtros
+    const ym = hojeStr().slice(0,7);
+    document.getElementById("histMes").value = ym;
+    document.getElementById("relMes").value = ym;
+    document.getElementById("equipeData").value = hojeStr();
+
+    // carrega config da loja
+    try{
+      const cfg = await getDoc(doc(db,"stores",STORE_ID,"pontoConfig","jornada"));
+      if(cfg.exists()){ CONFIG = { ...CONFIG, ...cfg.data() }; aplicarConfigNaTela(); }
+    }catch(e){}
+
+    // pede localização
+    pedirLocalizacao();
+
+    // escuta pontos da loja
+    pontoRef = collection(db,"stores",STORE_ID,"ponto");
+    onSnapshot(pontoRef,(snap)=>{
+      PONTOS=[]; snap.forEach(d=> PONTOS.push({ id:d.id, ...d.data() }));
+      renderTudo();
+      hideLoading();
+    },(err)=>{ console.error(err); hideLoading(); document.getElementById("registrosHoje").innerHTML='<div class="hint">Erro ao carregar. Verifique as regras do Firestore.</div>'; });
+  });
+
+  function saudacaoTexto(){ const h=new Date().getHours(); return h<12?"Bom dia":(h<18?"Boa tarde":"Boa noite"); }
+  window.sair=async function(){ await signOut(auth); window.location.href="./login.html"; };
+
+  function pedirLocalizacao(){
+    const el=document.getElementById("localStatus");
+    if(!navigator.geolocation){ el.textContent="📍 Localização não suportada neste dispositivo."; return; }
+    el.textContent="📍 Obtendo localização...";
+    navigator.geolocation.getCurrentPosition(
+      (pos)=>{ minhaLoc={ lat:pos.coords.latitude, lng:pos.coords.longitude }; el.innerHTML='<span style="color:#7fffc0">📍 Localização validada ✓</span>'; },
+      (err)=>{ minhaLoc=null; el.innerHTML='<span style="color:#ffd166">📍 Localização não autorizada (o ponto será registrado sem GPS)</span>'; },
+      { enableHighAccuracy:true, timeout:8000 }
+    );
+  }
+
+  // ID do registro de ponto = uid + data
+  function meuRegistroHoje(){
+    const id = MY.uid+"_"+hojeStr();
+    return PONTOS.find(p=> p.id===id) || null;
+  }
+
+  window.baterPonto = async function(tipo){
+    const reg = meuRegistroHoje() || {
+      id: MY.uid+"_"+hojeStr(),
+      uid: MY.uid, nome: MY.name||MY.email, data: hojeStr(),
+      storeId: STORE_ID, marcacoes:{}
+    };
+    if(reg.marcacoes[tipo]){ alert("Você já registrou "+tipo+" hoje."); return; }
+    // validações de ordem
+    if(tipo==="intervalo" && !reg.marcacoes.entrada){ alert("Bata a Entrada primeiro."); return; }
+    if(tipo==="retorno" && !reg.marcacoes.intervalo){ alert("Você precisa registrar o Intervalo antes do Retorno."); return; }
+    if(tipo==="saida" && !reg.marcacoes.entrada){ alert("Bata a Entrada primeiro."); return; }
+
+    const agora=new Date();
+    reg.marcacoes[tipo] = { hora: hhmm(agora), ts: agora.getTime(), loc: minhaLoc };
+    reg.atualizadoEm = agora.toISOString();
+
+    showLoading("Registrando "+tipo+"...");
+    try{ await setDoc(doc(pontoRef, reg.id), reg); }
+    catch(e){ console.error(e); alert(msgErro(e,"registrar o ponto")); }
+    hideLoading();
+  };
+
+  function renderTudo(){ renderHoje(); renderHistorico(); if(MY.role==="admin"||MY.role==="superadmin"){ renderEquipe(); renderRelatorio(); } }
+
+  window.showTab=function(t){
+    ["bater","historico","equipe","config"].forEach(x=>{
+      const v=document.getElementById("view"+x.charAt(0).toUpperCase()+x.slice(1));
+      const b=document.getElementById("tab"+x.charAt(0).toUpperCase()+x.slice(1));
+      if(v) v.style.display=(x===t)?"block":"none";
+      if(b) b.classList.toggle("active",x===t);
+    });
+  };
+
+  // calcula horas trabalhadas de um registro (em minutos)
+  function minutosTrabalhados(reg){
+    if(!reg||!reg.marcacoes) return 0;
+    const m=reg.marcacoes;
+    if(!m.entrada) return 0;
+    const fim = m.saida ? m.saida.ts : Date.now();
+    let total = fim - m.entrada.ts;
+    // desconta intervalo se houve
+    if(m.intervalo && m.retorno){ total -= (m.retorno.ts - m.intervalo.ts); }
+    else if(m.intervalo && !m.retorno){ total = m.intervalo.ts - m.entrada.ts; }
+    return Math.max(0, Math.floor(total/60000));
+  }
+  function fmtMin(min){ const h=Math.floor(min/60), m=min%60; return pad(h)+":"+pad(m); }
+
+  // status do dia: falta / atraso / ok / extra
+  function statusDoDia(reg){
+    if(!reg||!reg.marcacoes||!reg.marcacoes.entrada) return {tag:"falta",label:"Falta"};
+    // atraso: entrada depois do horário + tolerância
+    const [eh,em]=CONFIG.entrada.split(":").map(Number);
+    const ent=new Date(reg.marcacoes.entrada.ts);
+    const limite = eh*60+em+Number(CONFIG.tolerancia||0);
+    const entMin = ent.getHours()*60+ent.getMinutes();
+    if(entMin > limite) return {tag:"atraso",label:"Atrasado"};
+    // hora extra
+    const min=minutosTrabalhados(reg);
+    if(reg.marcacoes.saida && min > CONFIG.carga*60) return {tag:"extra",label:"Hora extra"};
+    return {tag:"ok",label:"No horário"};
+  }
+
+  // ===== BATER (dia atual) =====
+  function renderHoje(){
+    const reg=meuRegistroHoje();
+    const m=reg?reg.marcacoes:{};
+    ["entrada","intervalo","retorno","saida"].forEach(t=>{
+      const btn=document.getElementById("btn"+t.charAt(0).toUpperCase()+t.slice(1));
+      if(btn){ if(m[t]){ btn.classList.add("done"); } else { btn.classList.remove("done"); } }
+    });
+    const linha=(label,key,ico)=>{
+      const mk=m[key];
+      return `<div class="linha"><span style="font-size:20px">${ico}</span><div style="flex:1"><div class="pt">${label}</div><div class="hr">${mk?mk.hora:"--:--"}</div></div>${mk&&mk.loc?'<span class="tag ok">📍 GPS</span>':(mk?'<span class="tag">sem GPS</span>':'<span class="tag">pendente</span>')}</div>`;
+    };
+    document.getElementById("registrosHoje").innerHTML =
+      linha("Entrada","entrada","🟢")+linha("Intervalo","intervalo","☕")+linha("Retorno","retorno","🔄")+linha("Saída","saida","🔴");
+    document.getElementById("horasHoje").textContent = fmtMin(minutosTrabalhados(reg));
+    const st=statusDoDia(reg);
+    const stEl=document.getElementById("statusHoje");
+    stEl.className="tag "+st.tag; stEl.textContent=st.label;
+  }
+
+  // ===== HISTÓRICO (meu) =====
+  window.renderHistorico=function(){
+    const mes=(document.getElementById("histMes")||{}).value || hojeStr().slice(0,7);
+    const meus=PONTOS.filter(p=> p.uid===MY.uid && (p.data||"").slice(0,7)===mes).sort((a,b)=> (b.data||"").localeCompare(a.data||""));
+    let totMin=0, faltas=0, atrasos=0, extraMin=0;
+    meus.forEach(r=>{ totMin+=minutosTrabalhados(r); const s=statusDoDia(r); if(s.tag==="atraso")atrasos++; if(s.tag==="extra"){ const ex=minutosTrabalhados(r)-CONFIG.carga*60; if(ex>0)extraMin+=ex; } });
+    document.getElementById("histKpis").innerHTML=`
+      <div class="kpi"><div class="t">Dias trabalhados</div><div class="v">${meus.length}</div></div>
+      <div class="kpi"><div class="t">Horas no mês</div><div class="v" style="font-size:18px">${fmtMin(totMin)}</div></div>
+      <div class="kpi"><div class="t">Atrasos</div><div class="v">${atrasos}</div></div>
+      <div class="kpi"><div class="t">Hora extra</div><div class="v" style="font-size:18px">${fmtMin(extraMin)}</div></div>`;
+    if(meus.length===0){ document.getElementById("histTabela").innerHTML=estadoVazio("📅","Nenhum ponto neste mês","Quando você bater o ponto (entrada, intervalo, retorno e saída), seus dias aparecerão aqui com as horas trabalhadas."); return; }
+    const rows=meus.map(r=>{
+      const m=r.marcacoes||{}; const s=statusDoDia(r);
+      return `<tr><td>${(r.data||"").split("-").reverse().join("/")}</td>
+        <td>${m.entrada?m.entrada.hora:"--"}</td><td>${m.intervalo?m.intervalo.hora:"--"}</td>
+        <td>${m.retorno?m.retorno.hora:"--"}</td><td>${m.saida?m.saida.hora:"--"}</td>
+        <td><b>${fmtMin(minutosTrabalhados(r))}</b></td><td><span class="tag ${s.tag}">${s.label}</span></td></tr>`;
+    }).join("");
+    document.getElementById("histTabela").innerHTML=`<table><thead><tr><th>Dia</th><th>Entrada</th><th>Interv.</th><th>Retorno</th><th>Saída</th><th>Horas</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table>`;
+  };
+
+  // ===== EQUIPE (admin) =====
+  window.renderEquipe=function(){
+    if(!(MY.role==="admin"||MY.role==="superadmin")) return;
+    const dia=(document.getElementById("equipeData")||{}).value || hojeStr();
+    const doDia=PONTOS.filter(p=> p.data===dia);
+    const presentes=doDia.filter(p=>p.marcacoes&&p.marcacoes.entrada).length;
+    const atrasados=doDia.filter(p=>statusDoDia(p).tag==="atraso").length;
+    document.getElementById("equipeKpis").innerHTML=`
+      <div class="kpi"><div class="t">Presentes</div><div class="v">${presentes}</div></div>
+      <div class="kpi"><div class="t">Atrasados</div><div class="v">${atrasados}</div></div>
+      <div class="kpi"><div class="t">Registros no dia</div><div class="v">${doDia.length}</div></div>`;
+    if(doDia.length===0){ document.getElementById("equipeTabela").innerHTML=estadoVazio("👥","Ninguém bateu ponto neste dia","Escolha outra data ou aguarde a equipe registrar o ponto. Os registros aparecem aqui em tempo real."); return; }
+    const rows=doDia.sort((a,b)=>(a.nome||"").localeCompare(b.nome||"")).map(r=>{
+      const m=r.marcacoes||{}; const s=statusDoDia(r);
+      return `<tr><td><b>${r.nome||"—"}</b></td><td>${m.entrada?m.entrada.hora:"--"}</td>
+        <td>${m.intervalo?m.intervalo.hora:"--"}</td><td>${m.retorno?m.retorno.hora:"--"}</td>
+        <td>${m.saida?m.saida.hora:"--"}</td><td><b>${fmtMin(minutosTrabalhados(r))}</b></td>
+        <td><span class="tag ${s.tag}">${s.label}</span></td>
+        <td>
+          <button class="btn sm" style="padding:3px 8px" onclick="abrirEditarPonto('${r.id}')">✏️</button>
+          <button class="btn bad sm" onclick="excluirPonto('${r.id}','${(r.nome||"").replace(/'/g,"")}','${r.data}')">🗑</button>
+        </td></tr>`;
+    }).join("");
+    document.getElementById("equipeTabela").innerHTML=`<table><thead><tr><th>Colaborador</th><th>Entrada</th><th>Interv.</th><th>Retorno</th><th>Saída</th><th>Horas</th><th>Status</th><th>Ação</th></tr></thead><tbody>${rows}</tbody></table>`;
+  };
+
+  // Excluir registro de ponto (só admin/super)
+  window.excluirPonto=async function(id, nome, data){
+    if(!(MY.role==="admin"||MY.role==="superadmin")){ alert("Sem permissão."); return; }
+    const dataFmt=(data||"").split("-").reverse().join("/");
+    if(!confirm(`Excluir o ponto de "${nome}" do dia ${dataFmt}?\n\nIsso apaga TODAS as marcações desse dia (entrada, intervalo, retorno, saída). Esta ação não pode ser desfeita.`)) return;
+    showLoading("Excluindo ponto...");
+    try{ await deleteDoc(doc(pontoRef, id)); }
+    catch(e){ console.error(e); alert(msgErro(e,"excluir o registro")); }
+    hideLoading();
+  };
+
+  // ===== EDITAR / ADICIONAR PONTO (admin/super) =====
+  let pontoEditId = null; // id do registro sendo editado (null = novo)
+
+  window.abrirEditarPonto=function(id){
+    if(!(MY.role==="admin"||MY.role==="superadmin")){ alert("Sem permissão."); return; }
+    const reg = PONTOS.find(p=>p.id===id);
+    if(!reg){ alert("Registro não encontrado."); return; }
+    pontoEditId = id;
+    const m = reg.marcacoes||{};
+    document.getElementById("epTitulo").textContent = "Editar ponto — " + (reg.nome||"");
+    document.getElementById("epNomeWrap").style.display = "none"; // nome fixo ao editar
+    document.getElementById("epData").value = reg.data || hojeStr();
+    document.getElementById("epData").disabled = true; // não muda a data ao editar
+    document.getElementById("epEntrada").value = m.entrada?.hora || "";
+    document.getElementById("epIntervalo").value = m.intervalo?.hora || "";
+    document.getElementById("epRetorno").value = m.retorno?.hora || "";
+    document.getElementById("epSaida").value = m.saida?.hora || "";
+    document.getElementById("modalPonto").classList.add("show");
+  };
+
+  window.abrirAddPonto=function(){
+    if(!(MY.role==="admin"||MY.role==="superadmin")){ alert("Sem permissão."); return; }
+    pontoEditId = null;
+    document.getElementById("epTitulo").textContent = "Adicionar ponto";
+    document.getElementById("epNomeWrap").style.display = "block";
+    // popula o select de colaboradores (pessoas que já têm algum registro na loja)
+    const nomes = {};
+    PONTOS.forEach(p=>{ if(p.uid) nomes[p.uid] = p.nome || p.uid; });
+    const sel = document.getElementById("epColaborador");
+    sel.innerHTML = '<option value="">— selecione —</option>' +
+      Object.entries(nomes).sort((a,b)=>(a[1]||"").localeCompare(b[1]||"")).map(([uid,nome])=>`<option value="${uid}">${nome}</option>`).join("");
+    document.getElementById("epData").value = document.getElementById("equipeData").value || hojeStr();
+    document.getElementById("epData").disabled = false;
+    document.getElementById("epEntrada").value = "";
+    document.getElementById("epIntervalo").value = "";
+    document.getElementById("epRetorno").value = "";
+    document.getElementById("epSaida").value = "";
+    document.getElementById("modalPonto").classList.add("show");
+  };
+
+  window.fecharPonto=function(){ document.getElementById("modalPonto").classList.remove("show"); };
+
+  // converte "HH:MM" + data "YYYY-MM-DD" em objeto de marcação { hora, ts, loc }
+  function marcacaoDe(horaStr, dataStr, antiga){
+    if(!horaStr) return null;
+    const [h,mi] = horaStr.split(":").map(Number);
+    const d = new Date(dataStr+"T00:00:00");
+    d.setHours(h||0, mi||0, 0, 0);
+    return { hora: horaStr, ts: d.getTime(), loc: (antiga&&antiga.loc)||null, editado:true };
+  }
+
+  window.salvarPonto=async function(){
+    if(!(MY.role==="admin"||MY.role==="superadmin")){ alert("Sem permissão."); return; }
+    const dataStr = document.getElementById("epData").value;
+    if(!dataStr){ alert("Escolha a data."); return; }
+    const ent = document.getElementById("epEntrada").value;
+    const inter = document.getElementById("epIntervalo").value;
+    const ret = document.getElementById("epRetorno").value;
+    const sai = document.getElementById("epSaida").value;
+
+    let reg, id;
+    if(pontoEditId){
+      reg = PONTOS.find(p=>p.id===pontoEditId);
+      if(!reg){ alert("Registro não encontrado."); return; }
+      id = pontoEditId;
+    } else {
+      // novo: precisa do colaborador
+      const sel = document.getElementById("epColaborador");
+      const uid = sel.value;
+      const nome = sel.options[sel.selectedIndex]?.text || "";
+      if(!uid){ alert("Selecione o colaborador."); return; }
+      id = uid + "_" + dataStr;
+      if(PONTOS.find(p=>p.id===id)){ alert("Já existe ponto desse colaborador nesse dia. Edite o registro existente."); return; }
+      reg = { id, uid, nome, data: dataStr, storeId: STORE_ID, marcacoes:{} };
+    }
+
+    const m = reg.marcacoes || {};
+    reg.marcacoes = {
+      entrada: marcacaoDe(ent, reg.data, m.entrada),
+      intervalo: marcacaoDe(inter, reg.data, m.intervalo),
+      retorno: marcacaoDe(ret, reg.data, m.retorno),
+      saida: marcacaoDe(sai, reg.data, m.saida)
+    };
+    // remove marcações vazias (null)
+    Object.keys(reg.marcacoes).forEach(k=>{ if(!reg.marcacoes[k]) delete reg.marcacoes[k]; });
+    reg.atualizadoEm = new Date().toISOString();
+    reg.editadoPor = MY.name || MY.email || "";
+
+    showLoading("Salvando ponto...");
+    try{
+      await setDoc(doc(pontoRef, id), reg);
+      fecharPonto();
+    }catch(e){ console.error(e); alert(msgErro(e,"salvar o ponto")); }
+    hideLoading();
+  };
+
+  // ===== RELATÓRIO POR PERÍODO (admin) =====
+  window.renderRelatorio=function(){
+    if(!(MY.role==="admin"||MY.role==="superadmin")) return;
+    const mes=(document.getElementById("relMes")||{}).value || hojeStr().slice(0,7);
+    const doMes=PONTOS.filter(p=> (p.data||"").slice(0,7)===mes);
+    // agrupa por pessoa
+    const porPessoa={};
+    doMes.forEach(r=>{
+      const k=r.uid;
+      if(!porPessoa[k]) porPessoa[k]={ nome:r.nome, dias:0, min:0, atrasos:0, extra:0 };
+      porPessoa[k].dias++;
+      porPessoa[k].min+=minutosTrabalhados(r);
+      const s=statusDoDia(r);
+      if(s.tag==="atraso") porPessoa[k].atrasos++;
+      const ex=minutosTrabalhados(r)-CONFIG.carga*60; if(r.marcacoes&&r.marcacoes.saida&&ex>0) porPessoa[k].extra+=ex;
+    });
+    const arr=Object.values(porPessoa).sort((a,b)=>(a.nome||"").localeCompare(b.nome||""));
+    if(arr.length===0){ document.getElementById("relTabela").innerHTML=estadoVazio("📊","Sem dados neste mês","Assim que a equipe registrar pontos, o resumo por colaborador (horas, atrasos e extras) aparecerá aqui."); return; }
+    const rows=arr.map(p=>`<tr><td><b>${p.nome||"—"}</b></td><td>${p.dias}</td><td>${fmtMin(p.min)}</td><td>${p.atrasos}</td><td>${fmtMin(p.extra)}</td></tr>`).join("");
+    document.getElementById("relTabela").innerHTML=`<table><thead><tr><th>Colaborador</th><th>Dias</th><th>Horas totais</th><th>Atrasos</th><th>Hora extra</th></tr></thead><tbody>${rows}</tbody></table>`;
+  };
+
+  window.exportarPontoCSV=function(){
+    const mes=(document.getElementById("relMes")||{}).value || hojeStr().slice(0,7);
+    const doMes=PONTOS.filter(p=> (p.data||"").slice(0,7)===mes).sort((a,b)=> (a.nome||"").localeCompare(b.nome||"") || (a.data||"").localeCompare(b.data||""));
+    if(doMes.length===0){ alert("Nenhum registro neste mês."); return; }
+    const cab=["Colaborador","Data","Entrada","Intervalo","Retorno","Saida","Horas","Status"];
+    const linhas=doMes.map(r=>{ const m=r.marcacoes||{}; const s=statusDoDia(r); return [r.nome||"", r.data||"", m.entrada?m.entrada.hora:"", m.intervalo?m.intervalo.hora:"", m.retorno?m.retorno.hora:"", m.saida?m.saida.hora:"", fmtMin(minutosTrabalhados(r)), s.label]; });
+    const csv=[cab,...linhas].map(l=>l.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(";")).join("\n");
+    const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"});
+    const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+    a.download="ponto_"+LOJA_NOME.replace(/[^a-z0-9]/gi,"_")+"_"+mes+".csv"; a.click();
+  };
+
+  // ===== CONFIG =====
+  function aplicarConfigNaTela(){
+    document.getElementById("cfgEntrada").value=CONFIG.entrada;
+    document.getElementById("cfgSaida").value=CONFIG.saida;
+    document.getElementById("cfgTolerancia").value=CONFIG.tolerancia;
+    document.getElementById("cfgCarga").value=CONFIG.carga;
+  }
+  window.salvarConfig=async function(){
+    CONFIG={
+      entrada:document.getElementById("cfgEntrada").value||"08:00",
+      saida:document.getElementById("cfgSaida").value||"18:00",
+      tolerancia:Number(document.getElementById("cfgTolerancia").value||10),
+      carga:Number(document.getElementById("cfgCarga").value||8)
+    };
+    showLoading("Salvando...");
+    try{ await setDoc(doc(db,"stores",STORE_ID,"pontoConfig","jornada"), CONFIG); alert("Configuração salva!"); renderTudo(); }
+    catch(e){ console.error(e); alert(msgErro(e,"salvar a configuração")); }
+    hideLoading();
+  };
+</script>
+
+<!-- MODAL EDITAR / ADICIONAR PONTO -->
+<div class="modalBack" id="modalPonto">
+  <div class="modal" style="max-width:440px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2 id="epTitulo" style="font-size:18px;font-weight:900">Editar ponto</h2>
+      <button class="btn" onclick="fecharPonto()">✕</button>
+    </div>
+    <div class="field" id="epNomeWrap" style="display:none">
+      <label>Colaborador</label>
+      <select id="epColaborador"></select>
+    </div>
+    <div class="field">
+      <label>Data</label>
+      <input id="epData" type="date"/>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="field"><label>🟢 Entrada</label><input id="epEntrada" type="time"/></div>
+      <div class="field"><label>☕ Intervalo</label><input id="epIntervalo" type="time"/></div>
+      <div class="field"><label>🔄 Retorno</label><input id="epRetorno" type="time"/></div>
+      <div class="field"><label>🔴 Saída</label><input id="epSaida" type="time"/></div>
+    </div>
+    <p class="hint" style="text-align:left;padding:6px 0 0">Deixe um horário em branco se não houver marcação. Ex: se a pessoa não fez intervalo, deixe intervalo e retorno vazios.</p>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px">
+      <button class="btn" onclick="fecharPonto()">Cancelar</button>
+      <button class="btn good" onclick="salvarPonto()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
