@@ -41,17 +41,12 @@ const COLLECTIONS={
   attendances:"crm_atendimentos",campaigns:"crm_campanhas",journeys:"crm_jornadas",
   segments:"crm_segmentos",loyalty:"crm_fidelidade",surveys:"crm_pesquisas",audit:"crm_auditoria"
 };
-const initialParams=new URLSearchParams(location.search);
-const requestedView=initialParams.get("view");
-const embedMode=initialParams.get("embed")==="1";
-const validInitialViews=new Set(["hoje","clientes","segmentos","atendimentos","agenda","funil","orcamentos","produtos","campanhas","jornadas","fidelidade","metricas","equipe","integracoes","usuarios","lgpd"]);
 const state={
   me:null,storeId:null,store:{},appState:{},sellers:[],users:[],
   clients:[],records:[],deals:[],tasks:[],attendances:[],campaigns:[],journeys:[],segments:[],loyalty:[],surveys:[],audit:[],
-  errors:{},loaded:new Set(),view:validInitialViews.has(requestedView)?requestedView:"hoje",selectedClients:new Set(),attendanceStatus:"",selectedAttendance:null,agendaRange:"today",
+  errors:{},loaded:new Set(),view:"hoje",selectedClients:new Set(),attendanceStatus:"",selectedAttendance:null,agendaRange:"today",
   detailClient:null,clientDetailTab:"resumo",renderQueued:false
 };
-if(embedMode) document.body.classList.add("crm-embed");
 
 function esc(value){return String(value??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));}
 function digits(value){return String(value||"").replace(/\D/g,"");}
@@ -244,8 +239,6 @@ onAuthStateChanged(auth,async user=>{
   applyPermissions();
   populateControls();
   Object.keys(COLLECTIONS).forEach(listenStoreCollection);
-  qsa(".crm-view").forEach(v=>v.classList.toggle("active",v.id===`view-${state.view}`));
-  qsa(".nav-link").forEach(b=>b.classList.toggle("active",b.dataset.view===state.view));
   renderShell();
   if(state.errors.store||state.errors.appState||state.errors.users){
     showPermission("Parte do contexto da loja demorou para responder. O CRM continuará tentando carregar os dados disponíveis.");

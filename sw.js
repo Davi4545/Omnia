@@ -1,10 +1,14 @@
-const CACHE_NAME = "ondis-shell-v2026-08-space-v8";
+const CACHE_NAME = "ondis-shell-v2026-08-crm-arena-v10";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./login.html",
   "./ondis-premium.css",
   "./ondis-premium.js",
+  "./crm.html",
+  "./crm-completo.html",
+  "./crm-completo.css",
+  "./crm-completo.js",
   "./assets/ondis-abertura.mp4",
   "./assets/ondis-abertura-poster.jpg",
   "./assets/arena-bau-3d.png",
@@ -42,6 +46,6 @@ self.addEventListener("fetch", event => {
         caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy)).catch(()=>{});
         return response;
       })
-      .catch(() => caches.match(event.request).then(response => response || caches.match("./login.html")))
+      .catch(() => caches.match(event.request,{ignoreSearch:true}).then(response => response || caches.match("./login.html")))
   );
 });
