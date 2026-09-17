@@ -260,6 +260,18 @@
       <label>Disponibilidade</label>
       <select id="prodDisp"><option value="sim">✅ Disponível</option><option value="nao">❌ Esgotado</option></select>
     </div>
+    <div class="field" style="border-top:1px solid #eee;padding-top:12px;margin-top:4px">
+      <label style="font-weight:900">Dados fiscais (NFC-e)</label>
+      <small style="display:block;color:var(--muted,#777);margin-bottom:8px">Obrigatório por lei para emitir nota fiscal deste produto. Sem NCM a venda não é bloqueada, mas a nota fiscal não sai — confira com seu contador.</small>
+      <div class="grid2">
+        <div class="field"><label>NCM *</label><input id="prodNcm" inputmode="numeric" maxlength="8" placeholder="Ex: 61091000"/></div>
+        <div class="field"><label>CFOP</label><input id="prodCfop" placeholder="Padrão da loja: 5102" maxlength="4"/></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>CSOSN (ICMS Simples Nacional)</label><input id="prodCsosn" placeholder="Padrão da loja: 102" maxlength="3"/></div>
+        <div class="field"><label>Unidade comercial</label><input id="prodUnidade" placeholder="Padrão: UN" maxlength="6"/></div>
+      </div>
+    </div>
     <div style="display:flex;gap:10px;justify-content:space-between;margin-top:8px;flex-wrap:wrap">
       <button class="btn bad" id="btnExcluirProduto" onclick="excluirProdutoDoModal()" style="display:none">🗑 Excluir</button>
       <div style="display:flex;gap:10px;margin-left:auto">
@@ -678,7 +690,7 @@
   window.abrirNovoProduto=function(){
     document.getElementById("prodTitulo").textContent="Novo produto";
     document.getElementById("prodId").value="";
-    ["prodRef","prodCat","prodNome","prodDesc","prodPreco","prodPromo","prodTamanhos"].forEach(id=>document.getElementById(id).value="");
+    ["prodRef","prodCat","prodNome","prodDesc","prodPreco","prodPromo","prodTamanhos","prodNcm","prodCfop","prodCsosn","prodUnidade"].forEach(id=>document.getElementById(id).value="");
     document.getElementById("prodGenero").value="";
     document.getElementById("prodDisp").value="sim";
     fotosTemp=[]; renderPhotoSlots();
@@ -699,6 +711,10 @@
     document.getElementById("prodPreco").value=p.preco?String(p.preco).replace(".",","):"";
     document.getElementById("prodPromo").value=p.promo?String(p.promo).replace(".",","):"";
     document.getElementById("prodDisp").value=p.disponivel||"sim";
+    document.getElementById("prodNcm").value=p.ncm||"";
+    document.getElementById("prodCfop").value=p.cfop||"";
+    document.getElementById("prodCsosn").value=p.csosn||"";
+    document.getElementById("prodUnidade").value=p.unidade||"";
     fotosTemp=(Array.isArray(p.fotos)&&p.fotos.length?p.fotos:[p.foto]).filter(Boolean).slice(0,3);
     renderPhotoSlots();
     document.getElementById("btnExcluirProduto").style.display="inline-block";
@@ -736,6 +752,10 @@
       preco,
       promo:brNum(document.getElementById("prodPromo").value),
       disponivel:document.getElementById("prodDisp").value,
+      ncm:document.getElementById("prodNcm").value.trim(),
+      cfop:document.getElementById("prodCfop").value.trim(),
+      csosn:document.getElementById("prodCsosn").value.trim(),
+      unidade:document.getElementById("prodUnidade").value.trim().toUpperCase(),
       fotos:fotosTemp.slice(0,3),
       foto:fotosTemp[0]||"",
       criadoEm:existente?.criadoEm||new Date().toISOString(),
