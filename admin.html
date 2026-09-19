@@ -76,6 +76,19 @@
     </div>
   </div>
 
+  <div class="card" id="conviteCard">
+    <div class="cardHead"><h2>🔗 Convidar vendedor</h2></div>
+    <div class="field">
+      <label>Link de cadastro (já com o código da loja)</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <input id="conviteLink" readonly style="flex:1;min-width:240px;padding:9px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:13px;"/>
+        <button class="btn good" onclick="copiarConvite()">📋 Copiar link</button>
+        <button class="btn" onclick="compartilharConvite()">📤 Compartilhar</button>
+      </div>
+      <div class="hint" style="padding-top:8px">Manda esse link pro vendedor (WhatsApp, e-mail, etc). Ele abre direto na tela de cadastro com o código da loja já preenchido.</div>
+    </div>
+  </div>
+
   <div class="kpis" id="kpisGeral"></div>
 
   <div class="card">
@@ -161,6 +174,35 @@
   window.sair = async function(){ await signOut(auth); window.location.href="./login.html"; };
   window.trocarLoja = function(){ lojaAtual = document.getElementById("lojaSelect").value; carregarVendedores(); };
 
+  function atualizarConvite(){
+    const loja = LOJAS.find(l=>l.id===lojaAtual) || {};
+    if(!loja.code){ document.getElementById("conviteLink").value = "Esta loja ainda não tem código configurado."; return; }
+    const link = new URL("./login.html", window.location.href).href + "?codigo=" + encodeURIComponent(loja.code);
+    document.getElementById("conviteLink").value = link;
+  }
+
+  window.copiarConvite = async function(){
+    const input = document.getElementById("conviteLink");
+    try{
+      await navigator.clipboard.writeText(input.value);
+      input.style.borderColor = "#29e07a";
+      setTimeout(()=> input.style.borderColor = "", 1200);
+    }catch(e){
+      input.select(); document.execCommand("copy");
+    }
+  };
+
+  window.compartilharConvite = async function(){
+    const loja = LOJAS.find(l=>l.id===lojaAtual) || {};
+    const link = document.getElementById("conviteLink").value;
+    const texto = `Você foi convidado(a) para vender na loja ${loja.name||""} no ONDIS! Cadastre-se por aqui: ${link}`;
+    if(navigator.share){
+      try{ await navigator.share({ title:"Convite ONDIS", text:texto }); }catch(e){ /* usuário cancelou */ }
+    }else{
+      window.open("https://wa.me/?text=" + encodeURIComponent(texto), "_blank");
+    }
+  };
+
   window.carregarVendedores = async function(){
     showLoading("Carregando vendedores...");
     try{
@@ -178,6 +220,7 @@
       const admins=users.filter(u=>u.role==="admin").length;
       const ativos=users.filter(u=>u.active!==false).length;
       const lojaNome = (LOJAS.find(l=>l.id===lojaAtual)||{}).name || "—";
+      atualizarConvite();
 
       document.getElementById("kpisGeral").innerHTML = `
         <div class="kpi"><div class="t">Loja</div><div class="v" style="font-size:15px">${lojaNome}</div></div>

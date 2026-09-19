@@ -287,6 +287,20 @@
     const loginVisible = document.getElementById("formLogin").style.display!=="none";
     if(loginVisible) window.fazerLogin(); else window.fazerCadastro();
   });
+
+  // Se veio de um link de convite (?codigo=XXX), abre direto na aba Cadastrar com o
+  // código preenchido e travado, pra não precisar ficar falando o código em voz alta.
+  (function aplicarLinkConvite(){
+    const params = new URLSearchParams(window.location.search);
+    const codigo = (params.get("codigo") || "").trim().toUpperCase();
+    if(!codigo) return;
+    window.switchTab("cadastro");
+    const campoCodigo = document.getElementById("cadCodigo");
+    campoCodigo.value = codigo;
+    campoCodigo.readOnly = true;
+    campoCodigo.style.opacity = "0.7";
+    document.getElementById("cadNome").focus();
+  })();
 </script>
 </body>
 </html>
