@@ -107,6 +107,7 @@
 </style>
 <link href="./ondis-premium.css" rel="stylesheet"/>
 <script src="./ondis-premium.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <link rel="stylesheet" href="./ondis-v9.css">
 <script src="./ondis-v9.js" defer></script>
 <link rel="stylesheet" href="./ondis-v11.css?v=12.3.0"><script src="./ondis-v11.js?v=12.3.0" defer></script></head>
@@ -179,9 +180,38 @@
   <div id="viewGerenciar" style="display:none">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">
       <h2 style="font-size:16px;font-weight:800">📦 Produtos da loja</h2>
-      <button class="btn good" onclick="abrirNovoProduto()">+ Novo produto</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <input type="file" id="importFile" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleImportFile(event)"/>
+        <button class="btn" onclick="document.getElementById('importFile').click()">📥 Importar planilha</button>
+        <button class="btn good" onclick="abrirNovoProduto()">+ Novo produto</button>
+      </div>
     </div>
     <div class="grid" id="gridGerenciar"><div class="hint">Nenhum produto ainda.</div></div>
+  </div>
+
+  <!-- MODAL IMPORTAR PLANILHA -->
+  <div class="modalBack" id="modalImportar" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;align-items:center;justify-content:center;padding:16px">
+    <div class="modal" style="max-width:920px;width:100%;max-height:90vh;overflow:auto;background:#12161f;border-radius:16px;padding:20px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <h2 style="font-size:16px;font-weight:900">📥 Importar produtos da planilha</h2>
+        <button class="btn" onclick="fecharImportar()">Fechar</button>
+      </div>
+      <div id="importStep1">
+        <p class="hint" style="text-align:left;padding:0 0 12px">Confira se cada coluna da sua planilha foi ligada ao campo certo do ONDIS. Colunas sem correspondência ficam como "Ignorar".</p>
+        <div id="importMapeamento" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px"></div>
+        <div class="hint" id="importResumo" style="text-align:left;padding:0 0 12px"></div>
+        <div style="overflow:auto;max-height:320px;border:1px solid rgba(255,255,255,.1);border-radius:10px">
+          <table style="width:100%;border-collapse:collapse;font-size:12px" id="importPreviewTable"></table>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+          <button class="btn" onclick="fecharImportar()">Cancelar</button>
+          <button class="btn good" onclick="confirmarImportacao()">Importar produtos</button>
+        </div>
+      </div>
+      <div id="importStep2" style="display:none">
+        <div class="hint" id="importProgresso" style="text-align:center;padding:30px 0;font-size:14px"></div>
+      </div>
+    </div>
   </div>
 
   <!-- PERFIL / WHATSAPP (funcionário) -->
@@ -304,7 +334,7 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut }
     from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-  import { getFirestore, doc, getDoc, setDoc, deleteDoc, updateDoc, collection, onSnapshot, getDocs }
+  import { getFirestore, doc, getDoc, setDoc, deleteDoc, updateDoc, collection, onSnapshot, getDocs, writeBatch }
     from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -772,6 +802,144 @@
     showLoading("Excluindo...");
     try{ await deleteDoc(doc(produtosRef,id)); }catch(e){ console.error(e); alert(msgErro(e,"excluir o produto")); }
     hideLoading();
+  };
+
+  // ===== IMPORTAR PLANILHA (ERP -> catálogo) =====
+  const IMPORT_FIELDS = {
+    ignorar:"— Ignorar —", nome:"Nome *", ref:"Referência/SKU", categoria:"Categoria", genero:"Gênero",
+    tamanhos:"Tamanhos", descricao:"Descrição", preco:"Preço *", promo:"Preço promocional",
+    disponivel:"Disponível", ncm:"NCM", cfop:"CFOP", csosn:"CSOSN", unidade:"Unidade"
+  };
+  const IMPORT_ALIASES = {
+    nome:["nome","produto","item","nomedoproduto","titulo","descricaocurta","descricaodoproduto","nomedoitem"],
+    ref:["ref","referencia","codigo","sku","codigoproduto","codigointerno","codbarras","codigodebarras"],
+    categoria:["categoria","grupo","familia","departamento"],
+    genero:["genero","sexo","publico"],
+    tamanhos:["tamanho","tamanhos","tam","grade"],
+    descricao:["descricao","detalhes","observacao","obs","descricaolonga"],
+    preco:["preco","valor","precovenda","valorvenda","precounitario","valorunitario","precodevenda"],
+    promo:["promo","precopromocional","promocao","precodesconto","precooferta"],
+    disponivel:["disponivel","situacao","status","ativo","estoque"],
+    ncm:["ncm"], cfop:["cfop"], csosn:["csosn","cst"], unidade:["unidade","un","unidademedida","und","unid"]
+  };
+  function normH(s){ return String(s??"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]/g,""); }
+  function autoMapColuna(header){
+    const h=normH(header);
+    for(const [campo,aliases] of Object.entries(IMPORT_ALIASES)) if(aliases.includes(h)) return campo;
+    return "ignorar";
+  }
+  let IMPORT_ROWS=[], IMPORT_HEADERS=[];
+
+  window.handleImportFile=function(ev){
+    const file=ev.target.files[0]; if(!file) return;
+    const reader=new FileReader();
+    reader.onload=function(e){
+      try{
+        const wb=XLSX.read(e.target.result,{type:"array"});
+        const sheet=wb.Sheets[wb.SheetNames[0]];
+        const rows=XLSX.utils.sheet_to_json(sheet,{header:1,defval:""});
+        if(!rows.length){ alert("Planilha vazia."); return; }
+        IMPORT_HEADERS = rows[0].map(h=>String(h||"").trim());
+        IMPORT_ROWS = rows.slice(1).filter(r=>r.some(c=>String(c||"").trim()!==""));
+        if(!IMPORT_ROWS.length){ alert("Nenhuma linha de produto encontrada abaixo do cabeçalho."); return; }
+        renderImportMapeamento();
+        document.getElementById("modalImportar").style.display="flex";
+        document.getElementById("importStep1").style.display="block";
+        document.getElementById("importStep2").style.display="none";
+      }catch(err){ console.error(err); alert("Não consegui ler essa planilha. Confira se é .xlsx, .xls ou .csv."); }
+      finally{ ev.target.value=""; }
+    };
+    reader.readAsArrayBuffer(file);
+  };
+
+  function renderImportMapeamento(){
+    const box=document.getElementById("importMapeamento");
+    box.innerHTML = IMPORT_HEADERS.map((h,idx)=>{
+      const sugestao = autoMapColuna(h);
+      const opts = Object.entries(IMPORT_FIELDS).map(([k,label])=>`<option value="${k}" ${k===sugestao?"selected":""}>${label}</option>`).join("");
+      return `<div class="field"><label>Coluna: "${h||"(sem nome, col. "+(idx+1)+")"}"</label><select data-col="${idx}" class="importColSelect" onchange="renderImportPreview()">${opts}</select></div>`;
+    }).join("");
+    renderImportPreview();
+  }
+
+  function importMapAtual(){
+    const map={};
+    document.querySelectorAll(".importColSelect").forEach(sel=>{ map[Number(sel.dataset.col)] = sel.value; });
+    return map;
+  }
+
+  function renderImportPreview(){
+    const map=importMapAtual();
+    const camposUsados = Object.values(map).filter(v=>v!=="ignorar");
+    const table=document.getElementById("importPreviewTable");
+    const colsAtivas = IMPORT_HEADERS.map((h,idx)=>idx).filter(idx=>map[idx]!=="ignorar");
+    table.innerHTML = "<thead><tr>"+colsAtivas.map(idx=>`<th style="padding:8px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)">${IMPORT_FIELDS[map[idx]]}</th>`).join("")+"</tr></thead>"+
+      "<tbody>"+IMPORT_ROWS.slice(0,15).map(r=>"<tr>"+colsAtivas.map(idx=>`<td style="padding:8px;border-bottom:1px solid rgba(255,255,255,.05)">${String(r[idx]??"")}</td>`).join("")+"</tr>").join("")+"</tbody>";
+    const faltaNome = !camposUsados.includes("nome"), faltaPreco = !camposUsados.includes("preco");
+    document.getElementById("importResumo").innerHTML =
+      `${IMPORT_ROWS.length} linha(s) na planilha. Mostrando as 15 primeiras.` +
+      (faltaNome?' <b style="color:#ff9090">Falta ligar a coluna do Nome.</b>':'') +
+      (faltaPreco?' <b style="color:#ff9090">Falta ligar a coluna do Preço.</b>':'');
+  }
+
+  window.fecharImportar=function(){
+    document.getElementById("modalImportar").style.display="none";
+    IMPORT_ROWS=[]; IMPORT_HEADERS=[];
+  };
+
+  function slugRef(s){ return String(s||"").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"_").replace(/^_+|_+$/g,"").slice(0,60); }
+
+  window.confirmarImportacao=async function(){
+    const map=importMapAtual();
+    const byField={}; Object.entries(map).forEach(([col,campo])=>{ if(campo!=="ignorar") byField[campo]=Number(col); });
+    if(byField.nome===undefined || byField.preco===undefined){ alert("Ligue pelo menos as colunas de Nome e Preço antes de importar."); return; }
+
+    document.getElementById("importStep1").style.display="none";
+    document.getElementById("importStep2").style.display="block";
+    const progresso=document.getElementById("importProgresso");
+    progresso.textContent = "Importando 0 de "+IMPORT_ROWS.length+"...";
+
+    let ok=0, pulados=[];
+    const CHUNK=400; // limite do Firestore é 500 operações por batch; deixamos folga
+    for(let i=0;i<IMPORT_ROWS.length;i+=CHUNK){
+      const lote=IMPORT_ROWS.slice(i,i+CHUNK);
+      const batch=writeBatch(db);
+      for(const r of lote){
+        const nome=String(r[byField.nome]??"").trim();
+        const preco=brNum(r[byField.preco]);
+        if(!nome || preco<=0){ pulados.push(nome||"(linha sem nome)"); continue; }
+        const refVal=byField.ref!==undefined?String(r[byField.ref]??"").trim():"";
+        const id = refVal ? ("prod_"+slugRef(refVal)) : ("prod_"+Date.now()+"_"+Math.random().toString(36).slice(2,7));
+        const existente=PRODUTOS.find(x=>x.id===id);
+        const dados={
+          id, nome,
+          ref:refVal,
+          categoria:byField.categoria!==undefined?String(r[byField.categoria]??"").trim():(existente?.categoria||""),
+          genero:byField.genero!==undefined?String(r[byField.genero]??"").trim():(existente?.genero||""),
+          tamanhos:byField.tamanhos!==undefined?String(r[byField.tamanhos]??"").split(/[,;/]/).map(t=>t.trim()).filter(Boolean):(existente?.tamanhos||[]),
+          descricao:byField.descricao!==undefined?String(r[byField.descricao]??"").trim():(existente?.descricao||""),
+          preco,
+          promo:byField.promo!==undefined?brNum(r[byField.promo]):(existente?.promo||0),
+          disponivel:byField.disponivel!==undefined?(/^(nao|não|0|esgotado|inativo|indisponivel)/i.test(String(r[byField.disponivel]??"").trim())?"nao":"sim"):(existente?.disponivel||"sim"),
+          ncm:byField.ncm!==undefined?String(r[byField.ncm]??"").replace(/\D/g,""):(existente?.ncm||""),
+          cfop:byField.cfop!==undefined?String(r[byField.cfop]??"").trim():(existente?.cfop||""),
+          csosn:byField.csosn!==undefined?String(r[byField.csosn]??"").trim():(existente?.csosn||""),
+          unidade:byField.unidade!==undefined?String(r[byField.unidade]??"").trim().toUpperCase():(existente?.unidade||"UN"),
+          fotos:existente?.fotos||[], foto:existente?.foto||"",
+          criadoEm:existente?.criadoEm||new Date().toISOString(),
+          atualizadoEm:new Date().toISOString()
+        };
+        batch.set(doc(produtosRef,id),dados);
+        ok++;
+      }
+      try{ await batch.commit(); }
+      catch(e){ console.error(e); alert("Erro ao salvar um lote de produtos: "+msgErro(e,"importar")); break; }
+      progresso.textContent = "Importando "+Math.min(i+CHUNK,IMPORT_ROWS.length)+" de "+IMPORT_ROWS.length+"...";
+    }
+
+    progresso.innerHTML = `✅ ${ok} produto(s) importado(s)/atualizado(s).` +
+      (pulados.length?`<br><br>⚠️ ${pulados.length} linha(s) ignorada(s) por falta de nome ou preço válido:<br><small>${pulados.slice(0,20).join(", ")}${pulados.length>20?"…":""}</small>`:"") +
+      `<br><br><button class="btn good" onclick="fecharImportar()">Concluir</button>`;
   };
 
   // ===== MEU WHATSAPP (funcionário) =====
