@@ -1,7 +1,58 @@
-// Service worker mínimo do snapshot Resultados (escopo próprio).
-// Cacheia apenas os arquivos que existem nesta pasta.
-const CACHE_NAME = 'resultados-snapshot-v1';
-const APP_SHELL = ["./", "./index.html", "./app.js", "./manifest.json", "./icon-192.png", "./icon-512.png", "./icon.svg"];
-self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE_NAME).then(c => Promise.all(APP_SHELL.map(u => c.add(u).catch(() => null))))); self.skipWaiting(); });
-self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))))); self.clients.claim(); });
-self.addEventListener("fetch", e => { if (e.request.method !== "GET") return; e.respondWith(fetch(e.request).then(r => { const cp = r.clone(); caches.open(CACHE_NAME).then(c => c.put(e.request, cp)).catch(() => {}); return r; }).catch(() => caches.match(e.request, { ignoreSearch: true }))); });
+const CACHE_NAME = "ondis-shell-v2026-10-modulos-v9";
+const APP_SHELL = [
+  "./",
+  "./index.html",
+  "./login.html",
+  "./ondis-premium.css",
+  "./ondis-premium.js",
+  "./assets/ondis-abertura.mp4",
+  "./assets/ondis-abertura-poster.jpg",
+  "./assets/arena-bau-3d.png",
+  "./assets/astronauta-foguete-3d.png",
+  "./assets/foguete-vendedor-3d.png",
+  "./assets/espaco-ranking.jpg",
+  "./assets/lua-3d.png",
+  "./assets/plutao-3d.png",
+  "./assets/lua-realista-3d.png",
+  "./assets/marte-3d.png",
+  "./assets/saturno-3d.png",
+  "./manifest.json",
+  "./icon-192.png",
+  "./icon-512.png"
+];
+
+self.addEventListener("install", event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache =>
+      // cache.addAll() é tudo-ou-nada: se UM arquivo da lista faltar no futuro,
+      // a instalação inteira falha e o app fica preso numa versão antiga.
+      // Cacheamos um por um e ignoramos falhas individuais.
+      Promise.all(
+        APP_SHELL.map(url =>
+          cache.add(url).catch(err => { console.warn("SW: falhou ao cachear", url, err); })
+        )
+      )
+    )
+  );
+  self.skipWaiting();
+});
+
+self.addEventListener("activate", event => {
+  event.waitUntil(
+    caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))))
+  );
+  self.clients.claim();
+});
+
+self.addEventListener("fetch", event => {
+  if(event.request.method !== "GET") return;
+  event.respondWith(
+    fetch(event.request)
+      .then(response => {
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy)).catch(()=>{});
+        return response;
+      })
+      .catch(() => caches.match(event.request).then(response => response || caches.match("./login.html")))
+  );
+});

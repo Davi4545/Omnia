@@ -8,7 +8,8 @@
 <link href="./icon-192.png" rel="icon"/>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:radial-gradient(900px 520px at 15% 5%, rgba(155,123,255,.14), transparent 60%),radial-gradient(800px 520px at 85% 10%, rgba(98,168,255,.12), transparent 55%),#0b0f14;color:#e7eefc;min-height:100vh;}
+  /* fundo/cor/fonte deste body são controlados pelo tema da loja em ondis-premium.css (regra !important) */
+  body{min-height:100vh;}
   header{position:sticky;top:0;z-index:10;background:rgba(11,15,20,.85);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.10);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
   .brand h1{font-size:18px;font-weight:900;}
   .brand .sub{font-size:12px;color:#9db0d0;}
@@ -51,12 +52,22 @@
   .storesChk label{display:inline-flex;align-items:center;gap:4px;font-size:12px;background:rgba(255,255,255,.05);padding:3px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.1);cursor:pointer;}
   .modalBack{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:flex-start;justify-content:center;overflow-y:auto;padding:24px 14px;}
   .modalBack.show{display:flex;}
-  .modalCx{background:#0f141c;border:1px solid rgba(255,255,255,.12);border-radius:18px;max-width:560px;width:100%;padding:22px;margin:auto;}
+  .modalCx{background:var(--ondis-surface,#0f141c);color:var(--ondis-text,#e7eefc);border:1px solid var(--ondis-line,rgba(255,255,255,.12));border-radius:18px;max-width:560px;width:100%;padding:22px;margin:auto;box-shadow:var(--ondis-shadow-lg,none);}
+  .modalModulos{max-width:620px;}
+  .mmHead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px;}
+  .mmHead h2{font-size:18px;font-weight:900;}
+  .mmPresets{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:4px;}
+  .mmList{max-height:52vh;overflow:auto;padding-right:4px;}
+  .mmGroup{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ondis-muted,#9db0d0);margin:14px 0 6px;font-weight:800;}
+  .mmRow{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border:1px solid var(--ondis-line,rgba(255,255,255,.1));border-radius:12px;margin-bottom:6px;cursor:pointer;background:var(--ondis-surface-soft,rgba(255,255,255,.04));}
+  .mmRow:hover{border-color:color-mix(in srgb,var(--ondis-primary,#2457e6) 40%,var(--ondis-line,rgba(255,255,255,.1)));}
+  .mmRow input{margin-top:3px;width:18px;height:18px;flex:0 0 auto;accent-color:var(--ondis-primary,#2457e6);cursor:pointer;}
+  .mmRow b{display:block;font-size:14px;}
+  .mmRow span{display:block;font-size:12px;color:var(--ondis-muted,#9db0d0);margin-top:2px;}
+  .mmFoot{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid var(--ondis-line,rgba(255,255,255,.1));}
 </style>
 <link href="./ondis-premium.css" rel="stylesheet"/>
 <script src="./ondis-premium.js"></script>
-<link rel="stylesheet" href="./ondis-v9.css">
-<script src="./ondis-v9.js" defer></script>
 </head>
 <body>
 
@@ -118,7 +129,7 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut, sendPasswordResetEmail }
     from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-  import { getFirestore, collection, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc, query, where, addDoc }
+  import { getFirestore, collection, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc, deleteField, query, where, addDoc }
     from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -224,13 +235,15 @@
         <td><b>${l.name||"—"}</b></td>
         <td><span class="tag code">${l.code||"—"}</span></td>
         <td>${qtd} usuário(s)</td>
+        <td>${modulosResumo(l)}</td>
         <td>
+          <button class="btn purple" onclick="abrirModulos('${l.id}')">🧩 Módulos</button>
           <button class="btn" onclick="verUsuariosDaLoja('${l.id}')">👥 Ver usuários</button>
           <button class="btn bad" onclick="excluirLoja('${l.id}','${(l.name||"").replace(/'/g,"")}')">Excluir loja</button>
         </td>
       </tr>`;
     }).join("");
-    wrap.innerHTML = `<table><thead><tr><th>Loja</th><th>Código</th><th>Usuários</th><th>Ações</th></tr></thead><tbody>${rows}</tbody></table>`;
+    wrap.innerHTML = `<table><thead><tr><th>Loja</th><th>Código</th><th>Usuários</th><th>Módulos</th><th>Ações</th></tr></thead><tbody>${rows}</tbody></table>`;
   }
 
   function renderUsuarios(){
@@ -317,6 +330,103 @@
     showLoading("Excluindo...");
     try{ await deleteDoc(doc(db,"users",uid)); await carregarTudo(); }
     catch(e){ console.error(e); alert(msgErro(e,"concluir")); hideLoading(); }
+  };
+
+  // ===== MÓDULOS LIBERADOS POR LOJA =====
+  // Fica em stores/{loja}.modules. Loja sem esse campo = tudo liberado.
+  let MOD_LOJA_ID = null;
+
+  function modulosResumo(loja){
+    const M = window.ONDIS_MODULES;
+    if(!M) return "—";
+    if(!M.hasConfig(loja.modules)){
+      return '<span class="tag good" title="Sem restrição: a loja acessa todas as janelas">Tudo liberado</span>';
+    }
+    const ef = M.effective(loja.modules);
+    const lista = M.list();
+    const ligados = lista.filter(m => ef[m.id]);
+    const nomes = ligados.map(m => m.label).join(", ") || "nenhum";
+    return '<span class="tag" title="' + nomes + '">' + ligados.length + ' de ' + lista.length + ' módulos</span>';
+  }
+
+  function renderListaModulos(ef){
+    const M = window.ONDIS_MODULES;
+    const grupos = { painel:"Painel principal", modulos:"Módulos / janelas" };
+    let html = "";
+    ["painel","modulos"].forEach(g=>{
+      html += '<div class="mmGroup">' + grupos[g] + '</div>';
+      M.list().filter(m => m.group === g).forEach(m=>{
+        html += '<label class="mmRow"><input type="checkbox" data-mod="' + m.id + '" ' + (ef[m.id] ? "checked" : "") + '/>'
+              + '<div><b>' + m.label + '</b><span>' + m.desc + '</span></div></label>';
+      });
+    });
+    document.getElementById("mmList").innerHTML = html;
+  }
+
+  window.abrirModulos = function(lojaId){
+    const loja = LOJAS.find(l => l.id === lojaId);
+    if(!loja) return;
+    const M = window.ONDIS_MODULES;
+    if(!M){ alert("Não foi possível carregar a lista de módulos. Recarregue a página (Ctrl+Shift+R)."); return; }
+    MOD_LOJA_ID = lojaId;
+    const box = document.getElementById("modalModulos");
+    box.querySelector(".mmTitulo").textContent = "🧩 Módulos de " + (loja.name || loja.code);
+    box.querySelector(".mmSub").textContent = M.hasConfig(loja.modules)
+      ? "Marque o que esta loja pode usar. O que ficar desmarcado some do menu dela."
+      : "Esta loja ainda não tem restrições (tudo liberado). Ao salvar, só ficará liberado o que estiver marcado.";
+    renderListaModulos(M.effective(loja.modules));
+    box.classList.add("show");
+  };
+
+  window.fecharModulos = function(){
+    document.getElementById("modalModulos").classList.remove("show");
+    MOD_LOJA_ID = null;
+  };
+
+  window.presetModulos = function(tipo){
+    const M = window.ONDIS_MODULES;
+    const ef = {};
+    M.list().forEach(m=>{
+      if(tipo === "all") ef[m.id] = true;
+      else if(tipo === "none") ef[m.id] = false;
+      else if(tipo === "crm") ef[m.id] = (m.id === "crm");
+      else if(tipo === "painel") ef[m.id] = (m.group === "painel");
+    });
+    renderListaModulos(ef);
+  };
+
+  window.salvarModulos = async function(){
+    if(!MOD_LOJA_ID) return;
+    const M = window.ONDIS_MODULES;
+    const marcados = {};
+    document.querySelectorAll("#mmList input[data-mod]").forEach(i=>{ marcados[i.dataset.mod] = i.checked; });
+    const mapa = M.sanitize(marcados);
+    if(!Object.values(mapa).some(Boolean) &&
+       !confirm("Nenhum módulo marcado: a loja ficará sem acesso a nenhuma janela (administradores ainda verão o botão Gerenciar). Confirma?")) return;
+    showLoading("Salvando módulos...");
+    try{
+      await updateDoc(doc(db,"stores",MOD_LOJA_ID), { modules: mapa, modulesUpdatedAt: new Date().toISOString() });
+      const l = LOJAS.find(x => x.id === MOD_LOJA_ID);
+      if(l) l.modules = mapa;
+      hideLoading();
+      fecharModulos();
+      renderLojas();
+    }catch(e){ console.error(e); hideLoading(); alert(msgErro(e, "salvar os módulos da loja")); }
+  };
+
+  // Volta ao comportamento original: remove o campo e a loja acessa tudo.
+  window.liberarTudoSemRestricao = async function(){
+    if(!MOD_LOJA_ID) return;
+    if(!confirm("Remover todas as restrições desta loja? Ela voltará a acessar TODAS as janelas (inclusive as que forem criadas no futuro).")) return;
+    showLoading("Removendo restrições...");
+    try{
+      await updateDoc(doc(db,"stores",MOD_LOJA_ID), { modules: deleteField(), modulesUpdatedAt: new Date().toISOString() });
+      const l = LOJAS.find(x => x.id === MOD_LOJA_ID);
+      if(l) delete l.modules;
+      hideLoading();
+      fecharModulos();
+      renderLojas();
+    }catch(e){ console.error(e); hideLoading(); alert(msgErro(e, "remover as restrições da loja")); }
   };
 
   // Ver usuários de uma loja específica
@@ -469,6 +579,30 @@
     </div>
     <p class="mulSub hint" style="text-align:left;padding:0 0 14px"></p>
     <div class="mulBody" style="max-height:60vh;overflow:auto"></div>
+  </div>
+</div>
+
+<!-- MODAL MÓDULOS DA LOJA -->
+<div class="modalBack" id="modalModulos">
+  <div class="modalCx modalModulos">
+    <div class="mmHead">
+      <h2 class="mmTitulo">🧩 Módulos da loja</h2>
+      <button class="btn" onclick="fecharModulos()">✕</button>
+    </div>
+    <p class="mmSub hint" style="text-align:left;padding:0 0 10px"></p>
+    <div class="mmPresets">
+      <button class="btn" onclick="presetModulos('all')">Marcar todos</button>
+      <button class="btn" onclick="presetModulos('none')">Desmarcar todos</button>
+      <button class="btn" onclick="presetModulos('crm')">Só CRM</button>
+      <button class="btn" onclick="presetModulos('painel')">Só painel (sem módulos extras)</button>
+    </div>
+    <div class="mmList" id="mmList"></div>
+    <div class="mmFoot">
+      <button class="btn warn" onclick="liberarTudoSemRestricao()">Remover restrições</button>
+      <span style="flex:1"></span>
+      <button class="btn" onclick="fecharModulos()">Cancelar</button>
+      <button class="btn good" onclick="salvarModulos()">Salvar</button>
+    </div>
   </div>
 </div>
 

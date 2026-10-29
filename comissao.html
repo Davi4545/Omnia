@@ -8,7 +8,8 @@
 <link href="./icon-192.png" rel="icon"/>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:radial-gradient(900px 520px at 15% 5%, rgba(41,224,122,.12), transparent 60%),radial-gradient(800px 520px at 85% 10%, rgba(255,209,102,.10), transparent 55%),#0b0f14;color:#e7eefc;min-height:100vh;}
+  /* fundo/cor/fonte deste body são controlados pelo tema da loja em ondis-premium.css (regra !important) */
+  body{min-height:100vh;}
   header{position:sticky;top:0;z-index:10;background:rgba(11,15,20,.85);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.10);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
   .brand h1{font-size:18px;font-weight:900;}
   .brand .sub{font-size:12px;color:#9db0d0;}
@@ -54,8 +55,6 @@
 </style>
 <link href="./ondis-premium.css" rel="stylesheet"/>
 <script src="./ondis-premium.js"></script>
-<link rel="stylesheet" href="./ondis-v9.css">
-<script src="./ondis-v9.js" defer></script>
 </head>
 <body>
 
@@ -177,7 +176,10 @@
     if(!STORE_ID){ hideLoading(); document.getElementById("ctxInfo").textContent="Nenhuma loja"; return; }
 
     LOJA_NOME=STORE_ID;
-    try{ const ls=await getDoc(doc(db,"stores",STORE_ID)); if(ls.exists()) LOJA_NOME=ls.data().name||ls.data().code||STORE_ID; }catch(e){}
+    let LOJA_DATA=null;
+    try{ const ls=await getDoc(doc(db,"stores",STORE_ID)); if(ls.exists()){ LOJA_DATA=ls.data(); LOJA_NOME=LOJA_DATA.name||LOJA_DATA.code||STORE_ID; } }catch(e){}
+    // Módulo liberado para esta loja? (controlado pelo super admin)
+    if(window.ONDIS_MODULES && !window.ONDIS_MODULES.guardPage(LOJA_DATA,"comissao",prof.role)){ hideLoading(); return; }
     document.getElementById("ctxInfo").textContent="Loja: "+LOJA_NOME+" · "+(prof.name||prof.email);
     document.getElementById("roleChip").textContent=prof.role==="admin"?"👑 Admin":(prof.role==="superadmin"?"⚡ Super":"🧑 Vendedor");
 
