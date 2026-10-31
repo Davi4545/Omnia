@@ -10,7 +10,10 @@
     neon: "carbon",
     textured: "carbon",
     purple: "amethyst",
-    sunset: "amethyst"
+    sunset: "amethyst",
+    vintage: "executive",
+    ultra: "executive",
+    "neon-tokyo": "executive"
   };
 
   const DEFAULT_CUSTOM = {
@@ -63,7 +66,7 @@
     root.style.setProperty("--ondis-custom-background", backgroundValue(custom));
 
     const meta = document.querySelector('meta[name="theme-color"]');
-    if(meta) meta.content = config.theme === "carbon" ? "#0b111a" : (config.theme === "ondis" ? "#08090c" : (config.theme === "custom" ? custom.background : "#f5f7fb"));
+    if(meta) meta.content = config.theme === "carbon" ? "#0b111a" : (config.theme === "ondis" ? "#0b0e13" : (config.theme === "custom" ? custom.background : "#f5f7fb"));
     if(persist !== false){
       try{ localStorage.setItem(CACHE_KEY, JSON.stringify(config)); }catch(e){}
     }
@@ -87,72 +90,143 @@
   apply(readCache() || { theme: "executive", custom: DEFAULT_CUSTOM }, false);
 })();
 
+/* ONDIS V8 — Command Center shortcut (Ctrl/Cmd + K) */
+(function(){
+  "use strict";
+  if(window.__ONDIS_COMMAND_V8__) return; window.__ONDIS_COMMAND_V8__=true;
+  const items=[
+    ["⚡","Frente de Loja","Venda rápida, abertura e fechamento","./frente-loja.html?view=venda"],
+    ["▣","ONDIS Finance","Operação, estoque, financeiro e DRE","./caixa.html"],
+    ["◎","CRM Simplificado","Clientes e oportunidades do dia","./crm.html"],
+    ["◉","CRM Completo","Pipeline, métricas e relacionamento","./crm-completo.html?v=10"],
+    ["🛍","Catálogo","Produtos, vitrine e estoque","./catalogo.html"],
+    ["◷","Ponto","Jornada e registros da equipe","./ponto.html"],
+    ["🏆","Gamificação & Ranking","Liga ONDIS, metas e conquistas","./index.html#seller"],
+    ["✦","Agente ONDIS IA","Perguntas e inteligência da operação","./caixa.html?view=agente"],
+    ["◫","Financeiro & DRE","Lucro, caixa, ponto de equilíbrio","./caixa.html?view=financeiro"]
+  ];
+  function build(){
+    if(document.getElementById("ondisCommandOverlay")) return;
+    const overlay=document.createElement("div"); overlay.id="ondisCommandOverlay";
+    overlay.innerHTML='<div class="ondisCommand" role="dialog" aria-modal="true" aria-label="Busca rápida ONDIS"><div class="ondisCommandHead"><b>⌕</b><input id="ondisCommandInput" autocomplete="off" placeholder="Buscar módulo ou ação…" aria-label="Buscar módulo ou ação"><kbd>ESC</kbd></div><div class="ondisCommandList" id="ondisCommandList"></div><div class="ondisCommandFoot"><span>↑↓ navegar · Enter abrir</span><span>ONDIS Command Center</span></div></div>';
+    document.body.appendChild(overlay);
+    let hint=null;
+    const topbar=document.querySelector(".contentTopbar");
+    if(topbar){
+      hint=document.createElement("button"); hint.type="button"; hint.className="ondisSearchIcon"; hint.innerHTML='⌕'; hint.title="Busca rápida (Ctrl K)"; hint.setAttribute("aria-label","Abrir busca rápida");
+      const hamb=topbar.querySelector(".hamb"); hamb?.insertAdjacentElement("afterend",hint);
+    }
+    const input=overlay.querySelector("#ondisCommandInput"),list=overlay.querySelector("#ondisCommandList"); const avail=()=>items.filter(it=>!window.ONDIS_MODULES||window.ONDIS_MODULES.hrefAllowed(it[3])); let active=0, filtered=avail();
+    function render(){list.innerHTML="";filtered.forEach((it,i)=>{const b=document.createElement("button");b.type="button";b.className="ondisCommandItem"+(i===active?" active":"");b.innerHTML='<span class="ondisCommandIcon">'+it[0]+'</span><span><strong>'+it[1]+'</strong><small>'+it[2]+'</small></span><span>↗</span>';b.addEventListener("click",()=>location.href=it[3]);list.appendChild(b)});if(!filtered.length)list.innerHTML='<div style="padding:24px;text-align:center;color:var(--ui2-muted);font-size:12px">Nenhum módulo encontrado.</div>'}
+    function open(){overlay.classList.add("open");input.value="";filtered=avail();active=0;render();setTimeout(()=>input.focus(),30)} function close(){overlay.classList.remove("open")}
+    input.addEventListener("input",()=>{const q=input.value.toLowerCase().trim();filtered=avail().filter(x=>(x[1]+" "+x[2]).toLowerCase().includes(q));active=0;render()});
+    input.addEventListener("keydown",e=>{if(e.key==="ArrowDown"){e.preventDefault();active=Math.min(active+1,filtered.length-1);render()}else if(e.key==="ArrowUp"){e.preventDefault();active=Math.max(active-1,0);render()}else if(e.key==="Enter"&&filtered[active])location.href=filtered[active][3];else if(e.key==="Escape")close()});
+    overlay.addEventListener("mousedown",e=>{if(e.target===overlay)close()}); if(hint)hint.addEventListener("click",open);
+    document.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();overlay.classList.contains("open")?close():open()}else if(e.key==="Escape"&&overlay.classList.contains("open"))close()});
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",build);else build();
+})();
+
+/* ONDIS V12.1 — global identity upgrade */
+(function(){
+  'use strict';
+  function cleanupThemeUI(){
+    document.querySelectorAll('[data-theme-value="ultra"],[data-theme-value="neon-tokyo"],[data-theme-value="vintage"]').forEach(el=>el.remove());
+    try{
+      const raw=JSON.parse(localStorage.getItem('ondis_visual_config_v1')||'null');
+      if(raw && ['ultra','neon-tokyo','vintage'].includes(raw.theme)){ raw.theme='executive'; localStorage.setItem('ondis_visual_config_v1',JSON.stringify(raw)); window.ONDIS_THEME?.apply(raw,true); }
+    }catch(e){}
+  }
+  function modernBrand(){
+    const selectors=['.sidebar .brand','.sidebarBrand','.mainSidebar .brand','.crm-brand','.caixa-brand'];
+    const seen=new Set();
+    selectors.flatMap(sel=>[...document.querySelectorAll(sel)]).forEach(t=>{
+      if(!t || seen.has(t)) return; seen.add(t);
+      if(t.querySelector('.ondisBrandModern')) return;
+      const close=t.querySelector('button,.sidebarClose,.collapseBtn');
+      const wrap=document.createElement('div'); wrap.className='ondisBrandModern';
+      wrap.innerHTML='<img class="ondisBrandSymbol" src="./ondis-symbol.png?v=12.2" alt="Símbolo ONDIS"><span class="ondisBrandCopy"><b>ONDIS</b><small>Sua loja</small></span>';
+      [...t.children].forEach(x=>{if(x!==close)x.style.display='none'}); t.insertBefore(wrap,close||null);
+    });
+  }
+  function fav(){let l=document.querySelector('link[rel~="icon"]');if(!l){l=document.createElement('link');l.rel='icon';document.head.appendChild(l)}l.href='./favicon.png?v=12.2'}
+  function init(){cleanupThemeUI();modernBrand();fav()}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+
 /* =====================================================================
-   ONDIS_MODULES — controle de módulos liberados por loja
+   ONDIS_MODULES — janelas liberadas por loja
    ---------------------------------------------------------------------
-   O super admin define, para cada loja, quais janelas ela pode usar.
-   O mapa fica em  stores/{lojaId}.modules  =  { crm:true, ponto:false, ... }
+   O super admin define, para cada loja, o que ela pode usar. O mapa fica
+   em  stores/{lojaId}.modules  =  { crm:true, ponto:false, ... }
 
-   Regras:
-   • Loja SEM mapa (nunca configurada)  -> tudo liberado (compatível com
-     as lojas que já existem hoje).
-   • Loja COM mapa -> só entra o que estiver explicitamente `true`.
-     (módulo novo que aparecer no futuro nasce DESLIGADO nessas lojas.)
-   • Super admin sempre enxerga tudo (itens desligados aparecem apagados
-     com um cadeado, só para ele).
+   • Loja SEM mapa (nunca configurada) -> tudo liberado (lojas atuais
+     continuam exatamente como estão).
+   • Loja COM mapa -> só entra o que estiver explicitamente `true`
+     (módulo criado no futuro nasce DESLIGADO nessas lojas).
+   • Super admin enxerga tudo (itens desligados aparecem apagados com 🔒).
 
-   ATENÇÃO: isto controla a interface. Para impedir também o acesso
-   direto aos dados, as Regras de Segurança do Firestore precisam
-   espelhar esta configuração (ver orientações entregues junto).
+   Isto controla a INTERFACE. Para barrar também o acesso direto aos
+   dados, as Regras do Firestore precisam espelhar esta configuração.
    ===================================================================== */
 (function(){
   "use strict";
 
+  // soft:true  = página sem login próprio -> bloqueada pelo cache local gravado no painel
   const MODULES = [
-    { id:"operacao",       label:"Operação (chão de loja)", desc:"Lista da vez, atendimentos e registro de vendas", group:"painel",  nav:["tabOps"] },
-    { id:"dados",          label:"Dados",                   desc:"Histórico de atendimentos e exportações",         group:"painel",  nav:["tabDados"] },
-    { id:"metas",          label:"Metas",                   desc:"Metas mensais da loja e dos vendedores",          group:"painel",  nav:["tabMetas"] },
-    { id:"metasRank",      label:"Ranking de Metas",        desc:"Corrida de metas da equipe",                      group:"painel",  nav:["tabMetasRank"] },
-    { id:"naoConvertidos", label:"Não Convertidos",         desc:"Análise dos atendimentos sem venda",              group:"painel",  nav:["tabNoConv"] },
-    { id:"dashboard",      label:"Dashboard",               desc:"Gráficos e indicadores",                          group:"painel",  nav:["tabDashboard"] },
-    { id:"arena",          label:"Arena",                   desc:"Arena de resultados do vendedor",                 group:"painel",  nav:["tabSeller"] },
-    { id:"ranking",        label:"Ranking",                 desc:"Ranking geral de vendedores",                     group:"painel",  nav:["btnRanking"] },
-    { id:"crm",            label:"CRM",                     desc:"Carteira de clientes, funil e disparos",          group:"modulos", nav:["btnCRM"],       page:"crm.html" },
-    { id:"ponto",          label:"Ponto",                   desc:"Controle de ponto da equipe",                     group:"modulos", nav:["btnPonto"],     page:"ponto.html" },
-    { id:"catalogo",       label:"Catálogo",                desc:"Vitrine de produtos e link para clientes",        group:"modulos", nav:["btnCatalogo"],  page:"catalogo.html" },
-    { id:"comissao",       label:"Comissão",                desc:"Cálculo de comissão por faixas",                  group:"modulos", nav:["btnComissao"],  page:"comissao.html" }
+    { id:"operacao",       label:"Operação (chão de loja)", desc:"Lista da vez, fila e registro de atendimentos",     group:"painel",  nav:["tabOps"] },
+    { id:"frenteLoja",     label:"Frente de Loja",          desc:"Venda rápida, abertura e fechamento de caixa",       group:"painel",  nav:["btnFrenteLoja"],      page:"frente-loja.html" },
+    { id:"dados",          label:"Dados",                   desc:"Histórico de atendimentos e exportações",            group:"painel",  nav:["tabDados"] },
+    { id:"metas",          label:"Metas",                   desc:"Metas mensais da loja e dos vendedores",             group:"painel",  nav:["tabMetas"] },
+    { id:"metasRank",      label:"Ranking de Metas",        desc:"Corrida de metas da equipe",                         group:"painel",  nav:["tabMetasRank"] },
+    { id:"naoConvertidos", label:"Não Convertidos",         desc:"Análise dos atendimentos sem venda",                 group:"painel",  nav:["tabNoConv"] },
+    { id:"dashboard",      label:"Dashboard",               desc:"Gráficos e indicadores",                             group:"painel",  nav:["tabDashboard"] },
+    { id:"liga",           label:"Liga ONDIS",              desc:"Gamificação, selos e arena do vendedor",             group:"painel",  nav:["tabSeller"],          page:"liga-ondis.html", soft:true },
+    { id:"ranking",        label:"Ranking",                 desc:"Ranking geral de vendedores",                        group:"painel",  nav:["btnRanking"] },
+    { id:"crm",            label:"CRM Simplificado",        desc:"Clientes e oportunidades do dia",                    group:"modulos", nav:["btnCRMSimples"],      page:"crm.html" },
+    { id:"crmCompleto",    label:"CRM Completo",            desc:"Pipeline, métricas e relacionamento",                group:"modulos", nav:["btnCRMCompleto"],     page:"crm-completo.html", soft:true },
+    { id:"ponto",          label:"Ponto",                   desc:"Jornada e registros da equipe",                      group:"modulos", nav:["btnPonto"],           page:"ponto.html" },
+    { id:"catalogo",       label:"Catálogo",                desc:"Produtos, vitrine e link para clientes",             group:"modulos", nav:["btnCatalogo"],        page:"catalogo.html" },
+    { id:"caixa",          label:"ONDIS Finance",           desc:"PDV, fiscal, estoque, financeiro e DRE",             group:"modulos", nav:["btnCaixa"],           page:"caixa.html" },
+    { id:"comissao",       label:"Comissão",                desc:"Cálculo de comissão por faixas",                     group:"modulos", nav:["btnComissao"],        page:"comissao.html" },
+    { id:"comprasIntel",   label:"Compras Inteligentes",    desc:"Sugestão de reposição e compras",                    group:"modulos", nav:["btnComprasIntel"],    page:"compras-inteligentes.html", soft:true },
+    { id:"collections",    label:"Collections",             desc:"Coleções e vitrines",                                group:"modulos", nav:["btnCollections"],     page:"collections.html", soft:true },
+    { id:"marketing",      label:"Marketing Intelligence",  desc:"Campanhas e inteligência de marketing",              group:"modulos", nav:["btnMarketingIntel"],  page:"marketing.html", soft:true },
+    { id:"fidelidade",     label:"ONDIS Club",              desc:"Programa de fidelidade e cashback",                  group:"modulos", nav:["btnFidelidade"],      page:"fidelidade.html", soft:true },
+    { id:"equipe360",      label:"Equipe 360°",             desc:"Visão completa da equipe",                           group:"modulos", nav:["btnEquipe360"],       page:"equipe-360.html", soft:true },
+    { id:"auditoria",      label:"Auditoria & Perdas",      desc:"Controle de perdas e divergências",                  group:"modulos", nav:["btnAuditoria"],       page:"auditoria.html", soft:true },
+    { id:"omnichannel",    label:"Omnichannel",             desc:"Integração de canais de venda",                      group:"modulos", nav:["btnOmnichannel"],     page:"omnichannel.html", soft:true },
+    { id:"autopilot",      label:"ONDIS Autopilot",         desc:"Automações e agente de IA",                          group:"modulos", nav:["btnAutopilot"],       page:"autopilot.html", soft:true }
   ];
 
-  const BY_ID = {};
-  MODULES.forEach(m => { BY_ID[m.id] = m; });
+  const BY_ID = {}; MODULES.forEach(m => { BY_ID[m.id] = m; });
+  const BY_PAGE = {}; MODULES.forEach(m => { if(m.page) BY_PAGE[m.page] = m; });
 
-  // abas do painel principal (index.html) -> módulo
+  // abas do painel principal (index.html)
   const TAB_ORDER = ["ops","dados","metas","metasRank","noConv","dashboard","seller"];
-  const TAB_TO_MODULE = { ops:"operacao", dados:"dados", metas:"metas", metasRank:"metasRank", noConv:"naoConvertidos", dashboard:"dashboard", seller:"arena" };
+  const TAB_TO_MODULE = { ops:"operacao", dados:"dados", metas:"metas", metasRank:"metasRank", noConv:"naoConvertidos", dashboard:"dashboard", seller:"liga" };
   const TAB_ID = { ops:"tabOps", dados:"tabDados", metas:"tabMetas", metasRank:"tabMetasRank", noConv:"tabNoConv", dashboard:"tabDashboard", seller:"tabSeller" };
   const VIEW_IDS = ["viewOps","viewDados","viewMetas","viewMetasRank","viewNoConv","viewDashboard","viewSeller"];
 
-  let current = null;       // último mapa aplicado
-  let currentRole = "";
-  let redirecting = false;
+  const CACHE = "ondis_modules_v1";
+  let current = null, currentRole = "", redirecting = false;
 
-  function hasConfig(map){
-    return !!map && typeof map === "object" && !Array.isArray(map) && Object.keys(map).length > 0;
+  function hasConfig(map){ return !!map && typeof map === "object" && !Array.isArray(map) && Object.keys(map).length > 0; }
+  function isEnabled(map, id){ return hasConfig(map) ? map[id] === true : true; }
+  function effective(map){ const o = {}; MODULES.forEach(m => { o[m.id] = isEnabled(map, m.id); }); return o; }
+  function sanitize(map){ const o = {}; MODULES.forEach(m => { o[m.id] = !!(map && map[m.id] === true); }); return o; }
+
+  function writeCache(map, role){
+    try{
+      localStorage.setItem(CACHE, JSON.stringify({ map: hasConfig(map) ? sanitize(map) : null, role: role || "", t: Date.now() }));
+    }catch(e){}
   }
-  function isEnabled(map, id){
-    if(!hasConfig(map)) return true;
-    return map[id] === true;
-  }
-  function effective(map){
-    const out = {};
-    MODULES.forEach(m => { out[m.id] = isEnabled(map, m.id); });
-    return out;
-  }
-  // Mapa "limpo" para gravar: só ids conhecidos, sempre booleanos.
-  function sanitize(map){
-    const out = {};
-    MODULES.forEach(m => { out[m.id] = !!(map && map[m.id] === true); });
-    return out;
+  function readCache(){
+    try{
+      const c = JSON.parse(localStorage.getItem(CACHE) || "null");
+      if(!c || (Date.now() - (c.t || 0)) > 24 * 3600 * 1000) return null; // cache velho é ignorado
+      return c;
+    }catch(e){ return null; }
   }
 
   function tabAllowed(tab){
@@ -160,17 +234,9 @@
     const id = TAB_TO_MODULE[tab];
     return !id || isEnabled(current, id);
   }
-  function anyTabAllowed(){
-    return TAB_ORDER.some(tabAllowed);
-  }
-  function fallbackTab(){
-    for(const t of TAB_ORDER){ if(tabAllowed(t)) return t; }
-    return null;
-  }
-
-  function release(){
-    document.documentElement.classList.remove("modsPending");
-  }
+  function anyTabAllowed(){ return TAB_ORDER.some(tabAllowed); }
+  function fallbackTab(){ for(const t of TAB_ORDER){ if(tabAllowed(t)) return t; } return null; }
+  function release(){ document.documentElement.classList.remove("modsPending"); }
 
   function showEmptyNote(show){
     const wrap = document.querySelector("main.wrap");
@@ -186,13 +252,10 @@
         wrap.insertBefore(note, wrap.firstChild);
       }
       note.style.display = "block";
-    } else if(note){
-      note.style.display = "none";
-    }
+    } else if(note){ note.style.display = "none"; }
   }
 
-  // Chamado no início de setTab() do index.html.
-  // Retorna a aba a abrir (a própria, ou uma permitida) ou false se não há nenhuma.
+  // Chamado no início de setTab() do index.html: devolve a aba a abrir, ou false se não há nenhuma.
   function guardTab(tab){
     if(tabAllowed(tab)){ showEmptyNote(false); return tab; }
     const alt = fallbackTab();
@@ -202,9 +265,9 @@
   }
 
   function applyNav(map, role){
-    current = map;
-    currentRole = role || "";
+    current = map; currentRole = role || "";
     const isSuper = currentRole === "superadmin";
+    writeCache(map, currentRole);
 
     MODULES.forEach(m => {
       const on = isEnabled(map, m.id);
@@ -218,9 +281,7 @@
       });
     });
 
-    // rótulo "Módulos": some se não sobrou nenhum botão visível no grupo
-    const group = document.getElementById("modulosGroup");
-    const label = document.getElementById("modulosLabel");
+    const group = document.getElementById("modulosGroup"), label = document.getElementById("modulosLabel");
     if(group && label){
       const any = Array.prototype.some.call(group.children, b => !b.classList.contains("modHidden") && b.style.display !== "none");
       label.classList.toggle("modHidden", !any);
@@ -231,14 +292,9 @@
         showEmptyNote(true);
         // vendedor (sem menu de administração) vai direto ao 1º módulo com página própria
         const pm = MODULES.find(m => m.page && isEnabled(map, m.id));
-        if(pm && currentRole !== "admin" && !redirecting){
-          redirecting = true;
-          location.replace("./" + pm.page);
-          return;
-        }
+        if(pm && currentRole !== "admin" && !redirecting){ redirecting = true; location.replace("./" + pm.page); return; }
       } else {
         showEmptyNote(false);
-        // se a aba aberta foi desligada, abre a primeira permitida
         const active = document.querySelector(".sideNav .navItem.active");
         if(active && active.classList.contains("modHidden")){
           const el = document.getElementById(TAB_ID[fallbackTab()]);
@@ -249,54 +305,60 @@
     release();
   }
 
-  // ---------- bloqueio de páginas inteiras (crm, ponto, comissão, catálogo) ----------
+  // ---------- bloqueio de páginas inteiras ----------
   function blockPage(id, opts){
     opts = opts || {};
     if(document.getElementById("ondisModBlock")) return;
-    const m = BY_ID[id];
-    const name = m ? m.label : "Este módulo";
-    const wrap = document.createElement("div");
-    wrap.id = "ondisModBlock";
-    wrap.className = "ondisModBlock";
-    const card = document.createElement("div");
-    card.className = "ondisModBlockCard";
-    const ico = document.createElement("div");
-    ico.className = "ondisModBlockIco";
-    ico.textContent = "🔒";
-    const h = document.createElement("h2");
-    const p = document.createElement("p");
-    if(opts.publicView){
-      h.textContent = "Página indisponível";
-      p.textContent = "Este catálogo não está disponível no momento.";
-    } else {
-      h.textContent = name + " não está liberado";
-      p.textContent = "O módulo " + name + " não faz parte do plano desta loja. Para contratar, fale com o administrador do ONDIS.";
-    }
+    const m = BY_ID[id], name = m ? m.label : "Este módulo";
+    const wrap = document.createElement("div"); wrap.id = "ondisModBlock"; wrap.className = "ondisModBlock";
+    const card = document.createElement("div"); card.className = "ondisModBlockCard";
+    const ico = document.createElement("div"); ico.className = "ondisModBlockIco"; ico.textContent = "🔒";
+    const h = document.createElement("h2"), p = document.createElement("p");
+    if(opts.publicView){ h.textContent = "Página indisponível"; p.textContent = "Este catálogo não está disponível no momento."; }
+    else { h.textContent = name + " não está liberado"; p.textContent = "O módulo " + name + " não faz parte do plano desta loja. Para contratar, fale com o administrador do ONDIS."; }
     card.appendChild(ico); card.appendChild(h); card.appendChild(p);
     if(!opts.publicView){
-      const a = document.createElement("a");
-      a.className = "ondisModBlockBtn";
-      a.href = "./index.html";
-      a.textContent = "← Voltar ao ONDIS";
-      card.appendChild(a);
+      const a = document.createElement("a"); a.className = "ondisModBlockBtn"; a.href = "./index.html"; a.textContent = "← Voltar ao ONDIS"; card.appendChild(a);
     }
-    wrap.appendChild(card);
-    document.body.appendChild(wrap);
+    wrap.appendChild(card); document.body.appendChild(wrap);
   }
 
-  // true = pode usar a página; false = bloqueou (e já mostrou o aviso)
+  // true = pode usar; false = bloqueou (aviso já exibido). Falha de leitura => libera.
   function guardPage(storeData, id, role, opts){
     if(role === "superadmin") return true;
-    const map = storeData && storeData.modules;
-    if(isEnabled(map, id)) return true;
+    if(isEnabled(storeData && storeData.modules, id)) return true;
     blockPage(id, opts);
     return false;
   }
+
+  function fileOf(href){
+    const s = String(href || "").split("#")[0].split("?")[0];
+    return s.split("/").pop() || "index.html";
+  }
+  // Usado pelo Ctrl+K: o link aponta para algo que a loja pode usar?
+  function hrefAllowed(href){
+    const role = currentRole || (readCache() || {}).role || "";
+    if(role === "superadmin") return true;
+    const map = current !== null ? current : (readCache() || {}).map;
+    let m = BY_PAGE[fileOf(href)];
+    if(!m && /index\.html#seller/.test(String(href))) m = BY_ID.liga;
+    return !m || isEnabled(map, m.id);
+  }
+
+  // Páginas sem login próprio: bloqueio "suave" pelo cache gravado pelo painel.
+  function softGuard(){
+    const m = BY_PAGE[fileOf(location.pathname)];
+    if(!m || !m.soft) return;
+    const c = readCache();
+    if(!c || c.role === "superadmin") return;
+    if(!isEnabled(c.map, m.id)) blockPage(m.id);
+  }
+  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", softGuard); else softGuard();
 
   window.ONDIS_MODULES = {
     list(){ return MODULES.map(m => Object.assign({}, m)); },
     byId: BY_ID,
     isEnabled, effective, sanitize, hasConfig,
-    applyNav, guardTab, tabAllowed, guardPage, blockPage, release
+    applyNav, guardTab, tabAllowed, guardPage, blockPage, hrefAllowed, release
   };
 })();

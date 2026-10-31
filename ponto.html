@@ -248,7 +248,10 @@
       document.getElementById("roleChip").textContent=prof.role; return;
     }
     LOJA_NOME=STORE_ID;
-    try{ const ls=await getDoc(doc(db,"stores",STORE_ID)); if(ls.exists()) LOJA_NOME=ls.data().name||ls.data().code||STORE_ID; }catch(e){}
+    let LOJA_DATA=null;
+    try{ const ls=await getDoc(doc(db,"stores",STORE_ID)); if(ls.exists()){ LOJA_DATA=ls.data(); LOJA_NOME=LOJA_DATA.name||LOJA_DATA.code||STORE_ID; } }catch(e){}
+    // Módulo liberado para esta loja? (controlado pelo super admin)
+    if(window.ONDIS_MODULES && !window.ONDIS_MODULES.guardPage(LOJA_DATA,"ponto",prof.role)){ hideLoading(); return; }
     document.getElementById("ctxInfo").textContent="Loja: "+LOJA_NOME+" · "+(prof.name||prof.email);
     document.getElementById("roleChip").textContent=prof.role==="admin"?"👑 Admin":(prof.role==="superadmin"?"⚡ Super":"🧑 Vendedor");
     document.getElementById("saudacao").textContent = saudacaoTexto()+", "+(prof.name||"").split(" ")[0]+"! 👋";
