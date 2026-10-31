@@ -9,8 +9,7 @@
 <link href="./icon-192.png" rel="icon"/>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  /* fundo/cor/fonte deste body são controlados pelo tema da loja em ondis-premium.css (regra !important) */
-  body{min-height:100vh;display:grid;place-items:center;padding:20px;}
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:radial-gradient(900px 520px at 15% 5%, rgba(41,224,122,.12), transparent 60%),radial-gradient(800px 520px at 85% 10%, rgba(98,168,255,.12), transparent 55%),#0b0f14;color:#e7eefc;min-height:100vh;display:grid;place-items:center;padding:20px;}
   .box{width:100%;max-width:420px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);border-radius:20px;padding:36px 32px;box-shadow:0 24px 60px rgba(0,0,0,.40);}
   .logo{display:flex;align-items:center;gap:12px;margin-bottom:28px;}
   .logoIcon{width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);display:grid;place-items:center;font-weight:900;font-size:20px;color:#62a8ff;}
@@ -40,17 +39,19 @@
 </style>
 <link href="./ondis-premium.css" rel="stylesheet"/>
 <script src="./ondis-premium.js"></script>
+<link rel="stylesheet" href="./ondis-v9.css">
+<script src="./ondis-v9.js" defer></script>
 </head>
-<body class="loginPage">
+<body class="loginPage introPlaying">
 
 <div class="systemIntro" id="systemIntro" aria-label="Vídeo de abertura do ONDIS">
   <video id="introVideo" autoplay playsinline preload="auto" poster="./assets/ondis-abertura-poster.jpg">
-    <source src="./assets/ondis-abertura.mp4?v=4" type="video/mp4"/>
+    <source src="./assets/ondis-abertura.mp4?v=11" type="video/mp4"/>
   </video>
   <div class="introStartGate" id="introStartGate" hidden>
     <div class="introStartCard">
-      <button class="introStartButton" id="introStart" type="button">▶ Iniciar abertura com som</button>
-      <span>O vídeo será reproduzido completo, desde o início.</span>
+      <button class="introStartButton" id="introStart" type="button">▶ Entrar no ONDIS</button>
+      <span>A abertura será reproduzida em tela cheia com música.</span>
     </div>
   </div>
   <div class="introControls">
@@ -62,54 +63,56 @@
   (()=>{
     const intro = document.getElementById('systemIntro');
     const video = document.getElementById('introVideo');
-    const sound = document.getElementById('introSound');
-    const skip = document.getElementById('introSkip');
     const gate = document.getElementById('introStartGate');
-    const start = document.getElementById('introStart');
+    const startBtn = document.getElementById('introStart');
     let finished = false;
+    window.ONDIS_INTRO_DONE = false;
     const finish = ()=>{
       if(finished) return;
       finished = true;
+      window.ONDIS_INTRO_DONE = true;
+      document.body.classList.remove('introPlaying');
       intro.classList.add('isLeaving');
-      setTimeout(()=> intro.remove(), 600);
+      window.dispatchEvent(new CustomEvent('ondis:intro-ended'));
+      setTimeout(()=> intro.remove(), 520);
     };
     video.addEventListener('ended', finish);
-    video.addEventListener('error', finish);
-    skip.addEventListener('click', finish);
-    sound.addEventListener('click', async ()=>{
-      video.muted = !video.muted;
-      try{ await video.play(); }catch(e){}
-      sound.textContent = video.muted ? '🔊 Ativar som' : '🔇 Desativar som';
-    });
 
-    const playCompleteWithSound = async ()=>{
-      video.pause();
-      video.currentTime = 0;
-      video.defaultMuted = false;
-      video.muted = false;
-      video.volume = 1;
-      await video.play();
-      gate.hidden = true;
-      sound.hidden = false;
-      sound.textContent = '🔇 Desativar som';
-    };
+    // Se o vídeo falhar (arquivo ausente, rede, codec), NUNCA prender o usuário:
+    // pula a abertura e vai direto para o login.
+    let videoBroken = false;
+    video.addEventListener('error', ()=>{ videoBroken = true; finish(); });
+    const src = video.querySelector('source');
+    if(src) src.addEventListener('error', ()=>{ videoBroken = true; finish(); });
 
-    start.addEventListener('click', async ()=>{
-      try{ await playCompleteWithSound(); }
-      catch(e){ start.textContent = 'Tentar iniciar novamente'; }
-    });
-
-    // Alguns navegadores bloqueiam reprodução automática com áudio. Nesse caso,
-    // o vídeo permanece parado em 0:00 até o usuário iniciar, sem perder nenhum trecho.
-    requestAnimationFrame(async ()=>{
-      try{ await playCompleteWithSound(); }
-      catch(e){
-        video.pause();
-        try{ video.currentTime = 0; }catch(err){}
+    async function playWithSound(){
+      if(videoBroken){ finish(); return false; }
+      try{
+        video.currentTime = 0;
+        video.muted = false;
+        video.volume = 1;
+        await video.play();
+        gate.hidden = true;
+        return true;
+      }catch(error){
+        // Autoplay bloqueado: mostra o botão. Mas se o clique manual também
+        // falhar (vídeo inválido), entra direto em vez de travar.
+        if(gate.hidden === false){ finish(); return false; }
         gate.hidden = false;
-        sound.hidden = true;
+        return false;
       }
-    });
+    }
+    // Tenta iniciar com música. Navegadores que bloqueiam autoplay com áudio
+    // exibem um único botão de entrada; ao clicar, o vídeo começa do início com som.
+    requestAnimationFrame(playWithSound);
+    if(startBtn) startBtn.addEventListener('click', playWithSound);
+
+    // Botão "Pular abertura" — sempre funcional
+    const skipBtn = document.getElementById('introSkip');
+    if(skipBtn) skipBtn.addEventListener('click', ()=>{ try{ video.pause(); }catch(e){} finish(); });
+
+    // Cinto de segurança: se em 6s o vídeo não começou a rodar, libera o acesso
+    setTimeout(()=>{ if(!finished && (video.readyState < 2 || video.paused) && gate.hidden){ finish(); } }, 6000);
   })();
 </script>
 
@@ -173,10 +176,10 @@
   const db   = getFirestore(app);
 
   onAuthStateChanged(auth, async (user)=>{
-    if(user){
-      showLoading("Verificando acesso...");
-      await redirectByUser(user);
-    }
+    if(!user) return;
+    const continueLogin=async()=>{ showLoading("Verificando acesso..."); await redirectByUser(user); };
+    if(window.ONDIS_INTRO_DONE) await continueLogin();
+    else window.addEventListener('ondis:intro-ended', continueLogin, {once:true});
   });
 
   async function getProfile(uid){
@@ -284,6 +287,20 @@
     const loginVisible = document.getElementById("formLogin").style.display!=="none";
     if(loginVisible) window.fazerLogin(); else window.fazerCadastro();
   });
+
+  // Se veio de um link de convite (?codigo=XXX), abre direto na aba Cadastrar com o
+  // código preenchido e travado, pra não precisar ficar falando o código em voz alta.
+  (function aplicarLinkConvite(){
+    const params = new URLSearchParams(window.location.search);
+    const codigo = (params.get("codigo") || "").trim().toUpperCase();
+    if(!codigo) return;
+    window.switchTab("cadastro");
+    const campoCodigo = document.getElementById("cadCodigo");
+    campoCodigo.value = codigo;
+    campoCodigo.readOnly = true;
+    campoCodigo.style.opacity = "0.7";
+    document.getElementById("cadNome").focus();
+  })();
 </script>
 </body>
 </html>
