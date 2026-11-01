@@ -164,7 +164,8 @@
      continuam exatamente como estão).
    • Loja COM mapa -> só entra o que estiver explicitamente `true`
      (módulo criado no futuro nasce DESLIGADO nessas lojas).
-   • Super admin enxerga tudo (itens desligados aparecem apagados com 🔒).
+   • O que NÃO estiver marcado some para todos, inclusive para o super admin
+     (ele edita a lista no painel do Super Admin).
 
    Isto controla a INTERFACE. Para barrar também o acesso direto aos
    dados, as Regras do Firestore precisam espelhar esta configuração.
@@ -184,7 +185,7 @@
     { id:"liga",           label:"Liga ONDIS",              desc:"Gamificação, selos e arena do vendedor",             group:"painel",  nav:["tabSeller"],          page:"liga-ondis.html", soft:true },
     { id:"ranking",        label:"Ranking",                 desc:"Ranking geral de vendedores",                        group:"painel",  nav:["btnRanking"] },
     { id:"crm",            label:"CRM Simplificado",        desc:"Clientes e oportunidades do dia",                    group:"modulos", nav:["btnCRMSimples"],      page:"crm.html" },
-    { id:"crmCompleto",    label:"CRM Completo",            desc:"Pipeline, métricas e relacionamento",                group:"modulos", nav:["btnCRMCompleto"],     page:"crm-completo.html", soft:true },
+    { id:"crmCompleto",    label:"CRM Completo",            desc:"Pipeline, métricas e relacionamento",                group:"modulos", nav:["btnCRMCompleto","btnDashboardCRM"], page:"crm-completo.html", soft:true },
     { id:"ponto",          label:"Ponto",                   desc:"Jornada e registros da equipe",                      group:"modulos", nav:["btnPonto"],           page:"ponto.html" },
     { id:"catalogo",       label:"Catálogo",                desc:"Produtos, vitrine e link para clientes",             group:"modulos", nav:["btnCatalogo"],        page:"catalogo.html" },
     { id:"caixa",          label:"ONDIS Finance",           desc:"PDV, fiscal, estoque, financeiro e DRE",             group:"modulos", nav:["btnCaixa"],           page:"caixa.html" },
@@ -230,7 +231,6 @@
   }
 
   function tabAllowed(tab){
-    if(currentRole === "superadmin") return true;
     const id = TAB_TO_MODULE[tab];
     return !id || isEnabled(current, id);
   }
@@ -266,7 +266,6 @@
 
   function applyNav(map, role){
     current = map; currentRole = role || "";
-    const isSuper = currentRole === "superadmin";
     writeCache(map, currentRole);
 
     MODULES.forEach(m => {
@@ -274,10 +273,9 @@
       (m.nav || []).forEach(nid => {
         const el = document.getElementById(nid);
         if(!el) return;
-        el.classList.toggle("modHidden", !on && !isSuper);
-        el.classList.toggle("modOff", !on && isSuper);
-        if(!on && isSuper){ el.title = "Módulo desligado nesta loja (só o super admin vê este item)"; }
-        else if(el.title && el.title.indexOf("Módulo desligado") === 0){ el.removeAttribute("title"); }
+        // Módulo não marcado pelo super admin: some do menu para TODOS (inclusive o próprio super admin)
+        el.classList.toggle("modHidden", !on);
+        el.classList.remove("modOff");
       });
     });
 
@@ -287,19 +285,17 @@
       label.classList.toggle("modHidden", !any);
     }
 
-    if(!isSuper){
-      if(!anyTabAllowed()){
-        showEmptyNote(true);
-        // vendedor (sem menu de administração) vai direto ao 1º módulo com página própria
-        const pm = MODULES.find(m => m.page && isEnabled(map, m.id));
-        if(pm && currentRole !== "admin" && !redirecting){ redirecting = true; location.replace("./" + pm.page); return; }
-      } else {
-        showEmptyNote(false);
-        const active = document.querySelector(".sideNav .navItem.active");
-        if(active && active.classList.contains("modHidden")){
-          const el = document.getElementById(TAB_ID[fallbackTab()]);
-          if(el) el.click();
-        }
+    if(!anyTabAllowed()){
+      showEmptyNote(true);
+      // vendedor (sem menu de administração) vai direto ao 1º módulo com página própria
+      const pm = MODULES.find(m => m.page && isEnabled(map, m.id));
+      if(pm && currentRole !== "admin" && currentRole !== "superadmin" && !redirecting){ redirecting = true; location.replace("./" + pm.page); return; }
+    } else {
+      showEmptyNote(false);
+      const active = document.querySelector(".sideNav .navItem.active");
+      if(active && active.classList.contains("modHidden")){
+        const el = document.getElementById(TAB_ID[fallbackTab()]);
+        if(el) el.click();
       }
     }
     release();
@@ -325,7 +321,6 @@
 
   // true = pode usar; false = bloqueou (aviso já exibido). Falha de leitura => libera.
   function guardPage(storeData, id, role, opts){
-    if(role === "superadmin") return true;
     if(isEnabled(storeData && storeData.modules, id)) return true;
     blockPage(id, opts);
     return false;
@@ -337,8 +332,6 @@
   }
   // Usado pelo Ctrl+K: o link aponta para algo que a loja pode usar?
   function hrefAllowed(href){
-    const role = currentRole || (readCache() || {}).role || "";
-    if(role === "superadmin") return true;
     const map = current !== null ? current : (readCache() || {}).map;
     let m = BY_PAGE[fileOf(href)];
     if(!m && /index\.html#seller/.test(String(href))) m = BY_ID.liga;
@@ -350,7 +343,7 @@
     const m = BY_PAGE[fileOf(location.pathname)];
     if(!m || !m.soft) return;
     const c = readCache();
-    if(!c || c.role === "superadmin") return;
+    if(!c) return;
     if(!isEnabled(c.map, m.id)) blockPage(m.id);
   }
   if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", softGuard); else softGuard();
