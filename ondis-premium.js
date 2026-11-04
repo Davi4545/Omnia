@@ -355,3 +355,80 @@
     applyNav, guardTab, tabAllowed, guardPage, blockPage, hrefAllowed, release
   };
 })();
+
+/* =====================================================================
+   ONDIS_SEGMENTOS — tipo de loja (Ótica, Vestuário, Outros)
+   ---------------------------------------------------------------------
+   Cada segmento traz a sua lista de categorias de produto e de motivos de
+   "não vendeu", usadas no atendimento (VENDEU / NÃO VENDEU).
+   Em  stores/{loja}  ficam:
+     segmento    "otica" | "vestuario" | "outros"
+     categorias  (opcional) lista própria — substitui a do segmento
+     motivos     (opcional) lista própria — substitui a do segmento
+   Loja sem `segmento` (criada antes) usa Ótica, como já funcionava.
+   ===================================================================== */
+(function(){
+  "use strict";
+  const SEGMENTOS = {
+    otica: {
+      id:"otica", nome:"Ótica",
+      categorias:["Óculos de Sol","Óculos de Grau (Armação)","Lente de Grau","Lente de Contato","Relógio","Acessórios"],
+      motivos:["Preço","Não encontrou o produto","Modelo/cor","Grau/receita","Só pesquisando","Outro"],
+      detalhe:{ rotulo:"Modelo / grau (opcional)", exemplo:"Ex: aviador, +1,50" }
+    },
+    vestuario: {
+      id:"vestuario", nome:"Vestuário",
+      categorias:["Camiseta","Calça","Camisa MC","Camisa ML","Vestido","Jaqueta","Acessórios","Bermuda","Saia","Polo","Boné"],
+      motivos:["Preço","Não encontrou o produto","Tamanho/numeração","Modelo/cor","Só pesquisando","Outro"],
+      detalhe:{ rotulo:"Numeração", exemplo:"Ex: 42, G, 38" }
+    },
+    outros: {
+      id:"outros", nome:"Outros",
+      categorias:["Produtos","Serviços","Acessórios","Outros"],
+      motivos:["Preço","Não encontrou o produto","Só pesquisando","Outro"],
+      detalhe:{ rotulo:"Detalhe (opcional)", exemplo:"" }
+    }
+  };
+  const PADRAO = "otica";
+
+  function limpa(lista, max){
+    if(!Array.isArray(lista)) return null;
+    const vistos = {}, out = [];
+    lista.forEach(x => {
+      const s = String(x == null ? "" : x).trim().slice(0, 40);
+      const k = s.toLowerCase();
+      if(s && !vistos[k]){ vistos[k] = 1; out.push(s); }
+    });
+    return out.slice(0, max || 30);
+  }
+  function get(id){ return SEGMENTOS[id] || SEGMENTOS[PADRAO]; }
+
+  // Dados da loja -> o que o atendimento deve usar
+  function resolve(loja){
+    const seg = get(loja && loja.segmento);
+    const cats = limpa(loja && loja.categorias);
+    const mots = limpa(loja && loja.motivos);
+    return {
+      segmento: seg.id, nome: seg.nome,
+      categorias: (cats && cats.length) ? cats : seg.categorias.slice(),
+      motivos: (mots && mots.length) ? mots : seg.motivos.slice(),
+      detalhe: Object.assign({}, seg.detalhe),
+      personalizado: !!((cats && cats.length) || (mots && mots.length))
+    };
+  }
+  // Para gravar: só guarda a lista se for diferente do padrão do segmento
+  function paraGravar(segId, categorias, motivos){
+    const seg = get(segId);
+    const c = limpa(categorias), m = limpa(motivos);
+    const igual = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+    return {
+      segmento: seg.id,
+      categorias: (c && c.length && !igual(c, seg.categorias)) ? c : null,
+      motivos: (m && m.length && !igual(m, seg.motivos)) ? m : null
+    };
+  }
+  window.ONDIS_SEGMENTOS = {
+    list(){ return Object.keys(SEGMENTOS).map(k => SEGMENTOS[k]); },
+    get, resolve, paraGravar, limpa, PADRAO
+  };
+})();

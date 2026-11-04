@@ -67,8 +67,8 @@
   select option{background:#1a1f2b;color:#e7eefc;}
   @media(max-width:720px){ .pontoBtns{grid-template-columns:repeat(2,1fr);} }
 </style>
-<link href="./ondis-premium.css" rel="stylesheet"/>
-<script src="./ondis-premium.js"></script>
+<link href="./ondis-premium.css?v=13.2" rel="stylesheet"/>
+<script src="./ondis-premium.js?v=13.2"></script>
 <link rel="stylesheet" href="./ondis-v9.css">
 <script src="./ondis-v9.js" defer></script>
 <link rel="stylesheet" href="./ondis-v11.css?v=12.3.0"><script src="./ondis-v11.js?v=12.3.0" defer></script></head>
@@ -170,14 +170,16 @@
       <button class="btn good" onclick="salvarConfig()">Salvar configuração</button>
       <div class="hint" style="text-align:left;margin-top:10px">⚠️ Este é um controle interno de jornada para gestão. Não substitui ponto homologado para fins legais (CLT/Portaria 671), caso sua operação exija registro oficial.</div>
     </div>
+    <div id="faceCfgCard" style="margin-top:14px"></div>
   </div>
 </div>
 
+<script src="./ponto-facial.js?v=1"></script>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut }
     from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-  import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, onSnapshot }
+  import { getFirestore, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, collection, onSnapshot }
     from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -275,6 +277,17 @@
 
     // escuta pontos da loja
     pontoRef = collection(db,"stores",STORE_ID,"ponto");
+
+    // Reconhecimento facial (quiosque): entrega ao módulo o que ele precisa
+    if(window.PontoFacial){
+      window.PontoFacial.init({
+        db, STORE_ID, LOJA_NOME, MY, pontoRef,
+        isAdmin: (MY.role==="admin"||MY.role==="superadmin"),
+        fs: { doc, getDoc, getDocs, setDoc, deleteDoc, collection },
+        getPontos: ()=>PONTOS, hojeStr, hhmm, msgErro,
+        getLoc: ()=>minhaLoc
+      }).catch(e=>console.error("Reconhecimento facial:", e));
+    }
     onSnapshot(pontoRef,(snap)=>{
       PONTOS=[]; snap.forEach(d=> PONTOS.push({ id:d.id, ...d.data() }));
       renderTudo();
@@ -420,9 +433,10 @@
     if(doDia.length===0){ document.getElementById("equipeTabela").innerHTML=estadoVazio("👥","Ninguém bateu ponto neste dia","Escolha outra data ou aguarde a equipe registrar o ponto. Os registros aparecem aqui em tempo real."); return; }
     const rows=doDia.sort((a,b)=>(a.nome||"").localeCompare(b.nome||"")).map(r=>{
       const m=r.marcacoes||{}; const s=statusDoDia(r);
-      return `<tr><td><b>${r.nome||"—"}</b></td><td>${m.entrada?m.entrada.hora:"--"}</td>
-        <td>${m.intervalo?m.intervalo.hora:"--"}</td><td>${m.retorno?m.retorno.hora:"--"}</td>
-        <td>${m.saida?m.saida.hora:"--"}</td><td><b>${fmtMin(minutosTrabalhados(r))}</b></td>
+      const hm=(x)=> x ? (x.hora + (x.metodo==="facial" ? ' <span title="Reconhecimento facial'+(x.dist!=null?' (distância '+x.dist+')':'')+'">🙂</span>' : (x.metodo==="manual-quiosque" ? ' <span title="Registro manual no tablet — conferir">⚠️</span>' : ""))) : "--";
+      return `<tr><td><b>${r.nome||"—"}</b></td><td>${hm(m.entrada)}</td>
+        <td>${hm(m.intervalo)}</td><td>${hm(m.retorno)}</td>
+        <td>${hm(m.saida)}</td><td><b>${fmtMin(minutosTrabalhados(r))}</b></td>
         <td><span class="tag ${s.tag}">${s.label}</span></td>
         <td>
           <button class="btn sm" style="padding:3px 8px" onclick="abrirEditarPonto('${r.id}')">✏️</button>

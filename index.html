@@ -1058,8 +1058,8 @@ body{ background-attachment: fixed; }
 }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<link href="./ondis-premium.css" rel="stylesheet"/>
-<script src="./ondis-premium.js"></script>
+<link href="./ondis-premium.css?v=13.2" rel="stylesheet"/>
+<script src="./ondis-premium.js?v=13.2"></script>
 <script>document.documentElement.classList.add("modsPending");setTimeout(function(){document.documentElement.classList.remove("modsPending");},6000);</script>
 
 <style id="ondis-race2d-style">
@@ -2031,6 +2031,22 @@ body{ background-attachment: fixed; }
     "Acessórios"
   ];
   const ITEM_TYPES = PRODUCT_CATEGORIES;
+  // Motivos de "não vendeu" e rótulo do campo de detalhe: também variam por segmento
+  const NOSOLD_OPTIONS = ["Preço", "Não encontrou o produto", "Modelo/cor", "Grau/receita", "Só pesquisando", "Outro"];
+  const DETALHE_CAMPO = { rotulo: "Modelo / grau (opcional)", exemplo: "Ex: aviador, +1,50" };
+  const escOpt = (s)=> String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+  // Chamado com o documento da loja (stores/{id}): troca categorias/motivos pelo segmento da loja
+  window.OMNIA_SET_SEGMENTO = function(loja){
+    if(!window.ONDIS_SEGMENTOS) return;
+    const r = window.ONDIS_SEGMENTOS.resolve(loja || {});
+    const snap = ()=> JSON.stringify([PRODUCT_CATEGORIES, NOSOLD_OPTIONS, DETALHE_CAMPO]);
+    const antes = snap();
+    PRODUCT_CATEGORIES.length = 0; r.categorias.forEach(c => PRODUCT_CATEGORIES.push(c));
+    NOSOLD_OPTIONS.length = 0;     r.motivos.forEach(m => NOSOLD_OPTIONS.push(m));
+    DETALHE_CAMPO.rotulo = r.detalhe.rotulo; DETALHE_CAMPO.exemplo = r.detalhe.exemplo;
+    window.OMNIA_SEGMENTO_ATUAL = r.segmento;
+    if(antes !== snap() && typeof window.OMNIA_RENDER === "function") window.OMNIA_RENDER();
+  };
 
   const defaultState = {
     store: { name:"Sua loja", status:"Online", logoDataUrl:"" },
@@ -2512,7 +2528,7 @@ body{ background-attachment: fixed; }
             </div>
             <div class="field" style="min-width:100%;margin-top:2px">
               <label>O que foi vendido <span style="font-weight:500;opacity:.7">(marque uma ou mais)</span></label>
-              <div class="catChips" id="soldCats_${cid}">${PRODUCT_CATEGORIES.map(c=>`<label class="catChip"><input type="checkbox" value="${c}"/><span>${c}</span></label>`).join("")}</div>
+              <div class="catChips" id="soldCats_${cid}">${PRODUCT_CATEGORIES.map(c=>`<label class="catChip"><input type="checkbox" value="${escOpt(c)}"/><span>${escOpt(c)}</span></label>`).join("")}</div>
             </div>
             <div class="row" style="margin-top:6px;padding-top:10px;border-top:1px dashed #dfe7f2">
               <div class="field" style="min-width:220px"><label>👤 Cliente (opcional — vai pro CRM)</label><input id="cliNome_${cid}" placeholder="Nome do cliente" /></div>
@@ -2522,10 +2538,10 @@ body{ background-attachment: fixed; }
           </div>
           <div id="nosoldFields_${cid}" style="display:none">
             <div class="row">
-              <div class="field" style="min-width:220px"><label>Motivo</label><select id="nsReason_${cid}"><option>Preço</option><option>Não encontrou o produto</option><option>Tamanho/numeração</option><option>Modelo/cor</option><option>Só pesquisando</option><option>Outro</option></select></div>
+              <div class="field" style="min-width:220px"><label>Motivo</label><select id="nsReason_${cid}">${NOSOLD_OPTIONS.map(o=>`<option value="${escOpt(o)}">${escOpt(o)}</option>`).join("")}</select></div>
               <div class="field" style="min-width:180px"><label>Gênero</label><select id="nsGender_${cid}"><option value="">Não informar</option><option value="Masculino">Masculino</option><option value="Feminino">Feminino</option></select></div>
-              <div class="field" style="min-width:220px"><label>Categoria do produto</label><select id="nsItemType_${cid}"><option value="">Selecione…</option>${PRODUCT_CATEGORIES.map(i=>`<option value="${i}">${i}</option>`).join("")}</select></div>
-              <div class="field" style="min-width:180px"><label>Numeração</label><input id="nsSize_${cid}" placeholder="Ex: 42, G, 38" /></div>
+              <div class="field" style="min-width:220px"><label>Categoria do produto</label><select id="nsItemType_${cid}"><option value="">Selecione…</option>${PRODUCT_CATEGORIES.map(i=>`<option value="${escOpt(i)}">${escOpt(i)}</option>`).join("")}</select></div>
+              <div class="field" style="min-width:180px"><label>${escOpt(DETALHE_CAMPO.rotulo)}</label><input id="nsSize_${cid}" placeholder="${escOpt(DETALHE_CAMPO.exemplo)}" /></div>
             </div>
           </div>
           <div class="field" style="min-width:100%;margin-top:8px"><label>Observação (opcional)</label><input id="saleObs_${cid}" placeholder="Ex: cliente só pesquisando / voltou depois" /></div>
@@ -6414,6 +6430,8 @@ body{ background-attachment: fixed; }
       onSnapshot(doc(db, "stores", storeId), (snap)=>{
         const modulos = snap.exists() ? (snap.data().modules || null) : null;
         if(window.ONDIS_MODULES) window.ONDIS_MODULES.applyNav(modulos, profile.role);
+        // Segmento da loja (Ótica / Vestuário / Outros): categorias e motivos do atendimento
+        if(window.OMNIA_SET_SEGMENTO) window.OMNIA_SET_SEGMENTO(snap.exists() ? snap.data() : {});
       }, (err)=>{
         console.error("Módulos da loja:", err);
         if(window.ONDIS_MODULES) window.ONDIS_MODULES.release();

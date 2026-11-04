@@ -2145,8 +2145,8 @@ body:has(.wrap .tabs) .tab.active{box-shadow:0 5px 14px color-mix(in srgb,var(--
    Módulos por loja (ONDIS_MODULES)
    ===================================================================== */
 .modHidden { display: none !important; }
-.navItem.modOff { opacity: .5; }
-.navItem.modOff .nl::after { content: " 🔒"; }
+/* item desligado pelo super admin nunca aparece (nem para o super admin) */
+.modOff { display: none !important; }
 html.modsPending .sideNav { visibility: hidden; }
 .modsEmptyNote { text-align: center; padding: 48px 20px; }
 .modsEmptyNote h2 { margin-bottom: 6px; }

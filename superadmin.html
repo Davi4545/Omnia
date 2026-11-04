@@ -65,8 +65,8 @@
   .mmRow span{display:block;font-size:12px;color:var(--ondis-muted,#9db0d0);margin-top:2px;}
   .mmFoot{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid var(--ondis-line,rgba(255,255,255,.1));}
 </style>
-<link href="./ondis-premium.css" rel="stylesheet"/>
-<script src="./ondis-premium.js"></script>
+<link href="./ondis-premium.css?v=13.2" rel="stylesheet"/>
+<script src="./ondis-premium.js?v=13.2"></script>
 <link rel="stylesheet" href="./ondis-v9.css">
 <script src="./ondis-v9.js" defer></script>
 </head>
@@ -100,6 +100,8 @@
     <div class="row" style="margin-bottom:16px">
       <div class="field" style="flex:1;min-width:200px"><label>Nome da loja</label><input id="novaLojaNome" placeholder="Ex: TXC Araguaína"/></div>
       <div class="field" style="min-width:160px"><label>Código (login dos vendedores)</label><input id="novaLojaCodigo" placeholder="Ex: TXC2024" style="text-transform:uppercase"/></div>
+      <div class="field" style="min-width:170px"><label>Segmento</label>
+        <select id="novaLojaSegmento"><option value="otica">Ótica</option><option value="vestuario">Vestuário</option><option value="outros">Outros</option></select></div>
       <button class="btn good" onclick="criarLoja()">+ Criar loja</button>
     </div>
     <div id="tabelaLojas"><div class="hint">Carregando lojas...</div></div>
@@ -236,15 +238,17 @@
         <td><b>${l.name||"—"}</b></td>
         <td><span class="tag code">${l.code||"—"}</span></td>
         <td>${qtd} usuário(s)</td>
+        <td>${segmentoResumo(l)}</td>
         <td>${modulosResumo(l)}</td>
         <td>
+          <button class="btn" onclick="abrirSegmento('${l.id}')">🏷️ Segmento</button>
           <button class="btn purple" onclick="abrirModulos('${l.id}')">🧩 Módulos</button>
           <button class="btn" onclick="verUsuariosDaLoja('${l.id}')">👥 Ver usuários</button>
           <button class="btn bad" onclick="excluirLoja('${l.id}','${(l.name||"").replace(/'/g,"")}')">Excluir loja</button>
         </td>
       </tr>`;
     }).join("");
-    wrap.innerHTML = `<table><thead><tr><th>Loja</th><th>Código</th><th>Usuários</th><th>Módulos</th><th>Ações</th></tr></thead><tbody>${rows}</tbody></table>`;
+    wrap.innerHTML = `<table><thead><tr><th>Loja</th><th>Código</th><th>Usuários</th><th>Segmento</th><th>Módulos</th><th>Ações</th></tr></thead><tbody>${rows}</tbody></table>`;
   }
 
   function renderUsuarios(){
@@ -291,7 +295,8 @@
     if(!dup.empty){ alert("Já existe uma loja com esse código."); return; }
     showLoading("Criando loja...");
     try{
-      await addDoc(collection(db,"stores"), { name:nome, code:code, createdAt:new Date().toISOString() });
+      const seg = (document.getElementById("novaLojaSegmento") || {}).value || "otica";
+      await addDoc(collection(db,"stores"), { name:nome, code:code, segmento:seg, createdAt:new Date().toISOString() });
       document.getElementById("novaLojaNome").value="";
       document.getElementById("novaLojaCodigo").value="";
       await carregarTudo();
@@ -331,6 +336,70 @@
     showLoading("Excluindo...");
     try{ await deleteDoc(doc(db,"users",uid)); await carregarTudo(); }
     catch(e){ console.error(e); alert(msgErro(e,"concluir")); hideLoading(); }
+  };
+
+  // ===== SEGMENTO DA LOJA (Ótica / Vestuário / Outros) =====
+  // Em stores/{loja}: segmento + (opcional) categorias e motivos próprios.
+  let SEG_LOJA_ID = null;
+
+  function segmentoResumo(loja){
+    const S = window.ONDIS_SEGMENTOS;
+    if(!S) return "—";
+    const r = S.resolve(loja);
+    const sem = !loja.segmento;
+    return '<span class="tag" title="' + r.categorias.length + ' categorias · ' + r.motivos.length + ' motivos">' + r.nome
+         + (sem ? ' (padrão)' : '') + (r.personalizado ? ' · personalizado' : '') + '</span>';
+  }
+  function linhasDe(txt){ return String(txt || "").split(/\r?\n/).map(s => s.trim()).filter(Boolean); }
+
+  window.abrirSegmento = function(lojaId){
+    const loja = LOJAS.find(l => l.id === lojaId);
+    const S = window.ONDIS_SEGMENTOS;
+    if(!loja || !S){ alert("Não foi possível carregar os segmentos. Recarregue a página (Ctrl+Shift+R)."); return; }
+    SEG_LOJA_ID = lojaId;
+    const r = S.resolve(loja);
+    const box = document.getElementById("modalSegmento");
+    box.querySelector(".sgTitulo").textContent = "🏷️ Segmento de " + (loja.name || loja.code);
+    const sel = document.getElementById("sgSegmento");
+    sel.innerHTML = S.list().map(s => '<option value="' + s.id + '">' + s.nome + '</option>').join("");
+    sel.value = r.segmento;
+    document.getElementById("sgCategorias").value = r.categorias.join("\n");
+    document.getElementById("sgMotivos").value = r.motivos.join("\n");
+    box.classList.add("show");
+  };
+  window.fecharSegmento = function(){
+    document.getElementById("modalSegmento").classList.remove("show");
+    SEG_LOJA_ID = null;
+  };
+  // Trocar o segmento carrega as listas padrão dele (você pode ajustar antes de salvar)
+  window.trocarSegmentoNoModal = function(){
+    const S = window.ONDIS_SEGMENTOS;
+    const seg = S.get(document.getElementById("sgSegmento").value);
+    document.getElementById("sgCategorias").value = seg.categorias.join("\n");
+    document.getElementById("sgMotivos").value = seg.motivos.join("\n");
+  };
+  window.restaurarPadraoSegmento = function(){ window.trocarSegmentoNoModal(); };
+
+  window.salvarSegmento = async function(){
+    if(!SEG_LOJA_ID) return;
+    const S = window.ONDIS_SEGMENTOS;
+    const cats = S.limpa(linhasDe(document.getElementById("sgCategorias").value));
+    const mots = S.limpa(linhasDe(document.getElementById("sgMotivos").value));
+    if(!cats.length){ alert("Informe ao menos uma categoria de produto."); return; }
+    if(!mots.length){ alert("Informe ao menos um motivo de “não vendeu”."); return; }
+    const g = S.paraGravar(document.getElementById("sgSegmento").value, cats, mots);
+    showLoading("Salvando segmento...");
+    try{
+      await updateDoc(doc(db,"stores",SEG_LOJA_ID), {
+        segmento: g.segmento,
+        categorias: g.categorias ? g.categorias : deleteField(),
+        motivos: g.motivos ? g.motivos : deleteField(),
+        segmentoAtualizadoEm: new Date().toISOString()
+      });
+      const l = LOJAS.find(x => x.id === SEG_LOJA_ID);
+      if(l){ l.segmento = g.segmento; if(g.categorias) l.categorias = g.categorias; else delete l.categorias; if(g.motivos) l.motivos = g.motivos; else delete l.motivos; }
+      hideLoading(); fecharSegmento(); renderLojas();
+    }catch(e){ console.error(e); hideLoading(); alert(msgErro(e, "salvar o segmento da loja")); }
   };
 
   // ===== MÓDULOS LIBERADOS POR LOJA =====
@@ -580,6 +649,28 @@
     </div>
     <p class="mulSub hint" style="text-align:left;padding:0 0 14px"></p>
     <div class="mulBody" style="max-height:60vh;overflow:auto"></div>
+  </div>
+</div>
+
+<!-- MODAL SEGMENTO DA LOJA -->
+<div class="modalBack" id="modalSegmento">
+  <div class="modalCx modalModulos">
+    <div class="mmHead">
+      <h2 class="sgTitulo">🏷️ Segmento da loja</h2>
+      <button class="btn" onclick="fecharSegmento()">✕</button>
+    </div>
+    <p class="hint" style="text-align:left;padding:0 0 10px">O segmento define as categorias de produto e os motivos de “não vendeu” que aparecem no atendimento (lista da vez) desta loja. Você pode ajustar as listas abaixo — uma opção por linha.</p>
+    <div class="field"><label>Segmento</label><select id="sgSegmento" onchange="trocarSegmentoNoModal()"></select></div>
+    <div class="row" style="margin-top:10px">
+      <div class="field" style="flex:1;min-width:220px"><label>Categorias de produto (uma por linha)</label><textarea id="sgCategorias" rows="8" style="width:100%"></textarea></div>
+      <div class="field" style="flex:1;min-width:220px"><label>Motivos de “não vendeu” (um por linha)</label><textarea id="sgMotivos" rows="8" style="width:100%"></textarea></div>
+    </div>
+    <div class="mmFoot">
+      <button class="btn warn" onclick="restaurarPadraoSegmento()">Restaurar padrão do segmento</button>
+      <span style="flex:1"></span>
+      <button class="btn" onclick="fecharSegmento()">Cancelar</button>
+      <button class="btn good" onclick="salvarSegmento()">Salvar</button>
+    </div>
   </div>
 </div>
 
