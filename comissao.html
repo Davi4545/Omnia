@@ -52,8 +52,8 @@
   .vazio .txt{font-size:13px;color:#9db0d0;max-width:340px;line-height:1.5;}
   @media(max-width:600px){ .faixaRow{grid-template-columns:1fr 1fr;} }
 </style>
-<link href="./ondis-premium.css?v=13.2" rel="stylesheet"/>
-<script src="./ondis-premium.js?v=13.2"></script>
+<link href="./ondis-premium.css?v=13.3" rel="stylesheet"/>
+<script src="./ondis-premium.js?v=13.3"></script>
 <link rel="stylesheet" href="./ondis-v9.css">
 <script src="./ondis-v9.js" defer></script>
 </head>
@@ -169,7 +169,7 @@
     try{ const s=await getDoc(doc(db,"users",user.uid)); if(s.exists()) prof={...prof, ...s.data()}; }catch(e){}
     if((user.email||"").toLowerCase()===SUPER_ADMIN_EMAIL) prof.role="superadmin";
     MY={ uid:user.uid, ...prof };
-    STORE_ID = sessionStorage.getItem("omnia_loja_ativa") || prof.storeId || (Array.isArray(prof.storeIds)&&prof.storeIds[0]) || null;
+    STORE_ID = (window.ONDIS_LOJA ? window.ONDIS_LOJA.escolher(prof) : (sessionStorage.getItem("omnia_loja_ativa") || prof.storeId || (Array.isArray(prof.storeIds)&&prof.storeIds[0]) || null));
 
     const ehGestor = (MY.role==="admin"||MY.role==="superadmin");
     if(ehGestor) document.getElementById("tabRegras").style.display="inline-block";

@@ -67,11 +67,11 @@
   select option{background:#1a1f2b;color:#e7eefc;}
   @media(max-width:720px){ .pontoBtns{grid-template-columns:repeat(2,1fr);} }
 </style>
-<link href="./ondis-premium.css?v=13.2" rel="stylesheet"/>
-<script src="./ondis-premium.js?v=13.2"></script>
+<link href="./ondis-premium.css?v=13.3" rel="stylesheet"/>
+<script src="./ondis-premium.js?v=13.3"></script>
 <link rel="stylesheet" href="./ondis-v9.css">
 <script src="./ondis-v9.js" defer></script>
-<link rel="stylesheet" href="./ondis-v11.css?v=12.3.0"><script src="./ondis-v11.js?v=12.3.0" defer></script></head>
+<link rel="stylesheet" href="./ondis-v11.css?v=12.3.0"><script src="./ondis-v11.js?v=13.3" defer></script></head>
 <body>
 
 <div class="loading show" id="loadingScreen"><div class="spinner"></div><div id="loadingMsg">Carregando...</div></div>
@@ -236,7 +236,7 @@
     try{ const s=await getDoc(doc(db,"users",user.uid)); if(s.exists()) prof={...prof, ...s.data()}; }catch(e){}
     if((user.email||"").toLowerCase()===SUPER_ADMIN_EMAIL) prof.role="superadmin";
     MY={ uid:user.uid, ...prof };
-    STORE_ID = sessionStorage.getItem("omnia_loja_ativa") || prof.storeId || (Array.isArray(prof.storeIds)&&prof.storeIds[0]) || null;
+    STORE_ID = (window.ONDIS_LOJA ? window.ONDIS_LOJA.escolher(prof) : (sessionStorage.getItem("omnia_loja_ativa") || prof.storeId || (Array.isArray(prof.storeIds)&&prof.storeIds[0]) || null));
 
     const ehAdmin = (MY.role==="admin"||MY.role==="superadmin");
     if(ehAdmin){

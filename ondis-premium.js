@@ -194,7 +194,7 @@
     { id:"collections",    label:"Collections",             desc:"Coleções e vitrines",                                group:"modulos", nav:["btnCollections"],     page:"collections.html", soft:true },
     { id:"marketing",      label:"Marketing Intelligence",  desc:"Campanhas e inteligência de marketing",              group:"modulos", nav:["btnMarketingIntel"],  page:"marketing.html", soft:true },
     { id:"fidelidade",     label:"ONDIS Club",              desc:"Programa de fidelidade e cashback",                  group:"modulos", nav:["btnFidelidade"],      page:"fidelidade.html", soft:true },
-    { id:"equipe360",      label:"Equipe 360°",             desc:"Visão completa da equipe",                           group:"modulos", nav:["btnEquipe360"],       page:"equipe-360.html", soft:true },
+    { id:"equipe360",      label:"Equipe 360°",             desc:"Visão completa da equipe",                           group:"modulos", nav:["btnEquipe360"],       page:"equipe-360.html" },
     { id:"auditoria",      label:"Auditoria & Perdas",      desc:"Controle de perdas e divergências",                  group:"modulos", nav:["btnAuditoria"],       page:"auditoria.html", soft:true },
     { id:"omnichannel",    label:"Omnichannel",             desc:"Integração de canais de venda",                      group:"modulos", nav:["btnOmnichannel"],     page:"omnichannel.html", soft:true },
     { id:"autopilot",      label:"ONDIS Autopilot",         desc:"Automações e agente de IA",                          group:"modulos", nav:["btnAutopilot"],       page:"autopilot.html", soft:true }
@@ -431,4 +431,35 @@
     list(){ return Object.keys(SEGMENTOS).map(k => SEGMENTOS[k]); },
     get, resolve, paraGravar, limpa, PADRAO
   };
+})();
+
+/* =====================================================================
+   ONDIS_LOJA — escolha SEGURA da loja ativa
+   ---------------------------------------------------------------------
+   As páginas guardam a loja escolhida em sessionStorage("omnia_loja_ativa").
+   Antes, qualquer valor ali era aceito — inclusive de uma sessão antiga ou
+   de outra pessoa. Agora só vale se o usuário PERTENCE àquela loja
+   (storeId / storeIds do cadastro) ou se for o super admin.
+   Isto organiza a interface; quem barra de verdade são as Regras do Firestore.
+   ===================================================================== */
+(function(){
+  "use strict";
+  const SUPER_EMAIL = "davi.vieira.each@gmail.com";
+  function idsDe(prof){
+    const out = [];
+    if(prof && prof.storeId) out.push(prof.storeId);
+    if(prof && Array.isArray(prof.storeIds)) prof.storeIds.forEach(x => { if(x) out.push(x); });
+    return out;
+  }
+  function ehSuper(prof){
+    return !!prof && (prof.role === "superadmin" || String(prof.email || "").toLowerCase() === SUPER_EMAIL);
+  }
+  function escolher(prof){
+    let salva = null;
+    try{ salva = sessionStorage.getItem("omnia_loja_ativa"); }catch(e){}
+    const ids = idsDe(prof);
+    if(salva && (ehSuper(prof) || ids.indexOf(salva) !== -1)) return salva;
+    return ids[0] || null;
+  }
+  window.ONDIS_LOJA = { escolher, idsDe, ehSuper };
 })();

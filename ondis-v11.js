@@ -3,7 +3,11 @@ const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const brl=n=>(Number(n)||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 const store=(k,d=[])=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}};
 const save=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
-function findData(fragment,def=[]){for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i)||'';if(k.toLowerCase().includes(fragment)){const v=store(k,null);if(Array.isArray(v)||typeof v==='object')return v}}return def}
+// Loja ativa (cada página define window.OMNIA_STORE_ID após o login). Sem loja definida, NUNCA adivinha.
+function activeStoreId(){try{return window.OMNIA_STORE_ID||window.ONDIS_STORE_ID||sessionStorage.getItem('omnia_loja_ativa')||''}catch{return ''}}
+// Procura nos dados guardados no navegador SOMENTE as chaves que pertencem à loja ativa
+// (antes pegava a primeira chave parecida de QUALQUER loja e misturava dados entre lojas).
+function findData(fragment,def=[]){const sid=activeStoreId();if(!sid)return def;for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i)||'';if(k.includes(sid)&&k.toLowerCase().includes(fragment)){const v=store(k,null);if(Array.isArray(v)||typeof v==='object')return v}}return def}
 function state(){try{if(typeof window.ONDIS_STATE==='function')return window.ONDIS_STATE();if(typeof window.OMNIA_GET_STATE==='function')return window.OMNIA_GET_STATE();return null}catch{return null}}
 function metrics(){
   const st=state();

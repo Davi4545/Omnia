@@ -1,3 +1,81 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Equipe 360° · ONDIS</title><link rel="stylesheet" href="retail-os.css?v=12"><link rel="stylesheet" href="./ondis-premium.css?v=13.2">
-<script src="./ondis-premium.js?v=13.2" defer></script>
-</head><body><header class="top"><button class="back" onclick="location.href='./index.html'">←</button><div class="brand">ONDIS <small>Equipe 360°</small></div><div class="sp"></div><button class="ai" onclick="ai()">✦ IA</button></header><main class="wrap"><div class="hero"><div><h1>Equipe 360°</h1><p>Performance justa: venda, margem, CRM, operação, ponto e uso do ONDIS.</p></div></div><div class="grid"><div class="kpi"><small>Equipe ativa</small><b>8</b><em>7 presentes</em></div><div class="kpi"><small>Conversão</small><b>63,6%</b><em>+4,8 p.p.</em></div><div class="kpi"><small>Uso ONDIS</small><b>91%</b><em>meta 95%</em></div><div class="kpi"><small>Margem média</small><b>31,4%</b><em>saudável</em></div></div><section class="card"><h2>Performance 360°</h2><table class="table"><tr><th>Vendedor</th><th>Vendas</th><th>Margem</th><th>Conversão</th><th>CRM</th><th>Uso</th></tr><tr><td>Wellington Silva Santos</td><td>R$ 42.300</td><td>33,8%</td><td>68%</td><td>92%</td><td><span class="pill good">100%</span></td></tr><tr><td>Camila Borges Soares</td><td>R$ 39.800</td><td>36,2%</td><td>64%</td><td>86%</td><td><span class="pill good">96%</span></td></tr><tr><td>Larissa Dias Fagundes</td><td>R$ 35.100</td><td>28,9%</td><td>59%</td><td>71%</td><td><span class="pill warn">82%</span></td></tr></table></section><section class="card"><h2>✦ Coaching ONDIS</h2><div class="insight"><b>Larissa tem boa venda, mas margem 4,1 p.p. abaixo da equipe.</b>Principal oportunidade: reduzir desconto e trabalhar mix premium.</div></section></main><aside class="agent"><h3>✦ ONDIS Intelligence</h3><p>Posso interpretar esta área e sugerir a próxima ação.</p><div class="chips"><button onclick="ask('Priorizei riscos e oportunidades com maior impacto financeiro.')">O que priorizar?</button><button onclick="ask('Preparei uma leitura executiva desta tela.')">Resumir</button></div><input placeholder="Pergunte ao ONDIS..." onkeydown="if(event.key==='Enter')ask(this.value)"></aside><div class="toast"></div><script src="retail-os.js?v=12"></script><script></script></body></html>
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Equipe 360° · ONDIS</title><link rel="stylesheet" href="retail-os.css?v=12"><link rel="stylesheet" href="./ondis-premium.css?v=13.3">
+<script src="./ondis-premium.js?v=13.3" defer></script>
+</head><body><header class="top"><button class="back" onclick="location.href='./index.html'">←</button><div class="brand">ONDIS <small>Equipe 360°</small></div><div class="sp"></div><button class="ai" onclick="ai()">✦ IA</button></header><main class="wrap">
+<div class="hero"><div><h1>Equipe 360°</h1><p>Desempenho real da equipe: venda, atendimento, conversão e ponto — <b id="e360Loja">carregando…</b> · <span id="e360Mes"></span></p></div></div>
+<div id="e360Msg" class="insight" style="display:none"></div>
+<div class="grid" id="e360Kpis"></div>
+<section class="card"><h2>Performance 360°</h2><div id="e360Tabela"><div class="insight"><b>Carregando os dados da sua loja…</b></div></div></section>
+<section class="card"><h2>✦ Coaching ONDIS</h2><div id="e360Coach"></div></section>
+</main>
+<aside class="agent"><h3>✦ ONDIS Intelligence</h3><p>Posso interpretar esta área e sugerir a próxima ação.</p><div class="chips"><button onclick="ask('Priorizei riscos e oportunidades com maior impacto financeiro.')">O que priorizar?</button><button onclick="ask('Preparei uma leitura executiva desta tela.')">Resumir</button></div><input placeholder="Pergunte ao ONDIS..." onkeydown="if(event.key==='Enter')ask(this.value)"></aside><div class="toast"></div>
+<script src="retail-os.js?v=12"></script>
+<script src="./equipe-360.js?v=1"></script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  import { getFirestore, doc, getDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCTjYwOpMpwhGbrsUFPOgO2V-GXAwfcubA",
+    authDomain: "omnia-3b32b.firebaseapp.com",
+    projectId: "omnia-3b32b",
+    storageBucket: "omnia-3b32b.firebasestorage.app",
+    messagingSenderId: "858764463578",
+    appId: "1:858764463578:web:1fabf841013e2053bd44e3"
+  };
+  const SUPER_ADMIN_EMAIL = "davi.vieira.each@gmail.com";
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const $ = id => document.getElementById(id);
+
+  function aviso(txt){ const m = $("e360Msg"); m.style.display = "block"; m.innerHTML = "<b>" + txt + "</b>"; }
+  const hojeStr = () => { const d = new Date(), p = n => String(n).padStart(2, "0"); return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()); };
+
+  onAuthStateChanged(auth, async (user) => {
+    if(!user){ location.href = "./login.html"; return; }
+    let prof = { role: "seller", name: user.email, email: user.email };
+    try{ const s = await getDoc(doc(db, "users", user.uid)); if(s.exists()) prof = { ...prof, ...s.data() }; }catch(e){}
+    if((user.email || "").toLowerCase() === SUPER_ADMIN_EMAIL) prof.role = "superadmin";
+
+    // LOJA ATIVA: só vale a escolhida na sessão se o usuário pertence a ela (ou for super admin)
+    const STORE_ID = window.ONDIS_LOJA ? window.ONDIS_LOJA.escolher(prof)
+      : (sessionStorage.getItem("omnia_loja_ativa") || prof.storeId || (Array.isArray(prof.storeIds) && prof.storeIds[0]) || null);
+    if(!STORE_ID){ aviso("Nenhuma loja ativa. Volte ao ONDIS e selecione uma loja."); $("e360Loja").textContent = "—"; return; }
+
+    let LOJA = null, nomeLoja = STORE_ID;
+    try{ const ls = await getDoc(doc(db, "stores", STORE_ID)); if(ls.exists()){ LOJA = ls.data(); nomeLoja = LOJA.name || LOJA.code || STORE_ID; } }catch(e){}
+    // módulo liberado para esta loja? (controlado pelo super admin)
+    if(window.ONDIS_MODULES && !window.ONDIS_MODULES.guardPage(LOJA, "equipe360", prof.role)) return;
+    $("e360Loja").textContent = "Loja: " + nomeLoja;
+    document.body.setAttribute("data-loja", STORE_ID);
+
+    if(prof.role !== "admin" && prof.role !== "superadmin"){
+      aviso("O Equipe 360° é exclusivo para administradores da loja.");
+      $("e360Tabela").innerHTML = ""; return;
+    }
+
+    // ---- TUDO abaixo lê SOMENTE de stores/{STORE_ID}/... ----
+    const D = { sellers: [], sales: [], records: [], pontos: [] };
+    const hoje = hojeStr();
+    let agendado = null;
+    function atualizar(){
+      clearTimeout(agendado);
+      agendado = setTimeout(() => {
+        const r = window.Equipe360.calcular({ mes: hoje.slice(0, 7), hoje, sellers: D.sellers, sales: D.sales, records: D.records, pontos: D.pontos });
+        window.Equipe360.render(r, "Loja: " + nomeLoja);
+      }, 60);
+    }
+    const falha = (nome) => (e) => { console.error("Equipe 360 (" + nome + "):", e); aviso("Não foi possível ler “" + nome + "” desta loja (" + ((e && e.code) || "erro") + ")."); };
+
+    onSnapshot(doc(db, "stores", STORE_ID, "app", "state"), (snap) => {
+      try{ const j = snap.exists() ? JSON.parse(snap.data().json || "{}") : {}; D.sellers = Array.isArray(j.sellers) ? j.sellers : []; }catch(e){ D.sellers = []; }
+      atualizar();
+    }, falha("equipe"));
+    onSnapshot(collection(db, "stores", STORE_ID, "caixa_vendas"), (s) => { D.sales = s.docs.map(d => ({ id: d.id, ...d.data() })); atualizar(); }, falha("vendas"));
+    onSnapshot(collection(db, "stores", STORE_ID, "records"), (s) => { D.records = s.docs.map(d => ({ id: d.id, ...d.data() })); atualizar(); }, falha("atendimentos"));
+    onSnapshot(collection(db, "stores", STORE_ID, "ponto"), (s) => { D.pontos = s.docs.map(d => ({ id: d.id, ...d.data() })); atualizar(); }, falha("ponto"));
+    atualizar();
+  });
+</script>
+</body></html>

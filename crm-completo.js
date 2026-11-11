@@ -238,7 +238,7 @@ onAuthStateChanged(auth,async user=>{
   profile.role=normalizeRole(profile.role);
   if(profile.active===false){toast("Sua conta está desativada.","error");await signOut(auth);location.href="./login.html";return;}
   state.me={uid:user.uid,...profile};
-  state.storeId=sessionStorage.getItem("omnia_loja_ativa")||profile.storeId||(Array.isArray(profile.storeIds)?profile.storeIds[0]:null);
+  state.storeId=(window.ONDIS_LOJA?window.ONDIS_LOJA.escolher(profile):(sessionStorage.getItem("omnia_loja_ativa")||profile.storeId||(Array.isArray(profile.storeIds)?profile.storeIds[0]:null)));
   if(!state.storeId){hideLoading();showPermission("Nenhuma loja está vinculada a este usuário. Volte ao ONDIS e selecione uma loja.");return;}
   await loadStoreContext();
   applyPermissions();

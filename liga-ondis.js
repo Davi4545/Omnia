@@ -30,7 +30,7 @@ const DEFAULT_REWARDS=[{id:"r1",icon:"🎟️",title:"Vale Experiência",points:
 const DEFAULT_CFG={seasonName:`Temporada ${new Date().getFullYear()}`,leagueGoal:12500,legendaryAt:10000,wallText:"A temporada está aberta. Venda, pontue e conquiste.",achievements:DEFAULT_ACHIEVEMENTS,challenges:DEFAULT_CHALLENGES,rewards:DEFAULT_REWARDS};
 let me=null,storeId=null,storeState={},records=[],cfg=structuredClone(DEFAULT_CFG),metrics=[],configTab="achievements";
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}function initials(n){return String(n||"ONDIS").split(/\s+/).slice(0,2).map(x=>x[0]).join("").toUpperCase()}
-function getStoreId(profile){return sessionStorage.getItem("omnia_loja_ativa")||profile.storeId||(Array.isArray(profile.storeIds)&&profile.storeIds[0])||null}
+function getStoreId(profile){return window.ONDIS_LOJA?window.ONDIS_LOJA.escolher(profile):(sessionStorage.getItem("omnia_loja_ativa")||profile.storeId||(Array.isArray(profile.storeIds)&&profile.storeIds[0])||null)}
 function goalFor(sid,mk){const vg=storeState.vendorGoalsByMonth?.[mk]?.[sid];if(typeof vg==="number")return vg;if(vg&&Number(vg.monthly))return Number(vg.monthly);const monthly=Number(storeState.goalsByMonth?.[mk]?.monthly||0);const active=(storeState.sellers||[]).filter(s=>s.active!==false).length||1;return monthly/active}
 function sellerObj(id){return (storeState.sellers||[]).find(s=>s.id===id)||{id,name:"Vendedor",photo:""}}
 function weekStart(){const d=new Date();const day=(d.getDay()+6)%7;d.setHours(0,0,0,0);d.setDate(d.getDate()-day);return d.getTime()}

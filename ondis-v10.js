@@ -5,7 +5,16 @@ function dateAdd(d,n){const x=new Date((d||today())+'T12:00:00');x.setDate(x.get
 function daysBetween(a,b){return Math.round((new Date(b+'T12:00:00')-new Date(a+'T12:00:00'))/86400000)}
 function state(){try{return typeof window.ONDIS_STATE==='function'?window.ONDIS_STATE():{}}catch{return {}}}
 function financeEntries(){return (state().FIN_ENTRIES||[]).filter(x=>!x.deleted)} function sales(){return (state().SALES||[]).filter(s=>s.status!=='cancelada')} function products(){return state().PRODUCTS||[]} function suppliers(){return (state().SUPPLIERS||[]).filter(s=>!s.deleted)} function notes(){return state().NOTES||[]}
-function loadExtra(){try{return JSON.parse(localStorage.getItem('ondis_finance_v10')||'{}')}catch{return {}}} function saveExtra(o){localStorage.setItem('ondis_finance_v10',JSON.stringify(o))}
+// Centros de custo, orçamento e observações ficam guardados POR LOJA (antes era uma chave única,
+// compartilhada por todas as lojas abertas no mesmo navegador).
+function sidV10(){try{return window.OMNIA_STORE_ID||sessionStorage.getItem('omnia_loja_ativa')||''}catch{return ''}}
+function keyV10(){const s=sidV10();return s?('ondis_finance_v10_'+s):null}
+function loadExtra(){const k=keyV10();if(!k)return {};try{let v=localStorage.getItem(k);
+  if(v==null){const old=localStorage.getItem('ondis_finance_v10');
+    // migração única: os dados antigos (sem loja) vão para a primeira loja que abrir; depois não são mais compartilhados
+    if(old&&!localStorage.getItem('ondis_finance_v10_migrado')){localStorage.setItem(k,old);localStorage.setItem('ondis_finance_v10_migrado',k);v=old}}
+  return JSON.parse(v||'{}')}catch{return {}}}
+function saveExtra(o){const k=keyV10();if(!k)return;try{localStorage.setItem(k,JSON.stringify(o))}catch{}}
 const defaultCenters=['Loja','Administrativo','Marketing','Equipe','Logística','Tecnologia']; const defaultBudgetCats=['Fornecedor','Aluguel','Folha / salários','Impostos','Marketing','Cartões','Serviços','Comissões','Pró-labore','Outros'];
 function extra(){const e=loadExtra(); e.centers=e.centers?.length?e.centers:defaultCenters.slice(); e.budget=e.budget||{}; return e}
 window.showFinance3Tab=function(tab){document.querySelectorAll('.fin3Nav button').forEach(b=>b.classList.toggle('active',b.dataset.fin3===tab));document.querySelectorAll('.fin3Pane').forEach(p=>p.classList.toggle('active',p.id==='fin3-'+tab));renderFinanceV10(tab)};

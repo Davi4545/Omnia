@@ -2192,3 +2192,272 @@ html.modsPending .sideNav { visibility: hidden; }
   background: color-mix(in srgb, var(--ondis-primary) 11%, var(--ondis-surface));
   color: var(--ondis-primary);
 }
+
+/* @@VISUAL-V2-START@@ */
+/* =====================================================================
+   ONDIS VERMELHO — camada visual v2 (fiel ao layout de referência)
+   ===================================================================== */
+/* ---- marca: ONDIS branco + marca vermelha; sem o logo antigo padrão ---- */
+:root[data-theme="ondis"] .sideBrandText h1,
+:root[data-theme="ondis"] .sideBrandText h1 * {
+  background: none !important;
+  -webkit-background-clip: border-box !important; background-clip: border-box !important;
+  -webkit-text-fill-color: #fff !important; color: #fff !important;
+  text-shadow: none !important;
+}
+:root[data-theme="ondis"] .sidebar .logoBox:has(img[src$="icon-192.png"]) { display: none !important; }
+:root[data-theme="ondis"] .sideBrand { padding-top: 22px !important; padding-bottom: 8px !important; gap: 0 !important; }
+:root[data-theme="ondis"] .sidebar .sub, :root[data-theme="ondis"] .sidebar .sub span {
+  text-transform: uppercase; letter-spacing: .16em; font-size: 10px !important; font-weight: 700 !important; color: rgba(255,255,255,.62) !important;
+}
+:root[data-theme="ondis"] .sidebar .sideNav { margin-top: 14px; }
+
+/* ---- ícones do menu: silhuetas brancas (como no layout) ---- */
+:root[data-theme="ondis"] .sidebar .navItem .ni { filter: grayscale(1) brightness(1.9) contrast(1.05); opacity: .95; }
+:root[data-theme="ondis"] .sidebar .navItem { border-radius: 14px !important; padding-top: 11px !important; padding-bottom: 11px !important; font-weight: 600; }
+:root[data-theme="ondis"] .sidebar .navItem .nl { font-size: 14px; text-shadow: 0 1px 8px rgba(0,0,0,.75); }
+:root[data-theme="ondis"] .sidebar .sideSection { text-shadow: 0 1px 8px rgba(0,0,0,.9); font-weight: 800; color: rgba(255,255,255,.62) !important; }
+:root[data-theme="ondis"] .sidebar .navItem.active { font-weight: 800; }
+
+/* ---- barra superior: busca em formato de campo ---- */
+:root[data-theme="ondis"] .contentTopbar { min-height: 70px; padding-left: 18px; padding-right: 18px; }
+:root[data-theme="ondis"] .ondisSearchIcon {
+  display: inline-flex !important; align-items: center; gap: 10px; width: min(380px, 30vw); height: 46px; border-radius: 14px !important;
+  padding: 0 16px !important; justify-content: flex-start; font-size: 18px !important;
+  background: rgba(255,255,255,.07) !important; border: 1px solid rgba(255,255,255,.16) !important; color: rgba(255,255,255,.75) !important;
+}
+:root[data-theme="ondis"] .ondisSearchIcon::after { content: "Buscar vendedor, cliente, produto…"; font-size: 14px; font-weight: 500; opacity: .85; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+:root[data-theme="ondis"] .contentTopbar .topbarTitle { margin-left: 8px; font-size: 18px !important; font-weight: 800; }
+:root[data-theme="ondis"] .contentTopbar .v11-agent-btn, :root[data-theme="ondis"] .contentTopbar .accBtn { border-radius: 14px !important; height: 44px; }
+
+/* ---- Operação: cabeçalho vira o banner vermelho com cubos ---- */
+:root[data-theme="ondis"] #viewOps .grid > .card:first-child > .cardHeader {
+  margin: 14px 14px 0; padding: 24px 26px !important; border-radius: 18px; min-height: 104px; align-items: center;
+  background:
+    linear-gradient(100deg, rgba(10,12,18,.55) 0%, rgba(150,8,26,.55) 45%, rgba(228,20,43,.25) 100%),
+    url("./ondis-cubes-top.jpg") right center / cover no-repeat, #8d0b1c !important;
+  border: 0 !important; box-shadow: 0 14px 34px rgba(150, 8, 26, .28) !important; color: #fff !important;
+}
+:root[data-theme="ondis"] #viewOps .grid > .card:first-child > .cardHeader h2 { color: #fff !important; font-size: 26px !important; font-weight: 900 !important; letter-spacing: -.01em; }
+:root[data-theme="ondis"] #viewOps .grid > .card:first-child > .cardHeader { display: flex !important; flex-wrap: nowrap !important; gap: 16px; }
+:root[data-theme="ondis"] #viewOps .grid > .card:first-child > .cardHeader h2 { flex: 1 1 auto; min-width: 0; margin: 0; line-height: 1.15; }
+:root[data-theme="ondis"] #viewOps .grid > .card:first-child > .cardHeader .opsSubtitle { display: block !important; margin: 6px 0 0 !important; color: rgba(255,255,255,.85) !important; font-size: 13px !important; font-weight: 500 !important; line-height: 1.35; max-width: 340px; }
+:root[data-theme="ondis"] #viewOps .grid > .card:first-child > .cardHeader .rowRight { display: flex !important; flex-wrap: nowrap !important; gap: 10px; flex: 0 0 auto; align-items: center; }
+:root[data-theme="ondis"] #viewOps .cardHeader .rowRight .btn {
+  background: rgba(8,10,16,.72) !important; border: 1px solid rgba(255,255,255,.22) !important; color: #fff !important; border-radius: 12px !important; box-shadow: none !important;
+}
+:root[data-theme="ondis"] #viewOps #btnPreference, :root[data-theme="ondis"] #viewOps #btnAddSeller {
+  background: rgba(8,10,16,.72) !important; border: 1px solid rgba(255,255,255,.24) !important; color: #fff !important; border-radius: 12px !important; box-shadow: none !important; white-space: nowrap;
+}
+:root[data-theme="ondis"] #viewOps #btnCallNext { color: #fff !important; white-space: nowrap; font-weight: 800; }
+:root[data-theme="ondis"] #viewOps .cardHeader .rowRight #btnCallNext {
+  background: linear-gradient(180deg, #ff3d52, #e4142b) !important; border-color: transparent !important; box-shadow: 0 8px 20px rgba(228,20,43,.45) !important;
+}
+
+/* ---- indicadores: ícones e traços em vermelho ---- */
+:root[data-theme="ondis"] #kpis .kpi { border-radius: 16px !important; }
+:root[data-theme="ondis"] #kpis .kpi .kpiIco {
+  background: rgba(228,20,43,.10) !important; color: #e4142b !important; border-radius: 12px !important;
+  filter: brightness(0) saturate(100%) invert(14%) sepia(97%) saturate(5600%) hue-rotate(347deg) brightness(93%) contrast(97%);
+}
+:root[data-theme="ondis"] #kpis .kpi .miniSpark path { stroke: #e4142b !important; }
+:root[data-theme="ondis"] #kpis .kpi .miniSpark { color: #e4142b !important; }
+
+/* ---- fila de atendimento ---- */
+:root[data-theme="ondis"] #queueList .item { border-radius: 16px !important; border-color: var(--ondis-line) !important; background: #fff !important; }
+:root[data-theme="ondis"] #queueList .item .pos {
+  border-radius: 12px !important; background: #f1f2f6 !important; color: #10131a !important; border: 0 !important; box-shadow: none !important;
+}
+:root[data-theme="ondis"] #queueList .item:first-child {
+  background: linear-gradient(90deg, rgba(228,20,43,.09), #fff 60%) !important; border-color: rgba(228,20,43,.32) !important;
+}
+:root[data-theme="ondis"] #queueList .item:first-child .pos {
+  background: linear-gradient(180deg, #f82034, #cf1226) !important; color: #fff !important; box-shadow: 0 8px 18px rgba(228,20,43,.35) !important;
+}
+:root[data-theme="ondis"] #queueList .item:first-child .pos::after,
+:root[data-theme="ondis"] #queueList .item .pos .tag,
+:root[data-theme="ondis"] #queueList .item .nextTag { background: #e4142b !important; color: #fff !important; }
+:root[data-theme="ondis"] #queueList .item:first-child .avatar { box-shadow: 0 0 0 2px #fff, 0 0 0 4px #e4142b !important; border-color: #e4142b !important; }
+:root[data-theme="ondis"] #queueList .item .queueStats span { background: #f6f7fa !important; color: #3a4252 !important; border-color: var(--ondis-line) !important; }
+
+/* ---- painel "Em atendimento": cabeçalho escuro ---- */
+:root[data-theme="ondis"] #viewOps .grid > .card:nth-child(2) { overflow: hidden; }
+:root[data-theme="ondis"] #viewOps .grid > .card:nth-child(2) > .cardHeader {
+  background: #0f1219 !important; border: 0 !important; color: #fff !important; padding: 18px 22px !important;
+}
+:root[data-theme="ondis"] #viewOps .grid > .card:nth-child(2) > .cardHeader h2 { color: #fff !important; font-size: 22px !important; font-weight: 900 !important; }
+:root[data-theme="ondis"] #attendTag.tag, :root[data-theme="ondis"] #viewOps .grid > .card:nth-child(2) .cardHeader .tag {
+  background: rgba(25,195,125,.12) !important; color: #3ee0a0 !important; border: 1px solid #19c37d !important; font-weight: 800;
+}
+:root[data-theme="ondis"] .attDecision .btn.good {
+  background: linear-gradient(180deg, #19c37d, #0a8f5b) !important; color: #fff !important; border: 0 !important; border-radius: 14px !important;
+  box-shadow: 0 10px 22px rgba(7,150,95,.35) !important; font-weight: 900;
+}
+:root[data-theme="ondis"] .attDecision .btn.bad {
+  background: linear-gradient(180deg, #ff1f55, #d1003a) !important; color: #fff !important; border: 0 !important; border-radius: 14px !important;
+  box-shadow: 0 10px 22px rgba(229,8,63,.35) !important; font-weight: 900;
+}
+:root[data-theme="ondis"] .attStat { border-radius: 14px !important; }
+:root[data-theme="ondis"] .attAvatar { box-shadow: 0 0 0 2px #fff, 0 0 0 4px #e4142b !important; }
+:root[data-theme="ondis"] .sellerHighlight { background: #fff3d6 !important; color: #a86a00 !important; }
+
+:root[data-theme="ondis"] #attendPanel, :root[data-theme="ondis"] #attendPanel .attCard { background: #fff !important; }
+:root[data-theme="ondis"] .attCard { border: 0 !important; box-shadow: none !important; }
+:root[data-theme="ondis"] .attAvatar, :root[data-theme="ondis"] .attHero .avatar { border-color: transparent !important; outline: 0 !important; }
+:root[data-theme="ondis"] .attInfoBox { background: #fff !important; border: 1px solid var(--ondis-line) !important; }
+:root[data-theme="ondis"] .attLive { color: #07965f !important; }
+:root[data-theme="ondis"] .cancelAttendSmall { color: #6b7280 !important; }
+
+:root[data-theme="ondis"] #viewOps .grid > .card:first-child > .cardHeader h2 { display: block !important; font-size: 24px !important; white-space: normal; }
+:root[data-theme="ondis"] #viewOps .grid > .card:first-child > .cardHeader .opsSubtitle { max-width: 420px; }
+:root[data-theme="ondis"] .sidebar .navItem { padding-left: 12px !important; padding-right: 6px !important; gap: 9px !important; }
+:root[data-theme="ondis"] .sidebar .navItem .nl { font-size: 13.5px; letter-spacing: -.005em; white-space: nowrap; }
+
+/* ---- LEGIBILIDADE: textos com cor pastel fixa (pensados p/ fundo escuro) viram cores do tema ---- */
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .wrap [style*="#7fffc0" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .card [style*="#7fffc0" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .modal [style*="#7fffc0" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .modalCx [style*="#7fffc0" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .panel [style*="#7fffc0" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) table [style*="#7fffc0" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .contentTopbar [style*="#7fffc0" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) header [style*="#7fffc0" i]:not(option):not(input):not(select):not(textarea) { color: var(--ondis-success) !important; }
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .wrap [style*="#ffd166" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .card [style*="#ffd166" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .modal [style*="#ffd166" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .modalCx [style*="#ffd166" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .panel [style*="#ffd166" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) table [style*="#ffd166" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .contentTopbar [style*="#ffd166" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) header [style*="#ffd166" i]:not(option):not(input):not(select):not(textarea) { color: var(--ondis-warning) !important; }
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .wrap [style*="#c9b6ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .wrap [style*="#a0c8ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .wrap [style*="#62a8ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .card [style*="#c9b6ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .card [style*="#a0c8ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .card [style*="#62a8ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .modal [style*="#c9b6ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .modal [style*="#a0c8ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .modal [style*="#62a8ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .modalCx [style*="#c9b6ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .modalCx [style*="#a0c8ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .modalCx [style*="#62a8ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .panel [style*="#c9b6ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .panel [style*="#a0c8ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .panel [style*="#62a8ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) table [style*="#c9b6ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) table [style*="#a0c8ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) table [style*="#62a8ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .contentTopbar [style*="#c9b6ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .contentTopbar [style*="#a0c8ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .contentTopbar [style*="#62a8ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) header [style*="#c9b6ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) header [style*="#a0c8ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) header [style*="#62a8ff" i]:not(option):not(input):not(select):not(textarea) { color: var(--ondis-primary) !important; }
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .wrap [style*="#ff9090" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .card [style*="#ff9090" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .modal [style*="#ff9090" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .modalCx [style*="#ff9090" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .panel [style*="#ff9090" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) table [style*="#ff9090" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .contentTopbar [style*="#ff9090" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) header [style*="#ff9090" i]:not(option):not(input):not(select):not(textarea) { color: var(--ondis-danger) !important; }
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .wrap [style*="#9db0d0" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .wrap [style*="#b8c7e0" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .card [style*="#9db0d0" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .card [style*="#b8c7e0" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .modal [style*="#9db0d0" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .modal [style*="#b8c7e0" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .modalCx [style*="#9db0d0" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .modalCx [style*="#b8c7e0" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .panel [style*="#9db0d0" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .panel [style*="#b8c7e0" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) table [style*="#9db0d0" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) table [style*="#b8c7e0" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .contentTopbar [style*="#9db0d0" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .contentTopbar [style*="#b8c7e0" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) header [style*="#9db0d0" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) header [style*="#b8c7e0" i]:not(option):not(input):not(select):not(textarea) { color: var(--ondis-muted) !important; }
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .wrap [style*="#e7eefc" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .wrap [style*="#cfe0ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .card [style*="#e7eefc" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .card [style*="#cfe0ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .modal [style*="#e7eefc" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .modal [style*="#cfe0ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .modalCx [style*="#e7eefc" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .modalCx [style*="#cfe0ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .panel [style*="#e7eefc" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .panel [style*="#cfe0ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) table [style*="#e7eefc" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) table [style*="#cfe0ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .contentTopbar [style*="#e7eefc" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) .contentTopbar [style*="#cfe0ff" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) header [style*="#e7eefc" i]:not(option):not(input):not(select):not(textarea),
+:root:not([data-theme="carbon"]):not([data-theme="ondis"]) header [style*="#cfe0ff" i]:not(option):not(input):not(select):not(textarea) { color: var(--ondis-text) !important; }
+:root[data-theme="ondis"] .wrap [style*="#7fffc0" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .card [style*="#7fffc0" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .modal [style*="#7fffc0" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .modalCx [style*="#7fffc0" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .panel [style*="#7fffc0" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] table [style*="#7fffc0" i]:not(option):not(input):not(select):not(textarea) { color: var(--ondis-success) !important; }
+:root[data-theme="ondis"] .wrap [style*="#ffd166" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .card [style*="#ffd166" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .modal [style*="#ffd166" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .modalCx [style*="#ffd166" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .panel [style*="#ffd166" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] table [style*="#ffd166" i]:not(option):not(input):not(select):not(textarea) { color: var(--ondis-warning) !important; }
+:root[data-theme="ondis"] .wrap [style*="#c9b6ff" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .wrap [style*="#a0c8ff" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .wrap [style*="#62a8ff" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .card [style*="#c9b6ff" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .card [style*="#a0c8ff" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .card [style*="#62a8ff" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .modal [style*="#c9b6ff" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .modal [style*="#a0c8ff" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .modal [style*="#62a8ff" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .modalCx [style*="#c9b6ff" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .modalCx [style*="#a0c8ff" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .modalCx [style*="#62a8ff" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .panel [style*="#c9b6ff" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .panel [style*="#a0c8ff" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .panel [style*="#62a8ff" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] table [style*="#c9b6ff" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] table [style*="#a0c8ff" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] table [style*="#62a8ff" i]:not(option):not(input):not(select):not(textarea) { color: var(--ondis-primary) !important; }
+:root[data-theme="ondis"] .wrap [style*="#ff9090" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .card [style*="#ff9090" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .modal [style*="#ff9090" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .modalCx [style*="#ff9090" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .panel [style*="#ff9090" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] table [style*="#ff9090" i]:not(option):not(input):not(select):not(textarea) { color: var(--ondis-danger) !important; }
+:root[data-theme="ondis"] .wrap [style*="#9db0d0" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .wrap [style*="#b8c7e0" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .card [style*="#9db0d0" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .card [style*="#b8c7e0" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .modal [style*="#9db0d0" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .modal [style*="#b8c7e0" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .modalCx [style*="#9db0d0" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .modalCx [style*="#b8c7e0" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .panel [style*="#9db0d0" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .panel [style*="#b8c7e0" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] table [style*="#9db0d0" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] table [style*="#b8c7e0" i]:not(option):not(input):not(select):not(textarea) { color: var(--ondis-muted) !important; }
+:root[data-theme="ondis"] .wrap [style*="#e7eefc" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .wrap [style*="#cfe0ff" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .card [style*="#e7eefc" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .card [style*="#cfe0ff" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .modal [style*="#e7eefc" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .modal [style*="#cfe0ff" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .modalCx [style*="#e7eefc" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .modalCx [style*="#cfe0ff" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .panel [style*="#e7eefc" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] .panel [style*="#cfe0ff" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] table [style*="#e7eefc" i]:not(option):not(input):not(select):not(textarea),
+:root[data-theme="ondis"] table [style*="#cfe0ff" i]:not(option):not(input):not(select):not(textarea) { color: var(--ondis-text) !important; }
+/* ---- ONDIS Vermelho: sobras de roxo/azul viram vermelho ---- */
+:root[data-theme="ondis"] #btnDashboardCRM { background: linear-gradient(180deg, #f82034, #cf1226) !important; border-color: transparent !important; color: #fff !important; box-shadow: 0 8px 20px rgba(228,20,43,.3) !important; }
+:root[data-theme="ondis"] #viewDashboard button.active, :root[data-theme="ondis"] #viewDashboard .active { color: #e4142b !important; }
+:root[data-theme="ondis"] .dashboardEyebrow { color: #e4142b !important; }
+:root[data-theme="ondis"] .dashboardEyebrow::before { background: #e4142b !important; }
+
+/* @@VISUAL-V2-END@@ */
