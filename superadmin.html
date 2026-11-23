@@ -69,8 +69,9 @@
 <script src="./ondis-premium.js?v=13.3"></script>
 <link rel="stylesheet" href="./ondis-v9.css">
 <script src="./ondis-v9.js" defer></script>
+  <link rel="stylesheet" href="./ondis-visual-refresh.css?v=1.0.0">
 </head>
-<body>
+<body data-ondis-refresh="superadmin">
 
 <div class="loading show" id="loadingScreen">
   <div class="spinner"></div>
@@ -96,7 +97,7 @@
 
   <!-- Criar loja -->
   <div class="card">
-    <div class="cardHead"><h2>🏬 Lojas / Franquias</h2></div>
+    <div class="cardHead"><h2><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14l1 13H4L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span>Lojas / Franquias</h2></div>
     <div class="row" style="margin-bottom:16px">
       <div class="field" style="flex:1;min-width:200px"><label>Nome da loja</label><input id="novaLojaNome" placeholder="Ex: TXC Araguaína"/></div>
       <div class="field" style="min-width:160px"><label>Código (login dos vendedores)</label><input id="novaLojaCodigo" placeholder="Ex: TXC2024" style="text-transform:uppercase"/></div>
@@ -109,13 +110,13 @@
 
   <!-- Usuários -->
   <div class="card">
-    <div class="cardHead"><h2>👥 Todos os usuários</h2><button class="btn" onclick="carregarTudo()">↻ Atualizar</button></div>
+    <div class="cardHead"><h2><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Todos os usuários</h2><button class="btn" onclick="carregarTudo()">↻ Atualizar</button></div>
     <div id="tabelaUsuarios"><div class="hint">Carregando usuários...</div></div>
   </div>
 
   <!-- Backup -->
   <div class="card">
-    <div class="cardHead"><h2>💾 Backup dos dados</h2></div>
+    <div class="cardHead"><h2><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 22 8-4V6l-8-4-8 4v12l8 4Z"/><path d="m9 12 2 2 4-4"/></svg></span>Backup dos dados</h2></div>
     <p class="hint" style="text-align:left;padding:0 0 14px">Baixe uma cópia de segurança de TODOS os dados de TODAS as lojas (vendas, clientes, ponto, produtos, configurações). Guarde em local seguro. Recomendado fazer semanalmente.</p>
     <div style="display:flex;gap:10px;flex-wrap:wrap">
       <button class="btn good" onclick="backupJSON()">⬇️ Backup completo (JSON)</button>
@@ -644,7 +645,7 @@
 <div class="modalBack" id="modalUsuariosLoja">
   <div class="modalCx">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-      <h2 class="mulTitulo" style="font-size:18px;font-weight:900">👥 Usuários da loja</h2>
+      <h2 class="mulTitulo" style="font-size:18px;font-weight:900"><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Usuários da loja</h2>
       <button class="btn" onclick="fecharUsuariosLoja()">✕</button>
     </div>
     <p class="mulSub hint" style="text-align:left;padding:0 0 14px"></p>
@@ -656,7 +657,7 @@
 <div class="modalBack" id="modalSegmento">
   <div class="modalCx modalModulos">
     <div class="mmHead">
-      <h2 class="sgTitulo">🏷️ Segmento da loja</h2>
+      <h2 class="sgTitulo"><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14l1 13H4L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span>Segmento da loja</h2>
       <button class="btn" onclick="fecharSegmento()">✕</button>
     </div>
     <p class="hint" style="text-align:left;padding:0 0 10px">O segmento define as categorias de produto e os motivos de “não vendeu” que aparecem no atendimento (lista da vez) desta loja. Você pode ajustar as listas abaixo — uma opção por linha.</p>
@@ -678,7 +679,7 @@
 <div class="modalBack" id="modalModulos">
   <div class="modalCx modalModulos">
     <div class="mmHead">
-      <h2 class="mmTitulo">🧩 Módulos da loja</h2>
+      <h2 class="mmTitulo"><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14l1 13H4L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span>Módulos da loja</h2>
       <button class="btn" onclick="fecharModulos()">✕</button>
     </div>
     <p class="mmSub hint" style="text-align:left;padding:0 0 10px"></p>

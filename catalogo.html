@@ -110,14 +110,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <link rel="stylesheet" href="./ondis-v9.css">
 <script src="./ondis-v9.js" defer></script>
-<link rel="stylesheet" href="./ondis-v11.css?v=12.3.0"><script src="./ondis-v11.js?v=13.3" defer></script></head>
-<body>
+<link rel="stylesheet" href="./ondis-v11.css?v=12.3.0"><script src="./ondis-v11.js?v=13.3" defer></script>  <link rel="stylesheet" href="./ondis-visual-refresh.css?v=1.0.0">
+</head>
+<body data-ondis-refresh="catalog">
 
 <div class="loading show" id="loadingScreen"><div class="spinner"></div><div id="loadingMsg">Carregando...</div></div>
 
 <header>
   <div class="brand">
-    <h1>🛍️ <span id="lojaTitulo">Catálogo</span></h1>
+    <h1><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14l1 13H4L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span><span id="lojaTitulo">Catálogo</span></h1>
     <div class="sub" id="ctxInfo">—</div>
   </div>
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
@@ -179,7 +180,7 @@
   <!-- GERENCIAR (funcionário) -->
   <div id="viewGerenciar" style="display:none">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">
-      <h2 style="font-size:16px;font-weight:800">📦 Produtos da loja</h2>
+      <h2 style="font-size:16px;font-weight:800"><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14l1 13H4L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span>Produtos da loja</h2>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <input type="file" id="importFile" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleImportFile(event)"/>
         <button class="btn" onclick="document.getElementById('importFile').click()">📥 Importar planilha</button>
@@ -193,7 +194,7 @@
   <div class="modalBack" id="modalImportar" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;align-items:center;justify-content:center;padding:16px">
     <div class="modal" style="max-width:920px;width:100%;max-height:90vh;overflow:auto;background:#12161f;border-radius:16px;padding:20px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <h2 style="font-size:16px;font-weight:900">📥 Importar produtos da planilha</h2>
+        <h2 style="font-size:16px;font-weight:900"><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14l1 13H4L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span>Importar produtos da planilha</h2>
         <button class="btn" onclick="fecharImportar()">Fechar</button>
       </div>
       <div id="importStep1">
@@ -217,12 +218,12 @@
   <!-- PERFIL / WHATSAPP (funcionário) -->
   <div id="viewPerfil" style="display:none">
     <div class="modal" style="margin:0;max-width:480px">
-      <h2 style="font-size:17px;font-weight:900;margin-bottom:6px">👤 Meu WhatsApp</h2>
+      <h2 style="font-size:17px;font-weight:900;margin-bottom:6px"><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/></svg></span>Meu WhatsApp</h2>
       <p class="hint" style="text-align:left;padding:0 0 14px">Cadastre seu número. Ele será usado quando um cliente enviar o pedido pelo seu link do catálogo.</p>
       <div class="field"><label>Seu WhatsApp (com DDD)</label><input id="meuWhats" inputmode="tel" placeholder="(00) 00000-0000"/></div>
       <button class="btn good" onclick="salvarMeuWhats()">Salvar número</button>
       <div class="divider" style="height:1px;background:rgba(255,255,255,.08);margin:18px 0"></div>
-      <h3 style="font-size:14px;font-weight:800;margin-bottom:6px">🔗 Meu link do catálogo</h3>
+      <h3 style="font-size:14px;font-weight:800;margin-bottom:6px"><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14l1 13H4L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span>Meu link do catálogo</h3>
       <p class="hint" style="text-align:left;padding:0 0 8px">Mande este link para seus clientes. Os pedidos vêm direto pro seu WhatsApp.</p>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
         <input id="meuLink" readonly style="flex:1;min-width:200px;padding:9px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#7fffc0;font-size:12px"/>
@@ -239,7 +240,7 @@
 <div class="modalBack" id="modalLinkGerado">
   <div class="modal" style="max-width:480px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-      <h2 style="font-size:18px;font-weight:900">🔗 Link personalizado</h2>
+      <h2 style="font-size:18px;font-weight:900"><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 9 9 0 0 1-4-.9L3 21l1.9-5.5a9 9 0 0 1-.9-4A8.5 8.5 0 0 1 12.5 3 8.5 8.5 0 0 1 21 11.5Z"/></svg></span>Link personalizado</h2>
       <button class="btn" onclick="fecharLinkGerado()">✕</button>
     </div>
     <p class="hint" style="text-align:left;padding:0 0 12px">Mande este link para seu cliente. Ao abrir, ele verá primeiro as peças que você separou — e depois pode explorar o catálogo completo.</p>
@@ -316,7 +317,7 @@
 <div class="modalBack" id="modalCarrinho">
   <div class="modal">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <h2 style="font-size:18px;font-weight:900">🛒 Seu pedido</h2>
+      <h2 style="font-size:18px;font-weight:900"><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/></svg></span>Seu pedido</h2>
       <button class="btn" onclick="fecharCarrinho()">✕</button>
     </div>
     <div id="cartLista"></div>

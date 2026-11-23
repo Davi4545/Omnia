@@ -71,8 +71,9 @@
 <script src="./ondis-premium.js?v=13.3"></script>
 <link rel="stylesheet" href="./ondis-v9.css">
 <script src="./ondis-v9.js" defer></script>
-<link rel="stylesheet" href="./ondis-v11.css?v=12.3.0"><script src="./ondis-v11.js?v=13.3" defer></script></head>
-<body>
+<link rel="stylesheet" href="./ondis-v11.css?v=12.3.0"><script src="./ondis-v11.js?v=13.3" defer></script>  <link rel="stylesheet" href="./ondis-visual-refresh.css?v=1.0.0">
+</head>
+<body data-ondis-refresh="timeclock">
 
 <div class="loading show" id="loadingScreen"><div class="spinner"></div><div id="loadingMsg">Carregando...</div></div>
 
@@ -125,7 +126,7 @@
   <div id="viewHistorico" style="display:none">
     <div class="card">
       <div class="cardHead">
-        <h2>📅 Meu histórico</h2>
+        <h2><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Meu histórico</h2>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
           <input id="histMes" type="month" style="padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:13px" onchange="renderHistorico()"/>
         </div>
@@ -139,7 +140,7 @@
   <div id="viewEquipe" style="display:none">
     <div class="card">
       <div class="cardHead">
-        <h2>👥 Equipe — situação do dia</h2>
+        <h2><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Equipe — situação do dia</h2>
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
           <button class="btn good" onclick="abrirAddPonto()">+ Adicionar ponto</button>
           <input id="equipeData" type="date" style="padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:13px" onchange="renderEquipe()"/>
@@ -149,7 +150,7 @@
       <div id="equipeTabela"></div>
     </div>
     <div class="card">
-      <div class="cardHead"><h2>📊 Relatório por período</h2>
+      <div class="cardHead"><h2><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Relatório por período</h2>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
           <input id="relMes" type="month" style="padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:13px" onchange="renderRelatorio()"/>
           <button class="btn" onclick="exportarPontoCSV()">⬇️ Excel</button>
@@ -162,7 +163,7 @@
   <!-- CONFIG (admin) -->
   <div id="viewConfig" style="display:none">
     <div class="card" style="max-width:520px">
-      <div class="cardHead"><h2>⚙️ Configuração da jornada</h2></div>
+      <div class="cardHead"><h2><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Configuração da jornada</h2></div>
       <div class="field"><label>Horário de entrada</label><input id="cfgEntrada" type="time" value="08:00"/></div>
       <div class="field"><label>Horário de saída</label><input id="cfgSaida" type="time" value="18:00"/></div>
       <div class="field"><label>Tolerância de atraso (minutos)</label><input id="cfgTolerancia" type="number" value="10" min="0"/></div>

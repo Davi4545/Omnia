@@ -47,8 +47,9 @@
 <script src="./ondis-premium.js?v=13.3"></script>
 <link rel="stylesheet" href="./ondis-v9.css">
 <script src="./ondis-v9.js" defer></script>
-<link rel="stylesheet" href="./ondis-v11.css?v=12.3.0"><script src="./ondis-v11.js?v=13.3" defer></script></head>
-<body>
+<link rel="stylesheet" href="./ondis-v11.css?v=12.3.0"><script src="./ondis-v11.js?v=13.3" defer></script>  <link rel="stylesheet" href="./ondis-visual-refresh.css?v=1.0.0">
+</head>
+<body data-ondis-refresh="admin">
 
 <div class="loading show" id="loadingScreen">
   <div class="spinner"></div>
@@ -77,7 +78,7 @@
   </div>
 
   <div class="card" id="conviteCard">
-    <div class="cardHead"><h2>🔗 Convidar vendedor</h2></div>
+    <div class="cardHead"><h2><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Convidar vendedor</h2></div>
     <div class="field">
       <label>Link de cadastro (já com o código da loja)</label>
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
@@ -93,7 +94,7 @@
 
   <div class="card">
     <div class="cardHead">
-      <h2>👥 Vendedores da loja</h2>
+      <h2><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Vendedores da loja</h2>
       <button class="btn" onclick="carregarVendedores()">↻ Atualizar</button>
     </div>
     <div id="tabelaVendedores"><div class="hint">Carregando vendedores...</div></div>

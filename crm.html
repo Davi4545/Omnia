@@ -88,8 +88,9 @@
 <script src="./ondis-premium.js?v=13.3"></script>
 <link rel="stylesheet" href="./ondis-v9.css">
 <script src="./ondis-v9.js" defer></script>
-<link rel="stylesheet" href="./ondis-v11.css?v=12.3.0"><script src="./ondis-v11.js?v=13.3" defer></script></head>
-<body>
+<link rel="stylesheet" href="./ondis-v11.css?v=12.3.0"><script src="./ondis-v11.js?v=13.3" defer></script>  <link rel="stylesheet" href="./ondis-visual-refresh.css?v=1.0.0">
+</head>
+<body data-ondis-refresh="crm-simple">
 
 <div class="loading show" id="loadingScreen"><div class="spinner"></div><div id="loadingMsg">Carregando...</div></div>
 
@@ -119,7 +120,7 @@
   <div id="viewHoje">
     <div class="kpis" id="hojeKpis"></div>
     <div class="card">
-      <div class="cardHead"><h2>⚡ Ações de hoje</h2><button class="btn sm" onclick="renderHoje()">↻ Atualizar</button></div>
+      <div class="cardHead"><h2><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18"/></svg></span>Ações de hoje</h2><button class="btn sm" onclick="renderHoje()">↻ Atualizar</button></div>
       <div id="hojeConteudo"><div class="hint">Carregando...</div></div>
     </div>
   </div>
@@ -129,7 +130,7 @@
     <div class="kpis" id="clientesKpis"></div>
     <div class="card">
       <div class="cardHead">
-        <h2>👥 Clientes</h2>
+        <h2><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Clientes</h2>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
           <input id="buscaCliente" placeholder="Buscar nome/telefone..." style="padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:13px;" oninput="renderClientes()"/>
           <select id="filtroEtapa" onchange="renderClientes()" style="padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:13px">
@@ -158,7 +159,7 @@
   <!-- FUNIL -->
   <div id="viewFunil" style="display:none">
     <div class="card">
-      <div class="cardHead"><h2>📊 Funil de vendas</h2><span class="hint" style="padding:0">Arraste os cards entre as colunas</span></div>
+      <div class="cardHead"><h2><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 9h18M16 14h2"/></svg></span>Funil de vendas</h2><span class="hint" style="padding:0">Arraste os cards entre as colunas</span></div>
       <div class="funil">
         <div class="col" data-etapa="lead" ondragover="permitirDrop(event)" ondrop="soltarCard(event,'lead')" ondragleave="sairDrop(event)"><h3>🔵 Lead <span id="cntLead" class="tag">0</span></h3><div id="colLead"></div></div>
         <div class="col" data-etapa="negociacao" ondragover="permitirDrop(event)" ondrop="soltarCard(event,'negociacao')" ondragleave="sairDrop(event)"><h3>🟡 Negociação <span id="cntNeg" class="tag">0</span></h3><div id="colNeg"></div></div>
@@ -171,16 +172,16 @@
   <div id="viewMetricas" style="display:none">
     <div class="kpis" id="metricasKpis"></div>
     <div class="card">
-      <div class="cardHead"><h2>📈 Saúde do funil</h2></div>
+      <div class="cardHead"><h2><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/></svg></span>Saúde do funil</h2></div>
       <div id="funilBarras"></div>
     </div>
     <div class="grid2" style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
       <div class="card">
-        <div class="cardHead"><h2>🏆 Top compradores</h2></div>
+        <div class="cardHead"><h2><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Top compradores</h2></div>
         <div id="topCompradores"><div class="hint">—</div></div>
       </div>
       <div class="card">
-        <div class="cardHead"><h2>⚠️ Clientes em risco</h2></div>
+        <div class="cardHead"><h2><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Clientes em risco</h2></div>
         <div id="clientesRisco"><div class="hint">—</div></div>
       </div>
     </div>
@@ -189,18 +190,18 @@
   <!-- LEMBRETES -->
   <div id="viewLembretes" style="display:none">
     <div class="card">
-      <div class="cardHead"><h2>🎂 Aniversariantes do mês</h2></div>
+      <div class="cardHead"><h2><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/></svg></span>Aniversariantes do mês</h2></div>
       <div id="aniversariantes"><div class="hint">Carregando...</div></div>
     </div>
     <div class="card">
-      <div class="cardHead"><h2>📞 Pós-venda (fechados há 30+ dias)</h2></div>
+      <div class="cardHead"><h2><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 9h18M16 14h2"/></svg></span>Pós-venda (fechados há 30+ dias)</h2></div>
       <div id="posVenda"><div class="hint">Carregando...</div></div>
     </div>
   </div>
 
   <div id="viewCampanhas" style="display:none">
     <div class="card">
-      <div class="cardHead"><h2>📣 Nova campanha</h2></div>
+      <div class="cardHead"><h2><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="9" width="18" height="12" rx="2"/><path d="M12 9v12M3 13h18M12 9H7.5a2.5 2.5 0 1 1 2.3-3.5L12 9m0 0h4.5a2.5 2.5 0 1 0-2.3-3.5L12 9"/></svg></span>Nova campanha</h2></div>
       <p class="hint" style="text-align:left;padding:0 0 14px">Crie uma mensagem e dispare para um grupo de clientes de uma vez. Use <b style="color:#7fffc0">{nome}</b> na mensagem para inserir o nome de cada cliente automaticamente.</p>
 
       <div class="field">
@@ -244,7 +245,7 @@
 <div class="modalBack" id="modalDisparo">
   <div class="modal">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-      <h2 style="font-size:18px;font-weight:900">🚀 Disparar campanha</h2>
+      <h2 style="font-size:18px;font-weight:900"><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="9" width="18" height="12" rx="2"/><path d="M12 9v12M3 13h18M12 9H7.5a2.5 2.5 0 1 1 2.3-3.5L12 9m0 0h4.5a2.5 2.5 0 1 0-2.3-3.5L12 9"/></svg></span>Disparar campanha</h2>
       <button class="btn" onclick="fecharDisparo()">✕</button>
     </div>
     <p class="hint" style="text-align:left;padding:0 0 10px">Clique em cada cliente para abrir o WhatsApp com a mensagem pronta. Conforme envia, marque como enviado. Vá de cima para baixo.</p>
@@ -260,7 +261,7 @@
 <div class="modalBack" id="modalLiberar">
   <div class="modal">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-      <h2 style="font-size:18px;font-weight:900">🔓 Liberar clientes</h2>
+      <h2 style="font-size:18px;font-weight:900"><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Liberar clientes</h2>
       <button class="btn" onclick="fecharLiberar()">✕</button>
     </div>
     <p class="hint" style="text-align:left;padding:0 0 14px">Escolha um vendedor para liberar todos os clientes dele. Eles ficam <b>sem dono</b> e disponíveis para todos os vendedores da loja — o primeiro que abrir a ficha de cada cliente vira o dono. Útil para corrigir clientes atribuídos ao vendedor errado.</p>
@@ -327,7 +328,7 @@
           <button class="btn bad sm" id="fichaExcluir">🗑 Excluir</button>
         </div>
 
-        <h3 class="secTitle">💰 COMPRAS</h3>
+        <h3 class="secTitle"><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/></svg></span>COMPRAS</h3>
         <div id="fichaCompras"></div>
         <div style="display:flex;gap:6px;margin-top:8px">
           <input id="compraValor" placeholder="Valor (ex: 250,00)" style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:13px"/>
@@ -336,7 +337,7 @@
         </div>
       </div>
       <div>
-        <h3 class="secTitle" style="margin-top:0">📋 INTERAÇÕES</h3>
+        <h3 class="secTitle" style="margin-top:0"><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18"/></svg></span>INTERAÇÕES</h3>
         <div style="display:flex;gap:6px;margin-bottom:10px">
           <select id="interTipo" style="flex:0 0 auto;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e7eefc;font-size:13px">
             <option value="📞 Ligação">📞 Ligação</option>
@@ -358,7 +359,7 @@
 <div class="modalBack" id="modalZap">
   <div class="modal" style="max-width:480px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-      <h2 style="font-size:18px;font-weight:900">💬 Enviar WhatsApp</h2>
+      <h2 style="font-size:18px;font-weight:900"><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/></svg></span>Enviar WhatsApp</h2>
       <button class="btn" onclick="fecharZap()">✕</button>
     </div>
     <p class="hint" style="text-align:left;padding:0 0 12px" id="zapPara">—</p>

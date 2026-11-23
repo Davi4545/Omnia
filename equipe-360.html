@@ -1,13 +1,14 @@
 <!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Equipe 360° · ONDIS</title><link rel="stylesheet" href="retail-os.css?v=12"><link rel="stylesheet" href="./ondis-premium.css?v=13.3">
 <script src="./ondis-premium.js?v=13.3" defer></script>
-</head><body><header class="top"><button class="back" onclick="location.href='./index.html'">←</button><div class="brand">ONDIS <small>Equipe 360°</small></div><div class="sp"></div><button class="ai" onclick="ai()">✦ IA</button></header><main class="wrap">
+  <link rel="stylesheet" href="./ondis-visual-refresh.css?v=1.0.0">
+</head><body data-ondis-refresh="team"><header class="top"><button class="back" onclick="location.href='./index.html'">←</button><div class="brand">ONDIS <small>Equipe 360°</small></div><div class="sp"></div><button class="ai" onclick="ai()">✦ IA</button></header><main class="wrap">
 <div class="hero"><div><h1>Equipe 360°</h1><p>Desempenho real da equipe: venda, atendimento, conversão e ponto — <b id="e360Loja">carregando…</b> · <span id="e360Mes"></span></p></div></div>
 <div id="e360Msg" class="insight" style="display:none"></div>
 <div class="grid" id="e360Kpis"></div>
 <section class="card"><h2>Performance 360°</h2><div id="e360Tabela"><div class="insight"><b>Carregando os dados da sua loja…</b></div></div></section>
-<section class="card"><h2>✦ Coaching ONDIS</h2><div id="e360Coach"></div></section>
+<section class="card"><h2><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/></svg></span>Coaching ONDIS</h2><div id="e360Coach"></div></section>
 </main>
-<aside class="agent"><h3>✦ ONDIS Intelligence</h3><p>Posso interpretar esta área e sugerir a próxima ação.</p><div class="chips"><button onclick="ask('Priorizei riscos e oportunidades com maior impacto financeiro.')">O que priorizar?</button><button onclick="ask('Preparei uma leitura executiva desta tela.')">Resumir</button></div><input placeholder="Pergunte ao ONDIS..." onkeydown="if(event.key==='Enter')ask(this.value)"></aside><div class="toast"></div>
+<aside class="agent"><h3><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/></svg></span>ONDIS Intelligence</h3><p>Posso interpretar esta área e sugerir a próxima ação.</p><div class="chips"><button onclick="ask('Priorizei riscos e oportunidades com maior impacto financeiro.')">O que priorizar?</button><button onclick="ask('Preparei uma leitura executiva desta tela.')">Resumir</button></div><input placeholder="Pergunte ao ONDIS..." onkeydown="if(event.key==='Enter')ask(this.value)"></aside><div class="toast"></div>
 <script src="retail-os.js?v=12"></script>
 <script src="./equipe-360.js?v=1"></script>
 <script type="module">
