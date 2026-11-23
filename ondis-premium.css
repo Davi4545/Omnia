@@ -2790,3 +2790,327 @@ html.modsPending .sideNav { visibility: hidden; }
 @media(min-width:721px) and (max-width:1550px){
   #viewMetasRank .rankKpiStrip{grid-template-columns:repeat(3,minmax(0,1fr));}
 }
+
+/* =========================================================
+   ONDIS — Liga: revisão visual isolada, sem alterações de dados
+   Escopo estrito: #viewSeller (todas as seis abas)
+   ========================================================= */
+#viewSeller {
+  --liga-ink:#17233b;
+  --liga-quiet:#66758d;
+  --liga-border:#e1e7f1;
+  --liga-accent:#6e48ee;
+  --liga-panel:#ffffff;
+}
+#viewSeller .ligaArena {overflow:visible!important; min-width:0}
+#viewSeller .ligaUiSvg {display:inline-block;flex:none;vertical-align:middle;stroke:currentColor;overflow:visible}
+#viewSeller .ligaHero {
+  position:relative;
+  align-items:center!important;
+  min-height:110px;
+  padding:22px 27px!important;
+  background:
+     radial-gradient(360px 135px at 100% 0%,rgba(236,72,153,.13),transparent 77%),
+     radial-gradient(310px 180px at 52% 140%,rgba(117,88,255,.075),transparent 75%),
+     linear-gradient(120deg,var(--ondis-surface,#fff),color-mix(in srgb,var(--ondis-primary,#e31b39) 5%,var(--ondis-surface,#fff)))!important;
+  border:1px solid var(--liga-border)!important;
+  box-shadow:0 10px 30px rgba(35,45,84,.05)!important;
+}
+#viewSeller .ligaHero .ligaSeason {
+  display:inline-flex;max-width:max-content;min-height:23px;align-items:center;
+  padding:4px 11px!important;border-radius:999px;
+  letter-spacing:.085em!important;font-size:10px!important;
+  color:var(--liga-accent)!important;
+}
+#viewSeller .ligaHero h2{font-size:clamp(24px,2.2vw,32px)!important;line-height:1.12!important;margin:8px 0 6px!important}
+#viewSeller .ligaHero p{max-width:660px;line-height:1.55!important;font-size:12px!important}
+#viewSeller .ligaHero .btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;
+  border-radius:11px!important;padding:0 14px!important;
+  font-size:12px!important;font-weight:750!important;
+  white-space:nowrap;transition:box-shadow .2s ease,transform .2s ease;
+}
+#viewSeller .ligaHero .btn:hover {transform:translateY(-1px);box-shadow:0 6px 16px rgba(73,57,140,.12)!important}
+#viewSeller .ligaTabs {gap:5px!important;scrollbar-width:thin;scrollbar-color:#c5c8d9 transparent;}
+#viewSeller .ligaTabs button {display:inline-flex!important;gap:7px!important;padding:0 15px!important;font-size:12px!important;line-height:1.2!important}
+#viewSeller .ligaTabs button span {display:grid;place-items:center;flex:none;line-height:1}
+#viewSeller .ligaTabs button .ligaUiSvg {width:16px;height:16px}
+#viewSeller .ligaTabs button:focus-visible,
+#viewSeller [data-arena-go]:focus-visible,
+#viewSeller .btn:focus-visible {outline:2px solid var(--liga-accent);outline-offset:2px}
+#viewSeller .ligaFilters {gap:12px!important;padding:15px!important;margin-bottom:16px!important}
+#viewSeller .ligaFilters .field label {display:block;margin-bottom:5px;color:var(--liga-quiet)!important;font-size:10px!important;font-weight:750!important;line-height:1.3}
+#viewSeller .ligaFilters .field select,#viewSeller .ligaFilters .field input {min-height:41px!important;padding:7px 10px!important;font-size:12px!important;border-radius:9px!important}
+#viewSeller .ligaFilters .field select:focus,#viewSeller .ligaFilters .field input:focus {outline:2px solid color-mix(in srgb,var(--liga-accent) 25%,transparent);outline-offset:0;border-color:#b3a4ff!important}
+#viewSeller .ligaHomeShell{grid-template-columns:minmax(0,1fr) 266px;gap:15px;align-items:stretch;margin-top:0}
+#viewSeller .ligaHomeMain{display:flex;flex-direction:column;min-width:0;gap:13px}
+#viewSeller .ligaHomeRail{grid-template-columns:1fr;grid-auto-rows:max-content;gap:12px;min-width:0}
+#viewSeller .ligaHomeBottom{margin-top:0;gap:12px;grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch}
+#viewSeller .ligaHomeCard,
+#viewSeller .ligaHomeDarkCard{
+  min-width:0;overflow:hidden;padding:17px!important;border:1px solid var(--liga-border)!important;
+  background:var(--ondis-surface,#fff)!important;border-radius:17px!important;
+  box-shadow:0 8px 25px rgba(27,48,86,.04)!important;
+}
+#viewSeller .ligaHomeDarkCard{color:var(--liga-ink)!important}
+#viewSeller .ligaHomeCardHead{gap:7px;margin:0 0 15px!important;align-items:flex-start}
+#viewSeller .ligaHomeCardHead>b{color:var(--liga-ink)!important;font-size:11px!important;line-height:1.3;letter-spacing:.015em}
+#viewSeller .ligaHomeCardHead button,#viewSeller .ligaHomeCardHead span{flex:none;color:var(--liga-accent)!important;font-size:10px!important;line-height:1.35;font-weight:750!important;white-space:nowrap}
+#viewSeller .ligaHomeCardHead button:hover{text-decoration:underline}
+/* Área principal: imagem nova em alta definição e nível com respiro */
+#viewSeller .ligaExactHero{
+  position:relative;isolation:isolate;grid-template-columns:minmax(0,1.2fr) minmax(170px,.72fr) minmax(174px,.7fr);
+  gap:12px;min-height:250px;padding:24px 24px!important;border-radius:19px;
+  background:
+    radial-gradient(240px 160px at 63% 50%,rgba(133,94,248,.105),transparent 77%),
+    linear-gradient(115deg,#ffffff 0%,#f7f8ff 60%,#fdf4fc 100%)!important;
+  border:1px solid #e2e5f0!important;
+  box-shadow:0 10px 28px rgba(28,45,82,.045)!important;
+}
+#viewSeller .ligaExactHeroCopy{min-width:0;align-self:center}
+#viewSeller .ligaExactHeroCopy>span{display:inline-flex;padding:5px 9px;border-radius:6px;background:#f0edff;color:#5a3fd3!important;font-size:10px!important;letter-spacing:.035em}
+#viewSeller .ligaExactHeroCopy h3{font-size:clamp(33px,3.6vw,49px)!important;line-height:1.05!important;overflow-wrap:anywhere;margin:14px 0 13px!important}
+#viewSeller .ligaExactHeroCopy p{font-size:12px!important;line-height:1.65!important;max-width:350px}
+#viewSeller .ligaExactTrophy{min-width:0;height:204px!important}
+#viewSeller .ligaTrophyGlow{background:radial-gradient(circle,rgba(255,198,70,.2),rgba(119,69,237,.09) 55%,transparent 72%)!important}
+#viewSeller .ligaTrophyStage{width:100%!important;max-width:248px;height:210px!important}
+#viewSeller .ligaTrophy3D{
+  width:min(100%,228px)!important;height:203px!important;max-height:none!important;
+  border:0!important;border-radius:0!important;object-fit:contain!important;
+  filter:drop-shadow(0 17px 17px rgba(68,42,123,.23))!important;
+}
+#viewSeller .ligaExactLevel{
+  padding:17px!important;min-width:0;border:1px solid #e4e7f0!important;
+  border-radius:15px!important;background:rgba(255,255,255,.93)!important;
+  box-shadow:0 6px 22px rgba(25,43,83,.04)!important;
+}
+#viewSeller .ligaExactLevel small,#viewSeller .ligaExactLevel>span{font-size:10px!important;line-height:1.35;color:#7d889d!important}
+#viewSeller .ligaExactLevel .ligaLevelName{display:flex;align-items:center;gap:8px;font-size:19px!important;letter-spacing:-.015em;margin:9px 0 10px!important;overflow-wrap:anywhere}
+#viewSeller .ligaExactLevel .ligaLevelName .ligaUiSvg{color:#b98021}
+#viewSeller .ligaExactLevel>b{font-size:12px!important}
+#viewSeller .ligaExactLevel .ligaNextLevel{display:flex;align-items:center;gap:7px;font-size:13px!important}
+#viewSeller .ligaExactLevel .ligaNextLevel svg{color:var(--liga-accent)}
+#viewSeller .ligaExactLevel .ligaV3Progress{margin-top:11px!important}
+/* Indicadores com ícones vetoriais e valores legíveis. */
+#viewSeller .ligaKpis{gap:11px!important;margin:0!important;grid-template-columns:repeat(4,minmax(0,1fr))!important}
+#viewSeller .ligaExactKpi{
+  min-height:117px!important;padding:15px 12px!important;gap:11px!important;
+  grid-template-columns:39px minmax(0,1fr)!important;
+  background:var(--ondis-surface,#fff)!important;border:1px solid var(--liga-border)!important;
+  border-radius:15px!important;box-shadow:0 6px 20px rgba(30,49,82,.04)!important;
+}
+#viewSeller .ligaExactKpi>i{width:38px;height:38px;border-radius:11px;color:#6b45de;background:#f0eaff;text-shadow:none;align-self:start}
+#viewSeller .ligaExactKpi:nth-child(2)>i{color:#156fc2;background:#e9f3ff}
+#viewSeller .ligaExactKpi:nth-child(3)>i{color:#0e907c;background:#e7f8f2}
+#viewSeller .ligaExactKpi:nth-child(4)>i{color:#d28b21;background:#fff3de}
+#viewSeller .ligaExactKpi .t{font-size:9.5px!important;letter-spacing:.04em!important;line-height:1.3!important}
+#viewSeller .ligaExactKpi .v{font-size:clamp(16px,1.7vw,22px)!important;line-height:1.12!important;overflow-wrap:anywhere;margin:6px 0 4px}
+#viewSeller .ligaExactKpi .v small{display:inline;font-size:10px!important}
+#viewSeller .ligaExactKpi span{font-size:10px!important;line-height:1.3!important;margin:3px 0 8px!important}
+#viewSeller .ligaV3Progress{height:6px;border-radius:999px;overflow:hidden}
+#viewSeller .ligaV3Progress i {border-radius:inherit}
+/* Destaque do período: coroa transparente não invade foto nem nome. */
+#viewSeller .ligaExactBestSale{
+  display:flex;flex-direction:column;align-items:center;min-height:250px;padding:16px!important;
+  border-radius:18px!important;box-shadow:0 8px 28px rgba(176,124,24,.09)!important;
+  background:radial-gradient(circle at 50% 20%,#fffbe9,#ffefb9 80%,#ffe4a4)!important;
+}
+#viewSeller .ligaBestHead{width:100%;gap:6px;align-items:flex-start}
+#viewSeller .ligaBestHead b{font-size:10px!important;line-height:1.3;letter-spacing:.02em}
+#viewSeller .ligaBestHead span{flex:none;font-size:9px!important}
+#viewSeller .ligaExactBestSale .ligaBestCrown{
+  position:relative!important;top:auto!important;left:auto!important;display:block!important;
+  width:55px!important;height:46px!important;object-fit:contain!important;
+  margin:2px auto -7px!important;transform:none!important;
+  filter:drop-shadow(0 4px 5px rgba(154,92,5,.25))!important;
+  animation:ligaCrownHoverV9 3.4s ease-in-out infinite!important;
+}
+#viewSeller .ligaExactBestSale .ligaV3BestAvatar{
+  position:relative!important;width:69px!important;height:69px!important;margin:3px auto 8px!important;
+  border:3px solid #e9b934!important;box-shadow:0 0 0 4px rgba(255,255,255,.65),0 8px 15px rgba(194,131,20,.11)!important;
+}
+#viewSeller .ligaBestPlaceholder{display:grid;place-items:center;width:100%;height:100%;color:#c49a2e}
+#viewSeller .ligaExactBestSale h4{margin:4px 0 3px!important;font-size:15px!important;max-width:100%;line-height:1.25;overflow-wrap:anywhere}
+#viewSeller .ligaExactBestSale p{font-size:10px!important;line-height:1.4;margin:0 0 9px!important}
+#viewSeller .ligaExactBestSale>strong{font-size:clamp(19px,1.9vw,24px)!important;margin-top:auto;line-height:1.18}
+@keyframes ligaCrownHoverV9{50%{transform:translateY(-4px) rotate(3deg)}}
+/* Mural e recompensas: imagens customizadas no lugar de emojis. */
+#viewSeller .ligaMuralBody{min-height:101px;padding:10px 80px 6px 0}
+#viewSeller .ligaMuralBody b{display:block;font-size:12px!important;line-height:1.4;color:#24304c}
+#viewSeller .ligaMuralBody p{font-size:11px!important;line-height:1.65!important;color:#68778f!important;margin:6px 0 0}
+#viewSeller .ligaMuralBody>img{
+  position:absolute;right:0;top:0;width:77px;height:96px;object-fit:contain;
+  filter:drop-shadow(0 8px 12px rgba(83,47,166,.17));transform:rotate(8deg)
+}
+#viewSeller .ligaRewardMini{grid-template-columns:48px minmax(0,1fr) 19px;gap:10px;min-height:62px;padding:9px 0;border-color:#ecedf4}
+#viewSeller .ligaRewardMini .chest{width:46px;height:45px;background:transparent!important;box-shadow:none!important;border:0!important;overflow:visible}
+#viewSeller .ligaRewardMini .chest img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 5px 5px rgba(70,34,129,.18))}
+#viewSeller .ligaRewardMini b{font-size:11px!important;color:#21304e!important;line-height:1.32}
+#viewSeller .ligaRewardMini small{font-size:10px!important;color:#78869d!important;margin:3px 0 6px}
+#viewSeller .ligaRewardMini .ligaV3Progress{height:5px;background:#eff0f6}
+#viewSeller .ligaRewardLock{display:grid;place-items:center;color:#8895aa;font-size:0}
+#viewSeller .ligaRewardLock svg{height:15px;width:15px}
+/* Cards de resultados e ícones existentes no banco de conquistas */
+#viewSeller .ligaMiniPodium{gap:clamp(8px,1.5vw,18px);padding-top:22px;min-height:148px}
+#viewSeller .ligaMiniPodium .podiumHero{min-width:0;flex:1 1 0;max-width:120px}
+#viewSeller .ligaMiniPodium .podiumHero b{font-size:10px!important;line-height:1.4;overflow-wrap:anywhere}
+#viewSeller .ligaMiniPodium .podiumHero em{font-size:10px!important}
+#viewSeller .ligaMiniRankList>div{min-width:0;font-size:10px!important;grid-template-columns:22px minmax(0,1fr) auto;gap:6px;padding:10px 2px}
+#viewSeller .ligaMiniRankList>div>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#viewSeller .ligaMiniRankList>div>strong{font-size:10px!important;white-space:nowrap}
+#viewSeller .ligaMiniMission,#viewSeller .ligaMiniAchievement{grid-template-columns:45px minmax(0,1fr) auto;gap:9px;padding:10px 0;min-width:0}
+#viewSeller .ligaMiniMission>div,#viewSeller .ligaMiniAchievement>div{min-width:0}
+#viewSeller .ligaMiniMission b,#viewSeller .ligaMiniAchievement b{font-size:11px!important;line-height:1.3!important;overflow-wrap:anywhere}
+#viewSeller .ligaMiniMission small,#viewSeller .ligaMiniAchievement small{font-size:10px!important;line-height:1.45!important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin:4px 0}
+#viewSeller .ligaMiniMission em,#viewSeller .ligaMiniAchievement em{font-size:9px!important;max-width:92px!important;line-height:1.4;overflow-wrap:anywhere}
+#viewSeller .ligaMiniMissionBadge .ligaBadgeAsset,#viewSeller .ligaMiniAchievement .ligaBadgeAsset{display:block;max-width:48px}
+#viewSeller .ligaMiniMissionBadge .ligaUiSvg {width:24px;height:24px;color:#7050dc}
+#viewSeller .ligaMiniMissionBadge:has(.ligaUiSvg){background:#f0eaff!important;border-radius:13px!important}
+#viewSeller .ligaEmptyAchievement{font-size:11px!important;line-height:1.55;padding:16px 4px}
+#viewSeller .ligaMiniMission em.ligaMissionNumbers{
+  display:flex;flex-direction:column;align-items:flex-end;justify-content:center;
+  min-width:84px;max-width:114px!important;gap:3px;line-height:1.18;
+}
+#viewSeller .ligaMiniMission .ligaMissionNumbers span{font-size:10px!important;font-weight:850;color:#34415d;white-space:nowrap}
+#viewSeller .ligaMiniMission .ligaMissionNumbers small{font-size:9px!important;color:#7d8ba2;margin:0!important;line-height:1.25}
+#viewSeller .ligaMiniMission .ligaMissionNumbers b{font-size:10px!important;color:var(--liga-accent);white-space:nowrap}
+
+/* Recompensa coletiva: novo baú ilustrado e conteúdo sem amontoar */
+#viewSeller .ligaExactCollective{
+  grid-template-columns:112px minmax(0,1fr) minmax(210px,.8fr) auto;
+  gap:18px;margin-top:14px;padding:20px!important;
+  border-radius:19px;border:1px solid #5a40c7;
+  background:linear-gradient(115deg,#20115b 0%,#312078 54%,#151a55 100%)!important;
+}
+#viewSeller .ligaExactCollective span{font-size:10px!important;letter-spacing:.065em;line-height:1.45}
+#viewSeller .ligaExactCollective h3{font-size:17px!important;line-height:1.3}
+#viewSeller .ligaExactCollective p{font-size:11px!important;line-height:1.5}
+#viewSeller .ligaCollectiveProgress b{font-size:10px!important;line-height:1.4}
+#viewSeller .ligaAnimatedChest .ligaChestLid,#viewSeller .ligaAnimatedChest .ligaChestBody{
+  background-image:url('./liga-bau.png')!important;background-position:center!important;background-size:contain!important;
+}
+#viewSeller .ligaRewardCard .ligaRewardChest{
+  width:155px!important;height:122px!important;background:url('./liga-bau.png') center/contain no-repeat!important;
+  border:0!important;border-radius:0!important;filter:drop-shadow(0 13px 18px rgba(70,25,170,.28));
+}
+#viewSeller .ligaEmptyRewardArt{width:104px;height:94px;object-fit:contain}
+/* Demais abas: ranking, missão, progresso e conquistas */
+#viewSeller .ligaPanelHead{align-items:center;gap:16px;margin:12px 0 18px}
+#viewSeller .ligaPanelHead h3{font-size:21px!important;line-height:1.22}
+#viewSeller .ligaPanelHead small{font-size:11px!important;line-height:1.5}
+#viewSeller .ligaEyebrow{font-size:10px!important;letter-spacing:.09em!important}
+#viewSeller .ligaPersonalCard{padding:21px!important;border-radius:17px!important}
+#viewSeller .ligaPersonalIdentity h3{font-size:21px!important}
+#viewSeller .ligaPersonalIdentity p,#viewSeller .ligaDestination small{font-size:12px!important;line-height:1.5}
+#viewSeller .ligaDestination span{font-size:11px!important}
+#viewSeller .ligaDestination b{font-size:17px!important}
+#viewSeller .arenaGrid2{gap:14px;margin-top:14px}
+#viewSeller .arenaGrid2 .arenaBox{padding:18px!important;border-radius:16px!important}
+#viewSeller .arenaSectionTitle{font-size:12px!important;letter-spacing:.07em!important}
+#viewSeller .ligaPodium{min-height:190px;gap:22px;padding:30px 12px 15px;border-radius:18px 18px 0 0}
+#viewSeller .ligaPodium .podiumHero{min-width:0;text-align:center}
+#viewSeller .ligaPodium .podiumHero .avatar{margin:auto}
+#viewSeller .ligaPodium .podiumHero b{display:block;margin-top:10px;overflow-wrap:anywhere}
+#viewSeller .ligaRankingRow{grid-template-columns:35px 40px minmax(130px,1fr) minmax(105px,.45fr) 65px;gap:11px;padding:13px 15px;min-width:0}
+#viewSeller .ligaRankingRow strong{font-size:12px!important}
+#viewSeller .ligaRankingRow small{font-size:10px!important}
+#viewSeller .ligaRankingRow>b,#viewSeller .ligaRankingRow>em{font-size:11px!important}
+#viewSeller .ligaMissionGrid{gap:14px}
+#viewSeller .ligaV3Mission{min-width:0;padding:18px!important;border-radius:17px!important;box-shadow:0 6px 20px rgba(40,54,91,.045)!important}
+#viewSeller .ligaV3MissionTop{min-width:0;gap:12px!important}
+#viewSeller .ligaV3MissionTop>div:nth-child(2){min-width:0}
+#viewSeller .ligaV3MissionTop b{font-size:13px!important;line-height:1.4}
+#viewSeller .ligaV3MissionTop span,#viewSeller .ligaV3MissionRule{font-size:10px!important;line-height:1.45}
+#viewSeller .ligaV3MissionTop em{font-size:11px!important;white-space:nowrap}
+#viewSeller .ligaV3MissionIcon .ligaUiSvg{color:var(--liga-accent)}
+#viewSeller .ligaMissionActions{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap}
+#viewSeller .ligaMissionActions .btn,#viewSeller #btnEditarSelos{display:inline-flex;align-items:center;gap:7px;min-height:36px}
+#viewSeller .badgeGrid{gap:15px!important}
+#viewSeller .badgeCard{min-width:0;min-height:155px!important}
+#viewSeller .badgeTitle{font-size:13px!important;line-height:1.3!important}
+#viewSeller .badgeDesc{font-size:11px!important}
+#viewSeller .badgeTop{align-items:center}
+#viewSeller .ligaBadgeIconArt .ligaUiSvg{color:var(--liga-accent)}
+#viewSeller #arenaXpBox .ligaUiSvg{color:#b98028;fill:rgba(244,189,68,.14);margin-right:3px}
+/* Painel de recompensas (aba específica) */
+#viewSeller .ligaRewardCard{display:flex;align-items:center;gap:22px;flex-wrap:wrap;padding:22px!important;border-radius:19px!important}
+#viewSeller .ligaRewardCard>div:nth-child(2){flex:1 1 250px;min-width:0}
+#viewSeller .ligaRewardCard h3{font-size:19px!important;line-height:1.3}
+#viewSeller .ligaRewardCard p{font-size:12px!important;line-height:1.55}
+#viewSeller .ligaRewardCard small{font-size:11px!important}
+#viewSeller .ligaRewardCard .btn{flex:0 0 auto}
+/* Ajustes responsivos pelo tamanho útil da página. */
+@media(max-width:1460px){
+  #viewSeller .ligaHomeShell{grid-template-columns:minmax(0,1fr) 244px}
+  #viewSeller .ligaExactHero{grid-template-columns:minmax(0,1.1fr) minmax(150px,.68fr) minmax(160px,.75fr);padding:20px!important}
+  #viewSeller .ligaExactHeroCopy h3{font-size:clamp(31px,3vw,43px)!important}
+  #viewSeller .ligaKpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #viewSeller .ligaExactKpi{min-height:97px!important}
+}
+@media(max-width:1190px){
+  #viewSeller .ligaHomeShell{grid-template-columns:1fr}
+  #viewSeller .ligaHomeRail{grid-template-columns:repeat(3,minmax(0,1fr))}
+  #viewSeller .ligaExactHero{grid-template-columns:minmax(0,1fr) minmax(150px,.6fr) minmax(165px,.63fr)}
+  #viewSeller .ligaExactBestSale{min-height:248px}
+  #viewSeller .ligaExactCollective{grid-template-columns:100px 1fr minmax(150px,.8fr)}
+  #viewSeller .ligaExactCollective .btn{grid-column:3;justify-self:end}
+  #viewSeller .ligaFilters{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  #viewSeller .ligaHomeBottom{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:900px){
+  #viewSeller .ligaHero{align-items:flex-start!important}
+  #viewSeller .ligaHomeRail{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #viewSeller .ligaExactBestSale{grid-row:span 2}
+  #viewSeller .ligaHomeBottom{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #viewSeller .ligaHomeBottom>.ligaHomeCard:last-child{grid-column:1/-1}
+  #viewSeller .ligaExactHero{grid-template-columns:minmax(0,1fr) minmax(150px,.7fr)}
+  #viewSeller .ligaExactLevel{grid-column:1/-1}
+  #viewSeller .ligaFilters{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #viewSeller .ligaExactCollective{grid-template-columns:95px 1fr}
+  #viewSeller .ligaCollectiveProgress,#viewSeller .ligaExactCollective .btn{grid-column:2}
+  #viewSeller .ligaExactCollective .btn{justify-self:start}
+  #viewSeller .ligaMissionGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:620px){
+  #viewSeller{padding:13px!important;margin:-13px!important}
+  #viewSeller .ligaHero{flex-direction:column!important;align-items:stretch!important;gap:16px!important;padding:19px 18px!important}
+  #viewSeller .ligaHero .btn{align-self:flex-start}
+  #viewSeller .ligaHero h2{font-size:26px!important}
+  #viewSeller .ligaHero p{font-size:12px!important}
+  #viewSeller .ligaTabs{top:54px;margin-bottom:12px!important}
+  #viewSeller .ligaFilters{grid-template-columns:1fr!important;padding:13px!important;gap:10px!important}
+  #viewSeller .ligaExactHero{grid-template-columns:1fr;gap:4px;padding:20px!important;text-align:left}
+  #viewSeller .ligaExactHeroCopy h3{font-size:43px!important}
+  #viewSeller .ligaExactTrophy{height:170px!important}
+  #viewSeller .ligaTrophyStage{height:175px!important;max-width:200px}
+  #viewSeller .ligaTrophy3D{height:170px!important;width:185px!important}
+  #viewSeller .ligaExactLevel{grid-column:1;min-height:0}
+  #viewSeller .ligaHomeShell,#viewSeller .ligaHomeBottom,#viewSeller .ligaHomeRail{grid-template-columns:1fr!important;gap:12px}
+  #viewSeller .ligaHomeBottom>.ligaHomeCard:last-child{grid-column:auto}
+  #viewSeller .ligaKpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #viewSeller .ligaExactKpi{min-height:105px!important;grid-template-columns:1fr!important;gap:7px!important}
+  #viewSeller .ligaExactKpi .v{font-size:18px!important}
+  #viewSeller .ligaExactBestSale{grid-row:auto}
+  #viewSeller .ligaExactCollective{grid-template-columns:1fr;text-align:center;gap:12px}
+  #viewSeller .ligaExactCollective .ligaAnimatedChest{margin:auto}
+  #viewSeller .ligaCollectiveProgress,#viewSeller .ligaExactCollective .btn{grid-column:1}
+  #viewSeller .ligaExactCollective .btn{justify-self:center}
+  #viewSeller .ligaPanelHead{flex-direction:column;align-items:flex-start!important;gap:8px}
+  #viewSeller .ligaPanelHead small{text-align:left!important}
+  #viewSeller .ligaMissionGrid{grid-template-columns:1fr!important}
+  #viewSeller .ligaPodium{gap:8px;padding:18px 8px}
+  #viewSeller .ligaRankingList{overflow-x:auto}
+  #viewSeller .ligaRankingRow{min-width:600px}
+  #viewSeller .ligaPersonalIdentity{flex-wrap:wrap}
+  #viewSeller .ligaRewardCard{justify-content:center;text-align:center}
+  #viewSeller .ligaRewardCard>div:nth-child(2){flex-basis:100%}
+}
+@media(max-width:380px){
+  #viewSeller .ligaKpis{grid-template-columns:1fr!important}
+  #viewSeller .ligaExactKpi{grid-template-columns:40px minmax(0,1fr)!important}
+  #viewSeller .ligaMiniMission em,#viewSeller .ligaMiniAchievement em{max-width:70px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  #viewSeller .ligaBestCrown,#viewSeller .ligaTrophy3D,#viewSeller .ligaTrophyStage,
+  #viewSeller .ligaAnimatedChest{animation:none!important;transition:none!important}
+}

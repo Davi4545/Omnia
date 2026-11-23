@@ -1058,7 +1058,7 @@ body{ background-attachment: fixed; }
 }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<link href="./ondis-premium.css?v=13.4-visual-dashboard-ranking" rel="stylesheet"/>
+<link href="./ondis-premium.css?v=13.5-liga-ondis" rel="stylesheet"/>
 <script src="./ondis-premium.js?v=13.3"></script>
 <script>document.documentElement.classList.add("modsPending");setTimeout(function(){document.documentElement.classList.remove("modsPending");},6000);</script>
 
@@ -4640,6 +4640,26 @@ body{ background-attachment: fixed; }
     const view = document.getElementById('viewSeller');
     if(!view) return;
 
+    // Elementos exclusivamente visuais da Liga; não alteram pontuação, metas ou Firebase.
+    function ligaUiIcon(name, size=18){
+      const paths = {
+        overview:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+        progress:'<path d="m3 17 6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
+        trophy:'<path d="M8 21h8m-4-4v4M7 4h10v6a5 5 0 0 1-10 0V4Z"/><path d="M7 6H4v2a4 4 0 0 0 4 4m9-6h3v2a4 4 0 0 1-4 4"/>',
+        target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+        medal:'<path d="m8.5 3 3.5 6 3.5-6M5 3l4 7m10-7-4 7"/><circle cx="12" cy="15" r="6"/><path d="m10.2 15 1.3 1.3 2.5-2.7"/>',
+        gift:'<rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13M3 12h18M12 8H7a2.5 2.5 0 1 1 2.2-3.6L12 8Zm0 0h5a2.5 2.5 0 1 0-2.2-3.6L12 8Z"/>',
+        star:'<path d="m12 2 3.1 6.2 6.9 1-5 4.9 1.2 6.9-6.2-3.3-6.2 3.3 1.2-6.9-5-4.9 6.9-1L12 2Z"/>',
+        users:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/>',
+        clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+        lock:'<rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
+        settings:'<circle cx="12" cy="12" r="3"/><path d="M19 13a7 7 0 0 0 0-2l2-1.3-2-3.5-2.3 1a7 7 0 0 0-1.7-1L14.7 3h-4l-.3 3.2a7 7 0 0 0-1.7 1l-2.3-1-2 3.5L6.4 11a7 7 0 0 0 0 2L4.3 14.3l2 3.5 2.3-1a7 7 0 0 0 1.7 1l.4 3.2h4l.3-3.2a7 7 0 0 0 1.7-1l2.3 1 2-3.5-2-1.3Z"/>',
+        shield:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/>',
+        download:'<path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/>'
+      };
+      return `<svg class="ligaUiSvg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name] || paths.star}</svg>`;
+    }
+
     // Sempre injetar markup (nunca deixa tela em branco)
     view.innerHTML = `
       <section class="card arenaCard ligaArena">
@@ -4649,16 +4669,16 @@ body{ background-attachment: fixed; }
             <h2>Liga ONDIS</h2>
             <p>Venda. Pontue. Conquiste. Cada resultado real vira progresso, XP e conquista.</p>
           </div>
-          <button class="btn" id="btnSellerDownloadBadges">Baixar conquistas</button>
+          <button class="btn" id="btnSellerDownloadBadges">${ligaUiIcon('download',15)} <span>Baixar conquistas</span></button>
         </div>
         <div class="cardBody ligaBody">
           <div class="ligaTabs" role="tablist" aria-label="Áreas da Liga ONDIS">
-            <button type="button" data-arena-tab="overview" class="active"><span>✦</span> Visão geral</button>
-            <button type="button" data-arena-tab="progress"><span>↗</span> Meu progresso</button>
-            <button type="button" data-arena-tab="ranking"><span>🏆</span> Ranking</button>
-            <button type="button" data-arena-tab="missions"><span>🎯</span> Missões</button>
-            <button type="button" data-arena-tab="achievements"><span>🏅</span> Conquistas</button>
-            <button type="button" data-arena-tab="rewards"><span>🎁</span> Recompensas</button>
+            <button type="button" data-arena-tab="overview" class="active"><span>${ligaUiIcon('overview',16)}</span> Visão geral</button>
+            <button type="button" data-arena-tab="progress"><span>${ligaUiIcon('progress',16)}</span> Meu progresso</button>
+            <button type="button" data-arena-tab="ranking"><span>${ligaUiIcon('trophy',16)}</span> Ranking</button>
+            <button type="button" data-arena-tab="missions"><span>${ligaUiIcon('target',16)}</span> Missões</button>
+            <button type="button" data-arena-tab="achievements"><span>${ligaUiIcon('medal',16)}</span> Conquistas</button>
+            <button type="button" data-arena-tab="rewards"><span>${ligaUiIcon('gift',16)}</span> Recompensas</button>
           </div>
 
           <div class="arenaFilters ligaFilters" aria-label="Filtros da temporada">
@@ -4701,7 +4721,7 @@ body{ background-attachment: fixed; }
           <div class="ligaTabPanel" data-arena-panel="missions"><div id="arenaMissionsPanel"></div></div>
 
           <div class="ligaTabPanel" data-arena-panel="achievements">
-            <div class="arenaBadgesHead"><div><span class="ligaEyebrow">Coleção da temporada</span><h3 class="arenaSectionTitle">Conquistas do mês</h3></div><button class="btn warn" id="btnEditarSelos" style="display:none">⚙️ Editar conquistas</button></div>
+            <div class="arenaBadgesHead"><div><span class="ligaEyebrow">Coleção da temporada</span><h3 class="arenaSectionTitle">Conquistas do mês</h3></div><button class="btn warn" id="btnEditarSelos" style="display:none">${ligaUiIcon('settings',15)} Editar conquistas</button></div>
             <div class="badgeGrid" id="sellerBadges"></div>
             <div class="hint arenaHint">As conquistas são liberadas automaticamente a partir dos resultados registrados.</div>
           </div>
@@ -4775,7 +4795,7 @@ body{ background-attachment: fixed; }
           <div class="gameStageTop">
             <div class="gameHud"><small>ENERGIA DA EQUIPE</small><div class="teamEnergy">0%</div><div class="meter good"><i style="width:0%"></i></div></div>
             <div class="gameScreen"><div class="gameScreenTitle">CAMPEONATO DE <span>VENDAS</span></div><div class="hint">Cadastre os jogadores para abrir a temporada.</div></div>
-            <div class="gameHud rewardHud"><small>PRÓXIMA RECOMPENSA</small><div class="ligaRewardChest" role="img" aria-label="Baú da equipe"><span>✦</span></div><strong>${safeArenaText(teamReward.title)}</strong></div>
+            <div class="gameHud rewardHud"><small>PRÓXIMA RECOMPENSA</small><img class="ligaEmptyRewardArt" src="./liga-bau.png" alt="Baú de recompensa"><strong>${safeArenaText(teamReward.title)}</strong></div>
           </div>`;
         kpisEl.innerHTML = '<div class="hint">Cadastre um vendedor em <b>+ Vendedor</b> para usar a Arena.</div>';
         metaEl.innerHTML = '<div class="hint">—</div>';
@@ -4965,23 +4985,23 @@ body{ background-attachment: fixed; }
             <h3>Seja <em>Lenda.</em></h3>
             <p>Cada venda é XP. Cada meta é uma missão.<br>Cada conquista aproxima você do topo.</p>
           </div>
-          <div class="ligaExactTrophy" aria-label="Troféu 3D animado da Liga"><div class="ligaTrophyGlow"></div><div class="ligaTrophyStage"><img class="ligaTrophy3D" src="./trophy-3d.png" alt="Troféu 3D da Liga ONDIS"></div></div>
+          <div class="ligaExactTrophy" aria-label="Troféu 3D animado da Liga"><div class="ligaTrophyGlow"></div><div class="ligaTrophyStage"><img class="ligaTrophy3D" src="./liga-trofeu.png" alt="Troféu dourado da Liga ONDIS"></div></div>
           <div class="ligaExactLevel">
             <small>NÍVEL ATUAL</small>
-            <strong>${currentLevel.icon} ${currentLevel.name}</strong>
+            <strong class="ligaLevelName">${ligaUiIcon('shield',20)} ${currentLevel.name}</strong>
             <b>${seasonXP.toLocaleString('pt-BR')} / ${levelTarget.toLocaleString('pt-BR')} XP</b>
             <div class="ligaV3Progress"><i style="width:${levelPct}%"></i></div>
-            <span>Próximo nível</span><em>★ ${nextLevel.name}</em><small>↑ ${levelMissing.toLocaleString('pt-BR')} XP restantes</small>
+            <span>Próximo nível</span><em class="ligaNextLevel">${ligaUiIcon('star',14)} ${nextLevel.name}</em><small>↑ ${levelMissing.toLocaleString('pt-BR')} XP restantes</small>
           </div>
         </section>`;
-      if(overviewBestEl) overviewBestEl.innerHTML = `<article class="ligaExactBestSale"><div class="ligaBestHead"><b>DESTAQUE DO PERÍODO</b><span>${periodLabel}</span></div><div class="ligaBestCrown" aria-hidden="true">👑</div><div class="ligaV3BestAvatar">${bestPeriodSeller?.photo?`<img src="${bestPeriodSeller.photo}" alt="">`:'★'}</div><h4>${safeArenaText(bestPeriodSeller?.name||'Aguardando campeão')}</h4><p>${bestPeriodSale?.dateKey?periodSaleLabel:'Registre vendas no período'}</p><strong>${formatMoney(bestPeriodSale?.value||0)}</strong></article>`;
-      if(overviewMuralEl) overviewMuralEl.innerHTML = `<div class="ligaMuralBody"><b>Parabéns ao time! 🚀</b><p>Seguimos firmes na missão.<br>Cada venda nos leva mais longe!</p><span>🚀</span></div>`;
-      if(overviewRewardsEl) overviewRewardsEl.innerHTML = `<div class="ligaRewardMini"><span class="chest purple"><img src="./reward-chest.png" alt=""></span><div><b>Baú Épico</b><small>2.000 XP</small><div class="ligaV3Progress"><i style="width:${Math.min(100,seasonXP/2000*100)}%"></i></div></div><em>🔒</em></div><div class="ligaRewardMini"><span class="chest blue"><img src="./reward-chest.png" alt=""></span><div><b>Pacote Diamante</b><small>2.800 XP</small><div class="ligaV3Progress"><i style="width:${Math.min(100,seasonXP/2800*100)}%"></i></div></div><em>🔒</em></div><div class="ligaRewardMini"><span class="chest gold"><img src="./reward-chest.png" alt=""></span><div><b>Baú Lendário</b><small>4.000 XP</small><div class="ligaV3Progress"><i style="width:${Math.min(100,seasonXP/4000*100)}%"></i></div></div><em>🔒</em></div>`;
+      if(overviewBestEl) overviewBestEl.innerHTML = `<article class="ligaExactBestSale"><div class="ligaBestHead"><b>DESTAQUE DO PERÍODO</b><span>${periodLabel}</span></div><img class="ligaBestCrown" src="./liga-coroa.png" alt="" aria-hidden="true"><div class="ligaV3BestAvatar">${bestPeriodSeller?.photo?`<img src="${bestPeriodSeller.photo}" alt="">`:`<span class="ligaBestPlaceholder">${ligaUiIcon('star',25)}</span>`}</div><h4>${safeArenaText(bestPeriodSeller?.name||'Aguardando campeão')}</h4><p>${bestPeriodSale?.dateKey?periodSaleLabel:'Registre vendas no período'}</p><strong>${formatMoney(bestPeriodSale?.value||0)}</strong></article>`;
+      if(overviewMuralEl) overviewMuralEl.innerHTML = `<div class="ligaMuralBody"><b>Parabéns ao time!</b><p>Seguimos firmes na missão.<br>Cada venda nos leva mais longe!</p><img src="./liga-foguete.png" alt="Foguete da Liga ONDIS" loading="lazy"></div>`;
+      if(overviewRewardsEl) overviewRewardsEl.innerHTML = `<div class="ligaRewardMini"><span class="chest purple"><img src="./liga-bau.png" alt="Baú de recompensa"></span><div><b>Baú Épico</b><small>2.000 XP</small><div class="ligaV3Progress"><i style="width:${Math.min(100,seasonXP/2000*100)}%"></i></div></div><em class="ligaRewardLock">${ligaUiIcon('lock',14)}</em></div><div class="ligaRewardMini"><span class="chest blue"><img src="./liga-bau.png" alt="Baú de recompensa"></span><div><b>Pacote Diamante</b><small>2.800 XP</small><div class="ligaV3Progress"><i style="width:${Math.min(100,seasonXP/2800*100)}%"></i></div></div><em class="ligaRewardLock">${ligaUiIcon('lock',14)}</em></div><div class="ligaRewardMini"><span class="chest gold"><img src="./liga-bau.png" alt="Baú de recompensa"></span><div><b>Baú Lendário</b><small>4.000 XP</small><div class="ligaV3Progress"><i style="width:${Math.min(100,seasonXP/4000*100)}%"></i></div></div><em class="ligaRewardLock">${ligaUiIcon('lock',14)}</em></div>`;
 
       const rankingRows = allGameRows.map((row,index)=>`<div class="ligaRankingRow ${row.seller.id===sid?'current':''}"><span class="ligaRankNumber">${index+1}</span><div class="avatar">${avatarMarkup(row.seller)}</div><div><strong>${safeArenaText(row.seller.name||'Vendedor')}</strong><small>${row.sales} venda(s) · meta ${formatMoney(row.goal)}</small></div><b>${formatMoney(row.revenue)}</b><em>${row.pct.toFixed(1)}%</em></div>`).join('');
       rankingFullEl.innerHTML = `<div class="ligaPanelHead"><div><span class="ligaEyebrow">Classificação real</span><h3>Ranking da equipe</h3></div><small>Ordenado por percentual da meta; faturamento desempata.</small></div><div class="ligaPodium">${podium || '<div class="hint">Aguardando resultados.</div>'}</div><div class="ligaRankingList">${rankingRows}</div>`;
       if(overviewRankingEl) overviewRankingEl.innerHTML = `<div class="ligaMiniPodium">${podium || '<div class="hint">Aguardando resultados.</div>'}</div><div class="ligaMiniRankList">${allGameRows.slice(3,6).map((row,index)=>`<div><b>${index+4}</b><span>${safeArenaText(row.seller.name||'Vendedor')}</span><strong>${formatMoney(row.revenue)}</strong></div>`).join('')}</div>`;
-      rewardEl.innerHTML = `<div class="ligaRewardCard ${teamEnergy>=100?'unlocked':''}"><div class="ligaRewardChest" role="img" aria-label="Baú de recompensa"><span>✦</span></div><div><span class="ligaEyebrow">${teamEnergy>=100?'Recompensa liberada':'Recompensa coletiva'}</span><h3>${safeArenaText(teamReward.title)}</h3><p>${safeArenaText(teamReward.description)}</p><div class="meter good"><i style="width:${teamEnergy}%"></i></div><small>${formatMoney(teamRevenue)} de ${formatMoney(teamGoal)} · ${teamEnergy.toFixed(0)}%</small></div>${['admin','superadmin'].includes(arenaRole)?'<button class="btn warn" id="btnEditRewardArena">Editar recompensa</button>':''}</div>`;
+      rewardEl.innerHTML = `<div class="ligaRewardCard ${teamEnergy>=100?'unlocked':''}"><div class="ligaRewardChest" role="img" aria-label="Baú de recompensa"></div><div><span class="ligaEyebrow">${teamEnergy>=100?'Recompensa liberada':'Recompensa coletiva'}</span><h3>${safeArenaText(teamReward.title)}</h3><p>${safeArenaText(teamReward.description)}</p><div class="meter good"><i style="width:${teamEnergy}%"></i></div><small>${formatMoney(teamRevenue)} de ${formatMoney(teamGoal)} · ${teamEnergy.toFixed(0)}%</small></div>${['admin','superadmin'].includes(arenaRole)?'<button class="btn warn" id="btnEditRewardArena">Editar recompensa</button>':''}</div>`;
       const rewardEditButton=document.getElementById('btnEditRewardArena');if(rewardEditButton)rewardEditButton.onclick=abrirEditorSelos;
       if(overviewRewardEl) overviewRewardEl.innerHTML = `<div class="ligaExactCollective"><div class="ligaAnimatedChest" aria-label="Baú de recompensas"><div class="ligaChestGlow"></div><div class="ligaChestLid"></div><div class="ligaChestBody"></div></div><div><span>RECOMPENSA COLETIVA DA TEMPORADA</span><h3>${safeArenaText(teamReward.title)}</h3><p>${safeArenaText(teamReward.description)}</p></div><div class="ligaCollectiveProgress"><div class="ligaV3Progress"><i style="width:${teamEnergy}%"></i></div><b>${formatMoney(teamRevenue)} de ${formatMoney(teamGoal)} · ${teamEnergy.toFixed(0)}%</b></div>${['admin','superadmin'].includes(arenaRole)?'<button class="btn" id="btnOverviewEditReward">Editar recompensa</button>':''}</div>`; const overviewEdit=document.getElementById('btnOverviewEditReward'); if(overviewEdit) overviewEdit.onclick=abrirEditorSelos;
       maybeCelebrateTeamChest(teamEnergy,teamReward,mk2);
@@ -5000,10 +5020,10 @@ body{ background-attachment: fixed; }
       const monthPctNow = monthGoalNow>0 ? clamp((monthRevenueNow/monthGoalNow)*100,0,999) : 0;
 
       kpisEl.innerHTML = `
-        <div class="kpi ligaExactKpi"><i>★</i><div><div class="t">SUA PONTUAÇÃO</div><div class="v">${seasonXP.toLocaleString('pt-BR')} <small>pts</small></div><span>XP da temporada</span><div class="ligaV3Progress"><i style="width:${levelPct}%"></i></div></div></div>
-        <div class="kpi ligaExactKpi"><i>◎</i><div><div class="t">META DA LIGA</div><div class="v">${formatMoney(teamGoal).replace('R$ ','')}</div><span>${teamEnergy.toFixed(0)}% da meta coletiva</span><div class="ligaV3Progress"><i style="width:${teamEnergy}%"></i></div></div></div>
-        <div class="kpi ligaExactKpi"><i>♙</i><div><div class="t">PARTICIPANTES</div><div class="v">${allGameRows.length}</div><span>vendedores na liga</span><div class="ligaV3Progress"><i style="width:${Math.min(100,allGameRows.length*8)}%"></i></div></div></div>
-        <div class="kpi ligaExactKpi"><i>◷</i><div><div class="t">TEMPO RESTANTE</div><div class="v">${Math.max(0,Math.ceil((new Date(Number(mk2.slice(0,4)),Number(mk2.slice(5,7)),0,23,59,59)-new Date())/86400000))} <small>dias</small></div><span>para o fim do mês</span><div class="ligaV3Progress"><i style="width:${Math.max(8,100-(new Date().getDate()/daysInMonth(mk2)*100))}%"></i></div></div></div>`;
+        <div class="kpi ligaExactKpi"><i>${ligaUiIcon('star',21)}</i><div><div class="t">SUA PONTUAÇÃO</div><div class="v">${seasonXP.toLocaleString('pt-BR')} <small>pts</small></div><span>XP da temporada</span><div class="ligaV3Progress"><i style="width:${levelPct}%"></i></div></div></div>
+        <div class="kpi ligaExactKpi"><i>${ligaUiIcon('target',21)}</i><div><div class="t">META DA LIGA</div><div class="v">${formatMoney(teamGoal).replace('R$ ','')}</div><span>${teamEnergy.toFixed(0)}% da meta coletiva</span><div class="ligaV3Progress"><i style="width:${teamEnergy}%"></i></div></div></div>
+        <div class="kpi ligaExactKpi"><i>${ligaUiIcon('users',21)}</i><div><div class="t">PARTICIPANTES</div><div class="v">${allGameRows.length}</div><span>vendedores na liga</span><div class="ligaV3Progress"><i style="width:${Math.min(100,allGameRows.length*8)}%"></i></div></div></div>
+        <div class="kpi ligaExactKpi"><i>${ligaUiIcon('clock',21)}</i><div><div class="t">TEMPO RESTANTE</div><div class="v">${Math.max(0,Math.ceil((new Date(Number(mk2.slice(0,4)),Number(mk2.slice(5,7)),0,23,59,59)-new Date())/86400000))} <small>dias</small></div><span>para o fim do mês</span><div class="ligaV3Progress"><i style="width:${Math.max(8,100-(new Date().getDate()/daysInMonth(mk2)*100))}%"></i></div></div></div>`;
 
       // Metas (semana + mês) — baseado no mês referência
       const w = weekOfMonth(toKey);
@@ -5040,15 +5060,15 @@ body{ background-attachment: fixed; }
         else if(mission.metric==='goalPct'){ current=pctM; target=Number(mission.target ?? 100); unit='percent'; }
         return {...mission,badgeDef,current,target,unit};
       });
-      missionsEl.innerHTML = `<div class="ligaPanelHead"><div><span class="ligaEyebrow">Missões da semana</span><h3>Desafios ativos de ${safeArenaText(selectedRow?.seller?.name||'vendedor')}</h3></div><div class="ligaMissionActions"><small>As missões usam os mesmos critérios dos selos da Liga e podem ser editadas pela gestão.</small>${['admin','superadmin'].includes(arenaRole)?'<button class="btn" id="btnConfigMissions">⚙️ Configurar missões</button>':''}</div></div><div class="ligaMissionGrid">${missionDefinitions.map(mission=>{
+      missionsEl.innerHTML = `<div class="ligaPanelHead"><div><span class="ligaEyebrow">Missões da semana</span><h3>Desafios ativos de ${safeArenaText(selectedRow?.seller?.name||'vendedor')}</h3></div><div class="ligaMissionActions"><small>As missões usam os mesmos critérios dos selos da Liga e podem ser editadas pela gestão.</small>${['admin','superadmin'].includes(arenaRole)?`<button class="btn" id="btnConfigMissions">${ligaUiIcon('settings',14)} Configurar missões</button>`:''}</div></div><div class="ligaMissionGrid">${missionDefinitions.map(mission=>{
         const done=mission.target>0&&mission.current>=mission.target;
         const progress=mission.target>0?clamp((mission.current/mission.target)*100,0,100):0;
         const currentLabel=mission.unit==='valor'?formatMoney(mission.current):mission.unit==='percent'?`${mission.current.toFixed(1)}%`:mission.unit==='pa'?mission.current.toFixed(2):`${mission.current} vendas`;
         const targetLabel=mission.unit==='valor'?formatMoney(mission.target):mission.unit==='percent'?`${mission.target.toFixed(0)}%`:mission.unit==='pa'?mission.target.toFixed(2):`${mission.target} vendas`;
-        return `<article class="ligaMission ligaV3Mission ${done?'done':''}"><div class="ligaV3MissionTop"><div class="ligaV3MissionIcon ligaMissionBadgeArt">${badgeArt(mission.badge||'',mission.title) || (mission.icon||mission.badgeDef?.icon||'🎯')}</div><div><span>${done?'MISSÃO CONCLUÍDA':'MISSÃO ATIVA'}</span><b>${safeArenaText(mission.title)}</b></div><em>+${Number(mission.points||0)} XP</em></div><strong>${currentLabel} <small>/ ${targetLabel}</small></strong><div class="meter good"><i style="width:${progress}%"></i></div><small class="ligaV3MissionRule">Base: ${safeArenaText(mission.badgeDef?.title||'regra da Liga')}</small></article>`;
+        return `<article class="ligaMission ligaV3Mission ${done?'done':''}"><div class="ligaV3MissionTop"><div class="ligaV3MissionIcon ligaMissionBadgeArt">${badgeArt(mission.badge||'',mission.title) || ligaUiIcon('target',24)}</div><div><span>${done?'MISSÃO CONCLUÍDA':'MISSÃO ATIVA'}</span><b>${safeArenaText(mission.title)}</b></div><em>+${Number(mission.points||0)} XP</em></div><strong>${currentLabel} <small>/ ${targetLabel}</small></strong><div class="meter good"><i style="width:${progress}%"></i></div><small class="ligaV3MissionRule">Base: ${safeArenaText(mission.badgeDef?.title||'regra da Liga')}</small></article>`;
       }).join('')}</div>`;
       const missionConfigButton=document.getElementById('btnConfigMissions'); if(missionConfigButton) missionConfigButton.onclick=abrirEditorSelos;
-      if(overviewMissionsEl) overviewMissionsEl.innerHTML = missionDefinitions.slice(0,4).map(mission=>{const progress=mission.target>0?clamp((mission.current/mission.target)*100,0,100):0;const cur=mission.unit==='valor'?formatMoney(mission.current):mission.unit==='percent'?`${mission.current.toFixed(1)}%`:mission.unit==='pa'?mission.current.toFixed(2):`${mission.current}`;const tar=mission.unit==='valor'?formatMoney(mission.target):mission.unit==='percent'?`${mission.target.toFixed(0)}%`:mission.unit==='pa'?mission.target.toFixed(2):`${mission.target}`;return `<div class="ligaMiniMission"><span class="ligaMiniMissionBadge">${badgeArt(mission.badge||'',mission.title) || (mission.icon||mission.badgeDef?.icon||'🎯')}</span><div><b>${safeArenaText(mission.title)}</b><small>${safeArenaText(mission.badgeDef?.desc||'Desafio ativo')}</small><div class="ligaV3Progress"><i style="width:${progress}%"></i></div></div><em>${cur}/${tar}<br><b>${Number(mission.points||0)} XP</b></em></div>`}).join('');
+      if(overviewMissionsEl) overviewMissionsEl.innerHTML = missionDefinitions.slice(0,4).map(mission=>{const progress=mission.target>0?clamp((mission.current/mission.target)*100,0,100):0;const cur=mission.unit==='valor'?formatMoney(mission.current):mission.unit==='percent'?`${mission.current.toFixed(1)}%`:mission.unit==='pa'?mission.current.toFixed(2):`${mission.current}`;const tar=mission.unit==='valor'?formatMoney(mission.target):mission.unit==='percent'?`${mission.target.toFixed(0)}%`:mission.unit==='pa'?mission.target.toFixed(2):`${mission.target}`;return `<div class="ligaMiniMission"><span class="ligaMiniMissionBadge">${badgeArt(mission.badge||'',mission.title) || ligaUiIcon('target',24)}</span><div><b>${safeArenaText(mission.title)}</b><small>${safeArenaText(mission.badgeDef?.desc||'Desafio ativo')}</small><div class="ligaV3Progress"><i style="width:${progress}%"></i></div></div><em class="ligaMissionNumbers"><span>${cur}</span><small>de ${tar}</small><b>+${Number(mission.points||0)} XP</b></em></div>`}).join('');
       const bestTag = document.getElementById('arenaBestSaleTag');
       if(bestTag){ bestTag.style.display='inline-flex'; bestTag.innerHTML = 'Venda record do mês: <b>'+formatMoney(best)+'</b>'; }
 
@@ -5133,7 +5153,7 @@ body{ background-attachment: fixed; }
         cards.push(`
           <div class="badgeCard ${unlocked?'':'badgeLocked'}">
             <div class="badgeTop">
-              <div class="badgeIcon ligaBadgeIconArt">${badgeArt(defKey,def.title) || (def.icon||'🏅')}</div>
+              <div class="badgeIcon ligaBadgeIconArt">${badgeArt(defKey,def.title) || ligaUiIcon('medal',24)}</div>
               <div>
                 <div class="badgeTitle">${def.title} <span class="ligaV3BadgeXP">+${Number(def.points||0)} XP</span></div>
                 <div class="badgeDesc">${desc}</div>
@@ -5144,16 +5164,16 @@ body{ background-attachment: fixed; }
       }
 
       if(badgesEl){
-        badgesEl.innerHTML = cards.length ? cards.join('') : '<div class="hint">Nenhum selo ainda. Finalize vendas e metas para destravar. ⭐</div>';
+        badgesEl.innerHTML = cards.length ? cards.join('') : '<div class="hint">Nenhuma conquista liberada neste mês. Finalize missões e metas para desbloquear selos.</div>';
         badgesEl.dataset.rendered = 'true';
       }
-      if(overviewAchievementsEl){const recent=(earned||[]).slice().sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,4);overviewAchievementsEl.innerHTML=(recent.length?recent.map(e=>{const defKey=e.def||'';const def=getBadgeDef(defKey)||{};return `<div class="ligaMiniAchievement"><span class="ligaMiniBadgeArt">${badgeArt(defKey,def.title) || (def.icon||'🏅')}</span><div><b>${safeArenaText(def.title||'Conquista')}</b><small>${safeArenaText(def.desc||e.desc||'Conquista desbloqueada')}</small></div><em>+${Number(def.points||0)} XP</em></div>`}).join(''):'<div class="ligaEmptyAchievement">Finalize missões para desbloquear seus primeiros selos.</div>');}
+      if(overviewAchievementsEl){const recent=(earned||[]).slice().sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,4);overviewAchievementsEl.innerHTML=(recent.length?recent.map(e=>{const defKey=e.def||'';const def=getBadgeDef(defKey)||{};return `<div class="ligaMiniAchievement"><span class="ligaMiniBadgeArt">${badgeArt(defKey,def.title) || ligaUiIcon('medal',24)}</span><div><b>${safeArenaText(def.title||'Conquista')}</b><small>${safeArenaText(def.desc||e.desc||'Conquista desbloqueada')}</small></div><em>+${Number(def.points||0)} XP</em></div>`}).join(''):'<div class="ligaEmptyAchievement">Finalize missões para desbloquear seus primeiros selos.</div>');}
 
       // XP + estrelas (metas semanais/mensais batidas no mês)
       const stars = earned.filter(e=> (e.key||'').includes('_WEEK_GOAL') || (e.key||'').includes('_MONTH_GOAL')).length;
       const target = 12; // 12 estrelas = barra cheia (ajustável)
       const pctXP = clamp((stars/target)*100, 0, 100);
-      const starIcons = Array.from({length: Math.min(24, Math.max(0, stars))}, ()=> '⭐').join('');
+      const starIcons = Array.from({length: Math.min(24, Math.max(0, stars))}, ()=> ligaUiIcon('star',15)).join('');
       xpEl.innerHTML = `
         <div class="row" style="justify-content:space-between; align-items:center">
           <div><b>XP</b> · evolui com metas batidas</div>
@@ -5161,7 +5181,7 @@ body{ background-attachment: fixed; }
         </div>
         <div class="divider"></div>
         <div class="meter good"><i style="width:${pctXP}%"></i></div>
-        <div class="hint" style="margin-top:8px">${stars>0 ? starIcons : 'Ganhe ⭐ batendo metas semanais e mensais.'}</div>
+        <div class="hint" style="margin-top:8px">${stars>0 ? starIcons : 'Ganhe pontos batendo metas semanais e mensais.'}</div>
       `;
 
       const btn = document.getElementById('btnSellerDownloadBadges');
