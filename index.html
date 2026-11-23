@@ -1871,15 +1871,16 @@ body{ background-attachment: fixed; }
 </div>
 <!-- MODAL RANKING -->
 <div class="modalBack" id="rankingBack">
-<div class="modal">
-<div class="modalHead">
+<div class="modal rankingModal">
+<div class="modalHead rankingModalHead">
+<div>
 <h3>Ranking do dia</h3>
+<p>Performance atual da equipe com base em conversão, vendas e faturamento.</p>
+</div>
 <button class="close" id="closeRanking">Fechar</button>
 </div>
-<div class="modalBody">
-<div class="hint">Ordenado por <b>Conversão</b>. Empate: mais vendas.</div>
-<div class="divider"></div>
-<div class="list" id="rankingList"></div>
+<div class="modalBody rankingModalBody">
+<div id="rankingList"></div>
 </div>
 </div>
 </div>
@@ -2777,7 +2778,7 @@ body{ background-attachment: fixed; }
     const rows = aggBySeller(recsToday);
 
     if(rows.length === 0){
-      list.innerHTML = `<div class="hint">Sem dados ainda. Finalize atendimentos para aparecer no ranking.</div>`;
+      list.innerHTML = `<div class="rankingEmpty"><div class="rankingEmptyIcon">🏆</div><h4>Sem dados ainda</h4><p>Finalize atendimentos para aparecer no ranking do dia.</p></div>`;
       return;
     }
 
@@ -2787,23 +2788,86 @@ body{ background-attachment: fixed; }
       return b.revenue - a.revenue;
     });
 
-    rows.forEach((r, i)=>{
-      const s = getSeller(r.sellerId);
-      const item = document.createElement("div");
-      item.className = "item";
-      item.innerHTML = `
-        <div class="leftItem">
-          <div class="pos">${i+1}</div>
-          <div class="avatar">${s?.photo ? `<img src="${s.photo}">` : `<span style="color:var(--muted);font-weight:900">${(s?.name||"?")[0].toUpperCase()}</span>`}</div>
-          <div class="nameBlock">
-            <div class="name">${s?.name || "Vendedor"}</div>
-            <div class="meta">${r.atend} atend · ${r.sales} vendas · PA(venda) ${r.paPerSale.toFixed(2)} · ${formatMoney(r.revenue)}</div>
-          </div>
+    const totalRevenue = rows.reduce((sum,row)=> sum + Number(row.revenue||0), 0);
+    const totalSales = rows.reduce((sum,row)=> sum + Number(row.sales||0), 0);
+    const avgConv = rows.length ? rows.reduce((sum,row)=> sum + Number(row.conv||0), 0) / rows.length : 0;
+    const leader = rows[0];
+    const topThree = rows.slice(0,3);
+
+    const avatar = (seller)=> seller?.photo
+      ? `<img src="${seller.photo}" alt="${seller.name||'Vendedor'}">`
+      : `<span style="color:#66768f;font-weight:900">${(seller?.name||'?')[0].toUpperCase()}</span>`;
+
+    const summary = `
+      <div class="rankingSummaryGrid">
+        <article class="rankingSummaryCard leader">
+          <span class="eyebrow">Líder do dia</span>
+          <strong>${getSeller(leader.sellerId)?.name || 'Vendedor'}</strong>
+          <b>${leader.conv.toFixed(1)}%</b>
+          <small>${leader.sales} venda(s) · ${formatMoney(leader.revenue)}</small>
+        </article>
+        <article class="rankingSummaryCard">
+          <span class="eyebrow">Média de conversão</span>
+          <strong>Equipe</strong>
+          <b>${avgConv.toFixed(1)}%</b>
+          <small>${rows.length} participante(s) no ranking</small>
+        </article>
+        <article class="rankingSummaryCard">
+          <span class="eyebrow">Resultado acumulado</span>
+          <strong>Faturamento do dia</strong>
+          <b>${formatMoney(totalRevenue)}</b>
+          <small>${totalSales} venda(s) registradas</small>
+        </article>
+      </div>`;
+
+    const podium = topThree.map((r,index)=>{
+      const seller = getSeller(r.sellerId);
+      const rank = index + 1;
+      const labels = ['Campeão','Vice-líder','Top 3'];
+      return `<article class="rankingPodiumCard place${rank}">
+        <div class="rankingPodiumTop"><span class="rankingPodiumBadge">#${rank}</span><small>${labels[index]}</small></div>
+        <div class="rankingPodiumAvatar avatar">${avatar(seller)}</div>
+        <h4>${seller?.name || 'Vendedor'}</h4>
+        <p>${r.atend} atendimentos · ${r.sales} vendas</p>
+        <div class="rankingPodiumMain">${r.conv.toFixed(1)}%</div>
+        <div class="rankingPodiumMeta">Conversão do dia</div>
+        <div class="rankingPodiumInfo"><span>${formatMoney(r.revenue)}</span><span>PA ${r.paPerSale.toFixed(2)}</span></div>
+      </article>`;
+    }).join('');
+
+    const boardRows = rows.map((r,i)=>{
+      const seller = getSeller(r.sellerId);
+      const rank = i + 1;
+      const leaderGap = Math.max(0, Number(leader.conv||0) - Number(r.conv||0));
+      const status = r.conv >= 50 ? 'Excelente' : r.conv >= 30 ? 'Bom ritmo' : r.sales > 0 ? 'Desenvolvendo' : 'Sem vendas';
+      const statusClass = r.conv >= 50 ? 'good' : r.conv >= 30 ? 'warn' : 'neutral';
+      return `<article class="rankingBoardRow ${rank===1?'top':''}">
+        <div class="rankingBoardPos"><span class="pos place${Math.min(rank,4)}">${rank}</span><small>${rank===1?'Líder':`-${leaderGap.toFixed(1)} pts`}</small></div>
+        <div class="rankingBoardSeller"><div class="avatar">${avatar(seller)}</div><div class="nameBlock"><div class="name">${seller?.name || 'Vendedor'}</div><div class="meta">${r.atend} atend · ${r.sales} venda(s)</div></div></div>
+        <div class="rankingBoardMetric"><label>Conversão</label><b>${r.conv.toFixed(1)}%</b></div>
+        <div class="rankingBoardMetric"><label>Faturamento</label><b>${formatMoney(r.revenue)}</b></div>
+        <div class="rankingBoardMetric"><label>PA/venda</label><b>${r.paPerSale.toFixed(2)}</b></div>
+        <div class="rankingBoardStatus"><span class="tag ${statusClass}">${status}</span></div>
+      </article>`;
+    }).join('');
+
+    list.innerHTML = `
+      <div class="rankingModalIntro">
+        <div class="hint">Ordenado por <b>Conversão</b>. Empate por <b>mais vendas</b> e, em seguida, <b>faturamento</b>.</div>
+      </div>
+      ${summary}
+      <div class="rankingPodiumWrap">${podium}</div>
+      <div class="rankingBoard">
+        <div class="rankingBoardHead">
+          <span>Posição</span>
+          <span>Vendedor</span>
+          <span>Conversão</span>
+          <span>Faturamento</span>
+          <span>PA/venda</span>
+          <span>Status</span>
         </div>
-        <span class="tag good">${r.conv.toFixed(1)}%</span>
-      `;
-      list.appendChild(item);
-    });
+        <div class="rankingBoardList">${boardRows}</div>
+      </div>`;
   }
 
   // ======================
