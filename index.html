@@ -1058,7 +1058,7 @@ body{ background-attachment: fixed; }
 }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<link href="./ondis-premium.css?v=13.3" rel="stylesheet"/>
+<link href="./ondis-premium.css?v=13.4-visual-dashboard-ranking" rel="stylesheet"/>
 <script src="./ondis-premium.js?v=13.3"></script>
 <script>document.documentElement.classList.add("modsPending");setTimeout(function(){document.documentElement.classList.remove("modsPending");},6000);</script>
 
@@ -3678,7 +3678,17 @@ body{ background-attachment: fixed; }
   }
 
   function dashMoney(v){ return formatMoney(Number(v||0)); }
-  function dashEsc(v){ return safeArenaText(v==null?"":v); }
+  // Escapamento local do Dashboard: não depende do renderizador da Liga ONDIS.
+  // Antes, safeArenaText existia apenas dentro de renderSellerView(), o que
+  // interrompia os gráficos e todos os painéis posteriores no Dashboard.
+  function dashEsc(v){
+    return String(v == null ? "" : v)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
 
   function dashSpark(values,width=92,height=42){
     const vals=(values||[]).map(Number);

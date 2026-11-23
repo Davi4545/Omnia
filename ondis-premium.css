@@ -2461,3 +2461,332 @@ html.modsPending .sideNav { visibility: hidden; }
 :root[data-theme="ondis"] .dashboardEyebrow::before { background: #e4142b !important; }
 
 /* @@VISUAL-V2-END@@ */
+
+
+/* ============================================================================
+   ONDIS · Dashboard + Ranking de Metas — ajuste visual localizado (2026-11)
+   Escopo propositalmente limitado a #viewDashboard e #viewMetasRank.
+   Nenhuma regra de Firebase, vendas, metas ou outros módulos foi modificada.
+   ============================================================================ */
+
+/* --- Ranking: legibilidade, hierarquia e cards --- */
+#viewMetasRank {
+  background:linear-gradient(180deg, #f6f8fc 0%, #f2f6fc 100%);
+}
+#viewMetasRank .rankGoalPage {max-width:1600px;}
+#viewMetasRank .rankGoalHeader {
+  align-items:center;
+  margin-bottom:18px;
+  padding:8px 2px 4px;
+}
+#viewMetasRank .rankTitleBlock h2 {font-size:clamp(20px,1.65vw,28px);letter-spacing:-.03em;line-height:1.15;}
+#viewMetasRank .rankTitleBlock p {font-size:12px;line-height:1.5;}
+#viewMetasRank .rankFilters .field {min-width:145px;}
+#viewMetasRank .rankFilters label {font-size:10px!important;}
+#viewMetasRank .rankFilters input,
+#viewMetasRank .rankFilters select,
+#viewMetasRank .rankRefresh {min-height:40px;border-radius:11px!important;}
+#viewMetasRank .rankRefresh {font-size:11px;font-weight:800;}
+#viewMetasRank .rankKpiStrip {gap:12px;margin-bottom:15px;}
+#viewMetasRank .rankKpi {
+  gap:8px;
+  min-height:91px;
+  padding:14px 11px;
+  border-radius:16px;
+  border:1px solid #e2e9f3;
+  box-shadow:0 8px 24px rgba(27,49,88,.045);
+}
+#viewMetasRank .rankKpiIcon {flex:0 0 32px;width:32px;height:32px;font-size:15px;}
+#viewMetasRank .rankKpi small {font-size:10px;line-height:1.3;}
+#viewMetasRank .rankKpi strong {
+  font-size:clamp(12px,1.06vw,16px);
+  font-weight:850;
+  letter-spacing:-.035em;
+  line-height:1.3;
+  font-variant-numeric:tabular-nums;
+}
+#viewMetasRank .rankKpi em {font-size:10px;line-height:1.35;}
+#viewMetasRank .rankGoalGrid {grid-template-columns:minmax(0,1.05fr) minmax(0,1.45fr) minmax(0,.9fr);gap:14px;margin-bottom:15px;}
+#viewMetasRank .rankPanel {border:1px solid #dee6f2;border-radius:18px;box-shadow:0 10px 28px rgba(24,44,74,.045);}
+#viewMetasRank .rankPanelHead {margin-bottom:18px;gap:14px;}
+#viewMetasRank .rankPanelHead span {font-size:13px;letter-spacing:-.015em;color:#1e293b;}
+#viewMetasRank .rankPanelHead small {font-size:10px;line-height:1.45;}
+#viewMetasRank .rankRingWrap {gap:18px;min-height:215px;}
+#viewMetasRank .rankRing {flex:0 0 145px;width:145px;height:145px;}
+#viewMetasRank .rankRing strong {font-size:23px;}
+#viewMetasRank .rankRing span {font-size:10px;}
+#viewMetasRank .rankRingInfo {min-width:0;flex:1;}
+#viewMetasRank .rankRingInfo>strong {font-size:clamp(15px,1.3vw,20px);letter-spacing:-.03em;overflow-wrap:anywhere;}
+#viewMetasRank .rankRingInfo>span,
+#viewMetasRank .rankRingInfo>small {font-size:10px;line-height:1.5;}
+#viewMetasRank .rankEvolutionChart {min-height:238px;}
+#viewMetasRank .rankEvolutionChart svg {height:192px;}
+#viewMetasRank .rankChartLegend {font-size:10px;margin-bottom:8px;}
+#viewMetasRank .rankChartAxis {font-size:9px;margin-top:4px;}
+#viewMetasRank .rankInsightsCard {min-height:300px;}
+#viewMetasRank .rankInsight {padding:12px 2px;gap:10px;}
+#viewMetasRank .rankInsight i {width:34px;height:34px;flex:0 0 34px;}
+#viewMetasRank .rankInsight span,
+#viewMetasRank .rankInsight small {font-size:10px;line-height:1.35;}
+#viewMetasRank .rankInsight strong {font-size:12px;line-height:1.35;}
+
+/* Pódio refeito para evitar medalha, avatar e nome sobrepostos. */
+#viewMetasRank .rankPodiumPanel {
+  overflow:visible;
+  padding:20px 22px 22px;
+  background:radial-gradient(ellipse at 50% -35%,rgba(245,182,31,.075),transparent 65%),#fff;
+}
+#viewMetasRank .rankPodium {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,220px));
+  justify-content:center;
+  align-items:end;
+  gap:clamp(12px,3vw,42px);
+  min-height:310px;
+  padding:18px 8px 0;
+}
+#viewMetasRank .rankPodiumPerson {
+  box-sizing:border-box;
+  width:100%;
+  min-width:0;
+  min-height:248px;
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  padding:22px 13px 0;
+  border:1px solid #e5eaf3;
+  border-radius:20px 20px 12px 12px;
+  background:linear-gradient(180deg,#fff 0%,#f8faff 100%);
+  box-shadow:0 9px 24px rgba(26,50,88,.05);
+}
+#viewMetasRank .rankPodiumPerson.p1 {
+  min-height:285px;
+  border-color:#f6dfa9;
+  background:linear-gradient(180deg,#fffaf0 0%,#fff 46%,#f6f8ff 100%);
+  box-shadow:0 12px 30px rgba(159,107,16,.09);
+}
+#viewMetasRank .rankPodiumPerson.p2 {border-color:#d8d6fb;}
+#viewMetasRank .rankPodiumPerson.p3 {border-color:#f0d8cc;}
+#viewMetasRank .rankPodiumAvatar {
+  flex:0 0 auto;
+  width:78px;height:78px;
+  margin:0 auto 31px;
+  box-sizing:border-box;
+  overflow:visible;
+}
+#viewMetasRank .rankPodiumPerson.p1 .rankPodiumAvatar {width:98px;height:98px;}
+#viewMetasRank .rankPodiumAvatar img {display:block;width:100%;height:100%;object-fit:cover;border-radius:50%;}
+#viewMetasRank .rankPodiumAvatar i {bottom:-12px;z-index:2;}
+#viewMetasRank .rankPodiumCrown {top:-33px;font-size:29px;}
+#viewMetasRank .rankPodiumPerson>strong {
+  width:100%;
+  display:block;
+  flex:0 0 auto;
+  margin:0;
+  min-height:17px;
+  font-size:12px;
+  line-height:1.4;
+  font-weight:900;
+  color:#24334b;
+  white-space:normal;
+  overflow-wrap:anywhere;
+}
+#viewMetasRank .rankPodiumPerson>span {
+  display:block;
+  width:100%;
+  margin-top:7px;
+  font-size:clamp(12px,1.2vw,16px);
+  line-height:1.35;
+  letter-spacing:-.025em;
+  font-variant-numeric:tabular-nums;
+  white-space:normal;
+}
+#viewMetasRank .rankPodiumPerson>small {font-size:10px;line-height:1.4;margin-top:5px;}
+#viewMetasRank .rankPodiumBase {
+  box-sizing:border-box;
+  width:calc(100% + 26px);
+  min-height:40px;
+  height:auto;
+  margin-top:auto;
+  padding:10px 8px;
+  border:0;
+  border-top:1px solid #e5eaf3;
+  border-radius:0 0 12px 12px;
+  background:linear-gradient(180deg,#f2f6fe,#eaf1fa);
+}
+#viewMetasRank .rankPodiumPerson.p1 .rankPodiumBase {
+  min-height:48px;height:auto;
+  background:linear-gradient(180deg,#fff3d6,#ffe7a4);
+}
+#viewMetasRank .rankPodiumBase em {font-size:10px;font-weight:800;color:#65758b;}
+#viewMetasRank .rankPodiumPerson.p1 .rankPodiumBase em {color:#976400;}
+#viewMetasRank .rankLinkBtn {font-size:11px;padding:9px 13px;}
+#viewMetasRank .rankTablePanel {overflow:hidden;}
+
+/* --- Dashboard: grade consistente, com 6 KPIs numa linha quando há espaço --- */
+#viewDashboard .dashboardProCard {border-radius:20px;overflow:hidden;}
+#viewDashboard .dashboardProHead {gap:18px;align-items:center;flex-wrap:wrap;}
+#viewDashboard .dashboardProHead h2 {font-size:clamp(22px,1.8vw,29px)!important;letter-spacing:-.03em;}
+#viewDashboard .dashboardProHead p {font-size:12px;line-height:1.45;max-width:560px;}
+#viewDashboard .dashboardScopeRow {margin-bottom:15px;}
+#viewDashboard .dashboardScopeRow strong {font-size:15px;}
+#viewDashboard #dashKpis {
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:11px;
+  margin-bottom:17px;
+}
+#viewDashboard .dashboardExecutiveKpi {
+  min-width:0;
+  min-height:125px;
+  border-radius:17px;
+  padding:15px 13px;
+}
+#viewDashboard .dashboardExecutiveKpi small {font-size:10px;line-height:1.3;}
+#viewDashboard .dashboardExecutiveKpi strong {
+  font-size:clamp(16px,1.5vw,21px);
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-.04em;
+  overflow-wrap:anywhere;
+}
+#viewDashboard .dashboardExecutiveKpi em {font-size:10px;line-height:1.4;}
+#viewDashboard .dashboardMainGrid {grid-template-columns:minmax(0,1.5fr) repeat(2,minmax(0,.88fr));gap:14px;margin-bottom:14px;}
+#viewDashboard .dashboardSecondaryGrid {gap:14px;margin-bottom:14px;}
+#viewDashboard .dashboardPanel {
+  min-height:304px;
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  padding:18px;
+  border-radius:18px;
+  border:1px solid #dfe7f1;
+  background:#fff;
+  box-shadow:0 10px 25px rgba(18,37,66,.045);
+}
+#viewDashboard .dashboardPanelHead {margin-bottom:16px;align-items:flex-start;}
+#viewDashboard .dashboardPanelHead span {font-size:12px;line-height:1.4;}
+#viewDashboard .dashboardPanelHead small {font-size:10px;line-height:1.45;}
+#viewDashboard .dashboardPanelHead strong {font-size:clamp(19px,1.7vw,25px);}
+#viewDashboard .dashboardSvgChart,
+#viewDashboard .dashboardSvgChart.compact {
+  display:block;
+  width:100%;
+  min-height:210px;
+  height:235px;
+  flex:1;
+}
+#viewDashboard .dashboardSvgChart svg {width:100%;height:100%;display:block;overflow:hidden;}
+#viewDashboard .dashGridLine {stroke:#e6edf5;}
+#viewDashboard .dashAxisText {fill:#8190a5;}
+#viewDashboard .dashboardBarList {
+  width:100%;
+  min-width:0;
+  flex:1;
+  min-height:185px;
+  gap:13px;
+  justify-content:flex-start;
+  padding-top:4px;
+}
+#viewDashboard .dashboardBarRow {grid-template-columns:28px minmax(0,1fr);gap:10px;}
+#viewDashboard .dashboardBarRank {width:28px;height:28px;font-size:11px;}
+#viewDashboard .dashboardBarMeta>b {font-size:11px;line-height:1.4;}
+#viewDashboard .dashboardBarMeta>small {font-size:10px;line-height:1.4;}
+#viewDashboard .dashboardTrack {height:9px;}
+#viewDashboard .dashboardFunnel {width:100%;min-height:185px;flex:1;gap:10px;justify-content:center;}
+#viewDashboard .dashboardFunnelStep {height:40px;font-size:10px;}
+#viewDashboard .dashboardFunnelStep b {font-size:12px;}
+#viewDashboard .dashboardDonutWrap {
+  display:flex;
+  flex-direction:row;
+  flex-wrap:wrap;
+  gap:20px;
+  min-height:185px;
+  flex:1;
+  justify-content:center;
+  align-items:center;
+}
+#viewDashboard .dashboardDonut {flex:0 0 118px;}
+#viewDashboard .dashboardDonutLegend {min-width:110px;gap:10px;}
+#viewDashboard .dashboardDonutLegend span,
+#viewDashboard .dashboardDonutLegend b {font-size:10px;}
+#viewDashboard .dashboardEmptyChart,
+#viewDashboard .dashboardEmptyList {font-size:11px;line-height:1.5;min-height:170px;}
+#viewDashboard .dashboardEmptyChart span {font-size:11px;}
+#viewDashboard .dashboardInsightGrid {gap:12px;}
+#viewDashboard .dashboardInsightCard {border-radius:15px;padding:15px;min-width:0;}
+#viewDashboard .dashboardInsightCard>span {font-size:10px;line-height:1.4;}
+#viewDashboard .dashboardInsightCard>strong {font-size:15px;line-height:1.4;overflow-wrap:anywhere;}
+#viewDashboard .dashboardInsightCard>small {font-size:10px;line-height:1.4;}
+
+/* A largura útil já desconta a barra lateral do sistema. */
+@media(max-width:1430px){
+  #viewDashboard #dashKpis {grid-template-columns:repeat(3,minmax(0,1fr));}
+  #viewDashboard .dashboardMainGrid {grid-template-columns:repeat(2,minmax(0,1fr));}
+  #viewDashboard .dashboardRevenuePanel {grid-column:1/-1;min-height:345px;}
+  #viewDashboard .dashboardSecondaryGrid {grid-template-columns:repeat(2,minmax(0,1fr));}
+  #viewDashboard .dashboardInsightGrid {grid-template-columns:repeat(3,minmax(0,1fr));}
+}
+@media(max-width:1230px){
+  #viewMetasRank .rankKpiStrip {grid-template-columns:repeat(3,minmax(0,1fr));}
+  #viewMetasRank .rankGoalGrid {grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);}
+  #viewMetasRank .rankInsightsCard {grid-column:1/-1;min-height:0;}
+  #viewMetasRank #rankInsights {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
+  #viewMetasRank .rankInsight {padding:12px 8px;border-bottom:0;}
+}
+@media(max-width:900px){
+  #viewMetasRank .rankGoalHeader {flex-direction:column;align-items:stretch;}
+  #viewMetasRank .rankFilters {width:100%;}
+  #viewMetasRank .rankFilters .field {flex:1 1 175px;}
+  #viewMetasRank .rankPodium {gap:12px;grid-template-columns:repeat(3,minmax(0,1fr));padding:14px 0 0;}
+  #viewMetasRank .rankPodiumPerson {padding:20px 7px 0;}
+  #viewMetasRank .rankPodiumBase {width:calc(100% + 14px);}
+  #viewDashboard .dashboardTopTools {flex-wrap:wrap;}
+}
+@media(max-width:720px){
+  #viewMetasRank {margin:-14px;padding:14px;}
+  #viewMetasRank .rankKpiStrip {grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;}
+  #viewMetasRank .rankGoalGrid {grid-template-columns:minmax(0,1fr);}
+  #viewMetasRank .rankInsightsCard {grid-column:auto;}
+  #viewMetasRank #rankInsights {grid-template-columns:1fr;gap:0;}
+  #viewMetasRank .rankInsight {border-bottom:1px solid #eef1f5;}
+  #viewMetasRank .rankPodiumPanel {padding:16px 12px;}
+  #viewMetasRank .rankPodium {grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;}
+  #viewMetasRank .rankPodiumPerson {min-height:220px;padding:19px 5px 0;border-radius:13px 13px 10px 10px;}
+  #viewMetasRank .rankPodiumPerson.p1 {min-height:248px;}
+  #viewMetasRank .rankPodiumAvatar {width:60px;height:60px;margin-bottom:28px;}
+  #viewMetasRank .rankPodiumPerson.p1 .rankPodiumAvatar {width:70px;height:70px;}
+  #viewMetasRank .rankPodiumPerson>strong {font-size:10px;line-height:1.4;}
+  #viewMetasRank .rankPodiumPerson>span {font-size:11px;}
+  #viewMetasRank .rankPodiumPerson>small {font-size:9px;}
+  #viewMetasRank .rankPodiumBase {width:calc(100% + 10px);padding:9px 3px;}
+  #viewMetasRank .rankPodiumBase em {font-size:9px;}
+  #viewMetasRank .rankPodiumCrown {font-size:24px;top:-29px;}
+  #viewMetasRank .rankLinkBtn {font-size:10px;}
+  #viewDashboard .dashboardProHead {align-items:stretch;flex-direction:column;}
+  #viewDashboard .dashboardTopTools {width:100%;}
+  #viewDashboard #dashKpis {grid-template-columns:repeat(2,minmax(0,1fr));}
+  #viewDashboard .dashboardMainGrid,
+  #viewDashboard .dashboardSecondaryGrid,
+  #viewDashboard .dashboardInsightGrid {grid-template-columns:minmax(0,1fr);}
+  #viewDashboard .dashboardRevenuePanel {grid-column:auto;}
+  #viewDashboard .dashboardPanel {min-height:280px;}
+  #viewDashboard .dashboardSvgChart {height:220px;min-height:220px;}
+  #viewDashboard .dashboardDonutWrap {flex-direction:row;}
+}
+@media(max-width:400px){
+  #viewMetasRank .rankKpi {min-height:84px;padding:10px 8px;}
+  #viewMetasRank .rankKpiIcon {width:27px;height:27px;flex-basis:27px;}
+  #viewMetasRank .rankKpi strong {font-size:12px;}
+  #viewMetasRank .rankPodiumAvatar {width:48px;height:48px;}
+  #viewMetasRank .rankPodiumPerson.p1 .rankPodiumAvatar {width:58px;height:58px;}
+  #viewMetasRank .rankPodiumPerson>span {font-size:10px;}
+  #viewDashboard .dashboardExecutiveKpi {padding:12px 10px;}
+  #viewDashboard .dashboardExecutiveKpi strong {font-size:16px;}
+}
+
+/* Valores monetários completos: evita cortar faturamento e meta em telas médias. */
+@media(min-width:721px) and (max-width:1550px){
+  #viewMetasRank .rankKpiStrip{grid-template-columns:repeat(3,minmax(0,1fr));}
+}
