@@ -3114,3 +3114,176 @@ html.modsPending .sideNav { visibility: hidden; }
   #viewSeller .ligaBestCrown,#viewSeller .ligaTrophy3D,#viewSeller .ligaTrophyStage,
   #viewSeller .ligaAnimatedChest{animation:none!important;transition:none!important}
 }
+
+/* ===== Liga ONDIS — Ranking profissional ===== */
+#viewSeller .ligaRankingSummary{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:14px;
+  margin:0 0 16px;
+}
+#viewSeller .ligaRankingSummaryCard{
+  background:linear-gradient(145deg,#ffffff 0%,#f7f9ff 100%);
+  border:1px solid #e7ebf2;
+  border-radius:18px;
+  padding:16px 18px;
+  box-shadow:0 10px 26px rgba(32,48,80,.05);
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+#viewSeller .ligaRankingSummaryCard strong{font-size:18px;color:#17233d;line-height:1.2}
+#viewSeller .ligaRankingSummaryCard b{font-size:23px;color:#111c35;line-height:1.1}
+#viewSeller .ligaRankingSummaryCard small{color:#7b879b;font-size:11px;line-height:1.5}
+#viewSeller .ligaRankingSummaryCard.leader{background:linear-gradient(145deg,#fffaf0,#ffffff 70%);border-color:#f0deaa}
+#viewSeller .ligaRankingSummaryCard.mine{background:linear-gradient(145deg,#f8f2ff,#ffffff 70%);border-color:#e7d7ff}
+#viewSeller .ligaRankingSummaryCard.avg{background:linear-gradient(145deg,#eef6ff,#ffffff 70%);border-color:#dbe9ff}
+
+#viewSeller .ligaPodiumPro{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:18px;
+  align-items:stretch;
+  min-height:initial!important;
+  padding:10px 0 0!important;
+  background:transparent!important;
+  border:0!important;
+}
+#viewSeller .ligaPodiumCard{
+  position:relative;
+  background:linear-gradient(180deg,#ffffff 0%,#fbfcff 100%);
+  border:1px solid #e7ebf2;
+  border-radius:22px;
+  padding:16px 16px 18px;
+  box-shadow:0 16px 40px rgba(33,51,84,.08);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  overflow:hidden;
+}
+#viewSeller .ligaPodiumCard:before{
+  content:"";
+  position:absolute;
+  inset:0 0 auto 0;
+  height:5px;
+  background:linear-gradient(90deg,#8f5cff,#3b82f6);
+  opacity:.95;
+}
+#viewSeller .ligaPodiumCard.place1{transform:translateY(-10px); background:linear-gradient(180deg,#fffaf0 0%,#fff 100%); border-color:#efd08d}
+#viewSeller .ligaPodiumCard.place1:before{background:linear-gradient(90deg,#f7bf2c,#ff8f1f)}
+#viewSeller .ligaPodiumCard.place2:before{background:linear-gradient(90deg,#94a3b8,#cbd5e1)}
+#viewSeller .ligaPodiumCard.place3:before{background:linear-gradient(90deg,#cc7a3b,#e9a977)}
+#viewSeller .ligaPodiumCard.current{box-shadow:0 18px 42px rgba(112,66,217,.17);border-color:#d8c6ff}
+#viewSeller .ligaPodiumTop{display:flex;align-items:center;justify-content:space-between;gap:10px}
+#viewSeller .ligaPodiumBadge{
+  display:inline-flex;align-items:center;justify-content:center;min-width:54px;height:30px;
+  padding:0 12px;border-radius:999px;font-size:12px;font-weight:900;color:#fff;
+  background:linear-gradient(90deg,#7042d9,#9e57ff)
+}
+#viewSeller .place1 .ligaPodiumBadge{background:linear-gradient(90deg,#f59e0b,#facc15);color:#5b3a00}
+#viewSeller .place2 .ligaPodiumBadge{background:linear-gradient(90deg,#94a3b8,#cbd5e1);color:#334155}
+#viewSeller .place3 .ligaPodiumBadge{background:linear-gradient(90deg,#d97706,#fdba74);color:#5c2e00}
+#viewSeller .ligaPodiumTop small{color:#7b879b;font-size:11px;font-weight:700;letter-spacing:.02em;text-transform:uppercase}
+#viewSeller .ligaPodiumAvatarWrap{display:flex;justify-content:center}
+#viewSeller .ligaPodiumCard .avatar{
+  width:86px;height:86px;border-radius:50%;overflow:hidden;background:#eef3ff;
+  border:4px solid #dbe4f4;box-shadow:0 8px 24px rgba(35,52,83,.12)
+}
+#viewSeller .place1 .avatar{width:100px;height:100px;border-color:#f5c63d;box-shadow:0 10px 28px rgba(245,182,55,.2)}
+#viewSeller .ligaPodiumCard h4{margin:0;text-align:center;color:#17233d;font-size:18px;line-height:1.2}
+#viewSeller .ligaPodiumCard p{margin:0;text-align:center;color:#7b879b;font-size:12px;line-height:1.45}
+#viewSeller .ligaPodiumPrimary{text-align:center;font-size:28px;font-weight:900;color:#111c35;line-height:1.1}
+#viewSeller .ligaPodiumStats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#viewSeller .ligaPodiumStats span{background:#f8faff;border:1px solid #edf1f6;border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:3px}
+#viewSeller .ligaPodiumStats span b{font-size:14px;color:#17233d;line-height:1.2}
+#viewSeller .ligaPodiumStats span small{font-size:10px;color:#7b879b;line-height:1.4}
+#viewSeller .ligaPodiumFooter{margin-top:auto;padding-top:2px;text-align:center;font-size:11px;font-weight:800;color:#7042d9}
+
+#viewSeller .ligaRankingBoard{margin-top:18px;border:1px solid #e7ebf2;border-radius:20px;background:#fff;box-shadow:0 14px 34px rgba(28,44,76,.05);overflow:hidden}
+#viewSeller .ligaRankingBoardHead,
+#viewSeller .ligaRankingProRow{
+  display:grid;
+  grid-template-columns:100px minmax(220px,1.4fr) minmax(120px,.8fr) minmax(110px,.8fr) minmax(220px,1.15fr) 110px;
+  gap:14px;align-items:center;
+}
+#viewSeller .ligaRankingBoardHead{
+  padding:14px 18px;
+  background:linear-gradient(180deg,#fafbfe 0%,#f5f7fb 100%);
+  border-bottom:1px solid #e9eef5;
+}
+#viewSeller .ligaRankingBoardHead span{font-size:11px;font-weight:900;letter-spacing:.06em;color:#6e7b90;text-transform:uppercase}
+#viewSeller .ligaRankingList.pro{display:flex;flex-direction:column}
+#viewSeller .ligaRankingProRow{padding:16px 18px;border-top:1px solid #eef2f6;background:#fff}
+#viewSeller .ligaRankingProRow:first-child{border-top:0}
+#viewSeller .ligaRankingProRow:nth-child(even){background:#fcfdff}
+#viewSeller .ligaRankingProRow.top{background:linear-gradient(180deg,#fff 0%,#fcfcff 100%)}
+#viewSeller .ligaRankingProRow.current{background:linear-gradient(180deg,#f9f4ff 0%,#ffffff 100%);box-shadow:inset 4px 0 0 #8f5cff}
+#viewSeller .ligaRankingProPos{display:flex;flex-direction:column;gap:6px}
+#viewSeller .ligaRankingProPos small{font-size:10px;color:#7b879b;line-height:1.4}
+#viewSeller .ligaRankNumber{width:54px;height:34px;border-radius:12px;background:#eef2f7;color:#526176;font-size:14px}
+#viewSeller .ligaRankNumber.place1{background:linear-gradient(90deg,#f6c84d,#f59e0b);color:#6b4300}
+#viewSeller .ligaRankNumber.place2{background:linear-gradient(90deg,#cbd5e1,#94a3b8);color:#334155}
+#viewSeller .ligaRankNumber.place3{background:linear-gradient(90deg,#fdba74,#d97706);color:#5f3700}
+#viewSeller .ligaRankNumber.place4{background:#eef2f7;color:#526176}
+#viewSeller .ligaRankingProSeller{display:flex;align-items:center;gap:12px;min-width:0}
+#viewSeller .ligaRankingProSeller .avatar{width:48px;height:48px;border-radius:16px;overflow:hidden;flex:0 0 auto;box-shadow:0 6px 20px rgba(30,46,75,.1)}
+#viewSeller .ligaRankingProSeller strong{display:block;color:#17233d;font-size:14px;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#viewSeller .ligaRankingProSeller small{display:block;color:#7b879b;font-size:11px;line-height:1.4;margin-top:3px}
+#viewSeller .ligaRankingMetric{display:flex;flex-direction:column;gap:5px}
+#viewSeller .ligaRankingMetric label{font-size:10px;font-weight:800;letter-spacing:.06em;color:#8a96a8;text-transform:uppercase}
+#viewSeller .ligaRankingMetric b{font-size:14px;color:#111c35;line-height:1.2}
+#viewSeller .ligaRankingProgress{display:flex;flex-direction:column;gap:8px}
+#viewSeller .ligaRankingProgressTop{display:flex;flex-direction:column;gap:2px}
+#viewSeller .ligaRankingProgressTop b{font-size:15px;color:#17233d;line-height:1.2}
+#viewSeller .ligaRankingProgressTop small{font-size:10px;color:#7b879b;line-height:1.4}
+#viewSeller .ligaRankingProgress .ligaV3Progress{height:8px;background:#edf1f6}
+#viewSeller .ligaRankingStatus{justify-self:end;display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:0 14px;border-radius:999px;font-size:11px;font-weight:900;letter-spacing:.02em;text-align:center;border:1px solid transparent}
+#viewSeller .ligaRankingStatus.is-good{background:#ecfdf5;color:#12814a;border-color:#b7e7cf}
+#viewSeller .ligaRankingStatus.is-strong{background:#eff6ff;color:#2555d8;border-color:#cfe1ff}
+#viewSeller .ligaRankingStatus.is-watch{background:#fff8e8;color:#b97307;border-color:#f3dfad}
+#viewSeller .ligaRankingStatus.is-alert{background:#fff1f2;color:#c02339;border-color:#fecdd3}
+
+#viewSeller .ligaMiniRankingBoard{display:flex;flex-direction:column;gap:12px}
+#viewSeller .ligaMiniRankingHero{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+#viewSeller .ligaMiniRankingHero h4{margin:2px 0 0;color:#17233d;font-size:18px;line-height:1.25}
+#viewSeller .ligaMiniRankingHero small{color:#7b879b;font-size:11px}
+#viewSeller .ligaMiniPodium.pro{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:stretch;min-height:initial;padding-top:0}
+#viewSeller .ligaMiniPodiumCard{background:linear-gradient(180deg,#fff 0%,#fafbfe 100%);border:1px solid #e7ebf2;border-radius:16px;padding:12px 10px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;position:relative}
+#viewSeller .ligaMiniPodiumCard.current{border-color:#d7c5ff;box-shadow:0 10px 25px rgba(112,66,217,.13)}
+#viewSeller .ligaMiniPodiumCard .miniPlace{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:24px;border-radius:999px;background:#eef2f7;color:#536274;font-size:11px;font-weight:900}
+#viewSeller .ligaMiniPodiumCard.place1 .miniPlace{background:linear-gradient(90deg,#f6c84d,#f59e0b);color:#6b4300}
+#viewSeller .ligaMiniPodiumCard.place2 .miniPlace{background:linear-gradient(90deg,#cbd5e1,#94a3b8);color:#334155}
+#viewSeller .ligaMiniPodiumCard.place3 .miniPlace{background:linear-gradient(90deg,#fdba74,#d97706);color:#5f3700}
+#viewSeller .ligaMiniPodiumCard .avatar{width:54px;height:54px;border-radius:50%;overflow:hidden;border:3px solid #dbe4f4}
+#viewSeller .ligaMiniPodiumCard strong{font-size:11px;color:#17233d;line-height:1.35;overflow-wrap:anywhere}
+#viewSeller .ligaMiniPodiumCard b{font-size:12px;color:#111c35;line-height:1.2}
+#viewSeller .ligaMiniPodiumCard small{font-size:10px;color:#7b879b;line-height:1.4}
+#viewSeller .ligaMiniRankList.pro{display:flex;flex-direction:column;border-top:1px solid #eef1f6}
+#viewSeller .ligaMiniRankList.pro>div{display:grid;grid-template-columns:26px minmax(0,1fr) auto auto;gap:8px;align-items:center;padding:9px 0;border-top:1px solid #eef1f6;font-size:10px}
+#viewSeller .ligaMiniRankList.pro>div:first-child{border-top:0}
+#viewSeller .ligaMiniRankList.pro>div.current{background:linear-gradient(90deg,#f9f4ff,transparent 60%);border-radius:12px;padding-inline:8px;margin-inline:-8px}
+#viewSeller .ligaMiniRankList.pro>div>b{color:#7f8ca1}
+#viewSeller .ligaMiniRankList.pro>div>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#17233d;font-weight:700}
+#viewSeller .ligaMiniRankList.pro>div>small{color:#7b879b}
+#viewSeller .ligaMiniRankList.pro>div>strong{white-space:nowrap;font-size:10px;color:#111c35}
+
+@media (max-width: 1180px){
+  #viewSeller .ligaRankingSummary{grid-template-columns:1fr}
+  #viewSeller .ligaPodiumPro{grid-template-columns:1fr;gap:14px}
+  #viewSeller .ligaPodiumCard.place1{transform:none}
+  #viewSeller .ligaRankingBoardHead,
+  #viewSeller .ligaRankingProRow{grid-template-columns:92px minmax(180px,1fr) minmax(110px,.75fr) minmax(110px,.75fr) minmax(180px,1fr) 104px}
+}
+@media (max-width: 860px){
+  #viewSeller .ligaMiniPodium.pro{grid-template-columns:1fr}
+  #viewSeller .ligaRankingBoard{overflow-x:auto}
+  #viewSeller .ligaRankingBoardHead,
+  #viewSeller .ligaRankingList.pro{min-width:860px}
+}
+@media (max-width: 640px){
+  #viewSeller .ligaPodiumCard{padding:14px}
+  #viewSeller .ligaPodiumPrimary{font-size:24px}
+  #viewSeller .ligaPodiumStats{grid-template-columns:1fr}
+  #viewSeller .ligaRankingSummaryCard strong{font-size:16px}
+  #viewSeller .ligaRankingSummaryCard b{font-size:20px}
+}
