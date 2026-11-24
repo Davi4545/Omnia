@@ -1,0 +1,201 @@
+/* ONDIS | Metas decendiais + Operação 2026.11
+   Estilos isolados em #viewMetas / #viewOps; não altera outros módulos. */
+#viewOps,#viewMetas{--mo-ink:var(--ondis-text,#1a2437);--mo-muted:var(--ondis-muted,#718096);--mo-line:var(--ondis-line,#e2e7f1);--mo-soft:var(--ondis-surface-soft,#f6f8fc);--mo-brand:var(--ondis-primary,#e91535)}
+#viewOps *,#viewMetas *{box-sizing:border-box}
+
+/* ==================== OPERAÇÃO ==================== */
+#viewOps .opsPageTitle{display:flex;gap:18px;align-items:center;justify-content:space-between;padding:12px 4px 17px}
+#viewOps .opsKicker{display:block;font-size:10px;font-weight:900;letter-spacing:.15em;color:#be123c;margin-bottom:5px}
+#viewOps .opsPageTitle h1{font-size:clamp(24px,2.3vw,34px);font-weight:900;letter-spacing:-.045em;line-height:1.17;color:var(--mo-ink);margin:0 0 7px}
+#viewOps .opsPageTitle p{font-size:13px;margin:0;color:var(--mo-muted)}
+#viewOps .opsLiveBadge{white-space:nowrap;padding:9px 14px;border:1px solid #bbebd3;color:#047547;background:#e8fbf1;border-radius:100px;font-size:12px;font-weight:800;display:inline-flex;align-items:center;gap:8px}
+#viewOps .opsLiveBadge i{width:8px;height:8px;border-radius:50%;background:#14b878;box-shadow:0 0 0 4px rgba(20,184,120,.12)}
+#viewOps > .grid{grid-template-columns:minmax(0,1.1fr) minmax(340px,.9fr);gap:18px;margin-top:0}
+#viewOps .opsQueueCard,#viewOps .opsAttendCard{border-radius:23px!important;box-shadow:0 12px 35px rgba(20,31,56,.065)!important;border:1px solid var(--mo-line)!important;overflow:visible;background:var(--ondis-surface,#fff)!important;min-width:0}
+#viewOps .opsHeaderCopy{min-width:0;flex:1 1 auto}
+#viewOps .opsHeaderLabel{display:block;font-size:10px;letter-spacing:.14em;font-weight:900;color:#ffd9df;margin-bottom:6px}
+#viewOps .opsHeaderCopy h2{margin:0 0 6px!important;display:block!important;font-size:clamp(19px,1.9vw,24px)!important;font-weight:900!important;color:#fff!important;letter-spacing:-.035em!important;line-height:1.2!important}
+#viewOps .opsHeaderCopy .opsSubtitle{display:block!important;margin:0!important;color:rgba(255,255,255,.8)!important;font-size:12px!important;line-height:1.45!important;max-width:420px}
+:root[data-theme="ondis"] #viewOps .grid > .opsQueueCard > .cardHeader,
+#viewOps .opsQueueCard > .cardHeader{
+  margin:0!important;border-radius:22px 22px 0 0!important;min-height:125px!important;
+  display:flex!important;flex-wrap:wrap!important;gap:18px!important;padding:22px clamp(18px,2vw,26px)!important;
+  background:linear-gradient(112deg,#161925 0%,#691126 56%,#ce1437 100%)!important;
+  border:0!important;box-shadow:none!important;color:#fff!important
+}
+:root[data-theme="ondis"] #viewOps .grid > .opsQueueCard > .cardHeader h2{color:#fff!important;flex:initial!important}
+:root[data-theme="ondis"] #viewOps .grid > .opsQueueCard > .cardHeader .rowRight,
+#viewOps .opsQueueCard > .cardHeader .rowRight{flex:0 1 auto!important;display:flex!important;align-items:center;gap:8px!important;flex-wrap:wrap!important;max-width:100%}
+#viewOps .opsQueueCard .cardHeader .rowRight .btn{min-height:41px!important;padding:9px 13px!important;white-space:nowrap!important;border-radius:11px!important;font-size:12px!important;font-weight:800!important;background:rgba(255,255,255,.13)!important;border:1px solid rgba(255,255,255,.29)!important;color:#fff!important}
+#viewOps .opsQueueCard .cardHeader .rowRight #btnCallNext{background:#fff!important;border-color:#fff!important;color:#9e1430!important;box-shadow:0 8px 24px rgba(0,0,0,.16)!important}
+#viewOps .opsQueueCard .cardHeader .rowRight .btn:hover{filter:brightness(1.07)!important;transform:translateY(-1px)}
+#viewOps .opsQueueCard > .cardBody,#viewOps .opsAttendCard > .cardBody{padding:20px!important}
+#viewOps .opsIntro{color:#697a90!important;background:#f8faff!important;border:1px solid #e8edf4!important;border-radius:12px;padding:12px 14px;font-size:12px;line-height:1.6}
+#viewOps .opsIntro b{color:#26334b!important}
+#viewOps .opsQueueCard .cardBody>.divider{margin:15px 0!important;background:transparent!important;height:0!important}
+#viewOps #kpis{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+#viewOps #kpis .kpi{border:1px solid var(--mo-line)!important;border-radius:16px!important;box-shadow:none!important;background:linear-gradient(160deg,#fff,#fafbff)!important;padding:13px 12px!important;min-width:0;display:flex;gap:10px;align-items:flex-start}
+#viewOps #kpis .kpi .kpiIco{width:36px!important;height:36px!important;flex:0 0 36px!important;display:grid!important;place-items:center!important;background:#fff0f3!important;color:#b91c41!important;border:0!important;filter:none!important;border-radius:11px!important;font-size:18px!important}
+#viewOps #kpis .kpi .t{font-size:10px!important;letter-spacing:.02em;color:#718096!important;font-weight:800!important}
+#viewOps #kpis .kpi .v{color:#19253e!important;font-size:clamp(16px,1.4vw,22px)!important;font-weight:900!important;line-height:1.22!important;white-space:normal;overflow-wrap:anywhere}
+#viewOps #kpis .kpi .kpiTrend{font-size:10px!important;color:#8a96a8!important}
+#viewOps #kpis .kpi .miniSpark{opacity:.46;max-width:36px}
+#viewOps #kpis .kpi:last-child{grid-column:span 2}
+#viewOps #queueList{gap:11px!important}
+:root[data-theme="ondis"] #queueList .item,#viewOps #queueList .item{border:1px solid #e3e9f3!important;border-radius:16px!important;padding:14px!important;background:#fff!important;box-shadow:0 4px 17px rgba(27,44,78,.035)!important;gap:10px;transition:box-shadow .15s,transform .15s,border-color .15s}
+#viewOps #queueList .item:hover{box-shadow:0 9px 25px rgba(27,44,78,.09)!important;transform:translateY(-1px)}
+:root[data-theme="ondis"] #viewOps #queueList .item:first-child,#viewOps #queueList .item:first-child{background:linear-gradient(95deg,#fff2f5,#fff 65%)!important;border-color:#f5b0be!important}
+#viewOps #queueList .item .leftItem{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
+#viewOps #queueList .item .pos{width:36px!important;height:36px!important;flex:0 0 36px;border-radius:12px!important;font-size:14px!important;font-weight:900!important}
+#viewOps #queueList .item .avatar{width:47px!important;height:47px!important;border-radius:15px!important;flex:0 0 47px}
+#viewOps #queueList .item .name{font-size:14px!important;font-weight:900!important;color:#1e293b!important}
+#viewOps #queueList .item .queueStatus{font-size:11px!important;color:#64748b!important;margin-top:2px}
+#viewOps #queueList .item .queueStats{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+:root[data-theme="ondis"] #queueList .item .queueStats span,#viewOps #queueList .item .queueStats span{font-size:10px!important;font-weight:700!important;color:#526175!important;background:#f4f6fa!important;border:1px solid #e9edf3!important;padding:4px 7px!important;border-radius:7px!important;white-space:nowrap}
+#viewOps .queueMenu{position:relative;z-index:2}
+#viewOps .queueMenu summary{width:38px!important;height:38px!important;display:grid!important;place-items:center!important;border-radius:11px!important;background:#f3f6fa!important;color:#334155!important;border:1px solid #e0e6ef!important;cursor:pointer;font-size:20px!important;list-style:none}
+#viewOps .queueMenu summary::-webkit-details-marker{display:none}
+#viewOps .queueMenu[open]{z-index:30}
+#viewOps .queueMenuPanel{z-index:40!important}
+#viewOps .poolHeaderRow{border-radius:13px;background:#f8f9fc;border:1px solid #e9eef5;padding:11px 13px;gap:10px}
+#viewOps .poolHeaderRow .tiny:first-child{font-weight:900!important;color:#25334a!important}
+#viewOps #poolList .item{border:1px solid #e6eaf3!important;border-radius:15px!important;padding:12px 14px!important;background:#fff!important;transition:background .18s}
+#viewOps #poolList .item:hover{background:#fbf7f8!important;border-color:#f0b9c5!important}
+#viewOps #poolList .item .name{font-size:13px!important;font-weight:800!important}
+#viewOps .opsAttendCard{overflow:hidden}
+:root[data-theme="ondis"] #viewOps .grid > .opsAttendCard > .cardHeader,
+#viewOps .opsAttendCard > .cardHeader{border:0!important;box-shadow:none!important;background:#151925!important;padding:21px 24px!important;min-height:95px}
+:root[data-theme="ondis"] #viewOps .grid > .opsAttendCard > .cardHeader h2{color:#fff!important}
+#viewOps .opsAttendCard .cardHeader .tag{font-size:11px!important;background:rgba(255,255,255,.1)!important;color:#d7fce9!important;border:1px solid rgba(167,243,208,.35)!important;padding:7px 11px!important}
+#viewOps #attendPanel .attCard{padding:16px!important;border:1px solid #e6eaf2!important;border-radius:18px!important;background:linear-gradient(180deg,#fff,#fcfdff)!important;box-shadow:0 8px 28px rgba(20,35,68,.05)!important;margin-bottom:12px!important}
+#viewOps #attendPanel .attHero{display:flex;gap:13px;align-items:center;padding-bottom:15px;border-bottom:1px solid #eef2f6;margin-bottom:14px}
+#viewOps #attendPanel .attHero .name{font-size:17px!important;color:#18253b!important;font-weight:900!important}
+#viewOps #attendPanel .attLive{font-size:11px!important;color:#087b53!important;font-weight:800!important}
+#viewOps #attendPanel .attStatsGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+#viewOps #attendPanel .attStat{border:1px solid #e8edf3!important;border-radius:13px!important;background:#f7f9fc!important;padding:10px 11px!important}
+#viewOps #attendPanel .attStat small{font-size:10px!important;color:#718096!important}
+#viewOps #attendPanel .attStat b{color:#233047!important;white-space:normal;overflow-wrap:anywhere}
+#viewOps #attendPanel .attInfoBox{border-radius:12px!important;background:#f8faff!important;border:1px solid #e8edf5!important;color:#66768d!important;font-size:12px!important;line-height:1.6;padding:13px!important;margin:13px 0!important}
+#viewOps #attendPanel .attDecision{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+#viewOps #attendPanel .attDecision .btn{min-height:48px!important;font-weight:900!important;border-radius:12px!important;font-size:12px!important}
+#viewOps #attendPanel .attRecent{border:1px solid #e9eef5;border-radius:16px;padding:13px;background:#fff}
+#viewOps #attendPanel .attRecentHead b{color:#1f2b40!important}
+#viewOps #attendPanel .attRecentOne b{color:#26354b!important}
+#viewOps .opsAttendEmpty{min-height:210px;display:flex;flex-direction:column;gap:10px;justify-content:center;align-items:center;text-align:center;padding:20px;color:#78869b}
+#viewOps .opsAttendEmptyIcon{width:58px;height:58px;display:grid;place-items:center;background:#f3f6fb;border:1px solid #e4eaf3;border-radius:17px;color:#be1940;font-size:32px}
+#viewOps .opsAttendEmpty strong{font-size:14px;color:#1e293b}
+#viewOps .opsAttendEmpty span{font-size:12px;line-height:1.5}
+
+/* ==================== METAS DECENDIAIS ==================== */
+#viewMetas .ondisGoalsCard{border-radius:24px!important;overflow:hidden}
+#viewMetas .ondisGoalsCard > .cardHeader{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
+#viewMetas .goalsEyebrow{display:block;font-size:10px;font-weight:900;letter-spacing:.14em;color:#be123c;margin-bottom:6px}
+#viewMetas .goalsHeading h2{margin:0!important;font-size:clamp(23px,2vw,29px)!important;line-height:1.2}
+#viewMetas .goalsHeading h2::before{display:none!important}
+#viewMetas .goalsHeading p,#viewMetas .goalsSectionHead p{margin:5px 0 0;font-size:12px;color:#758398;line-height:1.6}
+#viewMetas .goalsActions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#viewMetas .goalsActions .btn{padding:11px 15px!important}
+#viewMetas .goalsInfo{display:flex;flex-direction:column;gap:4px;border:1px solid #d4def1;border-left:4px solid #597ded;background:#f5f8ff;padding:14px 17px;border-radius:13px;font-size:12px;line-height:1.6;color:#60718a}
+#viewMetas .goalsInfo strong{font-size:13px;color:#1e3769}
+#viewMetas .goalsInfo.converted{border-color:#bce5d0;border-left-color:#12a86c;background:#f2fdf7}
+#viewMetas .goalsInfo.converted strong{color:#075f3c}
+#viewMetas .goalsMainFields,#viewMetas .goalsVendorGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:18px 0}
+#viewMetas .goalsMainFields .field,#viewMetas .goalsVendorGrid .field{min-width:0}
+#viewMetas .goalsVendorGrid{grid-template-columns:repeat(3,minmax(0,1fr)) auto;align-items:end;margin:18px 0 12px}
+#viewMetas .goalsVendorGrid .btn{min-height:45px!important;white-space:nowrap}
+#viewMetas .goalsSectionHead{display:flex;align-items:end;justify-content:space-between;gap:14px;padding:25px 0 14px;margin-top:18px;border-top:1px solid #e9edf4}
+#viewMetas .goalsSectionHead h3{font-size:19px;font-weight:900;letter-spacing:-.03em;margin:0;color:#1f2b42}
+#viewMetas .goalsCurrent{display:flex;flex-direction:column;gap:6px;font-size:10px;color:#8390a3;font-weight:900;text-transform:uppercase;letter-spacing:.06em}
+#viewMetas .goalsCurrent input{width:160px;border-radius:10px;border:1px solid #e1e7f0;padding:9px 12px;background:#f7f9fc;font-size:12px;color:#26384f;opacity:1}
+#viewMetas .decendioCards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+#viewMetas .decendioCard{min-width:0;padding:19px;border:1px solid #e2e8f0;background:linear-gradient(156deg,#fff,#fafbfe);border-radius:19px;box-shadow:0 9px 26px rgba(26,39,70,.05);position:relative;overflow:hidden}
+#viewMetas .decendioCard:before{content:'';height:4px;position:absolute;top:0;left:0;right:0;background:#e5eaf2}
+#viewMetas .decendioCard.isCurrent{background:linear-gradient(150deg,#fff5f7,#fff 62%);border-color:#f1b1c0}
+#viewMetas .decendioCard.isCurrent:before{background:linear-gradient(90deg,#ed1740,#f45c72)}
+#viewMetas .decendioCard.isClosed:before{background:#12a86c}
+#viewMetas .decCardTop{display:flex;gap:13px;align-items:center;margin-bottom:21px}
+#viewMetas .decCardTop>span{width:45px;height:45px;flex:0 0 45px;display:grid;place-items:center;border:1px solid #e5eaf3;border-radius:14px;background:#f4f6fb;color:#5f6c80;font-size:16px;font-weight:900}
+#viewMetas .isCurrent .decCardTop>span{border-color:#ffd0d9;background:#ffe8ed;color:#b81539}
+#viewMetas .decCardTop h4{margin:0;font-size:15px;font-weight:900;color:#18263c}
+#viewMetas .decCardTop small{display:block;margin-top:3px;color:#8190a6;font-size:11px}
+#viewMetas .decendioCard .field{min-width:0;margin-bottom:14px}
+#viewMetas .decendioCard input{width:100%;min-width:0}
+#viewMetas .decCardTotal{border-radius:13px;background:#f4f7fb;padding:13px;border:1px solid #e8edf3;display:flex;flex-direction:column;gap:5px}
+#viewMetas .decCardTotal small{font-size:10px;font-weight:800;color:#77869b}
+#viewMetas .decCardTotal input{font-size:18px;font-weight:900!important;background:transparent!important;border:0!important;padding:0!important;min-height:28px!important;color:#1b2940!important;opacity:1!important}
+#viewMetas .decCardFoot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:13px}
+#viewMetas .decCardFoot span{font-size:10px;color:#8090a5;line-height:1.4}
+#viewMetas .decCardFoot input{width:100px!important;flex:0 0 100px;max-width:100px;border-radius:9px;text-align:center;background:#fff!important;font-size:11px;font-weight:800;padding:7px!important;min-height:34px}
+#viewMetas .goalsFootActions{display:flex;align-items:end;justify-content:flex-end;gap:10px;flex-wrap:wrap;padding:18px 0 4px}
+#viewMetas .goalsClosed{margin-right:auto;display:flex;flex-direction:column;gap:6px}
+#viewMetas .goalsClosed span{color:#7b8799;font-size:11px;font-weight:800}
+#viewMetas .goalsClosed input{border-radius:10px;min-height:40px;width:160px;padding:8px 12px;border:1px solid #e4e9f1;background:#f8faff;color:#263449;font-weight:700}
+#viewMetas .goalsKpis,#viewMetas .goalsVendorKpis{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px!important;margin:7px 0 20px}
+#viewMetas .goalsKpis .kpi,#viewMetas .goalsVendorKpis .kpi{padding:16px!important;display:flex;flex-direction:column;gap:8px;min-width:0}
+#viewMetas .goalsKpis .kpi .t,#viewMetas .goalsVendorKpis .kpi .t{font-size:11px!important;font-weight:800!important;color:#7a879b!important}
+#viewMetas .goalsKpis .kpi .v,#viewMetas .goalsVendorKpis .kpi .v{font-size:clamp(15px,1.35vw,20px)!important;font-weight:900!important;letter-spacing:-.03em;color:#19283f!important;overflow-wrap:anywhere;line-height:1.3}
+#viewMetas .goalsVendorKpis{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:5px}
+#viewMetas .goalsProgressGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+#viewMetas .goalsProgressItem{border:1px solid #e6ebf2;background:#fbfcff;border-radius:16px;padding:17px;min-width:0}
+#viewMetas .goalsProgressHead{display:flex;flex-direction:column;gap:5px;min-height:52px;margin-bottom:13px}
+#viewMetas .goalsProgressHead strong{font-size:12px;color:#293650}
+#viewMetas .goalsProgressHead b{font-size:12px;color:#66758c;overflow-wrap:anywhere}
+#viewMetas .goalsProgressItem .bar{height:9px!important;border:0!important;background:#e8edf4!important}
+#viewMetas .goalsProgressItem .bar i{background:linear-gradient(90deg,#ed1740,#f67b90)!important}
+#viewMetas .goalsProgressItem>span{display:block;margin-top:10px;color:#8190a5;font-size:11px}
+#viewMetas .goalsProgressItem>span b{color:#37475e}
+#viewMetas .goalsNote{padding:14px 16px;border-radius:12px;border:1px dashed #d4dbe7;color:#708197;font-size:11px;line-height:1.6;background:#fafbfe;margin:14px 0 0}
+
+@media (max-width:1300px){
+  #viewOps>.grid{grid-template-columns:1fr!important}
+  #viewMetas .goalsVendorGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:960px){
+  #viewMetas .decendioCards{grid-template-columns:1fr!important}
+  #viewMetas .goalsMainFields,#viewMetas .goalsProgressGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #viewMetas .goalsKpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #viewMetas .goalsVendorKpis{grid-template-columns:1fr!important}
+}
+@media (max-width:620px){
+  #viewOps .opsPageTitle{align-items:flex-start;flex-direction:column}
+  #viewOps .opsQueueCard>.cardHeader,#viewOps .opsAttendCard>.cardHeader{padding:18px!important}
+  #viewOps .opsQueueCard>.cardHeader .rowRight{width:100%!important;display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
+  #viewOps .opsQueueCard>.cardHeader .rowRight #btnCallNext{grid-column:span 2;grid-row:1}
+  #viewOps #kpis{grid-template-columns:1fr 1fr!important}
+  #viewOps #kpis .kpi:last-child{grid-column:span 2}
+  #viewOps #queueList .item{align-items:flex-start!important}
+  #viewOps #queueList .item .leftItem{gap:8px;min-width:0}
+  #viewOps #queueList .item .pos{width:30px!important;height:30px!important;flex-basis:30px}
+  #viewOps #queueList .item .avatar{width:36px!important;height:36px!important;flex-basis:36px}
+  #viewOps .opsAttendCard>.cardHeader{gap:10px}
+  #viewMetas .goalsMainFields,#viewMetas .goalsProgressGrid,#viewMetas .goalsVendorGrid{grid-template-columns:1fr!important}
+  #viewMetas .goalsSectionHead{flex-direction:column;align-items:flex-start}
+  #viewMetas .goalsKpis{grid-template-columns:1fr 1fr!important}
+  #viewMetas .goalsFootActions{align-items:stretch}
+  #viewMetas .goalsFootActions button{flex:1 1 150px}
+  #viewMetas .goalsClosed{width:100%}
+}
+@media (prefers-reduced-motion:reduce){#viewOps #queueList .item,#viewOps .opsQueueCard .btn{transition:none!important;transform:none!important}}
+
+/* Contraste dos botões do banner — vence a regra histórica de tema. */
+:root[data-theme="ondis"] #viewOps .opsQueueCard .cardHeader .rowRight #btnCallNext{
+  background:#fff!important;border:1px solid #fff!important;color:#94112e!important;
+  box-shadow:0 8px 20px rgba(0,0,0,.18)!important;
+}
+@media(max-width:620px){
+  :root[data-theme="ondis"] #viewOps .grid > .opsQueueCard:first-child > .cardHeader{
+    display:flex!important;flex-direction:column!important;align-items:stretch!important;
+    flex-wrap:wrap!important;padding:19px!important;gap:16px!important;min-height:initial!important;
+  }
+  :root[data-theme="ondis"] #viewOps .grid > .opsQueueCard:first-child > .cardHeader .opsHeaderCopy{
+    flex:0 0 auto!important;width:100%!important;max-width:100%!important;min-width:0!important;
+  }
+  :root[data-theme="ondis"] #viewOps .grid > .opsQueueCard:first-child > .cardHeader .rowRight{
+    display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important;
+    flex:none!important;flex-wrap:wrap!important;width:100%!important;max-width:none!important;
+  }
+  :root[data-theme="ondis"] #viewOps .grid > .opsQueueCard:first-child > .cardHeader .rowRight #btnCallNext{
+    grid-column:span 2!important;grid-row:1!important;
+  }
+  #viewOps .opsQueueCard > .cardHeader .opsHeaderCopy h2{white-space:normal!important;overflow-wrap:normal!important;font-size:22px!important}
+}

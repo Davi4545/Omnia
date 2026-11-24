@@ -1070,6 +1070,7 @@ body{ background-attachment: fixed; }
 <style id="v10-dashboard-fix">
 .dashboardPanel{min-height:280px}.dashboardSvgChart{min-height:210px}.dashboardSvgChart.compact{min-height:170px}.dashboardBarList,.dashboardFunnel,.dashboardDonutWrap{min-height:190px;display:flex;flex-direction:column;justify-content:center}.dashboardEmptyList{padding:28px 14px;border:1px dashed var(--line);border-radius:14px;text-align:center;color:var(--muted);background:color-mix(in srgb,var(--panel) 85%,var(--bg))}.dashboardMainGrid .dashboardPanel,.dashboardSecondaryGrid .dashboardPanel{background:linear-gradient(180deg,var(--panel),color-mix(in srgb,var(--panel) 94%,var(--bg)));box-shadow:0 10px 28px rgba(15,23,42,.045)}
 </style><link rel="stylesheet" href="./ondis-v11.css?v=12.3.0"><script src="./ondis-v11.js?v=13.3" defer></script>  <link rel="stylesheet" href="./ondis-visual-refresh.css?v=1.0.0">
+<link rel="stylesheet" href="./ondis-metas-operacao.css?v=1.0.0">
 </head>
 <body>
 <div class="appShell" id="appShell">
@@ -1127,10 +1128,11 @@ body{ background-attachment: fixed; }
 <main class="wrap">
 <!-- OPERACAO -->
 <div id="viewOps">
+<div class="opsPageTitle"><div><span class="opsKicker">CENTRAL DE ATENDIMENTO · ONDIS</span><h1>Operação em tempo real</h1><p>Organize a vez de cada vendedor e acompanhe cada atendimento.</p></div><span class="opsLiveBadge"><i></i> Painel ativo</span></div>
 <div class="grid">
-<section class="card">
+<section class="card opsQueueCard">
 <div class="cardHeader">
-<h2>👥 Fila de atendimento <span class="opsSubtitle">Atendimento só finaliza quando você registrar vendeu ou não vendeu.</span></h2>
+<div class="opsHeaderCopy"><span class="opsHeaderLabel">GESTÃO DA FILA</span><h2>Fila de atendimento</h2><p class="opsSubtitle">Atendimento só finaliza após registrar o resultado.</p></div>
 <div class="rowRight">
 <button class="btn" id="btnPreference">Preferência</button>
 <button class="btn warn" id="btnCallNext">Chamar próximo</button>
@@ -1145,15 +1147,15 @@ body{ background-attachment: fixed; }
 <div class="list" id="queueList"></div>
 <div class="divider"></div>
 <div class="row poolHeaderRow" style="justify-content:space-between">
-<div class="tiny">👥 Vendedor(es) fora da fila</div>
+<div class="tiny">Vendedores fora da fila</div>
 <div class="tiny">Clique para entrar / retomar</div>
 </div>
 <div class="list" id="poolList" style="margin-top:10px"></div>
 </div>
 </section>
-<section class="card">
+<section class="card opsAttendCard">
 <div class="cardHeader">
-<h2>Em atendimento</h2>
+<div class="opsHeaderCopy"><span class="opsHeaderLabel">ATENDIMENTO ATIVO</span><h2>Em atendimento</h2></div>
 <div class="rowRight"><span class="tag" id="attendTag">Nenhum</span></div>
 </div>
 <div class="cardBody" id="attendPanel">
@@ -1208,185 +1210,64 @@ body{ background-attachment: fixed; }
 </div>
 <!-- METAS -->
 <div id="viewMetas" style="display:none">
-<section class="card">
-<div class="cardHeader">
-<h2>Metas</h2>
-<div class="rowRight">
-<button class="btn" id="btnAutoRedistribute">Auto redistribuir</button>
-<button class="btn good" id="btnSaveGoals">Salvar metas</button>
-</div>
-</div>
-<div class="cardBody">
-<div class="noteBox">
-          ✅ Ao digitar a <b>meta mensal</b> e as <b>% por semana</b>, o ONDIS calcula automaticamente:
-          <b>meta diária</b> (baseado nos dias restantes do mês) e <b>metas das semanas</b>.
-          <br/>✅ Ao clicar em <b>Fechar Semana</b>, o sistema redistribui o que falta para as semanas restantes.
-        </div>
-<div class="divider"></div>
-<div class="row">
-<div class="field">
-<label>Mês da meta</label>
-<input id="goalMonth" type="month"/>
-</div>
-<div class="field">
-<label>Meta mensal (R$)</label>
-<input id="goalMonthly" inputmode="decimal" placeholder="Ex: 120000,00"/>
-</div>
-<div class="field">
-<label>Meta diária (AUTO) (R$)</label>
-<input disabled="" id="goalDaily" inputmode="decimal" placeholder="Auto"/>
-</div>
-</div>
-<div class="goalLevelEditor">
-  <div class="goalLevelIntro">
-    <b>Níveis de performance</b>
-    <span>Plutão marca 80% e a Lua marca 100%. Defina os percentuais da Meta 2 e da Meta 3.</span>
+<section class="card ondisGoalsCard">
+  <div class="cardHeader">
+    <div class="goalsHeading">
+      <span class="goalsEyebrow">PLANEJAMENTO COMERCIAL</span>
+      <h2>Metas por decêndio</h2>
+      <p>Três períodos por mês. Seus valores existentes continuam preservados.</p>
+    </div>
+    <div class="rowRight goalsActions">
+      <button class="btn" id="btnAutoRedistribute" type="button">Redistribuir metas existentes</button>
+      <button class="btn good" id="btnSaveGoals" type="button">Salvar metas</button>
+    </div>
   </div>
-  <div class="goalLevelFields">
-    <div class="field"><label>Plutão — aquecimento (%)</label><input disabled inputmode="decimal" value="80"/></div>
-    <div class="field"><label>Lua — Meta 1 (%)</label><input disabled id="goalBasePct" inputmode="decimal" value="100"/></div>
-    <div class="field"><label>Marte — Meta 2 (%)</label><input id="goalSuperPct" inputmode="decimal" value="120"/></div>
-    <div class="field"><label>Saturno — Meta 3 (%)</label><input id="goalDiamondPct" inputmode="decimal" value="150"/></div>
+  <div class="cardBody">
+    <div class="goalsInfo" id="goalsMigrationInfo" role="status">
+      <strong>Conversão sem perda de dados</strong>
+      <span>A distribuição semanal antiga será mantida no histórico. As metas decendiais só serão gravadas ao salvar ou confirmar a redistribuição.</span>
+    </div>
+    <div class="goalsMainFields">
+      <div class="field"><label for="goalMonth">Mês da meta</label><input id="goalMonth" type="month"/></div>
+      <div class="field"><label for="goalMonthly">Meta mensal (R$)</label><input id="goalMonthly" inputmode="decimal" placeholder="Ex: 120000,00"/></div>
+      <div class="field"><label for="goalDaily">Meta diária prevista (R$)</label><input disabled id="goalDaily" inputmode="decimal"/></div>
+    </div>
+    <div class="goalLevelEditor">
+      <div class="goalLevelIntro"><b>Níveis de performance</b><span>Percentuais das metas mensais preservados.</span></div>
+      <div class="goalLevelFields">
+        <div class="field"><label>Plutão — aquecimento (%)</label><input disabled value="80"/></div>
+        <div class="field"><label>Lua — Meta 1 (%)</label><input disabled id="goalBasePct" inputmode="decimal" value="100"/></div>
+        <div class="field"><label>Marte — Meta 2 (%)</label><input id="goalSuperPct" inputmode="decimal" value="120"/></div>
+        <div class="field"><label>Saturno — Meta 3 (%)</label><input id="goalDiamondPct" inputmode="decimal" value="150"/></div>
+      </div>
+    </div>
+    <div class="goalsSectionHead"><div><span class="goalsEyebrow">DISTRIBUIÇÃO DO MÊS</span><h3>Metas decendiais</h3><p>1–10, 11–20 e 21 até o último dia de cada mês.</p></div>
+      <div class="goalsCurrent"><span>Período de referência</span><input disabled id="goalCurrentWeek" aria-label="Decêndio atual"/></div>
+    </div>
+    <div class="decendioCards" id="decendioCards">
+      <article class="decendioCard" data-dec="1"><div class="decCardTop"><span>01</span><div><h4>1º decêndio</h4><small>Dias 1 a 10</small></div></div><div class="field"><label for="pW1">Peso (%)</label><input id="pW1" inputmode="decimal" placeholder="33,3"/></div><div class="decCardTotal"><small>Meta do período</small><input disabled id="goalW1"/></div><div class="decCardFoot"><span>Participação redistribuída</span><input disabled id="rpW1"/></div></article>
+      <article class="decendioCard" data-dec="2"><div class="decCardTop"><span>02</span><div><h4>2º decêndio</h4><small>Dias 11 a 20</small></div></div><div class="field"><label for="pW2">Peso (%)</label><input id="pW2" inputmode="decimal" placeholder="33,3"/></div><div class="decCardTotal"><small>Meta do período</small><input disabled id="goalW2"/></div><div class="decCardFoot"><span>Participação redistribuída</span><input disabled id="rpW2"/></div></article>
+      <article class="decendioCard" data-dec="3"><div class="decCardTop"><span>03</span><div><h4>3º decêndio</h4><small>Dias 21 ao último dia</small></div></div><div class="field"><label for="pW3">Peso (%)</label><input id="pW3" inputmode="decimal" placeholder="33,4"/></div><div class="decCardTotal"><small>Meta do período</small><input disabled id="goalW3"/></div><div class="decCardFoot"><span>Participação redistribuída</span><input disabled id="rpW3"/></div></article>
+    </div>
+    <div class="goalsFootActions"><div class="goalsClosed"><span>Decêndio atual encerrado?</span><input disabled id="goalWeekClosed" aria-label="Status do fechamento"/></div>
+      <button class="btn warn" id="btnCloseWeek" type="button">Fechar decêndio atual</button><button class="btn ghost" id="btnReopenWeeks" type="button">Reabrir decêndios</button></div>
+    <div class="goalsSectionHead"><div><span class="goalsEyebrow">PERFORMANCE EM TEMPO REAL</span><h3>Progresso das metas</h3></div></div>
+    <div class="kpis goalsKpis" id="kpisGoals"></div>
+    <div class="goalsProgressGrid">
+      <div class="goalsProgressItem"><div class="goalsProgressHead"><strong>Meta diária</strong><b id="goalDailyText"></b></div><div class="bar"><i id="barDaily"></i></div><span>Falta <b id="goalDailyLeft"></b></span></div>
+      <div class="goalsProgressItem"><div class="goalsProgressHead"><strong>Decêndio atual</strong><b id="goalWeeklyText"></b></div><div class="bar"><i id="barWeekly"></i></div><span>Falta <b id="goalWeeklyLeft"></b></span></div>
+      <div class="goalsProgressItem"><div class="goalsProgressHead"><strong>Meta mensal</strong><b id="goalMonthlyText"></b></div><div class="bar"><i id="barMonthly"></i></div><span>Falta <b id="goalMonthlyLeft"></b></span></div>
+    </div>
+    <div class="goalsSectionHead"><div><span class="goalsEyebrow">METAS INDIVIDUAIS</span><h3>Meta do vendedor</h3><p>Os valores mensais individuais já salvos continuam válidos.</p></div></div>
+    <div class="goalsVendorGrid">
+      <div class="field"><label for="goalVendorDivisor">Dividir meta da loja por</label><input id="goalVendorDivisor" inputmode="decimal" placeholder="Ex: 3,5"/></div>
+      <div class="field"><label for="goalVendorSelect">Vendedor</label><select id="goalVendorSelect"></select></div>
+      <div class="field"><label for="goalVendorMonthlyOverride">Meta mensal do vendedor (override)</label><input id="goalVendorMonthlyOverride" inputmode="decimal" placeholder="Deixe vazio para automático"/></div>
+      <button class="btn" id="btnSaveVendorGoal" type="button">Salvar meta vendedor</button>
+    </div>
+    <div class="kpis goalsVendorKpis" id="kpisVendorGoals"></div>
+    <p class="goalsNote">Os campos semanais antigos ficam armazenados sem alterações. Fechamentos e redistribuições novos pertencem somente aos decêndios.</p>
   </div>
-</div>
-<div class="divider"></div>
-<h3 style="margin:0 0 8px 0; font-size:14px; letter-spacing:.06em; text-transform:uppercase; color:#cfe0ff">Meta do Vendedor</h3>
-<div class="row" style="gap:12px">
-<div class="field" style="min-width:220px">
-<label>Dividir meta da loja por</label>
-<input id="goalVendorDivisor" inputmode="decimal" placeholder="Ex: 3,5"/>
-</div>
-<div class="field" style="min-width:260px">
-<label>Vendedor (ajuste opcional)</label>
-<select id="goalVendorSelect"></select>
-</div>
-<div class="field" style="min-width:240px">
-<label>Meta mensal do vendedor (override)</label>
-<input id="goalVendorMonthlyOverride" inputmode="decimal" placeholder="Deixe vazio p/ automático"/>
-</div>
-<div class="rowRight" style="margin-left:auto">
-<button class="btn" id="btnSaveVendorGoal">Salvar meta vendedor</button>
-</div>
-</div>
-<div class="kpis" id="kpisVendorGoals" style="margin-top:10px"></div>
-<div class="divider"></div>
-<h3 style="margin:0 0 8px 0; font-size:14px; letter-spacing:.06em; text-transform:uppercase; color:#cfe0ff">Distribuição semanal</h3>
-<div class="row" style="gap:12px">
-<div class="field" style="min-width:200px">
-<label>Semana atual</label>
-<input disabled="" id="goalCurrentWeek"/>
-</div>
-<div class="field" style="min-width:280px">
-<label>Semana fechada?</label>
-<input disabled="" id="goalWeekClosed"/>
-</div>
-<div class="rowRight" style="margin-left:auto">
-<button class="btn warn" id="btnCloseWeek">Fechar Semana Atual</button>
-<button class="btn ghost" id="btnReopenWeeks">Reabrir Semanas</button>
-</div>
-</div>
-<div class="divider"></div>
-<div class="row">
-<div class="field" style="min-width:180px">
-<label>% Semana 1 (base)</label>
-<input id="pW1" inputmode="decimal" placeholder="Ex: 25"/>
-</div>
-<div class="field" style="min-width:180px">
-<label>% Semana 2 (base)</label>
-<input id="pW2" inputmode="decimal" placeholder="Ex: 25"/>
-</div>
-<div class="field" style="min-width:180px">
-<label>% Semana 3 (base)</label>
-<input id="pW3" inputmode="decimal" placeholder="Ex: 25"/>
-</div>
-<div class="field" style="min-width:180px">
-<label>% Semana 4 (base)</label>
-<input id="pW4" inputmode="decimal" placeholder="Ex: 25"/>
-</div>
-</div>
-<div class="divider"></div>
-<div class="row">
-<div class="field" style="min-width:220px">
-<label>Meta Semana 1 (R$)</label>
-<input disabled="" id="goalW1"/>
-</div>
-<div class="field" style="min-width:220px">
-<label>Meta Semana 2 (R$)</label>
-<input disabled="" id="goalW2"/>
-</div>
-<div class="field" style="min-width:220px">
-<label>Meta Semana 3 (R$)</label>
-<input disabled="" id="goalW3"/>
-</div>
-<div class="field" style="min-width:220px">
-<label>Meta Semana 4 (R$)</label>
-<input disabled="" id="goalW4"/>
-</div>
-</div>
-<div class="divider"></div>
-<div class="row">
-<div class="field" style="min-width:220px">
-<label>% Semana 1 (recalculada)</label>
-<input disabled="" id="rpW1"/>
-</div>
-<div class="field" style="min-width:220px">
-<label>% Semana 2 (recalculada)</label>
-<input disabled="" id="rpW2"/>
-</div>
-<div class="field" style="min-width:220px">
-<label>% Semana 3 (recalculada)</label>
-<input disabled="" id="rpW3"/>
-</div>
-<div class="field" style="min-width:220px">
-<label>% Semana 4 (recalculada)</label>
-<input disabled="" id="rpW4"/>
-</div>
-</div>
-<div class="divider"></div>
-<h3 style="margin:0 0 8px 0; font-size:14px; letter-spacing:.06em; text-transform:uppercase; color:#cfe0ff">Progresso</h3>
-<div class="kpis" id="kpisGoals"></div>
-<div class="divider"></div>
-<div class="row" style="gap:14px">
-<div style="flex:1; min-width: 280px">
-<div class="row" style="justify-content:space-between">
-<div class="tiny">Meta diária (AUTO — dias restantes)</div>
-<div class="tiny"><b id="goalDailyText"></b></div>
-</div>
-<div class="bar"><i id="barDaily"></i></div>
-<div class="row" style="justify-content:space-between; margin-top:8px">
-<div class="tiny">Falta</div>
-<div class="tiny"><b id="goalDailyLeft"></b></div>
-</div>
-</div>
-<div style="flex:1; min-width: 280px">
-<div class="row" style="justify-content:space-between">
-<div class="tiny">Meta semanal (semana atual)</div>
-<div class="tiny"><b id="goalWeeklyText"></b></div>
-</div>
-<div class="bar"><i id="barWeekly"></i></div>
-<div class="row" style="justify-content:space-between; margin-top:8px">
-<div class="tiny">Falta</div>
-<div class="tiny"><b id="goalWeeklyLeft"></b></div>
-</div>
-</div>
-<div style="flex:1; min-width: 280px">
-<div class="row" style="justify-content:space-between">
-<div class="tiny">Meta mensal</div>
-<div class="tiny"><b id="goalMonthlyText"></b></div>
-</div>
-<div class="bar"><i id="barMonthly"></i></div>
-<div class="row" style="justify-content:space-between; margin-top:8px">
-<div class="tiny">Falta</div>
-<div class="tiny"><b id="goalMonthlyLeft"></b></div>
-</div>
-</div>
-</div>
-<div class="divider"></div>
-<div class="hint">
-          • Semana do mês usada: 1 (dias 1–7), 2 (8–14), 3 (15–21), 4 (22–final).<br/>
-          • Se você fechar a semana, o ONDIS redistribui o restante automaticamente.
-        </div>
-</div>
 </section>
 </div>
 <!-- RANKING METAS -->
@@ -3243,161 +3124,186 @@ body{ background-attachment: fixed; }
   }
 
   // ======================
-  // GOALS (mantido igual ao seu)
+  // METAS DECENDIAIS — preserva integralmente o esquema semanal antigo
   // ======================
   function getGoalsForMonth(mk){
     if(!state.goalsByMonth) state.goalsByMonth = {};
     if(!state.goalsByMonth[mk]){
       state.goalsByMonth[mk] = {
-        monthly: 0,
-        basePercents: [25,25,25,25],
-        weekTargets: [0,0,0,0],
-        closedWeeks: {},
-        levels: { basePct:100, superPct:120, diamondPct:150 }
+        monthly:0, basePercents:[25,25,25,25], weekTargets:[0,0,0,0],
+        closedWeeks:{}, levels:{basePct:100,superPct:120,diamondPct:150}
       };
     }
-    const g = state.goalsByMonth[mk];
-    if(!g.basePercents) g.basePercents = [25,25,25,25];
-    if(!g.weekTargets) g.weekTargets = [0,0,0,0];
-    if(!g.closedWeeks) g.closedWeeks = {};
-    g.levels = Object.assign({ basePct:100, superPct:120, diamondPct:150 }, g.levels || {});
-    g.levels.basePct = 100;
+    const g=state.goalsByMonth[mk];
+    if(!Array.isArray(g.basePercents)) g.basePercents=[25,25,25,25];
+    if(!Array.isArray(g.weekTargets)) g.weekTargets=[0,0,0,0];
+    if(!g.closedWeeks) g.closedWeeks={};
+    g.levels=Object.assign({basePct:100,superPct:120,diamondPct:150},g.levels||{});
+    g.levels.basePct=100;
     return g;
   }
-  function sum(arr){ return arr.reduce((a,b)=>a+Number(b||0),0); }
+  function sum(arr){return arr.reduce((a,b)=>a+Number(b||0),0);}
   function getMonthRevenueSold(mk){
-    const soldMonth = state.records.filter(r => r.monthKey === mk && r.outcome==="sold");
-    return soldMonth.reduce((s,r)=> s + Number(r.value||0), 0);
+    return state.records.filter(r=>r.monthKey===mk && r.outcome==='sold')
+      .reduce((sum,r)=>sum+Number(r.value||0),0);
   }
+  // Mantido para outras telas que ainda usam o ranking semanal.
   function autoRedistributeGoals(mk){
-    const g = getGoalsForMonth(mk);
-    const monthly = Number(g.monthly||0);
-    const done = getMonthRevenueSold(mk);
-    const remaining = Math.max(0, monthly - done);
-
-    const openWeeks = [1,2,3,4].filter(w => !g.closedWeeks[String(w)]);
-    const base = g.basePercents.map(p=> Number(p||0));
-    const sumOpenBase = sum(openWeeks.map(w=> base[w-1]));
-
-    const normalized = [0,0,0,0];
-    if(openWeeks.length === 0){
-      // tudo fechado
-    } else if(sumOpenBase <= 0){
-      openWeeks.forEach(w => normalized[w-1] = 100/openWeeks.length);
-    } else {
-      openWeeks.forEach(w => normalized[w-1] = (base[w-1]/sumOpenBase)*100);
-    }
-
-    const targets = [...g.weekTargets];
-    openWeeks.forEach(w=>{
-      targets[w-1] = remaining * (normalized[w-1]/100);
+    const g=getGoalsForMonth(mk),remaining=Math.max(0,Number(g.monthly||0)-getMonthRevenueSold(mk));
+    const open=[1,2,3,4].filter(w=>!g.closedWeeks[String(w)]),weights=g.basePercents.map(x=>Number(x||0));
+    const base=sum(open.map(w=>weights[w-1]));
+    const normalized=[0,0,0,0],targets=[...g.weekTargets];
+    open.forEach(w=>{
+      normalized[w-1]=base>0?weights[w-1]/base*100:100/open.length;
+      targets[w-1]=remaining*normalized[w-1]/100;
     });
-    g.weekTargets = targets;
-
-    const daysRemain = remainingDaysInMonthFromToday(mk);
-    const daily = (remaining / Math.max(1, daysRemain));
-
-    return { g, normalizedPercents: normalized, remaining, daily };
+    g.weekTargets=targets;
+    return {g,normalizedPercents:normalized,remaining,daily:remaining/remainingDaysInMonthFromToday(mk)};
   }
-
+  function decendioOfDate(dateKeyStr){
+    const d=Number(String(dateKeyStr).slice(8,10));
+    return d<=10?1:d<=20?2:3;
+  }
+  const decimalBR = n=>String(Number(n||0)).replace('.',',');
+  function decRange(mk,dec){
+    const last=daysInMonth(mk);
+    return dec===1?[1,10]:dec===2?[11,20]:[21,last];
+  }
+  function decendioFromLegacy(mk,g){
+    // Conversão por interseção dos dias, sem excluir os valores/fechamentos da semana.
+    const last=daysInMonth(mk),oldRanges=[[1,7],[8,14],[15,21],[22,last]];
+    const weights=[0,0,0],values=[0,0,0];
+    const oldWeights=Array.isArray(g.basePercents)?g.basePercents:[25,25,25,25];
+    const oldValues=Array.isArray(g.weekTargets)?g.weekTargets:[0,0,0,0];
+    for(let w=0;w<4;w++){
+      const [a,b]=oldRanges[w],span=b-a+1;
+      for(let d=1;d<=3;d++){
+        const [x,y]=decRange(mk,d);
+        const overlap=Math.max(0,Math.min(b,y)-Math.max(a,x)+1);
+        weights[d-1]+=Math.max(0,Number(oldWeights[w]||0))*overlap/span;
+        values[d-1]+=Math.max(0,Number(oldValues[w]||0))*overlap/span;
+      }
+    }
+    const totalWeight=sum(weights);
+    const percents=totalWeight>0?weights.map(x=>x/totalWeight*100):[100/3,100/3,100/3];
+    const oldTotal=sum(oldValues);
+    // Sem distribuição antiga persistida: partir do valor mensal registrado.
+    const targetPool=oldTotal>0?oldTotal:Math.max(0,Number(g.monthly||0)-getMonthRevenueSold(mk));
+    let targets;
+    if(oldTotal>0){
+      // Ajuste de centavos no último decêndio para preservar o total original.
+      const a=Math.round(values[0]*100),b=Math.round(values[1]*100),sumCents=Math.round(oldTotal*100);
+      targets=[a/100,b/100,(sumCents-a-b)/100];
+    }else{
+      const a=Math.round(targetPool*percents[0]),b=Math.round(targetPool*percents[1]);
+      targets=[a/100,b/100,(Math.round(targetPool*100)-a-b)/100];
+    }
+    return {basePercents:percents,targets,closed:{},source:'legacy',version:1};
+  }
+  function getDecendios(mk,g=getGoalsForMonth(mk)){
+    const d=g.decendios;
+    if(d && Array.isArray(d.basePercents) && d.basePercents.length===3 && Array.isArray(d.targets) && d.targets.length===3){
+      return {basePercents:d.basePercents.map(x=>Math.max(0,Number(x||0))),targets:d.targets.map(x=>Math.max(0,Number(x||0))),closed:{...(d.closed||{})},source:'saved',version:1};
+    }
+    return decendioFromLegacy(mk,g);
+  }
+  function redistributeDecendios(d,total){
+    // Mantém os valores fechados, redistribui apenas entre decêndios abertos.
+    const next={...d,basePercents:[...d.basePercents],targets:[...d.targets],closed:{...d.closed}};
+    const open=[1,2,3].filter(i=>!next.closed[String(i)]);
+    if(!open.length)return next;
+    const locked=sum([1,2,3].filter(i=>next.closed[String(i)]).map(i=>next.targets[i-1]));
+    const pool=Math.max(0,Number(total||0)-locked);
+    const weights=open.map(i=>Math.max(0,Number(next.basePercents[i-1]||0)));
+    const weightSum=sum(weights),totalCents=Math.round(pool*100);
+    let used=0;
+    open.forEach((i,k)=>{
+      const cents=k===open.length-1?totalCents-used:Math.round(totalCents*(weightSum>0?weights[k]/weightSum:1/open.length));
+      next.targets[i-1]=cents/100; used+=cents;
+    });
+    return next;
+  }
+  let goalsDraft=null;
+  function goalDraftFor(mk){return goalsDraft?.month===mk?goalsDraft.data:null;}
+  function paintDecendios(mk,g,d){
+    const baseSum=sum(d.basePercents);
+    for(let i=1;i<=3;i++){
+      const card=document.querySelector(`.decendioCard[data-dec="${i}"]`);
+      if(card){card.classList.toggle('isClosed',!!d.closed[String(i)]);card.classList.toggle('isCurrent',mk===monthKey() && i===decendioOfDate(todayKey()));}
+      const t=Number(d.targets[i-1]||0);
+      $('goalW'+i).value=formatMoney(t);
+      $('rpW'+i).value=d.closed[String(i)]?'Fechado':((baseSum>0?Number(d.basePercents[i-1]||0)/baseSum*100:0).toFixed(1)+'%');
+    }
+    const current=decendioOfDate(todayKey());
+    $('goalCurrentWeek').value=mk===monthKey()?`Decêndio ${current}`:'Mês selecionado';
+    $('goalWeekClosed').value=mk===monthKey()?(d.closed[String(current)]?'Sim':'Não'):'—';
+    const info=$('goalsMigrationInfo');
+    if(info){
+      info.classList.toggle('converted',!!g.decendios);
+      info.querySelector('strong').textContent=g.decendios?'Distribuição decendial salva':'Prévia das metas semanais existentes';
+      info.querySelector('span').textContent=g.decendios
+        ?'As semanas antigas continuam armazenadas, sem alterações. Edite os pesos e salve quando desejar.'
+        :'Os valores das quatro semanas foram repartidos proporcionalmente pelos dias dos três decêndios. Confira a prévia e clique em Salvar metas.';
+    }
+  }
   function renderGoals(){
-    const mk = $("goalMonth").value || monthKey();
-    const g = getGoalsForMonth(mk);
-
-    $("goalMonth").value = mk;
-    $("goalMonthly").value = g.monthly ? String(g.monthly).replace(".", ",") : "";
-    $("goalBasePct").value = "100";
-    $("goalSuperPct").value = String(g.levels.superPct ?? 120).replace(".", ",");
-    $("goalDiamondPct").value = String(g.levels.diamondPct ?? 150).replace(".", ",");
-
-    $("pW1").value = String(g.basePercents?.[0] ?? 25).replace(".", ",");
-    $("pW2").value = String(g.basePercents?.[1] ?? 25).replace(".", ",");
-    $("pW3").value = String(g.basePercents?.[2] ?? 25).replace(".", ",");
-    $("pW4").value = String(g.basePercents?.[3] ?? 25).replace(".", ",");
-
-    const { normalizedPercents, daily } = autoRedistributeGoals(mk);
-
-    $("goalDaily").value = String((daily||0).toFixed(2)).replace(".", ",");
-
-    $("goalW1").value = formatMoney(g.weekTargets[0]||0);
-    $("goalW2").value = formatMoney(g.weekTargets[1]||0);
-    $("goalW3").value = formatMoney(g.weekTargets[2]||0);
-    $("goalW4").value = formatMoney(g.weekTargets[3]||0);
-
-    [1,2,3,4].forEach(w=>{
-      const closed = !!g.closedWeeks[String(w)];
-      const v = closed ? "Fechada" : (normalizedPercents[w-1]||0).toFixed(1) + "%";
-      $("rpW"+w).value = v;
-    });
-
-    const today = todayKey();
-    const cw = weekOfMonth(today);
-    $("goalCurrentWeek").value = "Semana " + cw;
-    $("goalWeekClosed").value = g.closedWeeks[String(cw)] ? "Sim" : "Não";
-
-    save(state);
-    renderGoalsProgress();
-    try{ renderVendorGoals(); }catch{}
+    const mk=$('goalMonth').value||monthKey(),g=getGoalsForMonth(mk),d=getDecendios(mk,g);
+    goalsDraft=null;
+    $('goalMonth').value=mk;
+    $('goalMonthly').value=g.monthly?decimalBR(g.monthly):'';
+    $('goalBasePct').value='100';
+    $('goalSuperPct').value=decimalBR(g.levels.superPct);
+    $('goalDiamondPct').value=decimalBR(g.levels.diamondPct);
+    for(let i=1;i<=3;i++)$('pW'+i).value=decimalBR(Number(d.basePercents[i-1]||0).toFixed(2));
+    const daily=Math.max(0,Number(g.monthly||0)-getMonthRevenueSold(mk))/remainingDaysInMonthFromToday(mk);
+    $('goalDaily').value=daily.toFixed(2).replace('.',',');
+    paintDecendios(mk,g,d);
+    renderGoalsProgress(g,d);
+    try{renderVendorGoals();}catch(err){console.warn(err);}
+    // Não salvar ao abrir uma tela: preserva a distribuição anterior até ação explícita.
   }
-
-  function renderGoalsProgress(){
-    const mk = $("goalMonth").value || monthKey();
-    const g = getGoalsForMonth(mk);
-
-    const today = todayKey();
-    const currentWeek = weekOfMonth(today);
-
-    const monthSold = state.records.filter(r => r.monthKey === mk && r.outcome==="sold");
-    const monthRevenue = monthSold.reduce((s,r)=> s + Number(r.value||0), 0);
-
-    const daySold = state.records.filter(r => r.dateKey === today && r.outcome==="sold");
-    const dayRevenue = daySold.reduce((s,r)=> s + Number(r.value||0), 0);
-
-    const weekSold = state.records.filter(r => r.monthKey === mk && r.outcome==="sold" && weekOfMonth(r.dateKey) === currentWeek);
-    const weekRevenue = weekSold.reduce((s,r)=> s + Number(r.value||0), 0);
-
-    const monthlyTarget = Number(g.monthly||0);
-    const weeklyTarget = Number(g.weekTargets?.[currentWeek-1] || 0);
-
-    const { remaining, daily } = autoRedistributeGoals(mk);
-    const dailyTarget = Number(daily||0);
-
-    const monthlyPct = monthlyTarget>0 ? clamp((monthRevenue/monthlyTarget)*100, 0, 100) : 0;
-    const dailyPct = dailyTarget>0 ? clamp((dayRevenue/dailyTarget)*100, 0, 100) : 0;
-    const weeklyPct = weeklyTarget>0 ? clamp((weekRevenue/weeklyTarget)*100, 0, 100) : 0;
-
-    $("goalDailyText").textContent = `${formatMoney(dayRevenue)} / ${formatMoney(dailyTarget)}`;
-    $("goalWeeklyText").textContent = `${formatMoney(weekRevenue)} / ${formatMoney(weeklyTarget)} (S${currentWeek})`;
-    $("goalMonthlyText").textContent = `${formatMoney(monthRevenue)} / ${formatMoney(monthlyTarget)}`;
-
-    $("goalDailyLeft").textContent = formatMoney(Math.max(0, dailyTarget - dayRevenue));
-    $("goalWeeklyLeft").textContent = formatMoney(Math.max(0, weeklyTarget - weekRevenue));
-    $("goalMonthlyLeft").textContent = formatMoney(Math.max(0, monthlyTarget - monthRevenue));
-
-    $("barDaily").style.width = (dailyPct || 0) + "%";
-    $("barWeekly").style.width = (weeklyPct || 0) + "%";
-    $("barMonthly").style.width = (monthlyPct || 0) + "%";
-
-    const el = $("kpisGoals");
-    el.innerHTML = "";
-    const cards = [
-      { t: "Hoje (R$)", v: formatMoney(dayRevenue), cls: dailyPct>=100 ? "good":"" },
-      { t: "Semana atual (R$)", v: formatMoney(weekRevenue), cls: weeklyPct>=100 ? "good":"" },
-      { t: "Mês (R$)", v: formatMoney(monthRevenue), cls: monthlyPct>=100 ? "good":"" },
-      { t: "Restante do mês (R$)", v: formatMoney(remaining) },
+  function previewGoalsDraft(){
+    const mk=$('goalMonth').value||monthKey(),g=getGoalsForMonth(mk);
+    const old=getDecendios(mk,g),monthly=parseBRNumber($('goalMonthly').value);
+    const base=[1,2,3].map(i=>parseBRNumber($('pW'+i).value));
+    const changedMonthly=Math.abs(monthly-Number(g.monthly||0))>.001;
+    const existingTotal=sum(old.targets);
+    const total=changedMonthly?Math.max(0,monthly-getMonthRevenueSold(mk)):existingTotal;
+    const d=redistributeDecendios({...old,basePercents:base},total);
+    goalsDraft={month:mk,data:{g:{...g,monthly},d}};
+    $('goalDaily').value=(Math.max(0,monthly-getMonthRevenueSold(mk))/remainingDaysInMonthFromToday(mk)).toFixed(2).replace('.',',');
+    paintDecendios(mk,g,d);
+    renderGoalsProgress({...g,monthly},d);
+    try{renderVendorGoalsKpisOnly({...g,monthly},d);}catch(err){console.warn(err);}
+  }
+  function renderGoalsProgress(gOverride=null,dOverride=null){
+    const mk=$('goalMonth').value||monthKey(),g=gOverride||getGoalsForMonth(mk),d=dOverride||getDecendios(mk,g);
+    const today=todayKey(),sameMonth=mk===monthKey(),current=sameMonth?decendioOfDate(today):3;
+    const sold=state.records.filter(r=>r.monthKey===mk&&r.outcome==='sold');
+    const monthRevenue=sum(sold.map(r=>r.value));
+    const dayRevenue=sum(sold.filter(r=>r.dateKey===today).map(r=>r.value));
+    const periodRevenue=sum(sold.filter(r=>decendioOfDate(r.dateKey)===current).map(r=>r.value));
+    const monthlyTarget=Number(g.monthly||0),periodTarget=Number(d.targets[current-1]||0);
+    const remaining=Math.max(0,monthlyTarget-monthRevenue);
+    const dailyTarget=remaining/remainingDaysInMonthFromToday(mk);
+    const ratio=(n,t)=>t>0?clamp(n/t*100,0,100):0;
+    $('goalDailyText').textContent=`${formatMoney(dayRevenue)} / ${formatMoney(dailyTarget)}`;
+    $('goalWeeklyText').textContent=`${formatMoney(periodRevenue)} / ${formatMoney(periodTarget)} (D${current})`;
+    $('goalMonthlyText').textContent=`${formatMoney(monthRevenue)} / ${formatMoney(monthlyTarget)}`;
+    $('goalDailyLeft').textContent=formatMoney(Math.max(0,dailyTarget-dayRevenue));
+    $('goalWeeklyLeft').textContent=formatMoney(Math.max(0,periodTarget-periodRevenue));
+    $('goalMonthlyLeft').textContent=formatMoney(remaining);
+    $('barDaily').style.width=ratio(dayRevenue,dailyTarget)+'%';
+    $('barWeekly').style.width=ratio(periodRevenue,periodTarget)+'%';
+    $('barMonthly').style.width=ratio(monthRevenue,monthlyTarget)+'%';
+    const cards=[
+      {t:'Hoje',v:formatMoney(dayRevenue)},
+      {t:`${sameMonth?'Decêndio atual':`Decêndio ${current}`}`,v:formatMoney(periodRevenue)},
+      {t:'Faturamento do mês',v:formatMoney(monthRevenue)},
+      {t:'Falta para meta',v:formatMoney(remaining)}
     ];
-    for(const k of cards){
-      const div = document.createElement("div");
-      div.className = "kpi";
-      div.innerHTML = `<div class="t">${k.t}</div><div class="v ${k.cls||""}">${k.v}</div>`;
-      el.appendChild(div);
-    }
-
-    const cw = weekOfMonth(todayKey());
-    $("goalCurrentWeek").value = "Semana " + cw;
-    $("goalWeekClosed").value = g.closedWeeks[String(cw)] ? "Sim" : "Não";
+    $('kpisGoals').innerHTML=cards.map(c=>`<div class="kpi"><div class="t">${c.t}</div><div class="v">${c.v}</div></div>`).join('');
   }
-
 
   // ======================
   // META VENDEDOR (ref + override)
@@ -3473,53 +3379,28 @@ body{ background-attachment: fixed; }
   }
 
   // Recalcula só os KPIs do vendedor, sem tocar nos inputs (usado enquanto digita)
-  function renderVendorGoalsKpisOnly(){
-    const mk = $("goalMonth").value || monthKey();
-    const sel = $("goalVendorSelect");
-    const sid = sel ? sel.value : "";
-
-    const kpis = $("kpisVendorGoals");
-    if(!kpis) return;
-    kpis.innerHTML = "";
-
-    const g = getGoalsForMonth(mk);
-    const today = todayKey();
-    const cw = weekOfMonth(today);
-
-    const soldMonth = state.records.filter(r=>r.monthKey===mk && r.sellerId===sid && r.outcome==='sold');
-    const revMonth = soldMonth.reduce((s,r)=>s+Number(r.value||0),0);
-
-    const soldDay = state.records.filter(r=>r.dateKey===today && r.sellerId===sid && r.outcome==='sold');
-    const revDay = soldDay.reduce((s,r)=>s+Number(r.value||0),0);
-
-    const soldWeek = state.records.filter(r=>r.monthKey===mk && weekOfMonth(r.dateKey)===cw && r.sellerId===sid && r.outcome==='sold');
-    const revWeek = soldWeek.reduce((s,r)=>s+Number(r.value||0),0);
-
-    const vm = getVendorMonthlyTarget(mk, sid);
-    const ratio = ratioVendorToStore(mk, sid);
-    const storeWeekly = Number(g.weekTargets?.[cw-1]||0);
-    const storeDaily = parseBRNumber($("goalDaily").value||"0");
-
-    const vw = storeWeekly * ratio;
-    const vd = storeDaily * ratio;
-
-    const cards=[
-      {t:'Hoje (vend.)', v:`${formatMoney(revDay)} / ${formatMoney(vd)}`},
-      {t:`Semana ${cw} (vend.)`, v:`${formatMoney(revWeek)} / ${formatMoney(vw)}`},
-      {t:'Mês (vend.)', v:`${formatMoney(revMonth)} / ${formatMoney(vm)}`},
-    ];
-    for(const c of cards){
-      const div = document.createElement('div');
-      div.className='kpi';
-      div.innerHTML = `<div class="t">${c.t}</div><div class="v">${c.v}</div>`;
-      kpis.appendChild(div);
-    }
+  function renderVendorGoalsKpisOnly(previewG=null,previewD=null){
+    const mk=$('goalMonth').value||monthKey(),sid=$('goalVendorSelect')?.value||'',box=$('kpisVendorGoals');
+    if(!box)return;
+    const g=previewG||getGoalsForMonth(mk),d=previewD||getDecendios(mk,g),today=todayKey(),period=decendioOfDate(today);
+    const sold=state.records.filter(r=>r.monthKey===mk&&r.sellerId===sid&&r.outcome==='sold');
+    const month=sum(sold.map(r=>r.value));
+    const day=sum(sold.filter(r=>r.dateKey===today).map(r=>r.value));
+    const dec=sum(sold.filter(r=>decendioOfDate(r.dateKey)===period).map(r=>r.value));
+    const vm=getVendorMonthlyTarget(mk,sid),storeMonthly=Number(g.monthly||0),ratio=storeMonthly>0?vm/storeMonthly:0;
+    const vd=parseBRNumber($('goalDaily').value||'0')*ratio, vdec=Number(d.targets[period-1]||0)*ratio;
+    box.innerHTML=[
+      {t:'Hoje (vendedor)',v:`${formatMoney(day)} / ${formatMoney(vd)}`},
+      {t:`Decêndio ${period} (vendedor)`,v:`${formatMoney(dec)} / ${formatMoney(vdec)}`},
+      {t:'Mês (vendedor)',v:`${formatMoney(month)} / ${formatMoney(vm)}`}
+    ].map(x=>`<div class="kpi"><div class="t">${x.t}</div><div class="v">${x.v}</div></div>`).join('');
   }
 
   function saveVendorGoal(){
     const mk = $("goalMonth").value || monthKey();
-    const d = parseBRNumber($("goalVendorDivisor").value||"");
-    if(d>0) state.options.vendorDivisor = d;
+    const rawDivisor=($('goalVendorDivisor').value||'').trim();
+    const d=parseBRNumber(rawDivisor);
+    if(rawDivisor==='' || d>0)state.options.vendorDivisor=d>0?d:0;
 
     const sid = $("goalVendorSelect").value;
     const ov = parseBRNumber($("goalVendorMonthlyOverride").value||"");
@@ -3531,63 +3412,58 @@ body{ background-attachment: fixed; }
   }
 
   function saveGoals(){
-    const mk = $("goalMonth").value || monthKey();
-    const g = getGoalsForMonth(mk);
-
-    g.monthly = parseBRNumber($("goalMonthly").value);
-    const levels = {
-      basePct: 100,
-      superPct: parseBRNumber($("goalSuperPct").value),
-      diamondPct: parseBRNumber($("goalDiamondPct").value)
-    };
-    if(levels.superPct <= levels.basePct || levels.diamondPct <= levels.superPct){
-      alert("Configure os níveis em ordem crescente: Meta 2 deve ser maior que 100% e Meta 3 deve ser maior que a Meta 2.");
-      return;
+    const mk=$('goalMonth').value||monthKey(),g=getGoalsForMonth(mk);
+    const monthly=parseBRNumber($('goalMonthly').value);
+    const levels={basePct:100,superPct:parseBRNumber($('goalSuperPct').value),diamondPct:parseBRNumber($('goalDiamondPct').value)};
+    if(levels.superPct<=100 || levels.diamondPct<=levels.superPct){
+      alert('Meta 2 deve superar 100% e Meta 3 deve superar Meta 2.');return;
     }
-    g.levels = levels;
-    g.basePercents = [
-      parseBRNumber($("pW1").value),
-      parseBRNumber($("pW2").value),
-      parseBRNumber($("pW3").value),
-      parseBRNumber($("pW4").value),
-    ];
-
-    autoRedistributeGoals(mk);
-    state.goalsByMonth[mk] = g;
+    const base=[1,2,3].map(i=>parseBRNumber($('pW'+i).value));
+    if(base.some(x=>x<0) || sum(base)<=0){alert('Informe ao menos um peso positivo entre os três decêndios.');return;}
+    const current=getDecendios(mk,g),changedMonthly=Math.abs(monthly-Number(g.monthly||0))>.001;
+    const changedWeights=base.some((v,i)=>Math.abs(v-Number(current.basePercents[i]||0))>0.02);
+    const total=changedMonthly?Math.max(0,monthly-getMonthRevenueSold(mk)):sum(current.targets);
+    // Apenas converter/salvar sem editar conserva os valores dos períodos calculados da distribuição antiga.
+    const dec=(changedMonthly || changedWeights)
+      ? redistributeDecendios({...current,basePercents:base},total)
+      : {...current,basePercents:[...current.basePercents],targets:[...current.targets],closed:{...current.closed}};
+    // O formato semanal fica intacto para consultas e históricos existentes.
+    g.monthly=monthly;
+    g.levels=levels;
+    g.decendios={...dec,source:'user',version:1};
+    goalsDraft=null;
     save(state);
-
-    renderGoals();
-    renderMetaRank();
-    renderNoConv();
-
-    alert("Metas salvas e redistribuídas ✅");
+    renderGoals();renderMetaRank();renderNoConv();
+    alert('Metas decendiais salvas! Os dados semanais existentes foram preservados.');
   }
-
   function closeCurrentWeek(){
-    const mk = $("goalMonth").value || monthKey();
-    const g = getGoalsForMonth(mk);
-    const cw = weekOfMonth(todayKey());
-
-    if(g.closedWeeks[String(cw)]){ alert("Essa semana já está fechada."); return; }
-    if(!confirm(`Fechar Semana ${cw}? O ONDIS vai redistribuir a meta restante.`)) return;
-
-    g.closedWeeks[String(cw)] = true;
-    autoRedistributeGoals(mk);
-    state.goalsByMonth[mk] = g;
-    save(state);
-
-    renderGoals();
-    alert(`Semana ${cw} fechada ✅ Meta redistribuída.`);
+    const mk=$('goalMonth').value||monthKey();
+    if(mk!==monthKey()){alert('Selecione o mês atual para fechar um decêndio.');return;}
+    const g=getGoalsForMonth(mk),current=decendioOfDate(todayKey()),d=getDecendios(mk,g);
+    if(d.closed[String(current)]){alert('Este decêndio já foi fechado.');return;}
+    if(!confirm(`Fechar o ${current}º decêndio e redistribuir o restante entre os períodos abertos?`))return;
+    d.closed[String(current)]=true;
+    // Redistribuir SOMENTE os períodos futuros; nunca modificar valores de decêndios passados.
+    const future=[1,2,3].filter(i=>i>current && !d.closed[String(i)]);
+    if(future.length){
+      const futureTotal=Math.max(0,Number(g.monthly||0)-getMonthRevenueSold(mk));
+      const weights=future.map(i=>Math.max(0,Number(d.basePercents[i-1]||0)));
+      const ws=sum(weights); let used=0; const cents=Math.round(futureTotal*100);
+      future.forEach((i,k)=>{
+        const part=k===future.length-1?cents-used:Math.round(cents*(ws>0?weights[k]/ws:1/future.length));
+        d.targets[i-1]=part/100;used+=part;
+      });
+    }
+    g.decendios={...d,source:'user',version:1};
+    goalsDraft=null;save(state);renderGoals();
+    alert(future.length?`${current}º decêndio fechado. Metas futuras redistribuídas.`:`${current}º decêndio fechado. Não há decêndios posteriores para redistribuir.`);
   }
-
   function reopenWeeks(){
-    const mk = $("goalMonth").value || monthKey();
-    const g = getGoalsForMonth(mk);
-    if(!confirm("Reabrir todas as semanas?")) return;
-    g.closedWeeks = {};
-    autoRedistributeGoals(mk);
-    save(state);
-    renderGoals();
+    const mk=$('goalMonth').value||monthKey(),g=getGoalsForMonth(mk),d=getDecendios(mk,g);
+    if(!confirm('Reabrir os três decêndios? As metas semanais antigas permanecerão intactas.'))return;
+    d.closed={};
+    g.decendios={...redistributeDecendios(d,sum(d.targets)),source:'user',version:1};
+    goalsDraft=null;save(state);renderGoals();
   }
 
   // ======================
@@ -5695,56 +5571,27 @@ body{ background-attachment: fixed; }
   $("btnExportCSV").addEventListener("click", exportCSV);
   $("btnExportJSON").addEventListener("click", exportJSON);
 
-  // Goals inputs
-  $("goalMonth").addEventListener("change", renderGoals);
-  $("goalMonthly").addEventListener("input", ()=> { saveGoalsDraftAndAuto(); });
-  ["pW1","pW2","pW3","pW4"].forEach(id=>{
-    $(id).addEventListener("input", ()=> { saveGoalsDraftAndAuto(); });
+  // Goals inputs: previews never write to Firebase.
+  $('goalMonth').addEventListener('change',renderGoals);
+  ['goalMonthly','pW1','pW2','pW3','goalSuperPct','goalDiamondPct'].forEach(id=>{
+    $(id).addEventListener('input',previewGoalsDraft);
   });
-  // Vendor goals
-  $("goalVendorDivisor").addEventListener("input", ()=>{
-    const raw = ($("goalVendorDivisor").value||"").trim();
-    const d = parseBRNumber(raw);
-    // Campo vazio = volta ao automático (0). Valor válido = usa ele.
-    state.options.vendorDivisor = (raw==="" ? 0 : (d>0 ? d : 0));
-    save(state);
-    // NÃO re-renderiza o campo aqui (senão reescreve o que a pessoa está digitando).
-    // Atualiza só os KPIs dependentes, sem mexer no input.
-    try{ renderVendorGoalsKpisOnly(); }catch{}
+  $('goalVendorDivisor').addEventListener('input',()=>{
+    try{renderVendorGoalsKpisOnly();}catch(err){console.warn(err);}
   });
-  $("goalVendorSelect").addEventListener("change", ()=>{ try{ renderVendorGoals(); }catch{} });
-  $("goalVendorMonthlyOverride").addEventListener("input", ()=>{ /* visual only */ });
-  $("btnSaveVendorGoal").addEventListener("click", saveVendorGoal);
-  function saveGoalsDraftAndAuto(){
-    const mk = $("goalMonth").value || monthKey();
-    const g = getGoalsForMonth(mk);
-    g.monthly = parseBRNumber($("goalMonthly").value);
-    const draftLevels = {
-      basePct: 100,
-      superPct: parseBRNumber($("goalSuperPct").value),
-      diamondPct: parseBRNumber($("goalDiamondPct").value)
-    };
-    if(draftLevels.superPct > draftLevels.basePct && draftLevels.diamondPct > draftLevels.superPct){
-      g.levels = draftLevels;
-    }
-    g.basePercents = [
-      parseBRNumber($("pW1").value),
-      parseBRNumber($("pW2").value),
-      parseBRNumber($("pW3").value),
-      parseBRNumber($("pW4").value),
-    ];
-    autoRedistributeGoals(mk);
-    save(state);
-    renderGoals();
-  }
-
-  $("btnSaveGoals").addEventListener("click", saveGoals);
-  $("btnAutoRedistribute").addEventListener("click", ()=>{
-    renderGoals();
-    alert("Redistribuição automática aplicada ✅");
+  $('goalVendorSelect').addEventListener('change',()=>{try{renderVendorGoals();}catch(err){console.warn(err);}});
+  $('goalVendorMonthlyOverride').addEventListener('input',()=>{});
+  $('btnSaveVendorGoal').addEventListener('click',saveVendorGoal);
+  $('btnSaveGoals').addEventListener('click',saveGoals);
+  $('btnAutoRedistribute').addEventListener('click',()=>{
+    const mk=$('goalMonth').value||monthKey(),g=getGoalsForMonth(mk);
+    if(g.decendios && !confirm('Refazer os decêndios com base nas semanas antigas? Os decêndios atualmente salvos serão substituídos, mas o histórico semanal será mantido.'))return;
+    g.decendios={...decendioFromLegacy(mk,g),source:'converted',version:1};
+    goalsDraft=null;save(state);renderGoals();
+    alert('Metas já existentes redistribuídas entre os três decêndios, sem apagar semanas, mês ou histórico.');
   });
-  $("btnCloseWeek").addEventListener("click", closeCurrentWeek);
-  $("btnReopenWeeks").addEventListener("click", reopenWeeks);
+  $('btnCloseWeek').addEventListener('click',closeCurrentWeek);
+  $('btnReopenWeeks').addEventListener('click',reopenWeeks);
 
   // Seller View (dinamico: criado dentro de renderSellerView)
   // Delegacao segura: evita quebrar o app caso a Arena ainda nao tenha sido renderizada.
