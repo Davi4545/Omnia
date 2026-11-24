@@ -328,3 +328,19 @@ body.loginPage{
 :root[data-ondis-surface-tone="dark"] .contentTopbar #accountDrop.accountDrop .accItem.bad,
 :root[data-ondis-surface-tone="dark"] .contentTopbar #accountDrop.accountDrop .accItem.bad .accLabel{color:#ffbdca!important}
 :root[data-ondis-surface-tone="dark"] .contentTopbar #accountDrop.accountDrop .accItem.bad .accIcon{color:#ffafc0!important;background:rgba(251,113,133,.14)!important}
+
+
+/* ONDIS v2.1.1 — Respeitar módulos desmarcados no Super Admin.
+   A regra acima .sidebar .navItem { display:flex!important } se sobrepunha
+   ao .modHidden do controle de módulos e ao display:none das permissões.
+   Especificidade maior e declarada depois dos estilos do menu. */
+.sidebar .sideNav .navItem.modHidden,
+.sidebar .sideNav .navItem.modOff,
+.sidebar .sideNav .navItem[hidden],
+.sidebar .sideNav .navItem[style*="display:none"],
+.sidebar .sideNav .navItem[style*="display: none"] {
+  display: none !important;
+}
+.sidebar .sideNav .sideSection.modHidden {
+  display: none !important;
+}
