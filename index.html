@@ -1076,6 +1076,7 @@ body{ background-attachment: fixed; }
 <link rel="stylesheet" href="./ondis-visual-v4.css?v=4.0.0"/>
 
 <link rel="stylesheet" href="./ondis-contraste-global-v6.css?v=6.0.0">
+<link rel="stylesheet" href="./ondis-gamificacao-v7.css?v=7.0.0">
 </head>
 <body>
 <div class="appShell" id="appShell">
@@ -4339,6 +4340,39 @@ body{ background-attachment: fixed; }
 
 
   const BADGE_ICON_DEFAULTS = {DAY_GOAL:1,WEEK_GOAL:2,MONTH_GOAL:3,TVA_COMBO:4,PA_BRONZE:5,PA_SILVER:6,PA_GOLD:7,TM_SILVER:10,TM_GOLD:11,TM_SUPREME:12,SALE_TOP:13,SALE_RESPECT:14,BIG_SALE:20,BIGGEST_SALE:40,TOP_CONV:19,MAGIC_5:84,SUPREME_12:92,GOAL_80:82,GOAL_120:41,GOAL_150:88,CONV_EVOLUTION:42,GOAL_STREAK_2:41,GOAL_STREAK_3:87,EVOLUTION_GOAL:42,EXTRA_BONUS:16};
+  // Catálogo visual V7: não altera os IDs de selos nem as conquistas já obtidas.
+  const LIGA_REWARD_ARTS = {
+    epic:'ondis-reward-epic.png', diamond:'ondis-reward-diamond.png', legendary:'ondis-reward-legendary.png',
+    trophy:'ondis-reward-trophy.png', medal:'ondis-reward-medal.png', crest:'ondis-reward-crest.png',
+    target:'ondis-reward-target.png', calendar:'ondis-reward-calendar.png',
+    conversion:'ondis-reward-conversion.png', pa:'ondis-reward-pa.png', growth:'ondis-reward-growth.png',
+    lenda:'ondis-lenda-premium.png'
+  };
+  const DEFAULT_LIGA_REWARDS = [
+    {id:'epic',title:'Baú Épico',description:'Primeiro baú de conquistas',xp:2000,type:'Baú',art:'epic',enabled:true},
+    {id:'diamond',title:'Pacote Diamante',description:'Recompensa especial da temporada',xp:2800,type:'Pacote',art:'diamond',enabled:true},
+    {id:'legendary',title:'Baú Lendário',description:'Recompensa de alto desempenho',xp:4000,type:'Baú',art:'legendary',enabled:true},
+    {id:'trophy',title:'Troféu da Liga',description:'Reconhecimento da equipe',xp:6000,type:'Troféu',art:'trophy',enabled:true},
+    {id:'medal',title:'Medalha de Excelência',description:'Conquista por desempenho',xp:8000,type:'Medalha',art:'medal',enabled:true},
+    {id:'crest',title:'Selo Mestre',description:'Conquista máxima da temporada',xp:10000,type:'Selo',art:'crest',enabled:true}
+  ];
+  function ligaRewardItems(){
+    const saved = Array.isArray(state.ligaRewards) ? state.ligaRewards : null;
+    return (saved || DEFAULT_LIGA_REWARDS).map(item=>({...item, xp:Math.max(1,Number(item.xp)||1), enabled:item.enabled!==false,
+      art:LIGA_REWARD_ARTS[item.art]?item.art:'epic'}));
+  }
+  function ligaRewardImage(item){
+    return './'+(LIGA_REWARD_ARTS[item?.art] || LIGA_REWARD_ARTS.epic);
+  }
+  function ligaRewardPreview(rewards, xp, max=3){
+    const active=(rewards||[]).filter(r=>r.enabled!==false).sort((a,b)=>Number(a.xp)-Number(b.xp)).slice(0,max);
+    if(!active.length) return '<div class="ligaEmptyAchievement">Nenhuma recompensa ativa nesta temporada.</div>';
+    return active.map(r=>{
+      const pct=Math.min(100,Math.round(Math.max(0,Number(xp||0))/Math.max(1,Number(r.xp||1))*100));
+      return `<div class="ligaRewardMini ondisV7RewardMini"><span class="chest"><img src="${ligaRewardImage(r)}" alt=""></span><div><b>${ligaEscapeAttr(r.title)}</b><small>${Number(r.xp).toLocaleString('pt-BR')} XP · ${ligaEscapeAttr(r.type)}</small><div class="ligaV3Progress"><i style="width:${pct}%"></i></div></div><em class="ligaRewardLock">${pct>=100?'✓':'◇'}</em></div>`;
+    }).join('');
+  }
+
   function allBadgeKeys(){
     const custom=Array.isArray(state.customBadgeKeys)?state.customBadgeKeys:[];
     return [...Object.keys(BADGE_DEFS),...custom.filter(k=>!BADGE_DEFS[k])].filter(k=>!state.badgeConfig?.[k]?.deleted);
@@ -4355,11 +4389,10 @@ body{ background-attachment: fixed; }
   function ligaEscapeAttr(value){
     return String(value||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
   }
-  function badgeArt(key, alt){
+  function badgeArt(key, alt, preferredIconId){
     const cfg=(state.badgeConfig&&state.badgeConfig[key])||{};
-    const iconId=Number(cfg.iconId||BADGE_ICON_DEFAULTS[key]||1);
-    const fallback=(getBadgeDef(key)?.icon||'🏅');
-    return `<span class="ligaBadgeAsset"><img class="ligaBadgeArt" src="${achievementIconPath(iconId)}" alt="${ligaEscapeAttr(alt||'Conquista')}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><span class="ligaBadgeFallback" style="display:none">${fallback}</span></span>`;
+    const iconId=Number(preferredIconId||cfg.iconId||BADGE_ICON_DEFAULTS[key]||1);
+    return `<span class="ligaBadgeAsset"><img class="ligaBadgeArt" src="${achievementIconPath(iconId)}" alt="${ligaEscapeAttr(alt||'Conquista')}" loading="lazy" onerror="this.onerror=null;this.src='./ondis-reward-medal.png'"></span>`;
   }
   function badgeIconId(key){
     const cfg=(state.badgeConfig&&state.badgeConfig[key])||{};
@@ -4681,7 +4714,7 @@ body{ background-attachment: fixed; }
             <h2>Liga ONDIS</h2>
             <p>Venda. Pontue. Conquiste. Cada resultado real vira progresso, XP e conquista.</p>
           </div>
-          <button class="btn" id="btnSellerDownloadBadges">${ligaUiIcon('download',15)} <span>Baixar conquistas</span></button>
+          <div class="ondisV7HeroActions"><button class="btn ondisV7Configure" id="btnConfigGamificacao" type="button" style="display:none">${ligaUiIcon('settings',16)} <span>Configurar gamificação</span></button><button class="btn" id="btnSellerDownloadBadges">${ligaUiIcon('download',15)} <span>Baixar conquistas</span></button></div>
         </div>
         <div class="cardBody ligaBody">
           <div class="ligaTabs" role="tablist" aria-label="Áreas da Liga ONDIS">
@@ -4783,6 +4816,10 @@ body{ background-attachment: fixed; }
     storeEl.innerHTML = `<option>${safeArenaText(state.store?.name || 'Loja atual')}</option>`;
     periodEl.value = state.ui.arenaPeriod || 'month';
     const arenaRole = String(window.OMNIA_USER?.role || 'seller').toLowerCase();
+    const gamifyButton=document.getElementById('btnConfigGamificacao');
+    if(gamifyButton && ['admin','superadmin'].includes(arenaRole)){
+      gamifyButton.style.display='inline-flex';gamifyButton.onclick=abrirEditorSelos;
+    }
     const canChooseSeller = ['admin','superadmin','manager','gerente','marketing'].includes(arenaRole);
 
     const activateArenaTab = (tab, persist=true)=>{
@@ -4807,7 +4844,7 @@ body{ background-attachment: fixed; }
           <div class="gameStageTop">
             <div class="gameHud"><small>ENERGIA DA EQUIPE</small><div class="teamEnergy">0%</div><div class="meter good"><i style="width:0%"></i></div></div>
             <div class="gameScreen"><div class="gameScreenTitle">CAMPEONATO DE <span>VENDAS</span></div><div class="hint">Cadastre os jogadores para abrir a temporada.</div></div>
-            <div class="gameHud rewardHud"><small>PRÓXIMA RECOMPENSA</small><img class="ligaEmptyRewardArt" src="./liga-bau.png" alt="Baú de recompensa"><strong>${safeArenaText(teamReward.title)}</strong></div>
+            <div class="gameHud rewardHud"><small>PRÓXIMA RECOMPENSA</small><img class="ligaEmptyRewardArt" src="./ondis-reward-epic.png" alt="Baú de recompensa"><strong>${safeArenaText(teamReward.title)}</strong></div>
           </div>`;
         kpisEl.innerHTML = '<div class="hint">Cadastre um vendedor em <b>+ Vendedor</b> para usar a Arena.</div>';
         metaEl.innerHTML = '<div class="hint">—</div>';
@@ -5000,7 +5037,7 @@ body{ background-attachment: fixed; }
             <h3>Seja <em>Lenda.</em></h3>
             <p>Cada venda é XP. Cada meta é uma missão.<br>Cada conquista aproxima você do topo.</p>
           </div>
-          <div class="ligaExactTrophy" aria-label="Troféu 3D animado da Liga"><div class="ligaTrophyGlow"></div><div class="ligaTrophyStage"><img class="ligaTrophy3D" src="./liga-trofeu.png" alt="Troféu dourado da Liga ONDIS"></div></div>
+          <div class="ligaExactTrophy" aria-label="Troféu 3D animado da Liga"><div class="ligaTrophyGlow"></div><div class="ligaTrophyStage"><img class="ligaTrophy3D" src="./ondis-reward-trophy.png" alt="Troféu dourado da Liga ONDIS"></div></div>
           <div class="ligaExactLevel">
             <small>NÍVEL ATUAL</small>
             <strong class="ligaLevelName">${ligaUiIcon('shield',20)} ${currentLevel.name}</strong>
@@ -5009,9 +5046,9 @@ body{ background-attachment: fixed; }
             <span>Próximo nível</span><em class="ligaNextLevel">${ligaUiIcon('star',14)} ${nextLevel.name}</em><small>↑ ${levelMissing.toLocaleString('pt-BR')} XP restantes</small>
           </div>
         </section>`;
-      if(overviewBestEl) overviewBestEl.innerHTML = `<article class="ligaExactBestSale"><div class="ligaBestHead"><b>DESTAQUE DO PERÍODO</b><span>${periodLabel}</span></div><img class="ligaBestCrown" src="./liga-coroa.png" alt="" aria-hidden="true"><div class="ligaV3BestAvatar">${bestPeriodSeller?.photo?`<img src="${bestPeriodSeller.photo}" alt="">`:`<span class="ligaBestPlaceholder">${ligaUiIcon('star',25)}</span>`}</div><h4>${safeArenaText(bestPeriodSeller?.name||'Aguardando campeão')}</h4><p>${bestPeriodSale?.dateKey?periodSaleLabel:'Registre vendas no período'}</p><strong>${formatMoney(bestPeriodSale?.value||0)}</strong></article>`;
+      if(overviewBestEl) overviewBestEl.innerHTML = `<article class="ligaExactBestSale"><div class="ligaBestHead"><b>DESTAQUE DO PERÍODO</b><span>${periodLabel}</span></div><img class="ligaBestCrown" src="./ondis-reward-crest.png" alt="" aria-hidden="true"><div class="ligaV3BestAvatar">${bestPeriodSeller?.photo?`<img src="${bestPeriodSeller.photo}" alt="">`:`<span class="ligaBestPlaceholder">${ligaUiIcon('star',25)}</span>`}</div><h4>${safeArenaText(bestPeriodSeller?.name||'Aguardando campeão')}</h4><p>${bestPeriodSale?.dateKey?periodSaleLabel:'Registre vendas no período'}</p><strong>${formatMoney(bestPeriodSale?.value||0)}</strong></article>`;
       if(overviewMuralEl) overviewMuralEl.innerHTML = `<div class="ligaMuralBody"><b>Parabéns ao time!</b><p>Seguimos firmes na missão.<br>Cada venda nos leva mais longe!</p><img src="./liga-foguete.png" alt="Foguete da Liga ONDIS" loading="lazy"></div>`;
-      if(overviewRewardsEl) overviewRewardsEl.innerHTML = `<div class="ligaRewardMini"><span class="chest purple"><img src="./liga-bau.png" alt="Baú de recompensa"></span><div><b>Baú Épico</b><small>2.000 XP</small><div class="ligaV3Progress"><i style="width:${Math.min(100,seasonXP/2000*100)}%"></i></div></div><em class="ligaRewardLock">${ligaUiIcon('lock',14)}</em></div><div class="ligaRewardMini"><span class="chest blue"><img src="./liga-bau.png" alt="Baú de recompensa"></span><div><b>Pacote Diamante</b><small>2.800 XP</small><div class="ligaV3Progress"><i style="width:${Math.min(100,seasonXP/2800*100)}%"></i></div></div><em class="ligaRewardLock">${ligaUiIcon('lock',14)}</em></div><div class="ligaRewardMini"><span class="chest gold"><img src="./liga-bau.png" alt="Baú de recompensa"></span><div><b>Baú Lendário</b><small>4.000 XP</small><div class="ligaV3Progress"><i style="width:${Math.min(100,seasonXP/4000*100)}%"></i></div></div><em class="ligaRewardLock">${ligaUiIcon('lock',14)}</em></div>`;
+      if(overviewRewardsEl) overviewRewardsEl.innerHTML = ligaRewardPreview(ligaRewardItems(), seasonXP, 3);
 
       const leaderRow = allGameRows[0] || null;
       const myRankIndex = allGameRows.findIndex(row=>row.seller.id===sid);
@@ -5053,9 +5090,10 @@ body{ background-attachment: fixed; }
       const avgCard = `<div class="ligaRankingSummaryCard avg"><span class="ligaEyebrow">MÉDIA DO TIME</span><strong>${avgPct.toFixed(1)}%</strong><b>${allGameRows.length}</b><small>participante(s) na classificação</small></div>`;
       rankingFullEl.innerHTML = `<div class="ligaPanelHead"><div><span class="ligaEyebrow">Classificação real</span><h3>Ranking da equipe</h3></div><small>Ordenado por percentual da meta; faturamento desempata.</small></div><div class="ligaRankingSummary">${leaderCard}${myCard}${avgCard}</div><div class="ligaPodium ligaPodiumPro">${podiumCards || '<div class="hint">Aguardando resultados.</div>'}</div><div class="ligaRankingBoard"><div class="ligaRankingBoardHead"><span>Posição</span><span>Vendedor</span><span>Faturamento</span><span>Meta</span><span>Atingimento</span><span>Status</span></div><div class="ligaRankingList pro">${rankingRows || '<div class="hint">Ainda não há vendedores ranqueados neste período.</div>'}</div></div>`;
       if(overviewRankingEl) overviewRankingEl.innerHTML = `<div class="ligaMiniRankingBoard"><div class="ligaMiniRankingHero"><div><span class="ligaEyebrow">Top performers</span><h4>Ranking da equipe</h4></div><small>${allGameRows.length} participante(s)</small></div><div class="ligaMiniPodium pro">${topThreeRows.map((row,index)=>`<article class="ligaMiniPodiumCard place${index+1} ${row.seller.id===sid?'current':''}"><span class="miniPlace">#${index+1}</span><div class="avatar">${avatarMarkup(row.seller)}</div><strong>${safeArenaText(row.seller.name||'Vendedor')}</strong><b>${formatMoney(row.revenue)}</b><small>${row.pct.toFixed(1)}% da meta</small></article>`).join('') || '<div class="hint">Aguardando resultados.</div>'}</div><div class="ligaMiniRankList pro">${allGameRows.slice(3,7).map((row,index)=>`<div class="${row.seller.id===sid?'current':''}"><b>${index+4}</b><span>${safeArenaText(row.seller.name||'Vendedor')}</span><small>${row.pct.toFixed(1)}%</small><strong>${formatMoney(row.revenue)}</strong></div>`).join('') || '<div class="ligaEmptyAchievement">Ainda não há mais posições no ranking.</div>'}</div></div>`;
-      rewardEl.innerHTML = `<div class="ligaRewardCard ${teamEnergy>=100?'unlocked':''}"><div class="ligaRewardChest" role="img" aria-label="Baú de recompensa"></div><div><span class="ligaEyebrow">${teamEnergy>=100?'Recompensa liberada':'Recompensa coletiva'}</span><h3>${safeArenaText(teamReward.title)}</h3><p>${safeArenaText(teamReward.description)}</p><div class="meter good"><i style="width:${teamEnergy}%"></i></div><small>${formatMoney(teamRevenue)} de ${formatMoney(teamGoal)} · ${teamEnergy.toFixed(0)}%</small></div>${['admin','superadmin'].includes(arenaRole)?'<button class="btn warn" id="btnEditRewardArena">Editar recompensa</button>':''}</div>`;
+      const rewardCollection=ligaRewardItems().filter(r=>r.enabled!==false).sort((a,b)=>a.xp-b.xp);
+      rewardEl.innerHTML = `<div class="ondisV7RewardIntro"><div><span class="ligaEyebrow">TEMPORADA DE CONQUISTAS</span><h3>Recompensas da Liga</h3><p>Ganhe XP e desbloqueie suas recompensas. A gestão configura os prêmios e os pontos necessários.</p></div>${['admin','superadmin'].includes(arenaRole)?'<button class="btn ondisV7Configure" id="btnEditRewardArena">Configurar recompensas</button>':''}</div><div class="ondisV7RewardGallery">${rewardCollection.map(r=>{const pct=clamp(seasonXP/Math.max(1,r.xp)*100,0,100);return `<article class="ondisV7RewardCard"><img src="${ligaRewardImage(r)}" alt="${safeArenaText(r.title)}"><span class="ondisV7RewardType">${safeArenaText(r.type)}</span><h4>${safeArenaText(r.title)}</h4><p>${safeArenaText(r.description||'Recompensa da temporada')}</p><strong>${Number(r.xp).toLocaleString('pt-BR')} XP</strong><div class="ligaV3Progress"><i style="width:${pct}%"></i></div><small>${pct>=100?'Desbloqueada':'Progresso: '+pct.toFixed(0)+'%'}</small></article>`}).join('')||'<div class="hint">Nenhuma recompensa ativa.</div>'}</div><div class="ligaRewardCard ${teamEnergy>=100?'unlocked':''}"><img src="./ondis-lenda-premium.png" alt="Lenda ONDIS"><div><span class="ligaEyebrow">${teamEnergy>=100?'Recompensa coletiva liberada':'Recompensa coletiva'}</span><h3>${safeArenaText(teamReward.title)}</h3><p>${safeArenaText(teamReward.description)}</p><div class="meter good"><i style="width:${teamEnergy}%"></i></div><small>${formatMoney(teamRevenue)} de ${formatMoney(teamGoal)} · ${teamEnergy.toFixed(0)}%</small></div></div>`;
       const rewardEditButton=document.getElementById('btnEditRewardArena');if(rewardEditButton)rewardEditButton.onclick=abrirEditorSelos;
-      if(overviewRewardEl) overviewRewardEl.innerHTML = `<div class="ligaExactCollective"><div class="ligaAnimatedChest" aria-label="Baú de recompensas"><div class="ligaChestGlow"></div><div class="ligaChestLid"></div><div class="ligaChestBody"></div></div><div><span>RECOMPENSA COLETIVA DA TEMPORADA</span><h3>${safeArenaText(teamReward.title)}</h3><p>${safeArenaText(teamReward.description)}</p></div><div class="ligaCollectiveProgress"><div class="ligaV3Progress"><i style="width:${teamEnergy}%"></i></div><b>${formatMoney(teamRevenue)} de ${formatMoney(teamGoal)} · ${teamEnergy.toFixed(0)}%</b></div>${['admin','superadmin'].includes(arenaRole)?'<button class="btn" id="btnOverviewEditReward">Editar recompensa</button>':''}</div>`; const overviewEdit=document.getElementById('btnOverviewEditReward'); if(overviewEdit) overviewEdit.onclick=abrirEditorSelos;
+      if(overviewRewardEl) overviewRewardEl.innerHTML = `<div class="ligaExactCollective"><img class="ondisV7CollectiveArt" src="./ondis-reward-legendary.png" alt="Baú coletivo"><div><span>RECOMPENSA COLETIVA DA TEMPORADA</span><h3>${safeArenaText(teamReward.title)}</h3><p>${safeArenaText(teamReward.description)}</p></div><div class="ligaCollectiveProgress"><div class="ligaV3Progress"><i style="width:${teamEnergy}%"></i></div><b>${formatMoney(teamRevenue)} de ${formatMoney(teamGoal)} · ${teamEnergy.toFixed(0)}%</b></div>${['admin','superadmin'].includes(arenaRole)?'<button class="btn" id="btnOverviewEditReward">Editar recompensa</button>':''}</div>`; const overviewEdit=document.getElementById('btnOverviewEditReward'); if(overviewEdit) overviewEdit.onclick=abrirEditorSelos;
       maybeCelebrateTeamChest(teamEnergy,teamReward,mk2);
 
       // Records for seller in chosen date range (for KPIs && chart)
@@ -5117,10 +5155,10 @@ body{ background-attachment: fixed; }
         const progress=mission.target>0?clamp((mission.current/mission.target)*100,0,100):0;
         const currentLabel=mission.unit==='valor'?formatMoney(mission.current):mission.unit==='percent'?`${mission.current.toFixed(1)}%`:mission.unit==='pa'?mission.current.toFixed(2):`${mission.current} vendas`;
         const targetLabel=mission.unit==='valor'?formatMoney(mission.target):mission.unit==='percent'?`${mission.target.toFixed(0)}%`:mission.unit==='pa'?mission.target.toFixed(2):`${mission.target} vendas`;
-        return `<article class="ligaMission ligaV3Mission ${done?'done':''}"><div class="ligaV3MissionTop"><div class="ligaV3MissionIcon ligaMissionBadgeArt">${badgeArt(mission.badge||'',mission.title) || ligaUiIcon('target',24)}</div><div><span>${done?'MISSÃO CONCLUÍDA':'MISSÃO ATIVA'}</span><b>${safeArenaText(mission.title)}</b></div><em>+${Number(mission.points||0)} XP</em></div><strong>${currentLabel} <small>/ ${targetLabel}</small></strong><div class="meter good"><i style="width:${progress}%"></i></div><small class="ligaV3MissionRule">Base: ${safeArenaText(mission.badgeDef?.title||'regra da Liga')}</small></article>`;
+        return `<article class="ligaMission ligaV3Mission ${done?'done':''}"><div class="ligaV3MissionTop"><div class="ligaV3MissionIcon ligaMissionBadgeArt">${badgeArt(mission.badge||'',mission.title,mission.iconId) || ligaUiIcon('target',24)}</div><div><span>${done?'MISSÃO CONCLUÍDA':'MISSÃO ATIVA'}</span><b>${safeArenaText(mission.title)}</b></div><em>+${Number(mission.points||0)} XP</em></div><strong>${currentLabel} <small>/ ${targetLabel}</small></strong><div class="meter good"><i style="width:${progress}%"></i></div><small class="ligaV3MissionRule">Base: ${safeArenaText(mission.badgeDef?.title||'regra da Liga')}</small></article>`;
       }).join('')}</div>`;
       const missionConfigButton=document.getElementById('btnConfigMissions'); if(missionConfigButton) missionConfigButton.onclick=abrirEditorSelos;
-      if(overviewMissionsEl) overviewMissionsEl.innerHTML = missionDefinitions.slice(0,4).map(mission=>{const progress=mission.target>0?clamp((mission.current/mission.target)*100,0,100):0;const cur=mission.unit==='valor'?formatMoney(mission.current):mission.unit==='percent'?`${mission.current.toFixed(1)}%`:mission.unit==='pa'?mission.current.toFixed(2):`${mission.current}`;const tar=mission.unit==='valor'?formatMoney(mission.target):mission.unit==='percent'?`${mission.target.toFixed(0)}%`:mission.unit==='pa'?mission.target.toFixed(2):`${mission.target}`;return `<div class="ligaMiniMission"><span class="ligaMiniMissionBadge">${badgeArt(mission.badge||'',mission.title) || ligaUiIcon('target',24)}</span><div><b>${safeArenaText(mission.title)}</b><small>${safeArenaText(mission.badgeDef?.desc||'Desafio ativo')}</small><div class="ligaV3Progress"><i style="width:${progress}%"></i></div></div><em class="ligaMissionNumbers"><span>${cur}</span><small>de ${tar}</small><b>+${Number(mission.points||0)} XP</b></em></div>`}).join('');
+      if(overviewMissionsEl) overviewMissionsEl.innerHTML = missionDefinitions.slice(0,4).map(mission=>{const progress=mission.target>0?clamp((mission.current/mission.target)*100,0,100):0;const cur=mission.unit==='valor'?formatMoney(mission.current):mission.unit==='percent'?`${mission.current.toFixed(1)}%`:mission.unit==='pa'?mission.current.toFixed(2):`${mission.current}`;const tar=mission.unit==='valor'?formatMoney(mission.target):mission.unit==='percent'?`${mission.target.toFixed(0)}%`:mission.unit==='pa'?mission.target.toFixed(2):`${mission.target}`;return `<div class="ligaMiniMission"><span class="ligaMiniMissionBadge">${badgeArt(mission.badge||'',mission.title,mission.iconId) || ligaUiIcon('target',24)}</span><div><b>${safeArenaText(mission.title)}</b><small>${safeArenaText(mission.badgeDef?.desc||'Desafio ativo')}</small><div class="ligaV3Progress"><i style="width:${progress}%"></i></div></div><em class="ligaMissionNumbers"><span>${cur}</span><small>de ${tar}</small><b>+${Number(mission.points||0)} XP</b></em></div>`}).join('');
       const bestTag = document.getElementById('arenaBestSaleTag');
       if(bestTag){ bestTag.style.display='inline-flex'; bestTag.innerHTML = 'Venda record do mês: <b>'+formatMoney(best)+'</b>'; }
 
@@ -5322,7 +5360,7 @@ body{ background-attachment: fixed; }
           <label style="display:flex;gap:4px;align-items:center;font-size:12px;cursor:pointer;white-space:nowrap">
             <input type="checkbox" data-k="${key}" data-f="enabled" ${enabled?'checked':''}/> Ativo
           </label>
-          <button type="button" class="btn bad badgeDeleteBtn" data-delete-badge="${key}" title="Excluir selo">🗑 Excluir</button>
+          <button type="button" class="btn bad badgeDeleteBtn" data-delete-badge="${key}" title="Excluir selo">Excluir</button>
         </div>`;
     }
 
@@ -5337,7 +5375,7 @@ body{ background-attachment: fixed; }
       const defaultTarget = m.target ?? badge.val ?? badge.min ?? '';
       return `<div class="ligaMissionEditorRow">
         <input class="missionEnabled" type="checkbox" data-mi="${index}" ${m.enabled!==false?'checked':''} title="Ativar missão">
-        <input class="missionIcon" type="text" data-mi="${index}" value="${escapeEditorText(m.icon||badge.icon||'🎯')}" title="Ícone">
+        <span class="ondisGamifyMissionSymbol"><button type="button" class="ondisGamifyMissionIcon" data-mission-icon="${index}" title="Alterar imagem do desafio"><img src="${achievementIconPath(Number(m.iconId)||badgeIconId(m.badge))}" alt="Imagem do desafio"></button><input class="missionIcon" type="hidden" value="${escapeEditorText(m.icon||'')}"/><input class="missionArtId" type="hidden" value="${Number(m.iconId)||badgeIconId(m.badge)}"/></span>
         <div class="missionMain"><input class="missionTitle" type="text" data-mi="${index}" value="${escapeEditorText(m.title||badge.title||'Missão')}" placeholder="Nome da missão"><select class="missionBadge" data-mi="${index}">${ordem.map(k=>`<option value="${k}" ${k===(m.badge||'')?'selected':''}>${escapeEditorText(getBadgeDef(k).title||k)}</option>`).join('')}</select></div>
         <select class="missionMetric" data-mi="${index}">${metricOptions.map(([v,l])=>`<option value="${v}" ${v===m.metric?'selected':''}>${l}</option>`).join('')}</select>
         <input class="missionTarget" type="text" data-mi="${index}" value="${autoTarget?'':defaultTarget}" placeholder="${autoTarget?'Automático':'Alvo'}" ${autoTarget?'disabled':''}>
@@ -5345,34 +5383,57 @@ body{ background-attachment: fixed; }
       </div>`;
     }
 
+    const rewardDraft=ligaRewardItems().map(r=>({...r}));
+    const seasonEarnedXP=(state.badges?.earned||[]).filter(e=>e?.scope==='seller').reduce((sum,e)=>sum+Number(getBadgeDef(e.def||'')?.points||0),0);
+    const legendaryGoal=Math.max(1,Number(state.leagueConfig?.legendaryXP||7500));
+    const leagueProgressPct=Math.min(100,Math.max(0,seasonEarnedXP/legendaryGoal*100));
+    const safeText=(v)=>ligaEscapeAttr(v);
+    const rewardCount=rewardDraft.filter(r=>r.enabled!==false).length;
+    const activeMissionCount=missionCfg.filter(m=>m.enabled!==false).length;
+    back.classList.add('ondisGamifyBack');
+    back.style.cssText='position:fixed;inset:0;z-index:9999;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:16px;background:rgba(9,16,37,.76);backdrop-filter:blur(9px)';
     back.innerHTML = `
-      <div style="background:var(--ondis-surface);color:var(--ondis-text);border:1px solid var(--ondis-line);border-radius:18px;max-width:960px;width:100%;padding:24px;box-shadow:var(--ondis-shadow-lg);">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-          <h2 style="font-size:18px;font-weight:900">⚙️ Configurar Liga ONDIS</h2>
-          <button class="btn" id="selosFechar">✕ Fechar</button>
-        </div>
-        <p style="color:var(--ondis-muted);font-size:13px;margin-bottom:18px">Edite conquistas, réguas, pontuação e prêmio coletivo da Liga. Conversão, P.A., ticket, metas, evolução e sequências podem ser ajustados pela gestão.</p>
-        <div class="teamRewardEditor">
-          <img src="./reward-chest.png" alt="Baú da recompensa coletiva"/>
-          <div>
-            <label>Prêmio do baú da equipe</label>
-            <input id="teamRewardTitle" type="text" value="${escapeEditorText(state.teamReward.title)}" placeholder="Ex.: Jantar especial para toda a equipe"/>
-            <textarea id="teamRewardDescription" rows="3" placeholder="Descreva como o prêmio será liberado">${escapeEditorText(state.teamReward.description)}</textarea>
-          </div>
-        </div>
-        <div class="divider"></div>
-        <section class="ligaMissionEditor">
-          <div class="ligaConfigSectionHead"><div><span>🎯 MISSÕES DA SEMANA</span><h3>Desafios ativos da Liga</h3><p>Edite quais missões aparecem, a métrica, o alvo e o XP. Por padrão elas herdam os mesmos critérios dos selos.</p></div></div>
-          <div class="ligaMissionEditorHead"><span></span><span></span><b>Missão / selo base</b><b>Métrica</b><b>Alvo</b><b>XP</b></div>
-          <div id="missionEditorRows">${missionCfg.map(linhaMissao).join('')}</div>
+      <div class="ondisGamifyShell" role="dialog" aria-modal="true" aria-labelledby="ondisGamifyTitle">
+        <header class="ondisGamifyHead">
+          <div class="ondisGamifyTitle"><span class="ondisGamifyLogo"><img src="./ondis-reward-trophy.png" alt=""></span><div><span class="ondisGamifyKicker">CENTRAL DE GAMIFICAÇÃO</span><h2 id="ondisGamifyTitle">Gamificação ONDIS</h2><p>Recompensas, desafios, selos e evolução da Liga em um só lugar.</p></div></div>
+          <div class="ondisGamifyTopButtons"><button class="btn ondisGamifyButtonPrimary" type="button" id="gamifyNewRewardTop">＋ Nova recompensa</button><button class="btn" id="selosFechar" type="button">✕ Fechar</button></div>
+        </header>
+        <section class="ondisGamifySummary">
+          <div class="ondisGamifySeason"><img src="./ondis-lenda-premium.png" alt="Lenda ONDIS"><div><small>Temporada ativa</small><h3>Liga ONDIS <span>Ativa</span></h3><p>XP acumulado pela equipe: ${seasonEarnedXP.toLocaleString('pt-BR')} de ${legendaryGoal.toLocaleString('pt-BR')}</p><div class="ondisGamifySeasonProgress"><i style="width:${leagueProgressPct.toFixed(1)}%"></i></div></div></div>
+          <div class="ondisGamifyStat"><span>DESAFIOS ATIVOS</span><strong>${activeMissionCount}</strong><small>Missões configuradas</small></div>
+          <div class="ondisGamifyStat"><span>RECOMPENSAS</span><strong id="gamifyRewardsCount">${rewardCount}</strong><small>Prêmios disponíveis</small></div>
+          <div class="ondisGamifyStat"><span>SELOS E ÍCONES</span><strong>${ordem.length}</strong><small>Conquistas existentes</small></div>
         </section>
-        <div class="divider"></div>
-        <div class="ligaConfigSectionHead"><div><span>🏅 CONQUISTAS</span><h3>Selos e badges</h3><p>Réguas, textos, pontuação e ativação das conquistas automáticas. Crie, escolha ícone, defina métrica e exclua selos personalizados.</p></div><button type="button" class="btn good" id="btnInserirSelo">＋ Inserir selo <span style="font-size:9px;opacity:.8">NOVO</span></button></div>
-        <div id="selosLista">${ordem.map(linhaSelo).join('')}</div>
-        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px">
-          <button class="btn" id="selosCancelar">Cancelar</button>
-          <button class="btn good" id="selosSalvar">Salvar alterações</button>
+        <div class="ondisGamifyColumns">
+          <main class="ondisGamifyLeft">
+            <section class="ondisGamifyPanel">
+              <div class="ondisGamifySectionHead"><div><span class="ondisGamifyEyebrow">GALERIA DA TEMPORADA</span><h3>Próximas recompensas</h3><p>Prévia dos prêmios configurados para a Liga.</p></div><button type="button" class="ondisGamifyLink" data-gamify-nav="rewards">Gerenciar todas →</button></div>
+              <div class="ondisGamifyRewardPreview" id="gamifyRewardsPreview"></div>
+            </section>
+            <section class="ondisGamifyPanel ondisGamifyManager">
+              <div class="ondisGamifySectionHead"><div><span class="ondisGamifyEyebrow">PERSONALIZAÇÃO</span><h3>Gerenciar recompensas e conquistas</h3><p>Edite imagens, XP e regras sem apagar resultados anteriores.</p></div><button type="button" class="btn ondisGamifyButtonPrimary" id="gamifyNewReward">＋ Nova recompensa</button></div>
+              <nav class="ondisGamifyTabs" role="tablist" aria-label="Configurações da gamificação">
+                <button type="button" data-gamify-tab="rewards" class="active" aria-selected="true">▣ Recompensas</button>
+                <button type="button" data-gamify-tab="missions" aria-selected="false">⚑ Desafios</button>
+                <button type="button" data-gamify-tab="badges" aria-selected="false">✦ Selos e ícones</button>
+              </nav>
+              <div data-gamify-content="rewards" class="ondisGamifyTabPage active"><div class="ondisGamifyRewardsRows" id="gamifyRewardsRows"></div></div>
+              <div data-gamify-content="missions" class="ondisGamifyTabPage"><p class="ondisGamifyTip">Selecione um desafio para configurá-lo no painel da direita. As alterações só terão efeito ao salvar.</p><div class="ondisGamifyMissionIndex">${missionCfg.map((m,i)=>`<button type="button" data-gamify-mission="${i}"><img src="${achievementIconPath(Number(m.iconId)||badgeIconId(m.badge))}" alt=""><span>${safeText(m.title||'Missão')}</span><small>+${Number(m.points||0)} XP</small></button>`).join('')}</div></div>
+              <div data-gamify-content="badges" class="ondisGamifyTabPage"><div class="ondisGamifySectionHead"><div><h3>Biblioteca de selos</h3><p>Os 172 ícones foram redesenhados. Cada selo mantém seu identificador original.</p></div><button type="button" class="btn ondisGamifyButtonPrimary" id="btnInserirSelo">＋ Criar selo</button></div><div class="ondisGamifyBadgeList" id="selosLista">${ordem.map(linhaSelo).join('')}</div></div>
+            </section>
+          </main>
+          <aside class="ondisGamifyRight">
+            <section class="ondisGamifyPanel ondisGamifySettings">
+              <div class="ondisGamifySectionHead"><div><span class="ondisGamifyEyebrow">PERSONALIZAÇÃO GERAL</span><h3>Configuração da Liga</h3><p>Identidade visual e prêmio coletivo da equipe.</p></div></div>
+              <div class="teamRewardEditor ondisGamifyTeamReward"><img src="./ondis-lenda-premium.png" alt="Novo selo Lenda ONDIS"><div><label for="teamRewardTitle">Prêmio do baú da equipe</label><input id="teamRewardTitle" type="text" value="${safeText(state.teamReward.title)}" placeholder="Ex.: Jantar especial para a equipe"><label for="teamRewardDescription">Descrição do prêmio</label><textarea id="teamRewardDescription" rows="3" placeholder="Descreva a recompensa coletiva">${safeText(state.teamReward.description)}</textarea></div></div>
+            </section>
+            <section class="ondisGamifyPanel ondisGamifyChallenges">
+              <div class="ondisGamifySectionHead"><div><span class="ondisGamifyEyebrow">DESAFIOS DA LIGA</span><h3>Lista de missões</h3><p>Ative e configure as métricas, alvos e pontos de XP.</p></div></div>
+              <div class="ligaMissionEditor"><div class="ligaMissionEditorHead"><span></span><span></span><b>Missão / selo base</b><b>Métrica</b><b>Alvo</b><b>XP</b></div><div id="missionEditorRows">${missionCfg.map(linhaMissao).join('')}</div></div>
+            </section>
+          </aside>
         </div>
+        <footer class="ondisGamifyFooter"><span>Alterações em metas, selos e recompensas são gravadas apenas ao clicar em salvar.</span><div><button class="btn" id="selosCancelar" type="button">Cancelar</button><button class="btn ondisGamifyButtonPrimary" id="selosSalvar" type="button">Salvar gamificação</button></div></footer>
       </div>`;
 
     document.body.appendChild(back);
@@ -5389,6 +5450,74 @@ body{ background-attachment: fixed; }
       const sync=()=>{ const auto=['weekGoal','monthGoal'].includes(select.value); if(target){target.disabled=auto;target.placeholder=auto?'Automático':'Alvo';if(auto)target.value='';} };
       select.addEventListener('change',sync); sync();
     });
+
+    function renderGamifyRewards(){
+      const list=back.querySelector('#gamifyRewardsRows');
+      const preview=back.querySelector('#gamifyRewardsPreview');
+      const count=back.querySelector('#gamifyRewardsCount');
+      if(!list || !preview)return;
+      const sorted=[...rewardDraft].sort((a,b)=>Number(a.xp)-Number(b.xp));
+      preview.innerHTML=sorted.filter(r=>r.enabled!==false).slice(0,6).map(r=>`<article class="ondisGamifyRewardTile"><img src="${ligaRewardImage(r)}" alt=""><strong>${ligaEscapeAttr(r.title)}</strong><small>${Number(r.xp).toLocaleString('pt-BR')} XP</small><span class="ondisGamifyRewardTileLine"><i style="width:${Math.min(100,Math.max(0,seasonEarnedXP/Math.max(1,Number(r.xp)||1)*100)).toFixed(1)}%"></i></span></article>`).join('')||'<p class="ondisGamifyTip">Ative uma recompensa para vê-la aqui.</p>';
+      count.textContent=String(sorted.filter(r=>r.enabled!==false).length);
+      list.innerHTML=sorted.map(r=>`<article class="ondisGamifyRewardRow" data-reward-id="${ligaEscapeAttr(r.id)}" data-reward-art="${ligaEscapeAttr(r.art)}"><label class="ondisGamifyRewardSwitch" title="Ativar recompensa"><input class="rewardEnabled" type="checkbox" ${r.enabled!==false?'checked':''}></label><button class="ondisGamifyRewardArtButton" type="button" data-pick-reward-art="${ligaEscapeAttr(r.id)}" title="Escolher imagem"><img src="${ligaRewardImage(r)}" alt="Imagem da recompensa"></button><div class="ondisGamifyRewardFields"><label>Nome da recompensa<input class="rewardTitle" type="text" maxlength="80" value="${ligaEscapeAttr(r.title)}"></label><label>Descrição<input class="rewardDescription" type="text" maxlength="180" value="${ligaEscapeAttr(r.description||'')}"></label></div><label class="ondisGamifyRewardSmall">Tipo<select class="rewardType">${['Baú','Pacote','Troféu','Medalha','Selo','Outro'].map(t=>`<option ${t===r.type?'selected':''}>${t}</option>`).join('')}</select></label><label class="ondisGamifyRewardSmall">XP<input class="rewardXP" type="number" step="1" min="1" max="100000000" value="${Number(r.xp)}"></label><button class="ondisGamifyRewardRemove" type="button" data-remove-reward="${ligaEscapeAttr(r.id)}" title="Remover recompensa">✕</button></article>`).join('')||'<div class="ondisGamifyTip">Nenhuma recompensa cadastrada.</div>';
+      // Draft is synchronized from visible fields, never from Firestore until Save.
+      function syncDraft(){
+        back.querySelectorAll('.ondisGamifyRewardRow').forEach(row=>{
+          const current=rewardDraft.find(r=>r.id===row.dataset.rewardId);if(!current)return;
+          current.title=row.querySelector('.rewardTitle').value;
+          current.description=row.querySelector('.rewardDescription').value;
+          current.xp=row.querySelector('.rewardXP').value;
+          current.type=row.querySelector('.rewardType').value;
+          current.enabled=row.querySelector('.rewardEnabled').checked;
+          current.art=row.dataset.rewardArt;
+        });
+      }
+      list.querySelectorAll('.rewardTitle,.rewardDescription,.rewardXP').forEach(el=>el.addEventListener('input',syncDraft));
+      list.querySelectorAll('.rewardType,.rewardEnabled').forEach(el=>el.addEventListener('change',()=>{syncDraft();renderGamifyRewards();}));
+      list.querySelectorAll('button[data-pick-reward-art]').forEach(btn=>btn.onclick=()=>{
+        syncDraft();const id=btn.dataset.pickRewardArt;
+        openGamifyArtPicker((art)=>{const entry=rewardDraft.find(x=>x.id===id);if(entry){entry.art=art;renderGamifyRewards();}});
+      });
+      list.querySelectorAll('button[data-remove-reward]').forEach(btn=>btn.onclick=()=>{
+        if(!confirm('Remover esta recompensa da configuração? As conquistas já obtidas não serão apagadas.'))return;
+        syncDraft();const ix=rewardDraft.findIndex(r=>r.id===btn.dataset.removeReward);if(ix!==-1){rewardDraft.splice(ix,1);renderGamifyRewards();}
+      });
+    }
+    function openGamifyArtPicker(pick){
+      let modal=back.querySelector('.ondisGamifyArtOverlay');if(modal)modal.remove();
+      modal=document.createElement('div');modal.className='ondisGamifyArtOverlay';modal.innerHTML=`<div class="ondisGamifyArtDialog"><div class="ondisGamifySectionHead"><div><h3>Escolha uma imagem</h3><p>Baús, medalhas, troféus e selos da Liga.</p></div><button type="button" class="btn" data-close-art>Fechar</button></div><div class="ondisGamifyArtGrid">${Object.keys(LIGA_REWARD_ARTS).map(art=>`<button type="button" data-art="${art}" title="${art}"><img src="./${LIGA_REWARD_ARTS[art]}" alt=""><span>${art}</span></button>`).join('')}</div></div>`;
+      back.appendChild(modal);
+      modal.querySelector('[data-close-art]').onclick=()=>modal.remove();
+      modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();});
+      modal.querySelectorAll('[data-art]').forEach(btn=>btn.onclick=()=>{pick(btn.dataset.art);modal.remove();});
+    }
+    function addGamifyReward(){
+      const nextXP=Math.max(0,...rewardDraft.map(r=>Number(r.xp)||0))+1000;
+      rewardDraft.push({id:'custom_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),title:'Nova recompensa',description:'',xp:nextXP,type:'Baú',art:'epic',enabled:true});
+      setGamifyTab('rewards');renderGamifyRewards();
+      const last=back.querySelector('.ondisGamifyRewardRow:last-child .rewardTitle');if(last){last.focus();last.select();}
+    }
+    function setGamifyTab(tab){
+      back.querySelectorAll('[data-gamify-tab]').forEach(btn=>{const is=btn.dataset.gamifyTab===tab;btn.classList.toggle('active',is);btn.setAttribute('aria-selected',is?'true':'false');});
+      back.querySelectorAll('[data-gamify-content]').forEach(page=>page.classList.toggle('active',page.dataset.gamifyContent===tab));
+    }
+    back.querySelectorAll('[data-gamify-tab]').forEach(btn=>btn.onclick=()=>setGamifyTab(btn.dataset.gamifyTab));
+    back.querySelectorAll('[data-gamify-nav]').forEach(btn=>btn.onclick=()=>setGamifyTab(btn.dataset.gamifyNav));
+    back.querySelectorAll('#gamifyNewReward,#gamifyNewRewardTop').forEach(btn=>btn.onclick=addGamifyReward);
+    back.querySelectorAll('[data-gamify-mission]').forEach(btn=>btn.onclick=()=>{const row=back.querySelectorAll('.ligaMissionEditorRow')[Number(btn.dataset.gamifyMission)];if(row){row.scrollIntoView({block:'center',behavior:'smooth'});row.classList.add('is-focused');setTimeout(()=>row.classList.remove('is-focused'),1900);}});
+    back.querySelectorAll('.ondisGamifyMissionIcon').forEach(btn=>btn.onclick=()=>{
+      const idx=Number(btn.dataset.missionIcon);const row=back.querySelectorAll('.ligaMissionEditorRow')[idx];if(!row)return;
+      // Opens a selector of all 172 individual badge illustrations.
+      abrirBancoIconesMissao(row);
+    });
+    function abrirBancoIconesMissao(row){
+      const pick=document.createElement('div');pick.className='ondisGamifyArtOverlay';
+      pick.innerHTML=`<div class="ondisGamifyArtDialog"><div class="ondisGamifySectionHead"><div><h3>Banco de selos ONDIS</h3><p>172 novos ícones ilustrados para suas missões.</p></div><button class="btn" type="button" data-close-art>Fechar</button></div><div class="ligaIconBankGrid">${Array.from({length:172},(_,i)=>{const id=i+1;return `<button type="button" data-icon="${id}"><img src="${achievementIconPath(id)}" alt="Selo ${id}"><span>${id}</span></button>`}).join('')}</div></div>`;
+      back.appendChild(pick);pick.querySelector('[data-close-art]').onclick=()=>pick.remove();pick.addEventListener('click',e=>{if(e.target===pick)pick.remove();});
+      pick.querySelectorAll('[data-icon]').forEach(el=>el.onclick=()=>{const id=Number(el.dataset.icon);row.querySelector('.missionArtId').value=id;row.querySelector('.ondisGamifyMissionIcon img').src=achievementIconPath(id);pick.remove();});
+    }
+    back.querySelectorAll('.missionBadge').forEach(select=>select.addEventListener('change',()=>{const row=select.closest('.ligaMissionEditorRow');const id=badgeIconId(select.value);row.querySelector('.missionArtId').value=id;row.querySelector('.ondisGamifyMissionIcon img').src=achievementIconPath(id);}));
+    renderGamifyRewards();
 
     function bindDeleteBadges(){
       back.querySelectorAll('[data-delete-badge]').forEach(btn=>btn.onclick=()=>{
@@ -5431,6 +5560,20 @@ body{ background-attachment: fixed; }
     back.addEventListener('click', (e)=>{ if(e.target===back) fechar(); });
 
     document.getElementById('selosSalvar').onclick = ()=>{
+      const rewardRows=Array.from(back.querySelectorAll('.ondisGamifyRewardRow'));
+      const newRewards=rewardRows.map(row=>({
+        id:row.dataset.rewardId,title:row.querySelector('.rewardTitle')?.value?.trim()||'',
+        description:row.querySelector('.rewardDescription')?.value?.trim()||'',
+        xp:Number(row.querySelector('.rewardXP')?.value),
+        type:row.querySelector('.rewardType')?.value||'Baú',
+        art:row.dataset.rewardArt||'epic',enabled:!!row.querySelector('.rewardEnabled')?.checked
+      }));
+      if(newRewards.some(r=>!r.title || !Number.isFinite(r.xp) || r.xp<1 || r.xp>100000000)){
+        alert('Confira as recompensas: informe nome e XP válido (maior que zero).');return;
+      }
+      if(newRewards.some(r=>!LIGA_REWARD_ARTS[r.art])){
+        alert('Uma recompensa possui imagem inválida.');return;
+      }
       const novo = state.badgeConfig || {};
       state.teamReward = {
         title: document.getElementById('teamRewardTitle').value.trim() || "Prêmio coletivo da equipe",
@@ -5465,7 +5608,8 @@ body{ background-attachment: fixed; }
         return {
           ...base,
           enabled: !!row.querySelector('.missionEnabled')?.checked,
-          icon: row.querySelector('.missionIcon')?.value?.trim() || base.icon || '🎯',
+          icon: row.querySelector('.missionIcon')?.value?.trim() || base.icon || '',
+          iconId: Number(row.querySelector('.missionArtId')?.value||0) || badgeIconId(row.querySelector('.missionBadge')?.value||base.badge),
           title: row.querySelector('.missionTitle')?.value?.trim() || base.title || 'Missão',
           badge: row.querySelector('.missionBadge')?.value || base.badge || 'WEEK_GOAL',
           metric,
@@ -5474,6 +5618,7 @@ body{ background-attachment: fixed; }
         };
       });
       state.badgeConfig = novo;
+      state.ligaRewards = newRewards;
       save(state);
       fechar();
       alert("Gamificação atualizada! ✅ Conquistas, missões e XP já estão valendo para a Liga.");

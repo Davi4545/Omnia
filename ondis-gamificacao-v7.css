@@ -1,0 +1,128 @@
+/* ONDIS Gamificação V7 — camada isolada do editor, sem alterar lógica comercial */
+#viewSeller .ondisV7HeroActions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+#viewSeller .ondisV7Configure,.ondisGamifyBack .ondisGamifyButtonPrimary{background:linear-gradient(115deg,#075fe4,#2557ef 62%,#5a2fe0)!important;border:1px solid #1764d9!important;color:#fff!important;box-shadow:0 8px 20px rgba(34,77,194,.18)!important}
+#viewSeller .ondisV7Configure svg{color:#fff!important}
+#viewSeller .ondisV7RewardMini{min-height:66px}
+#viewSeller .ligaRewardMini.ondisV7RewardMini{display:grid;grid-template-columns:60px 1fr 24px;align-items:center;gap:9px;padding:7px 0!important;max-width:none}
+#viewSeller .ondisV7RewardMini .chest{display:grid;place-items:center;width:60px;height:57px;overflow:visible;background:transparent!important}
+#viewSeller .ondisV7RewardMini .chest img{width:66px;height:61px;object-fit:contain;filter:drop-shadow(0 6px 8px rgba(55,39,97,.18));max-width:none}
+#viewSeller .ondisV7RewardMini b{font-size:12px!important;color:var(--ondis-text)!important}
+#viewSeller .ondisV7RewardMini small{font-size:10px!important;color:var(--ondis-muted)!important}
+#viewSeller .ondisV7RewardMini .ligaRewardLock{font-weight:900;font-size:17px;color:#6c53df}
+#viewSeller .ondisV7CollectiveArt{width:155px;height:150px;object-fit:contain;filter:drop-shadow(0 15px 17px rgba(73,48,171,.14))}
+#viewSeller .ondisV7RewardIntro{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+#viewSeller .ondisV7RewardIntro h3{font-size:22px;color:var(--ondis-text);margin:4px 0}
+#viewSeller .ondisV7RewardIntro p{margin:0;font-size:12px;color:var(--ondis-muted);line-height:1.6}
+#viewSeller .ondisV7RewardGallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 20px}
+#viewSeller .ondisV7RewardCard{padding:14px 13px;border:1px solid var(--ondis-line);border-radius:18px;background:var(--ondis-surface);display:flex;flex-direction:column;align-items:center;text-align:center;box-shadow:0 10px 25px rgba(26,50,89,.06)}
+#viewSeller .ondisV7RewardCard img{width:126px;height:116px;object-fit:contain;filter:drop-shadow(0 12px 14px rgba(36,28,76,.18))}
+#viewSeller .ondisV7RewardType{color:#6545cb;background:rgba(131,99,232,.12);border-radius:99px;padding:4px 10px;font-weight:800;font-size:10px}
+#viewSeller .ondisV7RewardCard h4{font-size:14px;color:var(--ondis-text);margin:10px 0 4px}
+#viewSeller .ondisV7RewardCard p{margin:0 0 10px;min-height:32px;font-size:11px;color:var(--ondis-muted);line-height:1.5}
+#viewSeller .ondisV7RewardCard strong{font-size:14px;color:var(--ondis-text)}
+#viewSeller .ondisV7RewardCard .ligaV3Progress{width:100%;margin:10px 0 6px}
+#viewSeller .ondisV7RewardCard small{color:var(--ondis-muted);font-size:10px}
+
+.ondisGamifyBack{--gamify-border:#cadef6;--gamify-ink:#102044;--gamify-muted:#5c708e;--gamify-bg:#eff7ff;--gamify-card:#f8fbff;--gamify-primary:#1b66e6;--gamify-input:#fff}
+.ondisGamifyBack .ondisGamifyShell{width:min(1510px,100%);max-width:1510px;min-width:0;min-height:680px;max-height:calc(100vh - 32px);overflow:auto;position:relative;border:1px solid #d0e2f8;background:linear-gradient(155deg,#f9fcff,#e9f5ff 64%,#f5f8ff);color:var(--gamify-ink);border-radius:25px;box-shadow:0 34px 100px rgba(4,23,66,.3);padding:18px 18px 0;font-family:Inter,system-ui,Arial,sans-serif}
+.ondisGamifyBack .ondisGamifyShell *{box-sizing:border-box}
+.ondisGamifyBack .ondisGamifyShell p{line-height:1.55}
+.ondisGamifyBack .ondisGamifyShell button{cursor:pointer}
+.ondisGamifyBack .ondisGamifyShell input:not([type=checkbox]),.ondisGamifyBack .ondisGamifyShell textarea,.ondisGamifyBack .ondisGamifyShell select{background:var(--gamify-input)!important;color:var(--gamify-ink)!important;border:1px solid #cbdaf0!important;border-radius:11px!important;padding:10px 11px!important;min-height:38px!important;font-size:12px!important;line-height:1.3!important;box-shadow:none!important}
+.ondisGamifyBack .ondisGamifyShell input:focus,.ondisGamifyBack .ondisGamifyShell textarea:focus,.ondisGamifyBack .ondisGamifyShell select:focus{outline:2px solid #a9c8ff!important;outline-offset:0!important}
+.ondisGamifyBack .ondisGamifyShell input::placeholder{color:#8996ac!important}
+.ondisGamifyBack .ondisGamifyShell button.btn:not(.ondisGamifyButtonPrimary){color:#16335c!important;background:#fff!important;border:1px solid #c7d9ee!important;box-shadow:none!important}
+.ondisGamifyBack .ondisGamifyHead{display:flex;justify-content:space-between;gap:16px;align-items:center;margin:2px 3px 17px}
+.ondisGamifyBack .ondisGamifyTitle{display:flex;align-items:center;gap:13px}
+.ondisGamifyBack .ondisGamifyLogo{display:grid;place-items:center;width:57px;height:57px;background:linear-gradient(130deg,#5ca4ff,#732eff);border-radius:16px;flex-shrink:0;box-shadow:0 6px 16px rgba(62,88,219,.22)}
+.ondisGamifyBack .ondisGamifyLogo img{width:52px;height:52px;object-fit:contain}
+.ondisGamifyBack .ondisGamifyKicker,.ondisGamifyBack .ondisGamifyEyebrow{font-size:9px;color:#2970d2!important;letter-spacing:.13em;font-weight:900}
+.ondisGamifyBack .ondisGamifyTitle h2{font-size:28px;line-height:1.16;margin:2px 0;color:#101b3a!important;font-weight:900;letter-spacing:-.9px}
+.ondisGamifyBack .ondisGamifyTitle p{font-size:12px;margin:0;color:var(--gamify-muted)!important}
+.ondisGamifyBack .ondisGamifyTopButtons{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.ondisGamifyBack .ondisGamifyTopButtons button{padding:10px 17px!important;font-weight:800!important;font-size:12px!important;min-height:42px}
+.ondisGamifyBack .ondisGamifySummary{display:grid;grid-template-columns:minmax(300px,2fr) repeat(3,minmax(130px,.8fr));gap:12px;margin-bottom:17px}
+.ondisGamifyBack .ondisGamifySeason,.ondisGamifyBack .ondisGamifyStat{min-height:129px;min-width:0;border:1px solid #c1d8f8;border-radius:19px;background:linear-gradient(115deg,#d9ebff,#f6fbff);box-shadow:0 8px 20px rgba(37,82,144,.07)}
+.ondisGamifyBack .ondisGamifySeason{display:flex;align-items:center;gap:15px;padding:13px}
+.ondisGamifyBack .ondisGamifySeason img{width:112px;height:112px;object-fit:contain;filter:drop-shadow(0 8px 11px rgba(50,29,100,.25))}
+.ondisGamifyBack .ondisGamifySeason small{font-size:10px;color:#5575a3}
+.ondisGamifyBack .ondisGamifySeason h3{font-size:20px;margin:5px 0;color:#112450}
+.ondisGamifyBack .ondisGamifySeason h3 span{display:inline-block;vertical-align:middle;background:#dcfce8;border-radius:99px;color:#08783d;padding:4px 8px;font-size:10px}
+.ondisGamifyBack .ondisGamifySeason p{font-size:10px;margin:0 0 9px;color:var(--gamify-muted)}
+.ondisGamifyBack .ondisGamifySeasonProgress{width:100%;max-width:260px;height:9px;border-radius:20px;background:#c8d8ef;overflow:hidden}
+.ondisGamifyBack .ondisGamifySeasonProgress i{display:block;background:linear-gradient(90deg,#008aff,#e12afe);width:65%;height:100%;border-radius:20px}
+.ondisGamifyBack .ondisGamifyStat{padding:19px 17px;background:linear-gradient(145deg,#fafdff,#eaf4ff)}
+.ondisGamifyBack .ondisGamifyStat span{display:block;font-size:10px;font-weight:900;color:#54749e;letter-spacing:.055em}
+.ondisGamifyBack .ondisGamifyStat strong{display:block;font-size:29px;font-weight:900;color:#122650;margin:8px 0 1px}
+.ondisGamifyBack .ondisGamifyStat small{font-size:11px;color:var(--gamify-muted)}
+.ondisGamifyBack .ondisGamifyColumns{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.95fr);gap:16px}
+.ondisGamifyBack .ondisGamifyLeft,.ondisGamifyBack .ondisGamifyRight{display:flex;flex-direction:column;gap:16px;min-width:0}
+.ondisGamifyBack .ondisGamifyPanel{min-width:0;border:1px solid #bdd8f8;background:linear-gradient(150deg,rgba(255,255,255,.92),rgba(227,241,255,.87));border-radius:19px;box-shadow:0 10px 25px rgba(57,101,163,.065);padding:16px}
+.ondisGamifyBack .ondisGamifySectionHead{display:flex;gap:12px;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.ondisGamifyBack .ondisGamifySectionHead h3{font-size:18px;color:#112348!important;margin:3px 0;letter-spacing:-.35px}
+.ondisGamifyBack .ondisGamifySectionHead p{font-size:11px;color:#617693!important;margin:0}
+.ondisGamifyBack .ondisGamifyLink{background:transparent;border:0;padding:7px 0;color:#1463e3!important;font-size:11px;font-weight:800;white-space:nowrap}
+.ondisGamifyBack .ondisGamifyRewardPreview{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px;min-height:127px}
+.ondisGamifyBack .ondisGamifyRewardTile{text-align:center;min-width:0;display:flex;flex-direction:column;align-items:center;gap:4px;background:transparent;border:0}
+.ondisGamifyBack .ondisGamifyRewardTile img{width:min(100%,90px);height:83px;object-fit:contain;filter:drop-shadow(0 10px 11px rgba(43,32,100,.16))}
+.ondisGamifyBack .ondisGamifyRewardTile strong{display:block;color:#112148!important;font-size:10px;min-height:25px;line-height:1.2;overflow-wrap:anywhere}
+.ondisGamifyBack .ondisGamifyRewardTile small{font-size:9px;color:#53678e}
+.ondisGamifyBack .ondisGamifyRewardTileLine{display:block;width:90%;height:5px;border-radius:99px;background:linear-gradient(90deg,#2c7cf1,#d839ed);margin-top:3px}
+.ondisGamifyBack .ondisGamifyManager .ondisGamifySectionHead>.btn{font-size:11px!important;padding:8px 10px!important}
+.ondisGamifyBack .ondisGamifyTabs{display:flex;gap:6px;margin:6px 0 12px;border-bottom:1px solid #d4e5f9;flex-wrap:wrap}
+.ondisGamifyBack .ondisGamifyTabs button{padding:10px 13px;border:1px solid #d9e4f1;border-bottom:0;background:#f6faff;color:#354964!important;border-radius:10px 10px 0 0;font-size:11px;font-weight:800}
+.ondisGamifyBack .ondisGamifyTabs button.active{background:#fff;border-color:#b7d2f6;color:#0758d8!important;box-shadow:0 3px 0 #1b66e6}
+.ondisGamifyBack .ondisGamifyTabPage{display:none;max-height:440px;overflow:auto;padding:1px 0 8px}
+.ondisGamifyBack .ondisGamifyTabPage.active{display:block}
+.ondisGamifyBack .ondisGamifyRewardsRows{display:grid;gap:7px}
+.ondisGamifyBack .ondisGamifyRewardRow{display:grid;grid-template-columns:22px 56px minmax(130px,1.25fr) minmax(70px,.55fr) 86px 24px;gap:9px;align-items:center;border:1px solid #dce9f8;border-radius:13px;background:#fff;padding:9px}
+.ondisGamifyBack .ondisGamifyRewardSwitch input{width:17px;height:17px;accent-color:#1471ff}
+.ondisGamifyBack .ondisGamifyRewardArtButton{width:56px;height:58px;padding:2px;border:1px solid #deebf8;border-radius:11px;background:#f4f7ff}
+.ondisGamifyBack .ondisGamifyRewardArtButton img{width:100%;height:100%;object-fit:contain}
+.ondisGamifyBack .ondisGamifyRewardFields{display:grid;gap:5px;min-width:0}
+.ondisGamifyBack .ondisGamifyRewardRow label{font-size:9px;font-weight:800;color:#6981a2;min-width:0}
+.ondisGamifyBack .ondisGamifyRewardRow label input,.ondisGamifyBack .ondisGamifyRewardRow label select{display:block;width:100%;margin-top:3px;padding:6px 7px!important;min-height:31px!important;font-size:11px!important}
+.ondisGamifyBack .ondisGamifyRewardRemove{background:#fff1f3;color:#b32141!important;border:1px solid #f5c7d0;border-radius:9px;width:27px;height:31px;font-weight:900}
+.ondisGamifyBack .ondisGamifyTip{background:#f6faff;border:1px dashed #c8d8ee;border-radius:11px;color:#5e7190;font-size:12px;padding:14px;margin:6px 0}
+.ondisGamifyBack .ondisGamifyMissionIndex{display:grid;gap:8px}
+.ondisGamifyBack .ondisGamifyMissionIndex button{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #dbe6f3;padding:7px 12px;border-radius:11px;text-align:left;min-height:48px;color:#1c3153}
+.ondisGamifyBack .ondisGamifyMissionIndex img{width:37px;height:37px;object-fit:contain}
+.ondisGamifyBack .ondisGamifyMissionIndex span{flex:1;font-weight:800}
+.ondisGamifyBack .ondisGamifyMissionIndex small{color:#3866ce}
+.ondisGamifyBack .ondisGamifyTeamReward{display:grid!important;grid-template-columns:112px minmax(0,1fr)!important;gap:12px!important;padding:10px!important;align-items:center!important;margin:0!important;background:#e1f0ff!important;border:1px solid #c5dff9!important}
+.ondisGamifyBack .ondisGamifyTeamReward>img{width:107px!important;height:126px!important;object-fit:contain!important;margin:0!important}
+.ondisGamifyBack .ondisGamifyTeamReward label{display:block;color:#142e56;font-size:10px;margin-bottom:4px;font-weight:800}
+.ondisGamifyBack .ondisGamifyTeamReward textarea{display:block;width:100%;min-height:60px!important;resize:vertical}
+.ondisGamifyBack .ondisGamifyChallenges .ligaMissionEditor{background:none;padding:0;border:0}
+.ondisGamifyBack .ondisGamifyChallenges .ligaMissionEditorHead{display:none}
+.ondisGamifyBack .ondisGamifyChallenges .ligaMissionEditorRow{display:grid!important;grid-template-columns:20px 43px minmax(110px,1.25fr) minmax(105px,1fr) 72px 60px!important;gap:6px!important;padding:8px!important;margin-top:7px!important;border:1px solid #d9e6f8!important;border-radius:12px!important;background:#fff!important}
+.ondisGamifyBack .ondisGamifyChallenges .ligaMissionEditorRow.is-focused{outline:3px solid #a5c8fb}
+.ondisGamifyBack .ondisGamifyChallenges .missionMain{display:grid!important;grid-template-columns:1fr!important;gap:4px!important;min-width:0}
+.ondisGamifyBack .ondisGamifyChallenges .ligaMissionEditorRow .missionMetric{grid-column:auto!important;min-width:0!important}
+.ondisGamifyBack .ondisGamifyChallenges .ligaMissionEditorRow .missionTarget,.ondisGamifyBack .ondisGamifyChallenges .ligaMissionEditorRow .missionPoints{grid-column:auto!important;min-width:0}
+.ondisGamifyBack .ondisGamifyChallenges .ligaMissionEditorRow input:not([type=checkbox]),.ondisGamifyBack .ondisGamifyChallenges .ligaMissionEditorRow select{min-height:30px!important;padding:5px 7px!important;font-size:10px!important;max-width:100%}
+.ondisGamifyBack .ondisGamifyChallenges .ligaMissionEditorRow .missionEnabled{width:16px!important;min-height:16px!important;height:16px!important;accent-color:#1977ff}
+.ondisGamifyBack .ondisGamifyMissionIcon{display:grid;place-items:center;width:43px;height:44px;border-radius:12px;background:#eef5ff;border:1px solid #d5e5f8;padding:0}
+.ondisGamifyBack .ondisGamifyMissionIcon img{width:42px;height:42px;object-fit:contain}
+.ondisGamifyBack .ondisGamifyBadgeList{display:grid;gap:10px}
+.ondisGamifyBack .ondisGamifyBadgeList>div{margin-bottom:0!important;border:1px solid #d5e3f6!important;background:#fff!important}
+.ondisGamifyBack .ondisGamifyBadgeList .ligaIconPickerTrigger{width:70px;height:70px;display:grid;place-items:center;padding:3px;background:#f4f7fd;border:1px solid #dbe6f6;border-radius:12px}
+.ondisGamifyBack .ondisGamifyBadgeList .ligaBadgeArt{max-width:68px;max-height:68px}
+.ondisGamifyBack .ondisGamifyBadgeList input[type=checkbox]{accent-color:#1267f1}
+.ondisGamifyBack .ondisGamifyBadgeList label{color:#253654!important}
+.ondisGamifyBack .ondisGamifyFooter{position:sticky;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#eef6ff;border-top:1px solid #cbdff9;margin:16px -18px 0;padding:14px 20px;z-index:2;border-radius:0 0 23px 23px;box-shadow:0 -8px 16px rgba(22,68,122,.05)}
+.ondisGamifyBack .ondisGamifyFooter span{font-size:11px;color:#60728e}
+.ondisGamifyBack .ondisGamifyFooter>div{display:flex;gap:9px;flex-shrink:0}
+.ondisGamifyBack .ondisGamifyArtOverlay{position:fixed;inset:0;z-index:10010;background:rgba(12,28,62,.66);backdrop-filter:blur(7px);display:grid;place-items:center;padding:15px}
+.ondisGamifyBack .ondisGamifyArtDialog{width:min(900px,96vw);max-height:85vh;overflow:auto;background:#eff7ff;border:1px solid #c9dcef;border-radius:20px;padding:20px;box-shadow:0 20px 80px rgba(14,27,65,.28)}
+.ondisGamifyBack .ondisGamifyArtGrid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.ondisGamifyBack .ondisGamifyArtGrid button{background:#fff;border:1px solid #cadbee;border-radius:13px;padding:7px;color:#273e67;display:flex;flex-direction:column;align-items:center;font-size:10px;gap:5px}
+.ondisGamifyBack .ondisGamifyArtGrid button img{width:100%;height:95px;object-fit:contain}
+.ondisGamifyBack .ondisGamifyArtOverlay .ligaIconBankGrid{display:grid!important;grid-template-columns:repeat(10,minmax(0,1fr))!important;background:#f0f7ff;gap:6px!important;max-height:60vh;overflow:auto}
+.ondisGamifyBack .ondisGamifyArtOverlay .ligaIconBankGrid button{width:auto!important;min-width:0;aspect-ratio:1}
+/* ONDIS's Neon, Ocean, Sunset and custom dark themes are independent of the editor's white design. Keep readable text on every surface. */
+@media(max-width:1150px){.ondisGamifyBack .ondisGamifySummary{grid-template-columns:1.5fr 1fr 1fr}.ondisGamifyBack .ondisGamifySummary .ondisGamifyStat:last-child{grid-column:1/-1;min-height:90px}.ondisGamifyBack .ondisGamifyColumns{grid-template-columns:1fr}.ondisGamifyBack .ondisGamifyRewardPreview{grid-template-columns:repeat(6,minmax(0,1fr))}}
+@media(max-width:680px){.ondisGamifyBack .ondisGamifyShell{padding:12px 10px 0;max-height:calc(100vh - 16px);border-radius:17px}.ondisGamifyBack .ondisGamifyHead{align-items:flex-start;flex-direction:column}.ondisGamifyBack .ondisGamifyTitle h2{font-size:22px}.ondisGamifyBack .ondisGamifyTitle p{font-size:11px}.ondisGamifyBack .ondisGamifySummary{grid-template-columns:repeat(2,minmax(0,1fr))}.ondisGamifyBack .ondisGamifySeason{grid-column:1/-1}.ondisGamifyBack .ondisGamifyStat{min-height:104px}.ondisGamifyBack .ondisGamifySummary .ondisGamifyStat:last-child{grid-column:auto;min-height:104px}.ondisGamifyBack .ondisGamifyStat strong{font-size:22px}.ondisGamifyBack .ondisGamifyRewardPreview{grid-template-columns:repeat(3,minmax(0,1fr))}.ondisGamifyBack .ondisGamifyPanel{padding:12px}.ondisGamifyBack .ondisGamifyRewardRow{grid-template-columns:20px 54px minmax(0,1fr) 26px;gap:7px}.ondisGamifyBack .ondisGamifyRewardRow .ondisGamifyRewardSmall{grid-column:3;max-width:none}.ondisGamifyBack .ondisGamifyRewardRow .ondisGamifyRewardRemove{grid-column:4;grid-row:1}.ondisGamifyBack .ondisGamifyTeamReward{grid-template-columns:75px minmax(0,1fr)!important}.ondisGamifyBack .ondisGamifyTeamReward>img{width:75px!important;height:95px!important}.ondisGamifyBack .ondisGamifyChallenges .ligaMissionEditorRow{grid-template-columns:22px 43px minmax(0,1fr) 64px!important}.ondisGamifyBack .ondisGamifyChallenges .missionMain{grid-column:3/5!important}.ondisGamifyBack .ondisGamifyChallenges .missionMetric{grid-column:1/3!important}.ondisGamifyBack .ondisGamifyChallenges .missionTarget{grid-column:3!important}.ondisGamifyBack .ondisGamifyChallenges .missionPoints{grid-column:4!important}.ondisGamifyBack .ondisGamifyFooter{margin-inline:-10px;flex-wrap:wrap;padding:12px}.ondisGamifyBack .ondisGamifyFooter span{width:100%}.ondisGamifyBack .ondisGamifyArtGrid{grid-template-columns:repeat(3,1fr)}.ondisGamifyBack .ondisGamifyArtOverlay .ligaIconBankGrid{grid-template-columns:repeat(4,minmax(0,1fr))!important}#viewSeller .ondisV7RewardGallery{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:430px){#viewSeller .ondisV7RewardGallery{grid-template-columns:1fr}.ondisGamifyBack .ondisGamifyTitle{align-items:flex-start}.ondisGamifyBack .ondisGamifyLogo{width:43px;height:43px}.ondisGamifyBack .ondisGamifyLogo img{width:42px;height:42px}.ondisGamifyBack .ondisGamifySectionHead{flex-wrap:wrap}.ondisGamifyBack .ondisGamifyTabs button{font-size:10px;padding:9px}.ondisGamifyBack .ondisGamifyStat{padding:12px}}
+.ondisGamifyBack .ondisGamifyRewardTileLine{background:#d9e6fa!important;overflow:hidden}
+.ondisGamifyBack .ondisGamifyRewardTileLine>i{display:block;height:100%;background:linear-gradient(90deg,#257aff,#e43ce9);border-radius:inherit}
