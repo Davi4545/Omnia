@@ -1,0 +1,330 @@
+/* ONDIS — UI V2 / contraste + acabamento — 24.11.2026
+   Somente apresentação. Não modifica dados, permissões ou regras de negócio.
+   Prioridade: token da superfície atual > regra global de cor. Nunca
+   aplicar texto claro sobre cartão claro ou texto escuro sobre cabeçalho vermelho. */
+:root {
+  --ui-v2-bg: var(--ondis-bg, #f5f7fb);
+  --ui-v2-paper: var(--ondis-surface, #ffffff);
+  --ui-v2-soft: var(--ondis-surface-soft, #f7f9fd);
+  --ui-v2-fg: var(--ondis-text, #142137);
+  --ui-v2-sub: var(--ondis-muted, #66758a);
+  --ui-v2-line: var(--ondis-line, #e0e7f1);
+  --ui-v2-brand: var(--ondis-primary, #dc1837);
+  --ui-v2-shadow: 0 16px 42px rgba(21,34,58,.10);
+  --ui-v2-strong-shadow: 0 26px 70px rgba(17,28,50,.20);
+  --ui-v2-dark-ink: #121d30;
+  --ui-v2-light-ink: #f8fafc;
+  --ui-v2-on-brand: #ffffff;
+  --ui-v2-radius: 16px;
+}
+
+/* Alguns temas históricos eram escuros apenas no CSS antigo, enquanto os
+   componentes novos herdavam superfícies claras. Unificar SEM tocar no JS. */
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) {
+  color-scheme:dark;
+  --ondis-bg:#0c1320;
+  --ondis-surface:#141e2e;
+  --ondis-surface-soft:#202d40;
+  --ondis-text:#f8fafc;
+  --ondis-muted:#c0ccdd;
+  --ondis-line:#344357;
+  --ondis-shadow:0 18px 44px rgba(0,0,0,.25);
+  --ondis-shadow-lg:0 28px 72px rgba(0,0,0,.38);
+  --ondis-app-background:radial-gradient(circle at 85% -10%,rgba(124,94,220,.12),transparent 43%),#0c1320;
+}
+:root[data-theme="ocean"]{--ondis-bg:#081723;--ondis-surface:#102434;--ondis-surface-soft:#193346;--ondis-line:#29465a;--ondis-app-background:radial-gradient(circle at 80% 0%,rgba(35,171,235,.16),transparent 48%),#081723}
+:root[data-theme="sunset"]{--ondis-bg:#1b111a;--ondis-surface:#291b29;--ondis-surface-soft:#392738;--ondis-line:#574050;--ondis-app-background:radial-gradient(circle at 95% 0%,rgba(236,110,81,.14),transparent 48%),#1b111a}
+:root[data-theme="purple"]{--ondis-bg:#160f25;--ondis-surface:#211833;--ondis-surface-soft:#302443;--ondis-line:#48385c;--ondis-app-background:radial-gradient(circle at 90% 0%,rgba(162,102,245,.17),transparent 48%),#160f25}
+:root[data-theme="textured"]{--ondis-bg:#101824;--ondis-surface:#182333;--ondis-surface-soft:#253247;--ondis-line:#39485a;--ondis-app-background:repeating-linear-gradient(132deg,rgba(255,255,255,.014) 0 1px,transparent 1px 12px),#101824}
+/* Tema personalizado: tonalidade identificada visualmente por script local.
+   A cor do texto acompanha a superfície escolhida no editor de temas. */
+:root[data-theme="custom"][data-ondis-surface-tone="dark"] {
+  --ondis-text:#f8fafc;
+  --ondis-muted:#cbd5e1;
+  --ondis-line:rgba(241,245,249,.18);
+  color-scheme:dark;
+}
+:root[data-theme="custom"][data-ondis-surface-tone="light"] {
+  --ondis-text:#142033;
+  --ondis-muted:#556277;
+  --ondis-line:rgba(20,32,51,.17);
+  color-scheme:light;
+}
+
+/* COR BASE = cor da superfície, não da imagem/tema do cabeçalho */
+body:not(.loginPage){color:var(--ui-v2-fg)!important;}
+.appContent,main,.wrap{min-width:0}
+#viewOps,#viewMetas,#viewDados,#viewNoConv,#viewDashboard,#viewMetasRank,#viewSeller{color:var(--ui-v2-fg)}
+:where(.card,.panel,.modal,.item,.noteBox,.kpi,.dashboardPanel,.dashChartCard,.onx-panel,.rankingModal){color:var(--ui-v2-fg)}
+:where(.card,.panel,.modal,.item,.noteBox,.kpi) :where(.hint,.meta,.tiny,.sub,.t,small){color:var(--ui-v2-sub)}
+
+/* Barra superior: o ONDIS usa fundo escuro fixo, independentemente do conteúdo. */
+:root[data-theme="ondis"] .contentTopbar{color:#fff!important}
+:root[data-theme="ondis"] .contentTopbar #viewTitle,
+:root[data-theme="ondis"] .contentTopbar .topbarTitle{color:#fff!important}
+.contentTopbar{isolation:isolate;overflow:visible!important;min-width:0}
+.contentTopbar .accountMenu{position:relative;z-index:12;flex:0 0 auto}
+.contentTopbar .hamb{display:inline-flex!important;align-items:center;justify-content:center;flex:0 0 40px;min-width:40px;height:40px}
+.contentTopbar .topbarTitle{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:800;letter-spacing:-.025em}
+.contentTopbar #btnAccount{display:inline-flex!important;align-items:center;justify-content:center;gap:9px;white-space:nowrap;min-height:40px;padding:9px 14px!important;transition:background .18s ease,border-color .18s ease}
+.ondis-ui-icon{width:1.15em;height:1.15em;display:inline-block;vertical-align:middle;flex:none;stroke:currentColor;fill:none}
+.contentTopbar .hamb .ondis-ui-icon{width:20px;height:20px}
+#btnAccount .ondis-ui-icon{width:17px;height:17px}
+.sidebar .navItem{display:flex!important;align-items:center;gap:12px;min-height:45px;text-align:left}
+.sidebar .navItem .ni{display:inline-grid!important;place-items:center;flex:0 0 32px;width:32px;height:32px;border-radius:10px}
+.sidebar .navItem .ni .ondis-ui-icon{width:19px;height:19px;stroke-width:1.85}
+.sidebar .navItem .nl{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.sidebar .navItem:focus-visible,.hamb:focus-visible,#btnAccount:focus-visible{outline:3px solid color-mix(in srgb,var(--ui-v2-brand) 50%,transparent)!important;outline-offset:2px!important}
+.sidebar .sideSection{text-transform:uppercase;font-size:10px!important;letter-spacing:.15em;font-weight:800}
+/* A lateral vermelha ONDIS deve manter texto claro: não aplicar as cores do painel branco nela. */
+:root[data-theme="ondis"] .sidebar .navItem.active,
+:root[data-theme="ondis"] .sidebar .navItem.active .ni,
+:root[data-theme="ondis"] .sidebar .navItem.active .nl{color:#fff!important}
+
+/* MENU DA CONTA — reparo do problema da captura. A regra antiga
+   .contentTopbar button:not(.good) colocava BRANCO sobre BRANCO. */
+.contentTopbar #accountDrop.accountDrop{
+  --acc-paper:var(--ui-v2-paper);
+  --acc-ink:var(--ui-v2-fg);
+  --acc-muted:var(--ui-v2-sub);
+  position:absolute!important;inset:auto 0 auto auto!important;top:calc(100% + 12px)!important;
+  width:min(314px,calc(100vw - 24px))!important;min-width:min(280px,calc(100vw - 24px))!important;
+  padding:10px!important;display:none;flex-direction:column;gap:5px;
+  background:var(--acc-paper)!important;color:var(--acc-ink)!important;
+  border:1px solid var(--ui-v2-line)!important;border-radius:19px!important;
+  box-shadow:var(--ui-v2-strong-shadow)!important;z-index:1000!important;
+  transform-origin:top right;
+}
+.contentTopbar #accountDrop.accountDrop.show{display:flex!important;animation:uiV2DropIn .16s ease-out both}
+@keyframes uiV2DropIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.contentTopbar #accountDrop #userInfo{
+  display:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  color:var(--acc-ink)!important;background:var(--ui-v2-soft)!important;
+  border:1px solid var(--ui-v2-line)!important;border-radius:12px!important;
+  font-weight:750!important;font-size:12px!important;padding:13px 14px!important;
+  margin-bottom:5px;line-height:1.4;
+}
+.contentTopbar #accountDrop #userInfo[style*="display: inline"]{display:block!important}
+/* Mesmo que a barra superior esteja vermelha/escura, o pop-up possui
+   sua própria cor de texto conforme o tema. */
+:root .contentTopbar #accountDrop.accountDrop .accItem,
+:root[data-theme="ondis"] .contentTopbar #accountDrop.accountDrop button.accItem {
+  display:flex;align-items:center;gap:12px;min-height:45px;width:100%;
+  padding:10px 12px!important;margin:0!important;text-align:left!important;
+  border:1px solid transparent!important;border-radius:12px!important;
+  background:transparent!important;color:var(--acc-ink)!important;
+  box-shadow:none!important;text-shadow:none!important;
+  font-family:var(--ondis-font,system-ui)!important;font-weight:720!important;
+  line-height:1.35;font-size:13px!important;white-space:normal;
+}
+:root .contentTopbar #accountDrop.accountDrop .accItem:hover,
+:root[data-theme="ondis"] .contentTopbar #accountDrop.accountDrop button.accItem:hover{
+  background:var(--ui-v2-soft)!important;border-color:var(--ui-v2-line)!important;
+  color:var(--acc-ink)!important;
+}
+.contentTopbar #accountDrop .accIcon{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;flex:0 0 32px;background:color-mix(in srgb,var(--ui-v2-brand) 9%,var(--acc-paper));color:var(--ui-v2-brand)!important}
+.contentTopbar #accountDrop .accIcon .ondis-ui-icon{width:17px;height:17px;stroke:currentColor}
+.contentTopbar #accountDrop .accLabel{flex:1;min-width:0;color:inherit!important;opacity:1!important;visibility:visible!important;white-space:normal!important}
+:root .contentTopbar #accountDrop.accountDrop .accItem.bad{color:#ce2845!important}
+:root .contentTopbar #accountDrop.accountDrop .accItem.bad:hover{background:rgba(212,41,72,.075)!important;border-color:rgba(212,41,72,.15)!important}
+.contentTopbar #accountDrop .accItem.bad .accIcon{background:rgba(212,41,72,.1);color:#d12748!important}
+/* A visibilidade de cada botão continua governada pelo JS original. */
+.contentTopbar #accountDrop .accItem[style*="display:none"],
+.contentTopbar #accountDrop .accItem[style*="display: none"]{display:none!important}
+
+/* Componentes comuns das páginas já modernizadas */
+body[data-ondis-refresh] :is(.card,.panel,.resultado,.section-card,.catalog-hero,.insight),
+#viewMetas :is(.card,.goalLevelEditor), #viewDados .card, #viewNoConv .card{
+  background:var(--ui-v2-paper)!important;
+  border-color:var(--ui-v2-line)!important;
+  color:var(--ui-v2-fg)!important;
+}
+body[data-ondis-refresh] :is(.card,.panel,.resultado,.section-card) :is(h1,h2,h3,h4,strong),
+#viewMetas :is(.card,.goalLevelEditor) :is(h1,h2,h3,h4,strong),
+#viewDados :is(h2,h3,h4),#viewNoConv :is(h2,h3,h4){color:var(--ui-v2-fg)!important}
+body[data-ondis-refresh] :is(.hint,.meta,.tiny,.sub),
+#viewMetas :is(.hint,.meta,.tiny,.sub){color:var(--ui-v2-sub)!important}
+body[data-ondis-refresh] :is(input:not([type="checkbox"]):not([type="radio"]),select,textarea),
+#viewMetas :is(input:not([type="checkbox"]):not([type="radio"]),select,textarea),
+#viewDados :is(input,select,textarea){color:var(--ui-v2-fg)!important;background:var(--ui-v2-paper)!important;border-color:var(--ui-v2-line)!important;accent-color:var(--ui-v2-brand)}
+body[data-ondis-refresh] :is(input,textarea)::placeholder,
+#viewMetas :is(input,textarea)::placeholder{color:var(--ui-v2-sub)!important;opacity:.77}
+body[data-ondis-refresh] :is(table,th,td){color:var(--ui-v2-fg)!important;border-color:var(--ui-v2-line)!important}
+body[data-ondis-refresh] th{background:var(--ui-v2-soft)!important;color:var(--ui-v2-sub)!important}
+body[data-ondis-refresh] tr:hover td{background:var(--ui-v2-soft)!important}
+body[data-ondis-refresh] .modal, #settingsBack .modal{
+  color:var(--ui-v2-fg)!important;background:var(--ui-v2-paper)!important;border:1px solid var(--ui-v2-line)!important;
+  box-shadow:var(--ui-v2-strong-shadow)!important;
+}
+body[data-ondis-refresh] .modal :is(h2,h3,h4),#settingsBack .modal :is(h2,h3,h4){color:var(--ui-v2-fg)!important}
+body[data-ondis-refresh] .modalBack,#settingsBack.modalBack{background:rgba(8,13,24,.55)!important;backdrop-filter:blur(8px)}
+body[data-ondis-refresh] :is(.btn.good,.btn.primary), #viewMetas :is(.btn.good,.btn.primary){color:#fff!important}
+body[data-ondis-refresh] :is(.tab.active,.tabs button.active){color:#fff!important}
+
+/* Os decêndios usam cores fixas claras; no modo escuro precisam usar os tokens. */
+:root[data-ondis-surface-tone="dark"] #viewMetas .decendioCard,
+:root[data-ondis-surface-tone="dark"] #viewMetas .goalLevelEditor,
+:root[data-ondis-surface-tone="dark"] #viewMetas .noteBox{
+  background:var(--ui-v2-soft)!important;
+  border-color:var(--ui-v2-line)!important;
+  color:var(--ui-v2-fg)!important;
+}
+:root[data-ondis-surface-tone="dark"] #viewMetas .decendioCard :is(span,b,strong,small,em,label,p),
+:root[data-ondis-surface-tone="dark"] #viewMetas .goalLevelEditor :is(span,b,strong,small,em,label,p){color:var(--ui-v2-fg)!important}
+:root[data-ondis-surface-tone="dark"] #viewMetas .decendioCard input{background:var(--ui-v2-paper)!important;color:var(--ui-v2-fg)!important}
+
+/* A Operação possui faixa vermelha: preservar branco no texto DESSE cabeçalho,
+   mesmo que o tema geral seja claro. Não substituir por preto. */
+#viewOps .opsQueueCard>.cardHeader :is(h1,h2,h3,p,span),
+#viewOps .opsAttendCard>.cardHeader :is(h1,h2,h3,p,span){color:#fff!important}
+#viewOps .opsQueueCard>.cardHeader .rowRight .btn{color:#fff!important}
+#viewOps .opsQueueCard>.cardHeader .rowRight #btnCallNext{color:#a71531!important}
+#viewOps .opsIntro{color:#596b82!important}
+#viewOps #kpis .kpi{color:#17233c!important}
+#viewOps #kpis .kpi .v{color:#17233c!important}
+#viewOps #queueList .item{color:var(--ui-v2-fg)!important;background:var(--ui-v2-paper)!important;border-color:var(--ui-v2-line)!important}
+#viewOps #queueList .item .name{color:var(--ui-v2-fg)!important}
+:root[data-ondis-surface-tone="dark"] #viewOps #queueList .item .meta,
+:root[data-ondis-surface-tone="dark"] #viewOps #queueList .item .queueStatus{color:var(--ui-v2-sub)!important}
+
+/* Interfaces escuras: as partes operacionais que usam superfícies claras por
+   força do CSS legado conservam texto escuro, evitando branco em branco. */
+:root[data-ondis-surface-tone="dark"] body[data-ondis-refresh] :is(.card,.panel,.modal,.section-card,.resultado,.catalog-hero){background:var(--ui-v2-paper)!important;color:var(--ui-v2-fg)!important}
+:root[data-ondis-surface-tone="dark"] .sidebar:not(.ondisBranded){background:var(--ui-v2-paper)!important;border-color:var(--ui-v2-line)!important}
+:root[data-ondis-surface-tone="dark"]:not([data-theme="ondis"]) .sidebar .navItem:not(.active),
+:root[data-ondis-surface-tone="dark"]:not([data-theme="ondis"]) .sidebar .navItem .nl{color:var(--ui-v2-fg)!important}
+:root[data-ondis-surface-tone="dark"]:not([data-theme="ondis"]) .sidebar .navItem.active{background:var(--ui-v2-brand)!important;color:#fff!important}
+:root[data-ondis-surface-tone="dark"]:not([data-theme="ondis"]) .sidebar .navItem.active .nl{color:#fff!important}
+
+/* Tema ONDIS contém padrões fotográficos na topbar, não no menu flutuante. */
+:root[data-theme="ondis"] #accountDrop{background:var(--ui-v2-paper)!important;background-image:none!important}
+
+/* Navegação mobile, foco de teclado e movimento reduzido */
+@media(max-width:900px){
+  .contentTopbar{gap:9px!important;padding:10px 13px!important;min-height:58px!important}
+  .contentTopbar .topbarTitle{font-size:14px!important;margin-left:0!important}
+  #btnAccount{padding:8px 10px!important}
+  body[data-ondis-refresh] .wrap{padding:20px 15px 40px!important}
+}
+@media(max-width:560px){
+  .contentTopbar .accountMenu{margin-left:auto}
+  .contentTopbar #btnAccount span{font-size:12px}
+  .contentTopbar #accountDrop.accountDrop{right:-3px!important;top:calc(100% + 9px)!important;max-width:calc(100vw - 16px)!important}
+  body[data-ondis-refresh] .cardBody,#viewMetas .cardBody{padding:16px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .contentTopbar #accountDrop.show{animation:none!important}
+}
+
+/* Login: escuro e legível; sem mexer no vídeo ou na autenticação. */
+body.loginPage{
+  background:radial-gradient(circle at 15% 0%,rgba(222,31,62,.14),transparent 36%),
+    radial-gradient(circle at 92% 100%,rgba(89,73,137,.16),transparent 45%),#0b0f17!important;
+  color:#f8fafc!important;
+  font-family:var(--ondis-font,Inter,system-ui)!important;
+}
+.loginPage>.box{
+  background:#151b28!important;border:1px solid rgba(238,242,255,.15)!important;
+  border-radius:25px!important;box-shadow:0 34px 90px rgba(0,0,0,.34)!important;
+  max-width:445px!important;padding:clamp(22px,4vw,36px)!important;
+  color:#f8fafc!important;
+}
+.loginPage .box :is(h1,h2,h3,h4,strong,label){color:#f8fafc!important}
+.loginPage .box :is(.logoText p,.hint){color:#b8c5d8!important}
+.loginPage .box .logoIcon{color:#fff!important;background:linear-gradient(145deg,#f02445,#a40d28)!important;border-color:rgba(255,255,255,.13)!important}
+.loginPage .box .tabs{background:#0e1420!important;border:1px solid #2d3748!important;border-radius:14px!important;padding:5px!important}
+.loginPage .box .tabs button{color:#b9c6d7!important;border-radius:10px!important}
+.loginPage .box .tabs button.active{background:#e71939!important;color:#fff!important;border-color:#e71939!important}
+.loginPage .box .field input{background:#0f1623!important;color:#fff!important;border:1px solid #374458!important;border-radius:12px!important;min-height:46px!important}
+.loginPage .box .field input::placeholder{color:#8fa2bc!important}
+.loginPage .box .btn.good,.loginPage .box .btn:not(.bad){background:#e71939!important;color:#fff!important;border:1px solid #e71939!important;border-radius:12px!important;min-height:46px!important}
+.loginPage .box :is(a,.field label){color:#d0d9e7!important}
+.loginPage .box :is(input,button,a):focus-visible{outline:3px solid rgba(245,75,107,.55)!important;outline-offset:2px}
+
+/* Refinamentos pós-validação: painéis escuros, navegação e dropdown */
+:root .contentTopbar #accountDrop.accountDrop button.accItem{display:flex!important}
+:root .contentTopbar #accountDrop.accountDrop button.accItem[style*="display:none"],
+:root .contentTopbar #accountDrop.accountDrop button.accItem[style*="display: none"]{display:none!important}
+:root[data-ondis-surface-tone="dark"]:not([data-theme="ondis"]) .contentTopbar{
+  background:color-mix(in srgb,var(--ui-v2-bg) 88%,#000)!important;
+  border-bottom:1px solid var(--ui-v2-line)!important;
+  color:#f8fafc!important;
+}
+:root[data-ondis-surface-tone="dark"]:not([data-theme="ondis"]) .contentTopbar .topbarTitle{color:#fff!important}
+:root[data-ondis-surface-tone="dark"]:not([data-theme="ondis"]) .contentTopbar .hamb,
+:root[data-ondis-surface-tone="dark"]:not([data-theme="ondis"]) .contentTopbar #btnAccount{
+  background:rgba(255,255,255,.07)!important;color:#f8fafc!important;border-color:rgba(255,255,255,.2)!important;
+}
+:root[data-ondis-surface-tone="dark"]:not([data-theme="ondis"]) .sidebar,
+:root[data-ondis-surface-tone="dark"]:not([data-theme="ondis"]) .sidebar .sideNav,
+:root[data-ondis-surface-tone="dark"]:not([data-theme="ondis"]) .sidebar .sideBrand,
+:root[data-ondis-surface-tone="dark"]:not([data-theme="ondis"]) .sidebar .sideFoot{
+  background:var(--ui-v2-paper)!important;border-color:var(--ui-v2-line)!important;color:var(--ui-v2-fg)!important;
+}
+:root[data-ondis-surface-tone="dark"]:not([data-theme="ondis"]) .sidebar .sideSection,
+:root[data-ondis-surface-tone="dark"]:not([data-theme="ondis"]) .sidebar .sub{color:var(--ui-v2-sub)!important}
+:root[data-ondis-surface-tone="dark"]:not([data-theme="ondis"]) .sidebar .navItem:not(.active),
+:root[data-ondis-surface-tone="dark"]:not([data-theme="ondis"]) .sidebar .navItem:not(.active) .ni{
+  background:transparent!important;color:var(--ui-v2-fg)!important;
+}
+:root[data-ondis-surface-tone="dark"]:not([data-theme="ondis"]) .sidebar .navItem:not(.active):hover{
+  background:var(--ui-v2-soft)!important;color:var(--ui-v2-fg)!important;
+}
+:root[data-ondis-surface-tone="dark"]:not([data-theme="ondis"]) .sidebar .navItem.active .ni{
+  background:rgba(255,255,255,.10)!important;color:#fff!important;
+}
+:root[data-ondis-surface-tone="dark"] #viewOps #queueList .item{
+  background:var(--ui-v2-paper)!important;border-color:var(--ui-v2-line)!important;color:var(--ui-v2-fg)!important;
+}
+:root[data-ondis-surface-tone="dark"] #viewOps #queueList .item:first-child{
+  background:color-mix(in srgb,var(--ui-v2-brand) 8%,var(--ui-v2-paper))!important;
+}
+:root[data-ondis-surface-tone="dark"] #viewOps #queueList .item .nameBlock .name,
+:root[data-ondis-surface-tone="dark"] #viewOps #queueList .item .queueStatus{
+  color:var(--ui-v2-fg)!important;
+}
+:root[data-ondis-surface-tone="dark"] #viewOps #queueList .item .pos{
+  color:var(--ui-v2-fg)!important;background:var(--ui-v2-soft)!important;
+}
+:root[data-ondis-surface-tone="dark"] #viewOps #queueList .item .queueStats span{
+  background:var(--ui-v2-soft)!important;border-color:var(--ui-v2-line)!important;color:var(--ui-v2-sub)!important;
+}
+:root[data-ondis-surface-tone="dark"] #viewOps #queueList .item .queueMenu summary{
+  background:var(--ui-v2-soft)!important;color:var(--ui-v2-fg)!important;border-color:var(--ui-v2-line)!important;
+}
+/* Estados vazios e carregamentos existentes, sem criar buscas ou timers. */
+.dashboardEmptyList,.rankingEmpty,.ligaEmptyAchievement,.emptyState,.empty-state{
+  border:1px dashed var(--ui-v2-line)!important;
+  border-radius:16px!important;
+  padding:clamp(16px,2vw,26px)!important;
+  background:var(--ui-v2-soft)!important;
+  color:var(--ui-v2-sub)!important;
+}
+.skeleton,.skeletonLine,[data-loading="true"] .loadingLine{
+  background:linear-gradient(100deg,var(--ui-v2-soft) 20%,color-mix(in srgb,var(--ui-v2-fg) 6%,var(--ui-v2-soft)) 45%,var(--ui-v2-soft) 68%);
+  background-size:220% 100%;border-radius:9px;
+  animation:uiV2Shimmer 1.45s linear infinite;
+}
+@keyframes uiV2Shimmer{from{background-position:100% 0}to{background-position:-100% 0}}
+@media(prefers-reduced-motion:reduce){.skeleton,.skeletonLine,[data-loading="true"] .loadingLine{animation:none}}
+
+/* Prioridade explícita sobre os estilos legados de login por tema. */
+:root[data-theme] body.loginPage > .box,
+:root[data-theme] body.loginPage .box{
+  background:#151b28!important;color:#f8fafc!important;border-color:rgba(238,242,255,.17)!important;
+}
+:root[data-theme] body.loginPage .box :is(h1,h2,h3,h4,.name,strong,.logoText h1){color:#f8fafc!important}
+:root[data-theme] body.loginPage .box :is(.logoText p,.hint,.field label){color:#becbdd!important}
+:root[data-theme] body.loginPage .box .tabs{background:#0e1420!important;border-color:#2d3748!important}
+:root[data-theme] body.loginPage .box .tabs button:not(.active){color:#bfcbdb!important;background:transparent!important}
+:root[data-theme] body.loginPage .box .tabs button.active{background:#e71939!important;color:#fff!important}
+:root[data-theme] body.loginPage .box .field input{background:#0f1623!important;color:#fff!important;border-color:#374458!important}
+:root[data-theme] body.loginPage .box a{color:#cad6e7!important;border-color:#637187!important}
+:root[data-theme] body.loginPage .box .msg.error{background:rgba(249,65,91,.10)!important;color:#ffc2cc!important;border-color:rgba(255,127,145,.3)!important}
+:root[data-theme] body.loginPage .box .msg.success{background:rgba(30,175,126,.1)!important;color:#9af2d2!important;border-color:rgba(55,196,140,.3)!important}
+
+/* Contraste em estados especiais da barra lateral e da conta. */
+:root[data-theme="ondis"] .sidebar #statusChip{color:#f8fafc!important}
+:root[data-ondis-surface-tone="dark"] .contentTopbar #accountDrop.accountDrop .accItem.bad,
+:root[data-ondis-surface-tone="dark"] .contentTopbar #accountDrop.accountDrop .accItem.bad .accLabel{color:#ffbdca!important}
+:root[data-ondis-surface-tone="dark"] .contentTopbar #accountDrop.accountDrop .accItem.bad .accIcon{color:#ffafc0!important;background:rgba(251,113,133,.14)!important}
