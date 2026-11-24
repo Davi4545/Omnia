@@ -126,3 +126,120 @@
 @media(max-width:430px){#viewSeller .ondisV7RewardGallery{grid-template-columns:1fr}.ondisGamifyBack .ondisGamifyTitle{align-items:flex-start}.ondisGamifyBack .ondisGamifyLogo{width:43px;height:43px}.ondisGamifyBack .ondisGamifyLogo img{width:42px;height:42px}.ondisGamifyBack .ondisGamifySectionHead{flex-wrap:wrap}.ondisGamifyBack .ondisGamifyTabs button{font-size:10px;padding:9px}.ondisGamifyBack .ondisGamifyStat{padding:12px}}
 .ondisGamifyBack .ondisGamifyRewardTileLine{background:#d9e6fa!important;overflow:hidden}
 .ondisGamifyBack .ondisGamifyRewardTileLine>i{display:block;height:100%;background:linear-gradient(90deg,#257aff,#e43ce9);border-radius:inherit}
+
+/* V7.1 — Recompensa coletiva da Liga: grade responsiva sem sobreposição.
+   Os quatro elementos são irmãos no HTML legado; a arte nova é maior que a
+   coluna original do baú e precisa de uma coluna exclusiva. */
+#viewSeller .ligaExactCollective{
+  display:grid!important;
+  grid-template-areas:"art copy progress action"!important;
+  grid-template-columns:158px minmax(220px,1fr) minmax(210px,.78fr) max-content!important;
+  gap:18px!important;
+  align-items:center!important;
+  min-width:0;
+  min-height:176px;
+  padding:18px 20px!important;
+  overflow:hidden;
+  text-align:left;
+}
+#viewSeller .ligaExactCollective > .ondisV7CollectiveArt{
+  grid-area:art;
+  display:block;
+  width:148px!important;
+  height:140px!important;
+  max-width:100%;
+  object-fit:contain;
+  justify-self:center;
+  align-self:center;
+  flex:none;
+}
+#viewSeller .ligaExactCollective > div:not(.ligaCollectiveProgress){
+  grid-area:copy;
+  min-width:0;
+  align-self:center;
+}
+#viewSeller .ligaExactCollective > div:not(.ligaCollectiveProgress) > span{
+  display:block;
+  color:#d6c6ff!important;
+  line-height:1.4!important;
+  letter-spacing:.08em;
+}
+#viewSeller .ligaExactCollective > div:not(.ligaCollectiveProgress) > h3{
+  margin:7px 0 5px;
+  color:#fff!important;
+  font-size:clamp(16px,1.5vw,20px)!important;
+  line-height:1.3!important;
+  overflow-wrap:anywhere;
+}
+#viewSeller .ligaExactCollective > div:not(.ligaCollectiveProgress) > p{
+  color:#e9ddff!important;
+  font-size:11px!important;
+  line-height:1.55!important;
+  overflow-wrap:anywhere;
+}
+#viewSeller .ligaExactCollective > .ligaCollectiveProgress{
+  grid-area:progress;
+  grid-column:auto!important;
+  min-width:0;
+  width:100%;
+}
+#viewSeller .ligaExactCollective > .ligaCollectiveProgress .ligaV3Progress{
+  width:100%;
+  min-width:0;
+  height:8px;
+  margin:0 0 7px;
+}
+#viewSeller .ligaExactCollective > .ligaCollectiveProgress > b{
+  display:block;
+  color:#fff!important;
+  font-size:11px!important;
+  line-height:1.45!important;
+  overflow-wrap:anywhere;
+}
+#viewSeller .ligaExactCollective > button.btn{
+  grid-area:action;
+  grid-column:auto!important;
+  grid-row:auto!important;
+  justify-self:end!important;
+  align-self:center;
+  min-height:44px;
+  padding:12px 16px!important;
+  border-radius:12px!important;
+  white-space:nowrap;
+  background:#fff!important;
+  color:#191c32!important;
+  border:1px solid rgba(255,255,255,.75)!important;
+  box-shadow:0 7px 20px rgba(3,6,31,.12);
+}
+#viewSeller .ligaExactCollective > button.btn:hover{
+  background:#eeeaff!important;
+  color:#191c32!important;
+}
+@media(max-width:1190px){
+  #viewSeller .ligaExactCollective{
+    grid-template-areas:"art copy copy" "art progress action"!important;
+    grid-template-columns:150px minmax(0,1fr) max-content!important;
+    gap:12px 18px!important;
+  }
+  #viewSeller .ligaExactCollective > .ondisV7CollectiveArt{width:140px!important;height:138px!important}
+}
+@media(max-width:760px){
+  #viewSeller .ligaExactCollective{
+    grid-template-areas:"art copy" "progress progress" "action action"!important;
+    grid-template-columns:126px minmax(0,1fr)!important;
+    gap:12px 14px!important;
+    padding:17px!important;
+  }
+  #viewSeller .ligaExactCollective > .ondisV7CollectiveArt{width:120px!important;height:118px!important}
+  #viewSeller .ligaExactCollective > button.btn{justify-self:start!important}
+}
+@media(max-width:490px){
+  #viewSeller .ligaExactCollective{
+    grid-template-areas:"art" "copy" "progress" "action"!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:11px!important;
+    text-align:center;
+  }
+  #viewSeller .ligaExactCollective > .ondisV7CollectiveArt{width:132px!important;height:124px!important;margin:0 auto}
+  #viewSeller .ligaExactCollective > button.btn{justify-self:stretch!important;width:100%}
+}
