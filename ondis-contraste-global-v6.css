@@ -1,0 +1,206 @@
+/* ONDIS — Auditoria global de contraste V6
+   Exclusivamente apresentação: nenhuma alteração em dados, eventos ou permissões.
+   Carregar DEPOIS de todas as folhas antigas. Superfícies e texto são um par:
+   nunca aplicar uma cor de texto global dentro de um banner colorido. */
+:root {
+  --c6-paper:#ffffff;
+  --c6-soft:#f4f6fb;
+  --c6-ink:#172338;
+  --c6-muted:#58677d;
+  --c6-border:#dce3ed;
+  --c6-input:#ffffff;
+  --c6-input-ink:#172338;
+  --c6-link:#175fc5;
+  --c6-focus:#ca2345;
+}
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]),
+:root[data-theme="custom"][data-ondis-surface-tone="dark"] {
+  --c6-paper:#141e2e;
+  --c6-soft:#202d40;
+  --c6-ink:#f8fafc;
+  --c6-muted:#c9d4e4;
+  --c6-border:#3c4b5e;
+  --c6-input:#162236;
+  --c6-input-ink:#f8fafc;
+  --c6-link:#9cc7ff;
+  --c6-focus:#f16f89;
+}
+:root[data-theme="ocean"]{--c6-paper:#102434;--c6-soft:#193346;--c6-input:#132a3d}
+:root[data-theme="sunset"]{--c6-paper:#291b29;--c6-soft:#392738;--c6-input:#2c1f2e}
+:root[data-theme="purple"]{--c6-paper:#211833;--c6-soft:#302443;--c6-input:#291e3c}
+:root[data-theme="textured"]{--c6-paper:#182333;--c6-soft:#253247;--c6-input:#202d42}
+
+/* Corresponder texto e fundo para cartões, sem afetar banners vermelhos, topo escuro e marca. */
+body[data-ondis-refresh] :is(.card,.panel,.kpi,.section-card,.onx-panel,.modal:not(.rankingModal),.modalBody,.form-card),
+#viewOps :is(.kpi,.attStat), #viewMetas :is(.card,.goalLevelEditor){
+  color:var(--c6-ink);
+}
+body[data-ondis-refresh] :is(.card,.panel,.kpi,.section-card,.onx-panel) :is(h1,h2,h3,h4):not(.onx-inverse),
+#viewOps :is(.kpi,.attStat) :is(.t,.v,b),
+#viewMetas :is(.card,.goalLevelEditor) :is(h2,h3,h4){color:var(--c6-ink)!important}
+body[data-ondis-refresh] :is(.card,.panel,.kpi,.section-card,.onx-panel) :is(.hint,.meta,.sub,.tiny):not(.onx-inverse),
+#viewMetas :is(.hint,.meta),#viewOps :is(.hint,.meta){color:var(--c6-muted)!important}
+
+/* Controles normais: remover branco sobre branco ou cinza muito claro nos temas escuros.
+   Não tocar em ações com cor de marca, nem nos botões do cabeçalho escuro. */
+body[data-ondis-refresh] :is(main,.wrap,.content,.cardBody,.modalBody,.crm-content) button.btn:not(.good):not(.bad):not(.warn):not(.primary):not(.active):not(.selected):not([style*="background"]),
+body[data-ondis-refresh] :is(.modal,.card,.panel) button.close:not([style*="background"]){
+  background:var(--c6-paper)!important;
+  border-color:var(--c6-border)!important;
+  color:var(--c6-ink)!important;
+}
+body[data-ondis-refresh] :is(main,.wrap,.content,.modalBody) :is(input:not([type="checkbox"]):not([type="radio"]),select,textarea):not([style*="background"]){
+  background:var(--c6-input)!important;
+  color:var(--c6-input-ink)!important;
+  border-color:var(--c6-border)!important;
+}
+body[data-ondis-refresh] :is(main,.wrap,.content,.modalBody) :is(input,textarea)::placeholder{color:var(--c6-muted)!important;opacity:.9}
+body[data-ondis-refresh] :is(.field label,.form-grid label,.form-grid legend){color:var(--c6-muted)!important}
+body[data-ondis-refresh] :is(button,input,select,textarea,a):focus-visible{outline:2px solid var(--c6-focus)!important;outline-offset:2px}
+
+/* Ações preenchidas em vermelho/verde/azul têm texto branco, em qualquer tema. */
+body[data-ondis-refresh] :is(.btn.primary,.btn.good,.btnAccent,.btnMain,.tab.active):not(.bad):not(.warn){color:#fff!important}
+body[data-ondis-refresh] :is(button.btn.bad,button.btn.warn):not([style*="background"]){
+  color:var(--c6-ink)!important;
+}
+
+/* Loja e menus do app: fundos de navegação vermelhos/escuros usam texto claro.
+   Regra de visibilidade dos módulos continua exclusivamente controlada pelo JS. */
+:root[data-theme="ondis"] .contentTopbar :is(.topbarTitle,#viewTitle,#btnAccount,#btnAccount span),
+:root[data-theme="ondis"] .sidebar .navItem.active :is(.ni,.nl){color:#fff!important}
+.contentTopbar #accountDrop.accountDrop :is(.accItem,.accLabel,#userInfo){color:var(--c6-ink)!important}
+.contentTopbar #accountDrop.accountDrop .accItem.bad :is(.accLabel,.accIcon){color:#b82042!important}
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="purple"],[data-theme="sunset"],[data-theme="textured"]) .contentTopbar #accountDrop.accountDrop .accItem.bad :is(.accLabel,.accIcon){color:#ff91a5!important}
+
+/* Barra de navegação legada pode ficar branca sob tema escuro. Padronizar o par. */
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) #viewOps .sideSection,
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) #viewOps .tiny{color:var(--c6-muted)!important}
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) .sidebar .sideNav{
+ background:var(--c6-paper)!important;
+}
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) .sidebar .sideNav :is(.sideSection,#modulosLabel){color:var(--c6-muted)!important}
+
+/* CRM simplificado: as abas e botões eram claros com letras brancas. */
+body[data-ondis-refresh="crm-simple"] :is(button.btn:not(.good):not(.bad):not(.primary),button[id^="tab"]:not(.active)){
+ background:var(--c6-paper)!important;
+ color:var(--c6-ink)!important;
+ border-color:var(--c6-border)!important;
+}
+body[data-ondis-refresh="crm-simple"] :is(button[id^="tab"].active,button.btn.primary){color:#fff!important}
+
+/* CRM completo: a barra lateral escurece conforme tema, mas seus tokens
+   legados de texto continuavam escuros; os painéis brancos mantêm texto escuro. */
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) body[data-ondis-refresh="crm-full"] :is(.crm-sidebar,.crm-sidebar .crm-brand,.crm-sidebar .crm-nav,.crm-sidebar .sidebar-foot){
+ color:var(--c6-ink)!important;
+}
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) body[data-ondis-refresh="crm-full"] .crm-sidebar :is(.crm-brand strong,.nav-link,.nav-link i,.sidebar-foot a,.nav-group>span){color:var(--c6-muted)!important}
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) body[data-ondis-refresh="crm-full"] .crm-sidebar .crm-brand strong{color:var(--c6-ink)!important}
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) body[data-ondis-refresh="crm-full"] .crm-sidebar :is(.nav-link:hover,.nav-link.active){background:var(--c6-soft)!important;color:var(--c6-ink)!important}
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) body[data-ondis-refresh="crm-full"] .crm-sidebar .nav-link.active i{color:var(--c6-link)!important}
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) body[data-ondis-refresh="crm-full"] .crm-sidebar :is(.crm-brand span,.sidebar-foot a){color:var(--c6-muted)!important}
+body[data-ondis-refresh="crm-full"] :is(#openSuper,#refreshButton){background:var(--c6-paper)!important;color:var(--c6-ink)!important;border-color:var(--c6-border)!important}
+/* O assistente lateral e o drawer precisam casar texto com os seus fundos. */
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) body[data-ondis-refresh="crm-full"] .crm-sidebar+* :is(.super-body,.super-answer){color:var(--c6-ink)}
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) body[data-ondis-refresh="crm-full"] aside :is(strong,h2,h3):not(.on-light),
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) body[data-ondis-refresh="crm-full"] .super-answer :is(strong,h2,h3){color:var(--c6-ink)!important}
+/* CRM mobile/topbar e modais são superfícies claras explícitas em CSS legado. */
+body[data-ondis-refresh="crm-full"] :is(.crm-dialog,.super-drawer){color:#172238!important}
+body[data-ondis-refresh="crm-full"] :is(.crm-dialog,.super-drawer) :is(input,select,textarea){color:#172238!important;background:#fff!important}
+
+/* Equipe 360 e páginas utilitárias: botão voltar branco com texto branco. */
+body[data-ondis-refresh="team"] header button.back,
+body:has(.app>.side) button.back{color:#1b2b43!important;background:#fff!important}
+
+/* Ponto e comissão V5: campo claro herdava texto claro e abas legadas trocavam
+   apenas cor ou fundo. Reafirmar par de cores em ambos os estados. */
+body[data-ondis-refresh="timeclock"] .tabs .tab:not(.active),
+body[data-ondis-refresh="commission"] .tabs .tab:not(.active){background:var(--c6-paper)!important;color:var(--c6-ink)!important;border-color:var(--c6-border)!important}
+body[data-ondis-refresh="timeclock"] .tabs .tab.active,
+body[data-ondis-refresh="commission"] .tabs .tab.active{background:#c92242!important;color:#fff!important}
+body[data-ondis-refresh="timeclock"] .pontoBtn .ico{color:var(--c6-ink)!important;background:var(--c6-paper)!important;border-color:var(--c6-border)!important}
+body[data-ondis-refresh="timeclock"] #loadingMsg{color:#172338!important}
+body[data-ondis-refresh="commission"] :is(#valorVenda,input[type="text"]):not([style*="background"]){background:var(--c6-input)!important;color:var(--c6-input-ink)!important}
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) body[data-ondis-refresh="timeclock"] .pc-eyebrow,
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) body[data-ondis-refresh="commission"] .pc-eyebrow{color:#9ac6ff!important}
+
+/* Catálogo: filtro, busca e botão de limpar devem manter contraste. */
+body[data-ondis-refresh="catalog"] :is(#precoMin,#precoMax,#busca),
+body[data-ondis-refresh="catalogue"] :is(#precoMin,#precoMax,#busca),
+body[data-ondis-refresh="catalogo"] :is(#precoMin,#precoMax,#busca){color:var(--c6-ink)!important;background:var(--c6-paper)!important;border-color:var(--c6-border)!important}
+body[data-ondis-refresh="catalog"] .clearFiltersBtn,
+body[data-ondis-refresh="catalogue"] .clearFiltersBtn,
+body[data-ondis-refresh="catalogo"] .clearFiltersBtn{color:var(--c6-ink)!important;background:var(--c6-paper)!important;border-color:var(--c6-border)!important}
+
+/* Login V4 não deve herdar exceções de botões da área administrativa. */
+body.loginPage :is(input,select,textarea){color:inherit}
+
+/* PDV possui tema próprio e fundos claros hardcoded: corrigir texto do botão Voltar,
+   sem reestilizar os componentes operacionais nem alterar valores/estoque. */
+body:not([data-ondis-refresh]) :is(.sideFoot .back,.back[href],.top button.back){color:#20334d!important;background:#fff!important}
+
+/* Preservar contraste do cabeçalho grafite do Admin/Super Admin. */
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) > header :is(.btn,.chip){color:#fff!important}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) :is(.adminCard,.storeCard,.usersCard) :is(h2,h3,h4,strong){color:var(--c6-ink)}
+
+/* Botão e estado visual devem permanecer legíveis também com foco e seleção. */
+@media(prefers-reduced-motion:reduce){body[data-ondis-refresh] :is(button,.btn,.tab){transition:none!important}}
+
+/* Evidências da auditoria de renderização V6: casos remanescentes. */
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) .sidebar .sideNav button.navItem:not(.active),
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) .sidebar .sideNav button.navItem:not(.active) :is(.ni,.nl),
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) .sidebar .sideNav button.navItem.active,
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) .sidebar .sideNav button.navItem.active :is(.ni,.nl){color:#eef5ff!important}
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) .sidebar .sideNav button.navItem:hover{background:var(--c6-soft)!important}
+/* Painel da IA no CRM Completo: dentro do drawer branco, estados vazios ficam claros. */
+body[data-ondis-refresh="crm-full"] .super-drawer .empty-state{
+  background:#f4f6fb!important;color:#475569!important;
+  border-color:#e1e7f0!important
+}
+body[data-ondis-refresh="crm-full"] .super-drawer .empty-state :is(p,small,span){color:#475569!important}
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) body[data-ondis-refresh="crm-full"] .section-card .text-btn:not(.danger){color:#a9d0ff!important}
+/* Operação: legenda e cabeçalho da fila no tema escuro; o cartão precisa
+   acompanhar o tema, em vez de continuar branco com tipografia clara. */
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) #viewOps .opsQueueCard,
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) #viewOps .opsQueueCard .cardBody{background:var(--c6-paper)!important;color:var(--c6-ink)!important}
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) #viewOps .poolHeaderRow .tiny{color:var(--c6-muted)!important}
+/* Estado vazio da IA é sempre uma superfície clara dentro do painel lateral. */
+body[data-ondis-refresh="crm-full"] .super-drawer .empty-state strong{color:#172338!important}
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) body[data-ondis-refresh="catalog"] .searchBox>span{color:#b7cce9!important}
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) #viewOps .opsQueueCard .poolHeaderRow{
+ background:var(--c6-soft)!important;
+}
+body[data-ondis-refresh="crm-full"] #superAnswer .empty-state strong,
+body[data-ondis-refresh="crm-full"] #superAnswer .empty-state.small strong{color:#172338!important}
+
+/* Terceira verificação: Metas, Ranking de Metas e Dashboard quando suas abas abrem. */
+#viewMetas :is(.goalsInfo,.goalsProgressItem,.goalsKpis .kpi,.goalsVendorKpis .kpi){
+ background:var(--c6-paper)!important;color:var(--c6-ink)!important;border-color:var(--c6-border)!important;
+}
+#viewMetas :is(.goalsInfo,.goalsProgressItem) :is(strong,b,h3,h4){color:var(--c6-ink)!important}
+#viewMetas :is(.goalsInfo,.goalsProgressItem) :is(span,small,p):not(.goalsEyebrow){color:var(--c6-muted)!important}
+#viewMetas :is(.goalsProgressItem,.goalsInfo) :is(input,select){color:var(--c6-ink)!important}
+#viewMetas #btnCloseWeek{color:#754500!important;background:#fff3d9!important;border-color:#d6a155!important}
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) #viewMetas #btnCloseWeek{background:#45351e!important;color:#ffe0a0!important;border-color:#9a7136!important}
+#viewMetasRank .rankPanel{background:var(--c6-paper)!important;border-color:var(--c6-border)!important;color:var(--c6-ink)!important}
+#viewMetasRank .rankPanelHead :is(small,span){color:var(--c6-muted)!important}
+#viewMetasRank .rankPanel :is(strong,b,h3,h4){color:var(--c6-ink)!important}
+#viewDashboard #dashDateLabel{color:#52627a!important}
+#viewDashboard :is(.dashboardChartCard,.dashboardPanel,.dashChartCard) :is(small,.sub,.hint){color:var(--c6-muted)!important}
+
+/* CRM Completo: filtros de status e período inicialmente escondidos. */
+body[data-ondis-refresh="crm-full"] .status-tabs button:not(.active){
+ background:var(--c6-soft)!important;color:var(--c6-ink)!important;border-color:var(--c6-border)!important;
+}
+body[data-ondis-refresh="crm-full"] .status-tabs button.active{
+ background:#c92242!important;color:#fff!important;border-color:#c92242!important;
+}
+body[data-ondis-refresh="crm-full"] .search-box>span{color:#52627a!important}
+#viewMetas .goalsCurrent>span{color:#52627a!important}
+#viewMetas .decCardTotal small{color:#52627a!important}
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) #viewMetas .goalsEyebrow{color:#ff8fa9!important}
+#viewDashboard .dashboardPanel{background:var(--c6-paper)!important;color:var(--c6-ink)!important;border-color:var(--c6-border)!important}
+#viewDashboard .dashboardPanel .dashboardPanelHead :is(small,span){color:var(--c6-muted)!important}
+#viewDashboard .dashboardPanel .dashboardPanelHead :is(h2,h3,h4){color:var(--c6-ink)!important}
+#viewDashboard #dashRevenueTotal{color:var(--c6-ink)!important}
+#viewDashboard #dashRevenueDelta{color:#334155!important;background:#f3f6fb!important}
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]) #viewMetas .goalsCurrent>span{color:var(--c6-muted)!important}

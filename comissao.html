@@ -60,6 +60,9 @@
 <link rel="stylesheet" href="./ondis-ui-v2.css?v=2.1.1"/>
 <script defer src="./ondis-theme-v2.js?v=2.1.0"></script>
 <link rel="stylesheet" href="./ondis-visual-v4.css?v=4.0.0"/>
+<link rel="stylesheet" href="./ondis-ponto-comissao-v5.css?v=5.0.0"/>
+
+<link rel="stylesheet" href="./ondis-contraste-global-v6.css?v=6.0.0">
 </head>
 <body data-ondis-refresh="commission">
 
@@ -67,7 +70,7 @@
 
 <header>
   <div class="brand">
-    <h1>ONDIS <span style="color:#7fffc0">COMISSÃO</span></h1>
+    <h1>ONDIS <span>COMISSÃO</span></h1>
     <div class="sub" id="ctxInfo">—</div>
   </div>
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
@@ -78,7 +81,11 @@
 </header>
 
 <div class="wrap">
-  <div class="tabs">
+  <section class="pc-intro">
+    <div><div class="pc-eyebrow">ONDIS · PLANEJAMENTO DE RESULTADOS</div><h2>Simule seus ganhos com clareza</h2><p>Compare o valor planejado com a meta do mês e veja a faixa de comissão correspondente.</p></div>
+    <span class="pc-pill"><span class="pc-dot"></span> Simulação sem gravação de vendas</span>
+  </section>
+  <div class="tabs" role="tablist" aria-label="Seções de comissão">
     <button class="tab active" id="tabSimular" onclick="showTab('simular')">🧮 Simular comissão</button>
     <button class="tab" id="tabRegras" onclick="showTab('regras')" style="display:none">⚙️ Regras (gerente)</button>
   </div>
@@ -87,26 +94,23 @@
   <div id="viewSimular">
     <div class="card">
       <div class="cardHead"><h2><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 9h18M16 14h2"/></svg></span>Simule sua comissão</h2></div>
-      <p class="hint" style="text-align:left;padding:0 0 16px">Digite quanto você pretende vender no mês e veja quanto receberia de comissão, de acordo com o seu atingimento de meta.</p>
+      <p class="hint pc-left-hint">A simulação é uma estimativa conforme as faixas cadastradas pela gestão. Ela não registra vendas nem gera pagamentos.</p>
 
-      <div class="field">
-        <label>Vendedor</label>
-        <select id="selVendedor" onchange="aoTrocarVendedor()"></select>
+      <div class="pc-sim-fields">
+        <div class="field"><label for="selVendedor">Vendedor</label><select id="selVendedor" onchange="aoTrocarVendedor()"></select></div>
+        <div class="field"><label for="mesComissao">Mês de referência</label><input id="mesComissao" type="month" onchange="aoTrocarVendedor()"/></div>
       </div>
-
-      <div id="metaInfo" class="hint" style="text-align:left;padding:0 0 14px"></div>
-
-      <div class="field">
-        <label>Se eu vender (R$)</label>
-        <input id="valorVenda" inputmode="decimal" placeholder="Ex: 30.000" oninput="limparResultado()"/>
-      </div>
+      <div id="metaInfo" class="pc-goal-info" role="status"></div>
+      <div class="field"><label for="valorVenda">Previsão de faturamento no mês (R$)</label><input id="valorVenda" inputmode="decimal" placeholder="Ex.: 30.000,00" oninput="limparResultado()" autocomplete="off"/></div>
+      <div id="simProgress" class="pc-sim-progress" aria-live="polite"></div>
 
       <button class="btn good big" style="width:100%;justify-content:center" onclick="simular()">🧮 Simular comissão</button>
 
-      <div class="resultado" id="resultado">
+      <div class="resultado" id="resultado" aria-live="polite">
         <div class="fraseMotiv" id="resFrase"></div>
-        <div style="font-size:13px;color:#9db0d0">Sua comissão seria</div>
+        <div class="pc-result-label">Estimativa de comissão</div>
         <div class="comissao" id="resComissao">R$ 0,00</div>
+        <div class="pc-result-mini" id="resFaixa"></div>
         <div class="det" id="resDetalhe"></div>
       </div>
     </div>
@@ -116,7 +120,7 @@
   <div id="viewRegras" style="display:none">
     <div class="card">
       <div class="cardHead"><h2><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 9h18M16 14h2"/></svg></span>Faixas de comissão da loja</h2></div>
-      <p class="hint" style="text-align:left;padding:0 0 16px">Cadastre as faixas de atingimento de meta e o percentual de comissão de cada uma. Ex: de 100% a 104% da meta = 3% de comissão sobre o valor vendido.</p>
+      <p class="hint pc-left-hint">Defina o intervalo de atingimento (%) e a taxa de comissão (%) aplicada sobre o faturamento simulado. Os limites são inclusivos; faixas sobrepostas não podem ser salvas.</p>
 
       <div style="margin-bottom:10px">
         <div class="faixaRow" style="font-size:11px;color:#9db0d0;text-transform:uppercase;font-weight:700">
@@ -126,13 +130,14 @@
           <div></div>
         </div>
         <div id="faixasLista"></div>
+        <div id="faixasAviso" class="pc-validation" role="status" aria-live="polite"></div>
       </div>
-
       <button class="btn" onclick="addFaixa()">+ Adicionar faixa</button>
+      <div class="pc-tier-preview" id="previewFaixas" aria-live="polite"></div>
       <div style="margin-top:18px;display:flex;gap:10px;justify-content:flex-end">
         <button class="btn good" onclick="salvarRegras()">Salvar faixas</button>
       </div>
-      <p class="hint" style="text-align:left;padding:14px 0 0">💡 Dica: cubra todas as situações. Ex: 0–79%, 80–99%, 100–104%, 105–200%. O que ficar fora das faixas recebe 0% de comissão.</p>
+      <p class="hint pc-left-hint" style="margin-top:12px">Os intervalos não precisam cobrir todos os percentuais, mas fora das faixas a comissão simulada será zero. Por exemplo, 79% a 80% é uma lacuna para 79,5%. Antes de salvar, revise as lacunas e as condições contratuais da loja.</p>
     </div>
   </div>
 </div>
@@ -158,7 +163,7 @@
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  let MY=null, STORE_ID=null, LOJA_NOME="", STATE={}, FAIXAS=[];
+  let MY=null, STORE_ID=null, LOJA_NOME="", STATE={}, FAIXAS=[], FAIXAS_SALVAS=[], erroCarregarFaixas="";
 
   function showLoading(m){ document.getElementById("loadingScreen").classList.add("show"); document.getElementById("loadingMsg").textContent=m||"Carregando..."; }
   function hideLoading(){ document.getElementById("loadingScreen").classList.remove("show"); }
@@ -192,14 +197,16 @@
     try{
       const st=await getDoc(doc(db,"stores",STORE_ID,"app","state"));
       if(st.exists()){ try{ STATE=JSON.parse(st.data().json||"{}"); }catch(e){ STATE={}; } }
-    }catch(e){ console.error(e); }
+    }catch(e){ console.error(e); document.getElementById("metaInfo").textContent="Não foi possível carregar as metas desta loja. Verifique a conexão."; }
 
     // carrega as faixas de comissão da loja
     try{
       const cf=await getDoc(doc(db,"stores",STORE_ID,"comissaoConfig","faixas"));
-      if(cf.exists()) FAIXAS = cf.data().faixas || [];
-    }catch(e){ console.error(e); }
+      if(cf.exists()) FAIXAS = Array.isArray(cf.data().faixas) ? cf.data().faixas.map(f=>({...f})) : [];
+      FAIXAS_SALVAS=FAIXAS.map(f=>({...f}));
+    }catch(e){ console.error(e); erroCarregarFaixas="Não foi possível consultar as faixas: " + msgErro(e,"consultar as faixas"); }
 
+    document.getElementById("mesComissao").value = monthKey();
     montarVendedores();
     renderFaixas();
     hideLoading();
@@ -234,51 +241,77 @@
     return metaLoja / Math.max(1, divisor);
   }
 
+  function mesEscolhido(){ return document.getElementById("mesComissao").value || monthKey(); }
   function montarVendedores(){
     const sel=document.getElementById("selVendedor");
     const sellers=sellersDoState();
     const ehGestor=(MY.role==="admin"||MY.role==="superadmin");
-    let lista=sellers;
-    // vendedor comum: tenta pré-selecionar o próprio nome
+    sel.replaceChildren();
+    if(ehGestor){ const o=document.createElement("option"); o.value=""; o.textContent="Selecione o vendedor"; sel.appendChild(o); }
+    for(const pessoa of sellers){ const o=document.createElement("option"); o.value=pessoa.id; o.textContent=pessoa.name||"Vendedor"; sel.appendChild(o); }
     if(!ehGestor){
-      const meuNome=(MY.name||"").trim().toLowerCase();
-      // mostra todos, mas seleciona o dele se achar
-      sel.innerHTML = sellers.map(s=>`<option value="${s.id}">${s.name}</option>`).join("");
-      const meu=sellers.find(s=>(s.name||"").trim().toLowerCase()===meuNome);
+      const meuNome=(MY.name||"").trim().toLocaleLowerCase("pt-BR");
+      const meu=sellers.find(x=>(x.name||"").trim().toLocaleLowerCase("pt-BR")===meuNome);
       if(meu) sel.value=meu.id;
-    } else {
-      sel.innerHTML = '<option value="">— selecione o vendedor —</option>' + sellers.map(s=>`<option value="${s.id}">${s.name}</option>`).join("");
     }
-    if(sellers.length===0){
-      document.getElementById("metaInfo").innerHTML='⚠️ Nenhum vendedor encontrado. Cadastre vendedores e metas no ONDIS primeiro.';
-    } else {
-      aoTrocarVendedor();
-    }
+    if(!sellers.length){ document.getElementById("metaInfo").textContent="Nenhum vendedor ativo encontrado nesta loja."; }
+    else aoTrocarVendedor();
   }
-
+  function faixaPara(atingPct, faixas=FAIXAS){
+    return (faixas||[]).find(f=>Number.isFinite(Number(f.de)) && Number.isFinite(Number(f.ate)) && atingPct>=Number(f.de) && atingPct<=Number(f.ate)) || null;
+  }
+  function comissaoPara(atingPct){ return Number(faixaPara(atingPct)?.pct||0); }
+  function numeroSeguro(s){
+    if(typeof s!=="string" && typeof s!=="number") return null;
+    let txt=String(s).trim();
+    if(!txt || !/^[+-]?[\d.,\s]+$/.test(txt)) return null;
+    txt=txt.replace(/\s/g,"");
+    const ultimoP=txt.lastIndexOf("."), ultimoV=txt.lastIndexOf(",");
+    if(ultimoP>=0 && ultimoV>=0) txt=ultimoP>ultimoV?txt.replace(/,/g,""):txt.replace(/\./g,"").replace(",",".");
+    else if(ultimoV>=0) txt=txt.replace(/\./g,"").replace(",",".");
+    else if((txt.match(/\./g)||[]).length>1 || /^\d{1,3}(\.\d{3})+$/.test(txt)) txt=txt.replace(/\./g,"");
+    const n=Number(txt);
+    return Number.isFinite(n) && n>=0 ? n : null;
+  }
+  function renderPreviaSimulacao(){
+    const el=document.getElementById("simProgress");
+    const sid=document.getElementById("selVendedor").value;
+    const meta=metaDoVendedor(sid,mesEscolhido());
+    const valor=numeroSeguro(document.getElementById("valorVenda").value);
+    if(!sid || !meta || valor===null || valor===0){ el.innerHTML=""; return; }
+    const ating=100*valor/meta;
+    const progresso=Math.min(100,Math.max(0,ating));
+    el.innerHTML=`<div class="pc-sim-progress-head"><span>Atingimento estimado</span><strong>${ating.toFixed(1)}%</strong></div><div class="pc-track"><i style="width:${progresso.toFixed(2)}%"></i></div><small>${money(valor)} em vendas · meta ${money(meta)}</small>`;
+  }
   window.aoTrocarVendedor=function(){
     limparResultado();
     const sid=document.getElementById("selVendedor").value;
-    const mk=monthKey();
-    const meta=metaDoVendedor(sid, mk);
+    const mk=mesEscolhido();
     const info=document.getElementById("metaInfo");
-    if(!sid){ info.innerHTML=""; return; }
+    if(!sid){ info.textContent="Selecione um vendedor para consultar a meta."; return; }
+    const meta=metaDoVendedor(sid,mk);
     if(meta>0){
-      info.innerHTML=`🎯 Meta deste mês: <b style="color:#e7eefc">${money(meta)}</b>`;
-    } else {
-      info.innerHTML=`⚠️ Não há meta definida para ${mk} no ONDIS (nem individual, nem meta da loja). Peça ao gerente para cadastrar a meta do mês.`;
+      info.innerHTML=`<div><span class="pc-eyebrow">META DE ${mk.slice(5,7)}/${mk.slice(0,4)}</span><strong>${money(meta)}</strong><small>Meta individual ou distribuição da meta da loja</small></div>`;
+    }else{
+      info.textContent=`Não há meta definida em ${mk.slice(5,7)}/${mk.slice(0,4)} para este vendedor.`;
     }
+    renderPreviaSimulacao();
   };
-
-  window.limparResultado=function(){ document.getElementById("resultado").classList.remove("show"); };
-
-  function comissaoPara(atingPct){
-    // acha a faixa que contém o atingimento (%). Retorna % de comissão ou 0.
-    for(const f of FAIXAS){
-      const de=Number(f.de||0), ate=Number(f.ate||0);
-      if(atingPct >= de && atingPct <= ate) return Number(f.pct||0);
+  window.limparResultado=function(){ document.getElementById("resultado").classList.remove("show"); renderPreviaSimulacao(); };
+  function regrasValidas(lista){
+    const ordenadas=lista.map(f=>({de:Number(f.de),ate:Number(f.ate),pct:Number(f.pct)})).sort((a,b)=>a.de-b.de);
+    for(let i=0;i<ordenadas.length;i++){
+      const f=ordenadas[i];
+      if(![f.de,f.ate,f.pct].every(Number.isFinite)) return {ok:false,msg:`Faixa ${i+1}: preencha todos os campos com números válidos.`};
+      if(f.de<0 || f.ate<0 || f.ate<f.de || f.ate>10000) return {ok:false,msg:`Faixa ${i+1}: verifique início e fim (0 a 10.000%, com início não maior que fim).`};
+      if(f.pct<0 || f.pct>100) return {ok:false,msg:`Faixa ${i+1}: a comissão deve ser de 0% a 100%.`};
+      if(i>0 && f.de<=ordenadas[i-1].ate) return {ok:false,msg:`As faixas ${i} e ${i+1} se sobrepõem. Ajuste os limites.`};
     }
-    return 0;
+    const gaps=[];
+    for(let i=1;i<ordenadas.length;i++){
+      if(ordenadas[i].de-ordenadas[i-1].ate>0.02) gaps.push(`${ordenadas[i-1].ate}% a ${ordenadas[i].de}%`);
+    }
+    return {ok:true,faixas:ordenadas,gaps};
   }
 
   // Frase motivacional conforme o atingimento da meta
@@ -296,25 +329,29 @@
   window.simular=function(){
     const sid=document.getElementById("selVendedor").value;
     if(!sid){ alert("Selecione o vendedor."); return; }
-    const venda=brNum(document.getElementById("valorVenda").value);
-    if(venda<=0){ alert("Digite quanto pretende vender."); return; }
-    const mk=monthKey();
-    const meta=metaDoVendedor(sid, mk);
-    if(meta<=0){ alert("Não há meta definida no ONDIS para este mês (nem do vendedor, nem da loja). O gerente precisa cadastrar a meta do mês primeiro."); return; }
-    if(FAIXAS.length===0){ alert("As faixas de comissão ainda não foram cadastradas. Peça ao gerente."); return; }
-
-    const ating = (venda/meta)*100;
-    const pct = comissaoPara(ating);
-    const comissao = venda * (pct/100);
-
-    const frase = fraseMotivacional(ating);
-    document.getElementById("resFrase").innerHTML = `<span style="font-size:26px">${frase.emoji}</span><br>${frase.txt}`;
-    document.getElementById("resComissao").textContent = money(comissao);
-    document.getElementById("resDetalhe").innerHTML =
-      `Vendendo <b>${money(venda)}</b> você atinge <b>${ating.toFixed(1)}%</b> da meta (${money(meta)}).<br>`+
-      (pct>0
-        ? `Isso cai na faixa de <b>${pct}%</b> de comissão.`
-        : `⚠️ Esse atingimento não está em nenhuma faixa cadastrada — comissão de 0%. Fale com o gerente.`);
+    const venda=numeroSeguro(document.getElementById("valorVenda").value);
+    if(venda===null || venda<=0){ alert("Informe um faturamento válido, maior que zero."); return; }
+    const meta=metaDoVendedor(sid,mesEscolhido());
+    if(meta<=0){ alert("A meta do período selecionado ainda não foi cadastrada."); return; }
+    if(erroCarregarFaixas){ alert(erroCarregarFaixas); return; }
+    if(FAIXAS_SALVAS.length===0){ alert("A loja ainda não cadastrou faixas de comissão."); return; }
+    const validacao=regrasValidas(FAIXAS_SALVAS);
+    if(!validacao.ok){ alert("As faixas atuais precisam ser revisadas pela gestão: "+validacao.msg); return; }
+    const ating=venda/meta*100;
+    const faixa=faixaPara(ating,validacao.faixas);
+    const pct=faixa?Number(faixa.pct):0;
+    const valorComissao=venda*(pct/100);
+    const frase=fraseMotivacional(ating);
+    const elFrase=document.getElementById("resFrase");
+    elFrase.textContent=frase.emoji+" "+frase.txt;
+    document.getElementById("resComissao").textContent=money(valorComissao);
+    document.getElementById("resFaixa").textContent=faixa?`Faixa ${faixa.de}%–${faixa.ate}% · Alíquota ${pct}%`:`Sem faixa para ${ating.toFixed(1)}%`;
+    const proxima=validacao.faixas.find(f=>f.de>ating);
+    const faltar=proxima?Math.max(0,(meta*proxima.de/100)-venda):null;
+    const detalhe=`Vendendo ${money(venda)}, o atingimento estimado é de ${ating.toFixed(1)}% sobre a meta de ${money(meta)}.`+
+      (faixa?` Comissão calculada a ${pct}% sobre o faturamento.`:` Nenhuma faixa cobre esse atingimento: comissão estimada zero.`)+
+      (proxima?` Para chegar à próxima faixa de ${proxima.pct}%, faltam ${money(faltar)} em vendas.`:"");
+    document.getElementById("resDetalhe").textContent=detalhe;
     document.getElementById("resultado").classList.add("show");
   };
 
@@ -322,35 +359,46 @@
   function renderFaixas(){
     const box=document.getElementById("faixasLista");
     if(!box) return;
-    if(FAIXAS.length===0){
-      box.innerHTML='<div class="hint" style="text-align:left">Nenhuma faixa cadastrada ainda. Clique em "+ Adicionar faixa".</div>';
-      return;
-    }
-    box.innerHTML = FAIXAS.map((f,i)=>`
-      <div class="faixaRow">
-        <input type="number" step="1" value="${f.de}" placeholder="de %" oninput="editarFaixa(${i},'de',this.value)"/>
-        <input type="number" step="1" value="${f.ate}" placeholder="até %" oninput="editarFaixa(${i},'ate',this.value)"/>
-        <input type="number" step="0.1" value="${f.pct}" placeholder="comissão %" oninput="editarFaixa(${i},'pct',this.value)"/>
-        <button class="btn bad sm" onclick="removerFaixa(${i})">✕</button>
-      </div>`).join("");
+    if(FAIXAS.length===0) box.innerHTML='<div class="hint pc-left-hint">Nenhuma faixa cadastrada. Adicione ao menos uma para habilitar a simulação.</div>';
+    else box.innerHTML=FAIXAS.map((f,i)=>`<div class="faixaRow"><input aria-label="Faixa ${i+1} - início" type="number" min="0" max="10000" step="0.01" value="${Number.isFinite(Number(f.de))?f.de:""}" placeholder="de %" oninput="editarFaixa(${i},'de',this.value)"/><input aria-label="Faixa ${i+1} - fim" type="number" min="0" max="10000" step="0.01" value="${Number.isFinite(Number(f.ate))?f.ate:""}" placeholder="até %" oninput="editarFaixa(${i},'ate',this.value)"/><input aria-label="Faixa ${i+1} - comissão" type="number" min="0" max="100" step="0.01" value="${Number.isFinite(Number(f.pct))?f.pct:""}" placeholder="comissão %" oninput="editarFaixa(${i},'pct',this.value)"/><button class="btn bad sm" title="Remover faixa ${i+1}" onclick="removerFaixa(${i})">Remover</button></div>`).join("");
+    atualizarResumoFaixas();
   }
-  window.addFaixa=function(){ FAIXAS.push({de:0,ate:0,pct:0}); renderFaixas(); };
-  window.editarFaixa=function(i,campo,val){ if(FAIXAS[i]) FAIXAS[i][campo]=Number(val||0); };
+  function atualizarResumoFaixas(){
+    const aviso=document.getElementById("faixasAviso");
+    const preview=document.getElementById("previewFaixas");
+    if(erroCarregarFaixas){ aviso.textContent=erroCarregarFaixas; aviso.className="pc-validation bad"; }
+    if(!FAIXAS.length){ if(!erroCarregarFaixas){ aviso.textContent="Cadastre faixas antes de salvar."; aviso.className="pc-validation warn"; } preview.innerHTML=""; return; }
+    const v=regrasValidas(FAIXAS);
+    aviso.textContent=v.ok?(v.gaps.length?`Atenção: há ${v.gaps.length} lacuna(s) entre faixas. Valores nessas lacunas recebem 0%.`:`${v.faixas.length} faixa(s) válidas, sem sobreposição.`):v.msg;
+    aviso.className="pc-validation "+(v.ok?(v.gaps.length?"warn":"ok"):"bad");
+    preview.innerHTML=v.ok?'<strong>Prévia das faixas</strong><div class="pc-tier-list">'+v.faixas.map(f=>`<span>${f.de}%–${f.ate}% <b>${f.pct}% de comissão</b></span>`).join("")+'</div>':"";
+  }
+  window.addFaixa=function(){
+    const last=FAIXAS.length?FAIXAS[FAIXAS.length-1]:null;
+    const de=last&&Number.isFinite(Number(last.ate))?Math.min(10000,Number((Number(last.ate)+0.01).toFixed(2))):0;
+    FAIXAS.push({de,ate:de,pct:0}); renderFaixas();
+  };
+  window.editarFaixa=function(i,campo,val){ if(FAIXAS[i]) FAIXAS[i][campo]=String(val).trim()===""?NaN:Number(val); atualizarResumoFaixas(); };
   window.removerFaixa=function(i){ FAIXAS.splice(i,1); renderFaixas(); };
 
   window.salvarRegras=async function(){
     if(!(MY.role==="admin"||MY.role==="superadmin")){ alert("Sem permissão."); return; }
-    // ordena por 'de' e valida
-    const limpa = FAIXAS.filter(f=> !(f.de===0 && f.ate===0 && f.pct===0));
-    limpa.sort((a,b)=> Number(a.de)-Number(b.de));
-    showLoading("Salvando faixas...");
+    if(!STORE_ID){ alert("Nenhuma loja selecionada."); return; }
+    if(!FAIXAS.length){ alert("Inclua pelo menos uma faixa. Para excluir todas, revise essa operação com o gestor."); return; }
+    const valida=regrasValidas(FAIXAS);
+    if(!valida.ok){ alert(valida.msg); return; }
+    if(valida.gaps.length && !confirm(`Existem ${valida.gaps.length} lacuna(s) entre as faixas. Nessas lacunas a comissão será 0%. Deseja salvar mesmo assim?`)) return;
+    const btn=document.querySelector('#viewRegras button[onclick="salvarRegras()"]');
+    if(btn) btn.disabled=true;
+    showLoading("Validando e salvando faixas...");
     try{
-      await setDoc(doc(db,"stores",STORE_ID,"comissaoConfig","faixas"), { faixas: limpa, atualizadoEm:new Date().toISOString() });
-      FAIXAS=limpa; renderFaixas();
-      hideLoading();
-      alert("Faixas de comissão salvas! Os vendedores já podem simular.");
-    }catch(e){ hideLoading(); console.error(e); alert(msgErro(e,"salvar as faixas")); }
+      await setDoc(doc(db,"stores",STORE_ID,"comissaoConfig","faixas"),{faixas:valida.faixas,atualizadoEm:new Date().toISOString()},{merge:true});
+      FAIXAS=valida.faixas.map(f=>({...f})); FAIXAS_SALVAS=valida.faixas.map(f=>({...f})); erroCarregarFaixas=""; renderFaixas(); limparResultado();
+      alert("Faixas validadas e salvas! A simulação já utiliza os novos valores.");
+    }catch(e){ console.error(e); alert(msgErro(e,"salvar as faixas")); }
+    finally{ hideLoading(); if(btn) btn.disabled=false; }
   };
+
 </script>
 </body>
 </html>

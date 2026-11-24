@@ -75,6 +75,9 @@
 <link rel="stylesheet" href="./ondis-ui-v2.css?v=2.1.1"/>
 <script defer src="./ondis-theme-v2.js?v=2.1.0"></script>
 <link rel="stylesheet" href="./ondis-visual-v4.css?v=4.0.0"/>
+<link rel="stylesheet" href="./ondis-ponto-comissao-v5.css?v=5.0.0"/>
+
+<link rel="stylesheet" href="./ondis-contraste-global-v6.css?v=6.0.0">
 </head>
 <body data-ondis-refresh="timeclock">
 
@@ -82,7 +85,7 @@
 
 <header>
   <div class="brand">
-    <h1>ONDIS <span style="color:#7fffc0">PONTO</span></h1>
+    <h1>ONDIS <span>PONTO</span></h1>
     <div class="sub" id="ctxInfo">—</div>
   </div>
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
@@ -93,7 +96,11 @@
 </header>
 
 <div class="wrap">
-  <div class="tabs">
+  <section class="pc-intro">
+    <div><div class="pc-eyebrow">ONDIS · CONTROLE DE JORNADA</div><h2>Seu ponto, com clareza e segurança</h2><p>Registre seus horários, acompanhe sua jornada e consulte o histórico sem perder informações.</p></div>
+    <span class="pc-pill" id="pontoConnection"><span class="pc-dot"></span> Sincronização Firebase</span>
+  </section>
+  <div class="tabs" role="tablist" aria-label="Seções do ponto">
     <button class="tab active" id="tabBater" onclick="showTab('bater')">🕐 Bater ponto</button>
     <button class="tab" id="tabHistorico" onclick="showTab('historico')">📅 Meu histórico</button>
     <button class="tab" id="tabEquipe" onclick="showTab('equipe')" style="display:none">👥 Equipe</button>
@@ -106,7 +113,8 @@
       <div id="saudacao" style="font-size:20px;font-weight:800;margin-bottom:4px">Olá! 👋</div>
       <div id="dataHoje" class="hint" style="padding:2px 0 10px"></div>
       <div class="relogio" id="relogio">00:00:00</div>
-      <div id="localStatus" class="hint" style="padding:8px 0">📍 Localização: aguardando...</div>
+      <div id="localStatus" class="hint" style="padding:8px 0" role="status">📍 Localização: aguardando...</div>
+      <div class="pc-next" id="pontoOrientacao" role="status">Confira sua próxima marcação.</div>
       <div class="pontoBtns">
         <button class="pontoBtn" id="btnEntrada" onclick="baterPonto('entrada')"><span class="ico">🟢</span>Entrada</button>
         <button class="pontoBtn" id="btnIntervalo" onclick="baterPonto('intervalo')"><span class="ico">☕</span>Intervalo</button>
@@ -183,7 +191,7 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut }
     from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-  import { getFirestore, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, collection, onSnapshot }
+  import { getFirestore, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, collection, onSnapshot, runTransaction }
     from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -201,6 +209,7 @@
   const db = getFirestore(app);
 
   let MY=null, STORE_ID=null, LOJA_NOME="", PONTOS=[], pontoRef=null, CONFIG={entrada:"08:00",saida:"18:00",tolerancia:10,carga:8}, minhaLoc=null;
+  let gravandoPonto = false;
 
   function showLoading(m){ document.getElementById("loadingScreen").classList.add("show"); document.getElementById("loadingMsg").textContent=m||"Carregando..."; }
   function hideLoading(){ document.getElementById("loadingScreen").classList.remove("show"); }
@@ -223,6 +232,7 @@
     const dia = String(d.getDate()).padStart(2,"0");
     return `${y}-${m}-${dia}`;
   }
+  function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
   function pad(n){ return String(n).padStart(2,"0"); }
   function hhmm(d){ return pad(d.getHours())+":"+pad(d.getMinutes()); }
 
@@ -233,6 +243,7 @@
     if(el) el.textContent = pad(d.getHours())+":"+pad(d.getMinutes())+":"+pad(d.getSeconds());
   }
   setInterval(tickRelogio,1000); tickRelogio();
+  setInterval(()=>{ if(MY && pontoRef && document.getElementById("viewBater")?.style.display!=="none") renderHoje(); },60000);
 
   onAuthStateChanged(auth, async (user)=>{
     if(!user){ window.location.href="./login.html"; return; }
@@ -287,7 +298,7 @@
       window.PontoFacial.init({
         db, STORE_ID, LOJA_NOME, MY, pontoRef,
         isAdmin: (MY.role==="admin"||MY.role==="superadmin"),
-        fs: { doc, getDoc, getDocs, setDoc, deleteDoc, collection },
+        fs: { doc, getDoc, getDocs, setDoc, deleteDoc, collection, runTransaction },
         getPontos: ()=>PONTOS, hojeStr, hhmm, msgErro,
         getLoc: ()=>minhaLoc
       }).catch(e=>console.error("Reconhecimento facial:", e));
@@ -307,7 +318,7 @@
     if(!navigator.geolocation){ el.textContent="📍 Localização não suportada neste dispositivo."; return; }
     el.textContent="📍 Obtendo localização...";
     navigator.geolocation.getCurrentPosition(
-      (pos)=>{ minhaLoc={ lat:pos.coords.latitude, lng:pos.coords.longitude }; el.innerHTML='<span style="color:#7fffc0">📍 Localização validada ✓</span>'; },
+      (pos)=>{ minhaLoc={ lat:pos.coords.latitude, lng:pos.coords.longitude }; el.innerHTML='<span>📍 Localização validada ✓</span>'; },
       (err)=>{ minhaLoc=null; el.innerHTML='<span style="color:#ffd166">📍 Localização não autorizada (o ponto será registrado sem GPS)</span>'; },
       { enableHighAccuracy:true, timeout:8000 }
     );
@@ -319,26 +330,44 @@
     return PONTOS.find(p=> p.id===id) || null;
   }
 
+  function validacaoMarcacao(m, tipo){
+    if(!["entrada","intervalo","retorno","saida"].includes(tipo)) return "Tipo de marcação inválido.";
+    if(m[tipo]) return "Você já registrou " + tipo + " hoje.";
+    if(tipo !== "entrada" && !m.entrada) return "Registre a Entrada primeiro.";
+    if(m.saida) return "A jornada já foi finalizada.";
+    if(tipo === "intervalo" && m.retorno) return "O intervalo já foi encerrado.";
+    if(tipo === "retorno" && !m.intervalo) return "Registre o Intervalo primeiro.";
+    if(tipo === "saida" && m.intervalo && !m.retorno) return "Registre o Retorno antes da Saída.";
+    return null;
+  }
+
   window.baterPonto = async function(tipo){
-    const reg = meuRegistroHoje() || {
-      id: MY.uid+"_"+hojeStr(),
-      uid: MY.uid, nome: MY.name||MY.email, data: hojeStr(),
-      storeId: STORE_ID, marcacoes:{}
-    };
-    if(reg.marcacoes[tipo]){ alert("Você já registrou "+tipo+" hoje."); return; }
-    // validações de ordem
-    if(tipo==="intervalo" && !reg.marcacoes.entrada){ alert("Bata a Entrada primeiro."); return; }
-    if(tipo==="retorno" && !reg.marcacoes.intervalo){ alert("Você precisa registrar o Intervalo antes do Retorno."); return; }
-    if(tipo==="saida" && !reg.marcacoes.entrada){ alert("Bata a Entrada primeiro."); return; }
-
-    const agora=new Date();
-    reg.marcacoes[tipo] = { hora: hhmm(agora), ts: agora.getTime(), loc: minhaLoc };
-    reg.atualizadoEm = agora.toISOString();
-
+    if(gravandoPonto) return;
+    if(!MY || !pontoRef || !STORE_ID){ alert("Aguarde o carregamento da loja e tente novamente."); return; }
+    const hoje=hojeStr();
+    const id=MY.uid+"_"+hoje;
+    gravandoPonto=true;
+    const el=document.getElementById("pontoConnection");
+    if(el) el.textContent="Registrando com segurança…";
     showLoading("Registrando "+tipo+"...");
-    try{ await setDoc(doc(pontoRef, reg.id), reg); }
-    catch(e){ console.error(e); alert(msgErro(e,"registrar o ponto")); }
-    hideLoading();
+    try{
+      await runTransaction(db, async transaction=>{
+        const ref=doc(pontoRef,id);
+        const atual=await transaction.get(ref);
+        const dados=atual.exists()?atual.data():{};
+        const m={...(dados.marcacoes||{})};
+        const erro=validacaoMarcacao(m,tipo);
+        if(erro){ const e=new Error(erro); e.isFlow=true; throw e; }
+        const agora=new Date();
+        m[tipo]={hora:hhmm(agora),ts:agora.getTime(),loc:minhaLoc?{...minhaLoc}:null,metodo:"web"};
+        transaction.set(ref,{...dados,id,uid:MY.uid,nome:dados.nome||MY.name||MY.email,data:hoje,storeId:STORE_ID,marcacoes:m,atualizadoEm:agora.toISOString()});
+      });
+    }catch(e){ console.error("Registro do ponto:",e); alert(e.isFlow?e.message:msgErro(e,"registrar o ponto")); }
+    finally{
+      gravandoPonto=false;
+      hideLoading();
+      if(el) el.innerHTML='<span class="pc-dot"></span> Sincronização Firebase';
+    }
   };
 
   function renderTudo(){ renderHoje(); renderHistorico(); if(MY.role==="admin"||MY.role==="superadmin"){ renderEquipe(); renderRelatorio(); } }
@@ -347,28 +376,34 @@
     ["bater","historico","equipe","config"].forEach(x=>{
       const v=document.getElementById("view"+x.charAt(0).toUpperCase()+x.slice(1));
       const b=document.getElementById("tab"+x.charAt(0).toUpperCase()+x.slice(1));
-      if(v) v.style.display=(x===t)?"block":"none";
+      if(v) v.style.display=(x===t)?(x==="bater"?"grid":"block"):"none";
       if(b) b.classList.toggle("active",x===t);
     });
   };
 
   // calcula horas trabalhadas de um registro (em minutos)
   function minutosTrabalhados(reg){
-    if(!reg||!reg.marcacoes) return 0;
+    if(!reg || !reg.marcacoes?.entrada) return 0;
     const m=reg.marcacoes;
-    if(!m.entrada) return 0;
-    const fim = m.saida ? m.saida.ts : Date.now();
-    let total = fim - m.entrada.ts;
-    // desconta intervalo se houve
-    if(m.intervalo && m.retorno){ total -= (m.retorno.ts - m.intervalo.ts); }
-    else if(m.intervalo && !m.retorno){ total = m.intervalo.ts - m.entrada.ts; }
-    return Math.max(0, Math.floor(total/60000));
+    const inicio=Number(m.entrada.ts);
+    if(!Number.isFinite(inicio)) return 0;
+    const emAndamento=reg.data===hojeStr() && !m.saida;
+    const ultimo=[m.entrada,m.intervalo,m.retorno].filter(Boolean).reduce((max,x)=>Math.max(max,Number(x.ts)||0),inicio);
+    const fim=m.saida ? Number(m.saida.ts) : (emAndamento ? Date.now() : ultimo);
+    if(!Number.isFinite(fim) || fim<inicio) return 0;
+    let ms=fim-inicio;
+    if(m.intervalo){
+      const pausadoAte=m.retorno ? Number(m.retorno.ts) : fim;
+      ms-=Math.max(0,pausadoAte-Number(m.intervalo.ts));
+    }
+    return Math.max(0,Math.floor(ms/60000));
   }
   function fmtMin(min){ const h=Math.floor(min/60), m=min%60; return pad(h)+":"+pad(m); }
 
   // status do dia: falta / atraso / ok / extra
   function statusDoDia(reg){
-    if(!reg||!reg.marcacoes||!reg.marcacoes.entrada) return {tag:"falta",label:"Falta"};
+    if(!reg||!reg.marcacoes||!reg.marcacoes.entrada) return {tag:"falta",label:"Sem entrada"};
+    if(!reg.marcacoes.saida && reg.data!==hojeStr()) return {tag:"atraso",label:"Incompleto"};
     // atraso: entrada depois do horário + tolerância
     const [eh,em]=CONFIG.entrada.split(":").map(Number);
     const ent=new Date(reg.marcacoes.entrada.ts);
@@ -387,7 +422,11 @@
     const m=reg?reg.marcacoes:{};
     ["entrada","intervalo","retorno","saida"].forEach(t=>{
       const btn=document.getElementById("btn"+t.charAt(0).toUpperCase()+t.slice(1));
-      if(btn){ if(m[t]){ btn.classList.add("done"); } else { btn.classList.remove("done"); } }
+      if(btn){
+        btn.classList.toggle("done",!!m[t]);
+        btn.disabled=gravandoPonto || !!validacaoMarcacao(m,t);
+        btn.title=m[t] ? "Registrado às "+m[t].hora : (validacaoMarcacao(m,t)||"Registrar "+t);
+      }
     });
     const linha=(label,key,ico)=>{
       const mk=m[key];
@@ -396,6 +435,8 @@
     document.getElementById("registrosHoje").innerHTML =
       linha("Entrada","entrada","🟢")+linha("Intervalo","intervalo","☕")+linha("Retorno","retorno","🔄")+linha("Saída","saida","🔴");
     document.getElementById("horasHoje").textContent = fmtMin(minutosTrabalhados(reg));
+    const proximo = !m.entrada ? "Entrada" : !m.saida ? (!m.intervalo ? "Intervalo ou Saída" : !m.retorno ? "Retorno" : "Saída") : "Jornada concluída";
+    document.getElementById("pontoOrientacao").textContent = m.saida ? "Jornada concluída. Suas marcações estão registradas." : "Próximo passo: " + proximo;
     const st=statusDoDia(reg);
     const stEl=document.getElementById("statusHoje");
     stEl.className="tag "+st.tag; stEl.textContent=st.label;
@@ -438,13 +479,14 @@
     const rows=doDia.sort((a,b)=>(a.nome||"").localeCompare(b.nome||"")).map(r=>{
       const m=r.marcacoes||{}; const s=statusDoDia(r);
       const hm=(x)=> x ? (x.hora + (x.metodo==="facial" ? ' <span title="Reconhecimento facial'+(x.dist!=null?' (distância '+x.dist+')':'')+'">🙂</span>' : (x.metodo==="manual-quiosque" ? ' <span title="Registro manual no tablet — conferir">⚠️</span>' : ""))) : "--";
-      return `<tr><td><b>${r.nome||"—"}</b></td><td>${hm(m.entrada)}</td>
+      return `<tr><td><b>${esc(r.nome||"—")}</b></td><td>${hm(m.entrada)}</td>
         <td>${hm(m.intervalo)}</td><td>${hm(m.retorno)}</td>
         <td>${hm(m.saida)}</td><td><b>${fmtMin(minutosTrabalhados(r))}</b></td>
         <td><span class="tag ${s.tag}">${s.label}</span></td>
         <td>
-          <button class="btn sm" style="padding:3px 8px" onclick="abrirEditarPonto('${r.id}')">✏️</button>
-          <button class="btn bad sm" onclick="excluirPonto('${r.id}','${(r.nome||"").replace(/'/g,"")}','${r.data}')">🗑</button>
+          <button class="btn sm" style="padding:3px 8px" onclick="abrirEditarPonto('${r.id}')">Editar</button>
+          ${r.auditoriaCorrecoes?.length ? `<button class="btn sm" style="padding:3px 8px" onclick="abrirHistoricoAjustes('${r.id}')">Histórico</button>` : ""}
+          <button class="btn bad sm" onclick="excluirPonto('${r.id}','${(r.nome||"").replace(/'/g,"")}','${r.data}')">Excluir</button>
         </td></tr>`;
     }).join("");
     document.getElementById("equipeTabela").innerHTML=`<table><thead><tr><th>Colaborador</th><th>Entrada</th><th>Interv.</th><th>Retorno</th><th>Saída</th><th>Horas</th><th>Status</th><th>Ação</th></tr></thead><tbody>${rows}</tbody></table>`;
@@ -471,6 +513,7 @@
     pontoEditId = id;
     const m = reg.marcacoes||{};
     document.getElementById("epTitulo").textContent = "Editar ponto — " + (reg.nome||"");
+    document.getElementById("epMotivo").value = "";
     document.getElementById("epNomeWrap").style.display = "none"; // nome fixo ao editar
     document.getElementById("epData").value = reg.data || hojeStr();
     document.getElementById("epData").disabled = true; // não muda a data ao editar
@@ -485,6 +528,7 @@
     if(!(MY.role==="admin"||MY.role==="superadmin")){ alert("Sem permissão."); return; }
     pontoEditId = null;
     document.getElementById("epTitulo").textContent = "Adicionar ponto";
+    document.getElementById("epMotivo").value = "";
     document.getElementById("epNomeWrap").style.display = "block";
     // popula o select de colaboradores (pessoas que já têm algum registro na loja)
     const nomes = {};
@@ -502,6 +546,19 @@
   };
 
   window.fecharPonto=function(){ document.getElementById("modalPonto").classList.remove("show"); };
+  window.abrirHistoricoAjustes=function(id){
+    if(!(MY?.role==="admin"||MY?.role==="superadmin")) return;
+    const reg=PONTOS.find(p=>p.id===id);
+    const lista=Array.isArray(reg?.auditoriaCorrecoes)?reg.auditoriaCorrecoes:[];
+    const host=document.getElementById("auditDetails");
+    host.innerHTML=lista.length?lista.slice().reverse().map(a=>{
+      const resumo=(v)=>Object.entries(v||{}).filter(([,hora])=>hora).map(([tipo,hora])=>tipo+": "+hora).join(" · ")||"Sem horários";
+      return `<article class="pc-audit-item"><strong>${esc(a.porNome||a.porUid||"Gestor")}</strong><small>${esc(a.em||"")}</small><p>${esc(a.motivo||"Sem justificativa registrada")}</p><div><span>Antes: ${esc(resumo(a.antes))}</span><span>Depois: ${esc(resumo(a.depois))}</span></div></article>`;
+    }).join(""):'<div class="hint">Este registro ainda não possui ajustes administrativos registrados.</div>';
+    document.getElementById("modalHistoricoAjustes").classList.add("show");
+  };
+  window.fecharHistoricoAjustes=function(){ document.getElementById("modalHistoricoAjustes").classList.remove("show"); };
+
 
   // converte "HH:MM" + data "YYYY-MM-DD" em objeto de marcação { hora, ts, loc }
   function marcacaoDe(horaStr, dataStr, antiga){
@@ -512,49 +569,65 @@
     return { hora: horaStr, ts: d.getTime(), loc: (antiga&&antiga.loc)||null, editado:true };
   }
 
+  function validarHorariosManuais(h){
+    if(!h.entrada) return "Informe a Entrada para salvar o registro.";
+    if(h.retorno && !h.intervalo) return "Retorno exige um horário de Intervalo.";
+    if(h.intervalo && !h.retorno && h.saida) return "Preencha o Retorno antes da Saída, ou remova o Intervalo.";
+    const valores=["entrada","intervalo","retorno","saida"].filter(k=>h[k]).map(k=>h[k]);
+    for(let i=1;i<valores.length;i++) if(valores[i]<=valores[i-1]) return "Os horários precisam seguir a ordem do dia, sem sobreposição.";
+    return null;
+  }
   window.salvarPonto=async function(){
     if(!(MY.role==="admin"||MY.role==="superadmin")){ alert("Sem permissão."); return; }
-    const dataStr = document.getElementById("epData").value;
-    if(!dataStr){ alert("Escolha a data."); return; }
-    const ent = document.getElementById("epEntrada").value;
-    const inter = document.getElementById("epIntervalo").value;
-    const ret = document.getElementById("epRetorno").value;
-    const sai = document.getElementById("epSaida").value;
-
-    let reg, id;
-    if(pontoEditId){
-      reg = PONTOS.find(p=>p.id===pontoEditId);
-      if(!reg){ alert("Registro não encontrado."); return; }
-      id = pontoEditId;
-    } else {
-      // novo: precisa do colaborador
-      const sel = document.getElementById("epColaborador");
-      const uid = sel.value;
-      const nome = sel.options[sel.selectedIndex]?.text || "";
-      if(!uid){ alert("Selecione o colaborador."); return; }
-      id = uid + "_" + dataStr;
-      if(PONTOS.find(p=>p.id===id)){ alert("Já existe ponto desse colaborador nesse dia. Edite o registro existente."); return; }
-      reg = { id, uid, nome, data: dataStr, storeId: STORE_ID, marcacoes:{} };
-    }
-
-    const m = reg.marcacoes || {};
-    reg.marcacoes = {
-      entrada: marcacaoDe(ent, reg.data, m.entrada),
-      intervalo: marcacaoDe(inter, reg.data, m.intervalo),
-      retorno: marcacaoDe(ret, reg.data, m.retorno),
-      saida: marcacaoDe(sai, reg.data, m.saida)
+    const dataStr=document.getElementById("epData").value;
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(dataStr)){ alert("Escolha uma data válida."); return; }
+    const horas={
+      entrada:document.getElementById("epEntrada").value,
+      intervalo:document.getElementById("epIntervalo").value,
+      retorno:document.getElementById("epRetorno").value,
+      saida:document.getElementById("epSaida").value
     };
-    // remove marcações vazias (null)
-    Object.keys(reg.marcacoes).forEach(k=>{ if(!reg.marcacoes[k]) delete reg.marcacoes[k]; });
-    reg.atualizadoEm = new Date().toISOString();
-    reg.editadoPor = MY.name || MY.email || "";
-
-    showLoading("Salvando ponto...");
+    const erro=validarHorariosManuais(horas);
+    if(erro){ alert(erro); return; }
+    const motivo=document.getElementById("epMotivo").value.trim();
+    if(motivo.length<5){ alert("Informe o motivo do ajuste administrativo (mínimo de 5 caracteres)."); return; }
+    const registroAntigo=pontoEditId?PONTOS.find(p=>p.id===pontoEditId):null;
+    if(pontoEditId && !registroAntigo){ alert("Registro não encontrado. Atualize a página."); return; }
+    const sel=document.getElementById("epColaborador");
+    const uid=registroAntigo?.uid||sel.value;
+    const nome=registroAntigo?.nome||sel.options[sel.selectedIndex]?.text||"";
+    if(!uid){ alert("Selecione o colaborador."); return; }
+    const id=registroAntigo?.id || uid+"_"+dataStr;
+    const dia=registroAntigo?.data || dataStr;
+    showLoading("Salvando ponto com histórico do ajuste...");
     try{
-      await setDoc(doc(pontoRef, id), reg);
+      await runTransaction(db,async transaction=>{
+        const ref=doc(pontoRef,id);
+        const snap=await transaction.get(ref);
+        if(!registroAntigo && snap.exists()){
+          const e=new Error("Já existe ponto deste colaborador neste dia. Edite o registro existente."); e.isFlow=true; throw e;
+        }
+        if(registroAntigo && !snap.exists()){
+          const e=new Error("O registro foi removido em outro dispositivo. Atualize a página."); e.isFlow=true; throw e;
+        }
+        const dados=snap.exists()?snap.data():{};
+        if(registroAntigo && (dados.atualizadoEm||"")!==(registroAntigo.atualizadoEm||"")){
+          const e=new Error("Este registro foi alterado em outro dispositivo. Atualize antes de salvar."); e.isFlow=true; throw e;
+        }
+        const m=dados.marcacoes||{};
+        const marcacoes={};
+        for(const [campo,hora] of Object.entries(horas)){
+          const valor=marcacaoDe(hora,dia,m[campo]);
+          if(valor) marcacoes[campo]=valor;
+        }
+        const resumo=marc=>Object.fromEntries(Object.entries(marc||{}).map(([k,v])=>[k,v?.hora||""]));
+        const auditoria=Array.isArray(dados.auditoriaCorrecoes)?dados.auditoriaCorrecoes.slice():[];
+        auditoria.push({em:new Date().toISOString(),porUid:MY.uid,porNome:MY.name||MY.email||"",motivo,antes:resumo(m),depois:resumo(marcacoes)});
+        transaction.set(ref,{...dados,id,uid,nome,data:dia,storeId:STORE_ID,marcacoes,atualizadoEm:new Date().toISOString(),editadoPor:MY.name||MY.email||"",auditoriaCorrecoes:auditoria});
+      });
       fecharPonto();
-    }catch(e){ console.error(e); alert(msgErro(e,"salvar o ponto")); }
-    hideLoading();
+    }catch(e){ console.error(e); alert(e.isFlow?e.message:msgErro(e,"salvar o ponto")); }
+    finally{ hideLoading(); }
   };
 
   // ===== RELATÓRIO POR PERÍODO (admin) =====
@@ -575,7 +648,7 @@
     });
     const arr=Object.values(porPessoa).sort((a,b)=>(a.nome||"").localeCompare(b.nome||""));
     if(arr.length===0){ document.getElementById("relTabela").innerHTML=estadoVazio("📊","Sem dados neste mês","Assim que a equipe registrar pontos, o resumo por colaborador (horas, atrasos e extras) aparecerá aqui."); return; }
-    const rows=arr.map(p=>`<tr><td><b>${p.nome||"—"}</b></td><td>${p.dias}</td><td>${fmtMin(p.min)}</td><td>${p.atrasos}</td><td>${fmtMin(p.extra)}</td></tr>`).join("");
+    const rows=arr.map(p=>`<tr><td><b>${esc(p.nome||"—")}</b></td><td>${p.dias}</td><td>${fmtMin(p.min)}</td><td>${p.atrasos}</td><td>${fmtMin(p.extra)}</td></tr>`).join("");
     document.getElementById("relTabela").innerHTML=`<table><thead><tr><th>Colaborador</th><th>Dias</th><th>Horas totais</th><th>Atrasos</th><th>Hora extra</th></tr></thead><tbody>${rows}</tbody></table>`;
   };
 
@@ -585,7 +658,7 @@
     if(doMes.length===0){ alert("Nenhum registro neste mês."); return; }
     const cab=["Colaborador","Data","Entrada","Intervalo","Retorno","Saida","Horas","Status"];
     const linhas=doMes.map(r=>{ const m=r.marcacoes||{}; const s=statusDoDia(r); return [r.nome||"", r.data||"", m.entrada?m.entrada.hora:"", m.intervalo?m.intervalo.hora:"", m.retorno?m.retorno.hora:"", m.saida?m.saida.hora:"", fmtMin(minutosTrabalhados(r)), s.label]; });
-    const csv=[cab,...linhas].map(l=>l.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(";")).join("\n");
+    const csv=[cab,...linhas].map(l=>l.map(v=>{ const raw=String(v??""); const seguro=/^[=+@\-\t\r]/.test(raw)?"'"+raw:raw; return `"${seguro.replace(/"/g,'""')}"`; }).join(";")).join("\n");
     const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"});
     const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
     a.download="ponto_"+LOJA_NOME.replace(/[^a-z0-9]/gi,"_")+"_"+mes+".csv"; a.click();
@@ -599,18 +672,39 @@
     document.getElementById("cfgCarga").value=CONFIG.carga;
   }
   window.salvarConfig=async function(){
-    CONFIG={
-      entrada:document.getElementById("cfgEntrada").value||"08:00",
-      saida:document.getElementById("cfgSaida").value||"18:00",
-      tolerancia:Number(document.getElementById("cfgTolerancia").value||10),
-      carga:Number(document.getElementById("cfgCarga").value||8)
+    if(!MY || !["admin","superadmin"].includes(MY.role) || !STORE_ID){ alert("Acesso não autorizado."); return; }
+    const novo={
+      entrada:document.getElementById("cfgEntrada").value,
+      saida:document.getElementById("cfgSaida").value,
+      tolerancia:Number(document.getElementById("cfgTolerancia").value),
+      carga:Number(document.getElementById("cfgCarga").value)
     };
-    showLoading("Salvando...");
-    try{ await setDoc(doc(db,"stores",STORE_ID,"pontoConfig","jornada"), CONFIG); alert("Configuração salva!"); renderTudo(); }
-    catch(e){ console.error(e); alert(msgErro(e,"salvar a configuração")); }
-    hideLoading();
+    if(!/^\d{2}:\d{2}$/.test(novo.entrada)||!/^\d{2}:\d{2}$/.test(novo.saida)){
+      alert("Informe horários válidos de entrada e saída."); return;
+    }
+    if(!Number.isFinite(novo.tolerancia)||novo.tolerancia<0||novo.tolerancia>180){
+      alert("A tolerância precisa estar entre 0 e 180 minutos."); return;
+    }
+    if(!Number.isFinite(novo.carga)||novo.carga<=0||novo.carga>24){
+      alert("A carga diária precisa ser maior que zero e de até 24 horas."); return;
+    }
+    showLoading("Salvando a jornada...");
+    try{
+      await setDoc(doc(db,"stores",STORE_ID,"pontoConfig","jornada"),novo,{merge:true});
+      CONFIG={...CONFIG,...novo};renderTudo();alert("Configuração de jornada salva.");
+    }catch(e){console.error(e);alert(msgErro(e,"salvar a configuração"));}
+    finally{hideLoading();}
   };
 </script>
+
+<!-- HISTÓRICO DE AJUSTES ADMINISTRATIVOS -->
+<div class="modalBack" id="modalHistoricoAjustes">
+  <div class="modal" style="max-width:740px">
+    <div class="cardHead"><h2>Histórico de correções do ponto</h2><button class="btn" onclick="fecharHistoricoAjustes()">Fechar</button></div>
+    <p class="hint" style="text-align:left;padding:0 0 12px">Registro interno das alterações administrativas realizadas a partir desta versão.</p>
+    <div id="auditDetails"></div>
+  </div>
+</div>
 
 <!-- MODAL EDITAR / ADICIONAR PONTO -->
 <div class="modalBack" id="modalPonto">
@@ -633,7 +727,8 @@
       <div class="field"><label>🔄 Retorno</label><input id="epRetorno" type="time"/></div>
       <div class="field"><label>🔴 Saída</label><input id="epSaida" type="time"/></div>
     </div>
-    <p class="hint" style="text-align:left;padding:6px 0 0">Deixe um horário em branco se não houver marcação. Ex: se a pessoa não fez intervalo, deixe intervalo e retorno vazios.</p>
+    <p class="hint" style="text-align:left;padding:6px 0 0">Registre os horários na ordem correta. Se não houve intervalo, deixe Intervalo e Retorno em branco.</p>
+    <div class="field"><label for="epMotivo">Motivo do ajuste administrativo</label><textarea id="epMotivo" rows="2" placeholder="Ex.: correção de horário informada pelo colaborador"></textarea></div>
     <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px">
       <button class="btn" onclick="fecharPonto()">Cancelar</button>
       <button class="btn good" onclick="salvarPonto()">Salvar</button>
