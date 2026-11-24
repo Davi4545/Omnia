@@ -58,3 +58,20 @@
   #viewMetas .goalsVendorGrid{grid-template-columns:1fr!important}
   #viewMetas .goalsVendorGrid #btnSaveVendorGoal{width:100%}
 }
+
+/* V8.1 — edição de metas decendiais sem efeito nos outros períodos */
+#viewMetas .decendioCard .decendioSaveButton{
+  display:flex!important;align-items:center;justify-content:center;
+  width:100%;min-height:42px;margin-top:13px;padding:10px 14px;
+  border-radius:12px;font-size:12px;font-weight:850;line-height:1.2;
+  color:#fff!important;background:linear-gradient(135deg,#e9163e,#ba0e34)!important;
+  border:1px solid #b81035!important;box-shadow:0 5px 14px rgba(189,18,58,.18);
+  cursor:pointer;transition:transform .18s,box-shadow .18s;
+}
+#viewMetas .decendioCard .decendioSaveButton:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 20px rgba(189,18,58,.23)}
+#viewMetas .decendioCard .decendioSaveButton:focus-visible{outline:3px solid #f9a5ba;outline-offset:2px}
+#viewMetas .decendioCard .decendioSaveButton:disabled{background:#e5eaf0!important;color:#617286!important;border-color:#d4dce6!important;cursor:not-allowed;box-shadow:none;opacity:1!important}
+#viewMetas .decendioCard.hasPendingChanges{border-color:#e88ca2;box-shadow:0 8px 24px rgba(185,18,58,.09)}
+#viewMetas .decendioCard.hasPendingChanges .decCardFoot input{background:#fff2f5!important;color:#b31e43!important;border-color:#f0bbc9!important}
+#viewMetas .decendioCard .decCardFoot input{width:min(158px,48%)!important;flex:0 1 158px!important;max-width:158px!important;text-overflow:ellipsis}
+@media (max-width:760px){#viewMetas .decendioCard .decendioSaveButton{min-height:44px}}

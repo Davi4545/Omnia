@@ -1,0 +1,41 @@
+ONDIS V8.1 — METAS DECENDIAIS INDEPENDENTES
+==========================================
+
+ARQUIVOS PARA PUBLICAR
+- index.html (arquivo COMPLETO; preserva os demais módulos V8)
+- ondis-dados-metas-v8.css (arquivo completo com os novos botões)
+
+COMPORTAMENTO
+1. O 1º, 2º e 3º decêndios têm metas próprias e independentes.
+2. Alterar o valor em R$ de uma dezena modifica apenas a porcentagem daquela mesma dezena.
+3. Alterar a porcentagem de uma dezena modifica apenas o valor em R$ daquela mesma dezena.
+4. A porcentagem é calculada em relação à META MENSAL, e não em relação à soma dos decêndios.
+   Exemplo: mensal R$ 100.000; decêndio R$ 40.000 => 40%.
+5. Não é obrigatório que a soma das metas decendiais seja igual à meta mensal.
+6. Cada dezena agora tem seu próprio botão "Salvar Xº decêndio".
+   Esse botão grava somente os valores da dezena selecionada.
+7. O botão geral "Salvar metas" mantém sua função, salvando a meta mensal,
+   os níveis de performance e eventuais ajustes feitos nos decêndios.
+8. Ao alterar a meta mensal, os valores em R$ dos três decêndios permanecem intactos.
+   As porcentagens exibidas mudam porque sua base mensal mudou.
+9. O fechamento e a reabertura de decêndios não redistribuem automaticamente as metas.
+10. O botão "Redistribuir metas existentes" continua sendo uma ação EXPLÍCITA
+    e pode recalcular os valores com base na distribuição semanal antiga.
+11. Decêndios fechados permanecem bloqueados contra edição.
+12. A estrutura antiga weekTargets/basePercents/closedWeeks continua preservada.
+
+CUIDADOS
+- Para usar "Salvar Xº decêndio", a meta mensal da loja precisa estar salva.
+  Se você editou a meta mensal, use primeiro o botão geral "Salvar metas".
+- As alterações só são enviadas pela rotina de salvamento existente quando se clica em um botão de salvar.
+- Faça backup antes de publicar. Teste primeiro em uma loja de homologação.
+- O Firebase de produção NÃO foi acessado durante a preparação dos arquivos.
+- Testado com valores simulados: edição independente em R$ e %, salvamento
+  individual, alteração mensal, fechamento, reabertura e preservação do legado.
+
+INSTALAÇÃO
+1. Faça backup do index.html e do ondis-dados-metas-v8.css atuais.
+2. Substitua os dois arquivos correspondentes na raiz do repositório.
+3. Preserve todos os demais arquivos da versão V8/V7.1 já instalados.
+4. Após publicar, atualize o navegador com Ctrl+F5.
+5. Valide com dados de uma loja de homologação antes de liberar às lojas ativas.
