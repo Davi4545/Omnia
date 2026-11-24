@@ -1077,6 +1077,7 @@ body{ background-attachment: fixed; }
 
 <link rel="stylesheet" href="./ondis-contraste-global-v6.css?v=6.0.0">
 <link rel="stylesheet" href="./ondis-gamificacao-v7.css?v=7.0.0">
+<link rel="stylesheet" href="./ondis-dados-metas-v8.css?v=8.0.0">
 </head>
 <body>
 <div class="appShell" id="appShell">
@@ -1202,6 +1203,13 @@ body{ background-attachment: fixed; }
 </div>
 </div>
 <div class="divider"></div>
+<div class="dadosRevenueOverview" role="status" aria-live="polite">
+  <div class="dadosRevenueHero">
+    <span class="dadosRevenueIcon" aria-hidden="true">R$</span>
+    <div><span class="dadosRevenueEyebrow">FATURAMENTO REGISTRADO</span><h3>Total vendido até o momento</h3><strong id="dadosRevenueAllTime">R$ 0,00</strong><small>Vendas concluídas registradas na loja, até hoje</small></div>
+  </div>
+  <div class="dadosRevenuePeriod"><span id="dadosRevenueMonthLabel">No mês selecionado</span><strong id="dadosRevenueMonth">R$ 0,00</strong><small>Somente vendas concluídas</small></div>
+</div>
 <div class="kpis" id="kpisData"></div>
 <div class="divider"></div>
 <div id="dataTableWrap"></div>
@@ -1251,10 +1259,11 @@ body{ background-attachment: fixed; }
       <div class="goalsCurrent"><span>Período de referência</span><input disabled id="goalCurrentWeek" aria-label="Decêndio atual"/></div>
     </div>
     <div class="decendioCards" id="decendioCards">
-      <article class="decendioCard" data-dec="1"><div class="decCardTop"><span>01</span><div><h4>1º decêndio</h4><small>Dias 1 a 10</small></div></div><div class="field"><label for="pW1">Peso (%)</label><input id="pW1" inputmode="decimal" placeholder="33,3"/></div><div class="decCardTotal"><small>Meta do período</small><input disabled id="goalW1"/></div><div class="decCardFoot"><span>Participação redistribuída</span><input disabled id="rpW1"/></div></article>
-      <article class="decendioCard" data-dec="2"><div class="decCardTop"><span>02</span><div><h4>2º decêndio</h4><small>Dias 11 a 20</small></div></div><div class="field"><label for="pW2">Peso (%)</label><input id="pW2" inputmode="decimal" placeholder="33,3"/></div><div class="decCardTotal"><small>Meta do período</small><input disabled id="goalW2"/></div><div class="decCardFoot"><span>Participação redistribuída</span><input disabled id="rpW2"/></div></article>
-      <article class="decendioCard" data-dec="3"><div class="decCardTop"><span>03</span><div><h4>3º decêndio</h4><small>Dias 21 ao último dia</small></div></div><div class="field"><label for="pW3">Peso (%)</label><input id="pW3" inputmode="decimal" placeholder="33,4"/></div><div class="decCardTotal"><small>Meta do período</small><input disabled id="goalW3"/></div><div class="decCardFoot"><span>Participação redistribuída</span><input disabled id="rpW3"/></div></article>
+      <article class="decendioCard" data-dec="1"><div class="decCardTop"><span>01</span><div><h4>1º decêndio</h4><small>Dias 1 a 10</small></div></div><div class="field"><label for="pW1">Participação (%)</label><input id="pW1" inputmode="decimal" placeholder="33,3"/></div><div class="decCardTotal"><label for="goalW1">Meta do período (R$)</label><input id="goalW1" inputmode="decimal" autocomplete="off" aria-label="Meta em reais do 1º decêndio"/></div><div class="decCardFoot"><span>Participação redistribuída</span><input disabled id="rpW1"/></div></article>
+      <article class="decendioCard" data-dec="2"><div class="decCardTop"><span>02</span><div><h4>2º decêndio</h4><small>Dias 11 a 20</small></div></div><div class="field"><label for="pW2">Participação (%)</label><input id="pW2" inputmode="decimal" placeholder="33,3"/></div><div class="decCardTotal"><label for="goalW2">Meta do período (R$)</label><input id="goalW2" inputmode="decimal" autocomplete="off" aria-label="Meta em reais do 2º decêndio"/></div><div class="decCardFoot"><span>Participação redistribuída</span><input disabled id="rpW2"/></div></article>
+      <article class="decendioCard" data-dec="3"><div class="decCardTop"><span>03</span><div><h4>3º decêndio</h4><small>Dias 21 ao último dia</small></div></div><div class="field"><label for="pW3">Participação (%)</label><input id="pW3" inputmode="decimal" placeholder="33,4"/></div><div class="decCardTotal"><label for="goalW3">Meta do período (R$)</label><input id="goalW3" inputmode="decimal" autocomplete="off" aria-label="Meta em reais do 3º decêndio"/></div><div class="decCardFoot"><span>Participação redistribuída</span><input disabled id="rpW3"/></div></article>
     </div>
+    <p class="goalsSyncHint" id="goalsSyncHint" role="status" aria-live="polite">Edite o valor ou a porcentagem: o outro campo muda automaticamente. O total distribuído é mantido e só será salvo ao clicar em <b>Salvar metas</b>.</p>
     <div class="goalsFootActions"><div class="goalsClosed"><span>Decêndio atual encerrado?</span><input disabled id="goalWeekClosed" aria-label="Status do fechamento"/></div>
       <button class="btn warn" id="btnCloseWeek" type="button">Fechar decêndio atual</button><button class="btn ghost" id="btnReopenWeeks" type="button">Reabrir decêndios</button></div>
     <div class="goalsSectionHead"><div><span class="goalsEyebrow">PERFORMANCE EM TEMPO REAL</span><h3>Progresso das metas</h3></div></div>
@@ -1268,9 +1277,11 @@ body{ background-attachment: fixed; }
     <div class="goalsVendorGrid">
       <div class="field"><label for="goalVendorDivisor">Dividir meta da loja por</label><input id="goalVendorDivisor" inputmode="decimal" placeholder="Ex: 3,5"/></div>
       <div class="field"><label for="goalVendorSelect">Vendedor</label><select id="goalVendorSelect"></select></div>
-      <div class="field"><label for="goalVendorMonthlyOverride">Meta mensal do vendedor (override)</label><input id="goalVendorMonthlyOverride" inputmode="decimal" placeholder="Deixe vazio para automático"/></div>
+      <div class="field"><label for="goalVendorMonthlyOverride">Meta do vendedor (R$)</label><input id="goalVendorMonthlyOverride" inputmode="decimal" autocomplete="off" placeholder="Vazio = divisão automática"/></div>
+      <div class="field"><label for="goalVendorMonthlyPct">Participação na meta da loja (%)</label><input id="goalVendorMonthlyPct" inputmode="decimal" autocomplete="off" placeholder="Vazio = divisão automática"/></div>
       <button class="btn" id="btnSaveVendorGoal" type="button">Salvar meta vendedor</button>
     </div>
+    <p class="goalsVendorHint" id="goalsVendorHint">Valor e porcentagem do vendedor ficam sincronizados. Deixe o valor em branco para usar a divisão automática da loja.</p>
     <div class="kpis goalsVendorKpis" id="kpisVendorGoals"></div>
     <p class="goalsNote">Os campos semanais antigos ficam armazenados sem alterações. Fechamentos e redistribuições novos pertencem somente aos decêndios.</p>
   </div>
@@ -2999,11 +3010,21 @@ body{ background-attachment: fixed; }
 
     const a = agg(recsMonth);
 
+    // Apenas vendas de fato concluídas: não inclui trocas, garantias ou não-vendas.
+    const nowDateKey=todayKey();
+    const isSaleSoFar=r=>r && r.outcome==='sold' && r.dateKey && r.dateKey<=nowDateKey;
+    const allRevenue=state.records.reduce((total,r)=>total+(isSaleSoFar(r)?Number(r.value||0):0),0);
+    const monthRevenue=recsMonth.reduce((total,r)=>total+(isSaleSoFar(r)?Number(r.value||0):0),0);
+    $('dadosRevenueAllTime').textContent=formatMoney(allRevenue);
+    $('dadosRevenueMonth').textContent=formatMoney(monthRevenue);
+    $('dadosRevenueMonthLabel').textContent='No mês de '+chosenMonth.slice(5,7)+'/'+chosenMonth.slice(0,4);
+
     const kpis = [
       { t:"Atendimentos (mês)", v: formatNum(a.atend) },
       { t:"Vendas (mês)", v: formatNum(a.sales) },
       { t:"Conversão (mês)", v: a.conv.toFixed(1) + "%", cls:"good" },
       { t:"P.A. (por venda)", v: a.paPerSale.toFixed(2) },
+      { t:"Faturamento (mês)", v: formatMoney(monthRevenue), cls:"good" },
     ];
     const el = $("kpisData");
     el.innerHTML = "";
@@ -3290,15 +3311,44 @@ body{ background-attachment: fixed; }
     return next;
   }
   let goalsDraft=null;
+  let goalsEditError='';
+  const centsGoal=value=>Math.round(Number(value||0)*100);
+  const goalMoneyInput=value=>(Math.max(0,Number(value||0))).toFixed(2).replace('.',',');
+  const goalPercentInput=value=>(Math.max(0,Number(value||0))).toFixed(2).replace('.',',');
   function goalDraftFor(mk){return goalsDraft?.month===mk?goalsDraft.data:null;}
+  function readGoalNumber(el,kind){
+    const raw=String(el?.value||'').trim();
+    if(!raw || !/^(?:\d+(?:\.\d{3})*|\d+)(?:,\d{0,2})?$/.test(raw))return null;
+    const number=parseBRNumber(raw);
+    if(!Number.isFinite(number)||number<0||(kind==='percent'&&number>100)||(kind==='vendorPercent'&&number>10000))return null;
+    return number;
+  }
+  function goalPoolFor(mk,monthly,storedG,storedD){
+    return Math.abs(monthly-Number(storedG.monthly||0))>.001
+      ?Math.max(0,monthly-getMonthRevenueSold(mk))
+      :sum(storedD.targets);
+  }
+  function setGoalsEditError(msg=''){
+    goalsEditError=msg;
+    const help=$('goalsSyncHint');
+    if(help){help.classList.toggle('isError',!!msg);help.textContent=msg||'Valor e porcentagem ficam sincronizados. Os outros decêndios abertos se ajustam para manter a soma. Salve apenas quando conferir os valores.';}
+    const saveBtn=$('btnSaveGoals');
+    if(saveBtn)saveBtn.disabled=!!msg;
+  }
   function paintDecendios(mk,g,d){
-    const baseSum=sum(d.basePercents);
+    const total=sum(d.targets),baseSum=sum(d.basePercents);
     for(let i=1;i<=3;i++){
       const card=document.querySelector(`.decendioCard[data-dec="${i}"]`);
-      if(card){card.classList.toggle('isClosed',!!d.closed[String(i)]);card.classList.toggle('isCurrent',mk===monthKey() && i===decendioOfDate(todayKey()));}
+      const closed=!!d.closed[String(i)];
+      if(card){card.classList.toggle('isClosed',closed);card.classList.toggle('isCurrent',mk===monthKey() && i===decendioOfDate(todayKey()));}
       const t=Number(d.targets[i-1]||0);
-      $('goalW'+i).value=formatMoney(t);
-      $('rpW'+i).value=d.closed[String(i)]?'Fechado':((baseSum>0?Number(d.basePercents[i-1]||0)/baseSum*100:0).toFixed(1)+'%');
+      const pct=total>0?t/total*100:(baseSum>0?Number(d.basePercents[i-1]||0)/baseSum*100:0);
+      const valueInput=$('goalW'+i),pctInput=$('pW'+i);
+      valueInput.disabled=closed;
+      pctInput.disabled=closed;
+      if(document.activeElement!==valueInput)valueInput.value=goalMoneyInput(t);
+      if(document.activeElement!==pctInput)pctInput.value=goalPercentInput(pct);
+      $('rpW'+i).value=closed?'Fechado':pct.toFixed(2).replace('.',',')+'%';
     }
     const current=decendioOfDate(todayKey());
     $('goalCurrentWeek').value=mk===monthKey()?`Decêndio ${current}`:'Mês selecionado';
@@ -3308,9 +3358,20 @@ body{ background-attachment: fixed; }
       info.classList.toggle('converted',!!g.decendios);
       info.querySelector('strong').textContent=g.decendios?'Distribuição decendial salva':'Prévia das metas semanais existentes';
       info.querySelector('span').textContent=g.decendios
-        ?'As semanas antigas continuam armazenadas, sem alterações. Edite os pesos e salve quando desejar.'
-        :'Os valores das quatro semanas foram repartidos proporcionalmente pelos dias dos três decêndios. Confira a prévia e clique em Salvar metas.';
+        ?'As semanas antigas continuam armazenadas. Altere a porcentagem ou o valor em reais, depois confirme em Salvar metas.'
+        :'Os valores semanais foram repartidos proporcionalmente pelos três decêndios. Altere a porcentagem ou R$ e confira antes de salvar.';
     }
+  }
+  function updateGoalsPreview(mk,g,d){
+    const monthly=readGoalNumber($('goalMonthly'),'money');
+    if(monthly===null){setGoalsEditError('Informe uma meta mensal válida antes de editar a distribuição.');return;}
+    goalsDraft={month:mk,data:{g:{...g,monthly},d}};
+    $('goalDaily').value=goalMoneyInput(Math.max(0,monthly-getMonthRevenueSold(mk))/remainingDaysInMonthFromToday(mk));
+    setGoalsEditError();
+    paintDecendios(mk,g,d);
+    renderGoalsProgress({...g,monthly},d);
+    try{syncVendorGoalInputs('refresh');}catch(e){console.warn(e);}
+    try{renderVendorGoalsKpisOnly({...g,monthly},d);}catch(e){console.warn(e);}
   }
   function renderGoals(){
     const mk=$('goalMonth').value||monthKey(),g=getGoalsForMonth(mk),d=getDecendios(mk,g);
@@ -3320,27 +3381,60 @@ body{ background-attachment: fixed; }
     $('goalBasePct').value='100';
     $('goalSuperPct').value=decimalBR(g.levels.superPct);
     $('goalDiamondPct').value=decimalBR(g.levels.diamondPct);
-    for(let i=1;i<=3;i++)$('pW'+i).value=decimalBR(Number(d.basePercents[i-1]||0).toFixed(2));
     const daily=Math.max(0,Number(g.monthly||0)-getMonthRevenueSold(mk))/remainingDaysInMonthFromToday(mk);
-    $('goalDaily').value=daily.toFixed(2).replace('.',',');
+    $('goalDaily').value=goalMoneyInput(daily);
+    setGoalsEditError();
     paintDecendios(mk,g,d);
     renderGoalsProgress(g,d);
     try{renderVendorGoals();}catch(err){console.warn(err);}
-    // Não salvar ao abrir uma tela: preserva a distribuição anterior até ação explícita.
+    // Nenhuma escrita é executada ao abrir a tela.
   }
-  function previewGoalsDraft(){
-    const mk=$('goalMonth').value||monthKey(),g=getGoalsForMonth(mk);
-    const old=getDecendios(mk,g),monthly=parseBRNumber($('goalMonthly').value);
-    const base=[1,2,3].map(i=>parseBRNumber($('pW'+i).value));
-    const changedMonthly=Math.abs(monthly-Number(g.monthly||0))>.001;
-    const existingTotal=sum(old.targets);
-    const total=changedMonthly?Math.max(0,monthly-getMonthRevenueSold(mk)):existingTotal;
-    const d=redistributeDecendios({...old,basePercents:base},total);
-    goalsDraft={month:mk,data:{g:{...g,monthly},d}};
-    $('goalDaily').value=(Math.max(0,monthly-getMonthRevenueSold(mk))/remainingDaysInMonthFromToday(mk)).toFixed(2).replace('.',',');
-    paintDecendios(mk,g,d);
-    renderGoalsProgress({...g,monthly},d);
-    try{renderVendorGoalsKpisOnly({...g,monthly},d);}catch(err){console.warn(err);}
+  function previewGoalsDraft(source='monthly'){
+    const mk=$('goalMonth').value||monthKey(),g=getGoalsForMonth(mk),stored=getDecendios(mk,g);
+    const monthly=readGoalNumber($('goalMonthly'),'money');
+    if(monthly===null){setGoalsEditError('Informe um valor válido para a meta mensal.');return;}
+    const previous=goalDraftFor(mk)?.d||stored;
+    const total=goalPoolFor(mk,monthly,g,stored);
+    const locked=sum([1,2,3].filter(i=>previous.closed[String(i)]).map(i=>previous.targets[i-1]));
+    if(centsGoal(locked)>centsGoal(total)){
+      setGoalsEditError('A meta mensal não pode ficar abaixo dos valores de decêndios já fechados.');return;
+    }
+    const d=source==='monthly'
+      ?redistributeDecendios(previous,total)
+      :previous;
+    updateGoalsPreview(mk,g,d);
+  }
+  function editDecendioField(i,kind){
+    const mk=$('goalMonth').value||monthKey(),g=getGoalsForMonth(mk),stored=getDecendios(mk,g);
+    const monthly=readGoalNumber($('goalMonthly'),'money');
+    if(monthly===null){setGoalsEditError('Informe a meta mensal antes de editar os decêndios.');return;}
+    const d=goalDraftFor(mk)?.d||stored;
+    if(d.closed[String(i)]){setGoalsEditError('Este decêndio está fechado e não pode ser alterado.');return;}
+    const input=$(kind==='percent'?'pW'+i:'goalW'+i);
+    const value=readGoalNumber(input,kind);
+    if(value===null){setGoalsEditError('Informe '+(kind==='percent'?'uma porcentagem de 0% a 100%':'um valor em reais válido')+'.');return;}
+    const total=centsGoal(goalPoolFor(mk,monthly,g,stored));
+    const locked=[1,2,3].filter(x=>d.closed[String(x)]);
+    const lockedCents=locked.reduce((sum,x)=>sum+centsGoal(d.targets[x-1]),0);
+    const available=total-lockedCents;
+    const desired=kind==='percent'?Math.round(total*value/100):centsGoal(value);
+    if(available<0){setGoalsEditError('Os decêndios fechados ultrapassam o total disponível.');return;}
+    if(desired>available){setGoalsEditError('Este valor ultrapassa o saldo disponível: '+formatMoney(available/100)+'.');return;}
+    const other=[1,2,3].filter(x=>x!==i && !d.closed[String(x)]);
+    if(!other.length&&desired!==available){setGoalsEditError('Este é o único decêndio aberto; ele deve receber todo o saldo disponível.');return;}
+    const targets=d.targets.map(x=>centsGoal(x));
+    targets[i-1]=desired;
+    let rest=available-desired;
+    const weights=other.map(x=>Math.max(0,centsGoal(d.targets[x-1])));
+    const sumWeight=weights.reduce((a,b)=>a+b,0);
+    other.forEach((x,k)=>{
+      const cents=k===other.length-1?rest:Math.round((available-desired)*(sumWeight?weights[k]/sumWeight:1/other.length));
+      targets[x-1]=cents;rest-=cents;
+    });
+    const newTargets=targets.map(x=>x/100);
+    const newPercents=total>0?targets.map(x=>x/total*100):d.basePercents.slice();
+    const updated={...d,targets:newTargets,basePercents:newPercents};
+    updateGoalsPreview(mk,g,updated);
   }
   function renderGoalsProgress(gOverride=null,dOverride=null){
     const mk=$('goalMonth').value||monthKey(),g=gOverride||getGoalsForMonth(mk),d=dOverride||getDecendios(mk,g);
@@ -3426,6 +3520,7 @@ body{ background-attachment: fixed; }
     }
 
     const sel = $("goalVendorSelect");
+    const previousSid=sel.value;
     sel.innerHTML = "";
     const act = (state.sellers||[]).filter(s=>s.active);
     for(const s of act){
@@ -3434,6 +3529,7 @@ body{ background-attachment: fixed; }
       opt.textContent = s.name;
       sel.appendChild(opt);
     }
+    if(previousSid && act.some(s=>s.id===previousSid))sel.value=previousSid;
     if(!sel.value && act[0]) sel.value = act[0].id;
 
     const mk = $("goalMonth").value || monthKey();
@@ -3441,12 +3537,43 @@ body{ background-attachment: fixed; }
     const ov = getVendorOverride(mk, sid);
     const ovInp = $("goalVendorMonthlyOverride");
     if(ovInp && document.activeElement !== ovInp){
-      ovInp.value = ov>0 ? String(ov).replace(".",",") : "";
+      ovInp.value = ov>0 ? goalMoneyInput(ov) : "";
     }
-
+    syncVendorGoalInputs('refresh');
     renderVendorGoalsKpisOnly();
   }
 
+  function syncVendorGoalInputs(source){
+    const valueEl=$('goalVendorMonthlyOverride'),pctEl=$('goalVendorMonthlyPct');
+    if(!valueEl||!pctEl)return;
+    const mk=$('goalMonth').value||monthKey();
+    const storeMonthly=Number(goalDraftFor(mk)?.g?.monthly??getGoalsForMonth(mk).monthly??0);
+    const d=getVendorDivisor();
+    const autoPct=d>0?100/d:0;
+    if(source==='value'){
+      if(!valueEl.value.trim())pctEl.value='';
+      else {const amount=readGoalNumber(valueEl,'money');pctEl.value=amount!==null&&storeMonthly>0?goalPercentInput(amount/storeMonthly*100):'';}
+    }else if(source==='percent'){
+      if(!pctEl.value.trim())valueEl.value='';
+      else {const percent=readGoalNumber(pctEl,'vendorPercent');valueEl.value=percent!==null&&storeMonthly>0?goalMoneyInput(storeMonthly*percent/100):'';}
+    }else {
+      const sid=$('goalVendorSelect')?.value||'';
+      const ov=getVendorOverride(mk,sid);
+      if(document.activeElement!==valueEl && document.activeElement!==pctEl){
+        valueEl.value=ov>0?goalMoneyInput(ov):'';
+        pctEl.value=ov>0&&storeMonthly>0?goalPercentInput(ov/storeMonthly*100):'';
+      }else if(document.activeElement===valueEl&&valueEl.value.trim()){
+        const n=readGoalNumber(valueEl,'money');pctEl.value=n!==null&&storeMonthly>0?goalPercentInput(n/storeMonthly*100):'';
+      }else if(document.activeElement===pctEl&&pctEl.value.trim()){
+        const n=readGoalNumber(pctEl,'vendorPercent');valueEl.value=n!==null&&storeMonthly>0?goalMoneyInput(storeMonthly*n/100):'';
+      }
+    }
+    const help=$('goalsVendorHint');
+    if(help)help.textContent=storeMonthly>0
+      ?`Meta mensal da loja: ${formatMoney(storeMonthly)}. Sem valor personalizado, a participação automática é ${autoPct.toFixed(2).replace('.',',')}%.`
+      :'Defina primeiro uma meta mensal para a loja para calcular a porcentagem do vendedor.';
+    renderVendorGoalsKpisOnly();
+  }
   // Recalcula só os KPIs do vendedor, sem tocar nos inputs (usado enquanto digita)
   function renderVendorGoalsKpisOnly(previewG=null,previewD=null){
     const mk=$('goalMonth').value||monthKey(),sid=$('goalVendorSelect')?.value||'',box=$('kpisVendorGoals');
@@ -3456,7 +3583,12 @@ body{ background-attachment: fixed; }
     const month=sum(sold.map(r=>r.value));
     const day=sum(sold.filter(r=>r.dateKey===today).map(r=>r.value));
     const dec=sum(sold.filter(r=>decendioOfDate(r.dateKey)===period).map(r=>r.value));
-    const vm=getVendorMonthlyTarget(mk,sid),storeMonthly=Number(g.monthly||0),ratio=storeMonthly>0?vm/storeMonthly:0;
+    const storeMonthly=Number(g.monthly||0);
+    const currentInput=$('goalVendorMonthlyOverride');
+    const customValue=currentInput&&document.activeElement===currentInput?readGoalNumber(currentInput,'money'):null;
+    const customPct=$('goalVendorMonthlyPct')&&document.activeElement===$('goalVendorMonthlyPct')?readGoalNumber($('goalVendorMonthlyPct'),'vendorPercent'):null;
+    const vm=customPct!==null?storeMonthly*customPct/100:customValue!==null?customValue:getVendorMonthlyTarget(mk,sid);
+    const ratio=storeMonthly>0?vm/storeMonthly:0;
     const vd=parseBRNumber($('goalDaily').value||'0')*ratio, vdec=Number(d.targets[period-1]||0)*ratio;
     box.innerHTML=[
       {t:'Hoje (vendedor)',v:`${formatMoney(day)} / ${formatMoney(vd)}`},
@@ -3472,7 +3604,19 @@ body{ background-attachment: fixed; }
     if(rawDivisor==='' || d>0)state.options.vendorDivisor=d>0?d:0;
 
     const sid = $("goalVendorSelect").value;
-    const ov = parseBRNumber($("goalVendorMonthlyOverride").value||"");
+    if(!sid){alert('Selecione um vendedor antes de salvar a meta.');return;}
+    const valueEl=$('goalVendorMonthlyOverride'),pctEl=$('goalVendorMonthlyPct');
+    const rawValue=valueEl.value.trim(),rawPct=pctEl.value.trim();
+    const storeMonthly=Number(goalDraftFor(mk)?.g?.monthly??getGoalsForMonth(mk).monthly??0);
+    if(goalsDraft?.month===mk && Math.abs(storeMonthly-Number(getGoalsForMonth(mk).monthly||0))>0.001){
+      alert('Salve primeiro a meta mensal da loja para calcular a participação individual.');return;
+    }
+    if(rawValue&&readGoalNumber(valueEl,'money')===null){alert('Informe um valor válido para a meta do vendedor.');return;}
+    if(rawPct&&readGoalNumber(pctEl,'vendorPercent')===null){alert('Informe uma porcentagem válida (0 a 100).');return;}
+    if(rawPct&&storeMonthly<=0){alert('Defina e salve a meta da loja antes de salvar uma porcentagem individual.');return;}
+    if(rawPct&&Number(readGoalNumber(pctEl,'vendorPercent')||0)<=0){alert('Para voltar à divisão automática, deixe o campo de porcentagem em branco.');return;}
+    if(rawValue&&rawPct&&storeMonthly>0&&Math.abs(readGoalNumber(valueEl,'money')-storeMonthly*readGoalNumber(pctEl,'vendorPercent')/100)>Math.max(0.06,storeMonthly*0.00005+0.02)){alert('Valor e porcentagem estão diferentes. Confira antes de salvar.');return;}
+    const ov=rawValue?readGoalNumber(valueEl,'money'):0;
     setVendorOverride(mk, sid, ov);
 
     save(state);
@@ -3481,25 +3625,31 @@ body{ background-attachment: fixed; }
   }
 
   function saveGoals(){
+    if(goalsEditError){alert(goalsEditError);return;}
     const mk=$('goalMonth').value||monthKey(),g=getGoalsForMonth(mk);
-    const monthly=parseBRNumber($('goalMonthly').value);
+    const monthly=readGoalNumber($('goalMonthly'),'money');
+    if(monthly===null){alert('Informe uma meta mensal válida.');return;}
     const levels={basePct:100,superPct:parseBRNumber($('goalSuperPct').value),diamondPct:parseBRNumber($('goalDiamondPct').value)};
     if(levels.superPct<=100 || levels.diamondPct<=levels.superPct){
       alert('Meta 2 deve superar 100% e Meta 3 deve superar Meta 2.');return;
     }
-    const base=[1,2,3].map(i=>parseBRNumber($('pW'+i).value));
-    if(base.some(x=>x<0) || sum(base)<=0){alert('Informe ao menos um peso positivo entre os três decêndios.');return;}
-    const current=getDecendios(mk,g),changedMonthly=Math.abs(monthly-Number(g.monthly||0))>.001;
-    const total=changedMonthly?Math.max(0,monthly-getMonthRevenueSold(mk)):sum(current.targets);
-    const dec=redistributeDecendios({...current,basePercents:base},total);
-    // O formato semanal fica intacto para consultas e históricos existentes.
+    const old=getDecendios(mk,g),total=goalPoolFor(mk,monthly,g,old);
+    let d=goalDraftFor(mk)?.d||redistributeDecendios(old,total);
+    if(centsGoal(sum(d.targets))!==centsGoal(total)){
+      alert('A soma dos decêndios não corresponde ao valor total disponível. Confira antes de salvar.');return;
+    }
+    if([1,2,3].some(i=>old.closed[String(i)]&&centsGoal(old.targets[i-1])!==centsGoal(d.targets[i-1]))){
+      alert('Decêndios fechados não podem ser alterados.');return;
+    }
+    d={...d,basePercents:sum(d.targets)>0?d.targets.map(t=>t/sum(d.targets)*100):d.basePercents};
     g.monthly=monthly;
     g.levels=levels;
-    g.decendios={...dec,source:'user',version:1};
+    // Preserva os quatro campos semanais legados e qualquer histórico já salvo.
+    g.decendios={...d,source:'user',version:1};
     goalsDraft=null;
     save(state);
     renderGoals();renderMetaRank();renderNoConv();
-    alert('Metas decendiais salvas! Os dados semanais existentes foram preservados.');
+    alert('Metas salvas! Valor e percentual dos decêndios sincronizados; histórico semanal preservado.');
   }
   function closeCurrentWeek(){
     const mk=$('goalMonth').value||monthKey();
@@ -5792,14 +5942,29 @@ body{ background-attachment: fixed; }
 
   // Goals inputs: previews never write to Firebase.
   $('goalMonth').addEventListener('change',renderGoals);
-  ['goalMonthly','pW1','pW2','pW3','goalSuperPct','goalDiamondPct'].forEach(id=>{
-    $(id).addEventListener('input',previewGoalsDraft);
+  $('goalMonthly').addEventListener('input',()=>previewGoalsDraft('monthly'));
+  ['goalSuperPct','goalDiamondPct'].forEach(id=>$(id).addEventListener('input',()=>{
+    const mk=$('goalMonth').value||monthKey(),g=getGoalsForMonth(mk),d=goalDraftFor(mk)?.d||getDecendios(mk,g);
+    updateGoalsPreview(mk,g,d);
+  }));
+  [1,2,3].forEach(i=>{
+    $('pW'+i).addEventListener('input',()=>editDecendioField(i,'percent'));
+    $('goalW'+i).addEventListener('input',()=>editDecendioField(i,'money'));
+    $('pW'+i).addEventListener('blur',()=>{
+      const mk=$('goalMonth').value||monthKey(),g=getGoalsForMonth(mk);
+      paintDecendios(mk,g,goalDraftFor(mk)?.d||getDecendios(mk,g));
+    });
+    $('goalW'+i).addEventListener('blur',()=>{
+      const mk=$('goalMonth').value||monthKey(),g=getGoalsForMonth(mk);
+      paintDecendios(mk,g,goalDraftFor(mk)?.d||getDecendios(mk,g));
+    });
   });
   $('goalVendorDivisor').addEventListener('input',()=>{
     try{renderVendorGoalsKpisOnly();}catch(err){console.warn(err);}
   });
   $('goalVendorSelect').addEventListener('change',()=>{try{renderVendorGoals();}catch(err){console.warn(err);}});
-  $('goalVendorMonthlyOverride').addEventListener('input',()=>{});
+  $('goalVendorMonthlyOverride').addEventListener('input',()=>syncVendorGoalInputs('value'));
+  $('goalVendorMonthlyPct').addEventListener('input',()=>syncVendorGoalInputs('percent'));
   $('btnSaveVendorGoal').addEventListener('click',saveVendorGoal);
   $('btnSaveGoals').addEventListener('click',saveGoals);
   $('btnAutoRedistribute').addEventListener('click',()=>{

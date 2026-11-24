@@ -1,0 +1,60 @@
+/* ONDIS V8 — Dados e Metas. Escopado para preservar os demais módulos e temas. */
+#viewDados .dadosRevenueOverview{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(215px,300px);gap:22px;
+  align-items:center;margin:6px 0 20px;padding:24px 27px;border-radius:22px;
+  background:linear-gradient(115deg,#121b30 0%,#222d52 55%,#312359 100%);
+  border:1px solid rgba(170,192,255,.20);box-shadow:0 18px 40px rgba(22,28,53,.17);
+  color:#f8fbff!important;position:relative;overflow:hidden;
+}
+#viewDados .dadosRevenueOverview::before{
+  content:"";position:absolute;inset:-80px -80px auto auto;width:290px;height:270px;
+  pointer-events:none;background:radial-gradient(circle,rgba(224,38,101,.20),transparent 67%);
+}
+#viewDados .dadosRevenueHero{display:flex;align-items:center;gap:18px;min-width:0;position:relative}
+#viewDados .dadosRevenueIcon{width:56px;height:56px;flex:0 0 56px;display:grid;place-items:center;
+  border-radius:17px;font-weight:900;font-size:20px;background:linear-gradient(145deg,#f42b57,#b6133e);
+  color:#fff!important;box-shadow:0 8px 25px rgba(236,37,77,.30)}
+#viewDados .dadosRevenueHero>div{display:flex;flex-direction:column;gap:5px;min-width:0}
+#viewDados .dadosRevenueEyebrow{font-size:10px;letter-spacing:.12em;font-weight:900;color:#cad8fc!important}
+#viewDados .dadosRevenueOverview h3{margin:0;font-size:16px;line-height:1.3;color:#fff!important;font-weight:750}
+#viewDados .dadosRevenueOverview .dadosRevenueHero strong{font-size:clamp(25px,3vw,36px);font-weight:900;letter-spacing:-.035em;line-height:1.18;color:#fff!important;overflow-wrap:anywhere}
+#viewDados .dadosRevenueOverview small{font-size:11px;line-height:1.4;color:#d1d9ed!important}
+#viewDados .dadosRevenuePeriod{position:relative;border:1px solid rgba(226,232,255,.20);border-radius:16px;
+  padding:15px 18px;background:rgba(255,255,255,.075);display:flex;flex-direction:column;gap:6px;backdrop-filter:blur(8px)}
+#viewDados .dadosRevenuePeriod span{font-size:11px;font-weight:800;color:#edf2ff!important}
+#viewDados .dadosRevenuePeriod strong{font-size:23px;font-weight:900;color:#fff!important;letter-spacing:-.02em;overflow-wrap:anywhere}
+#viewDados #kpisData{margin-top:2px}
+#viewDados #kpisData .kpi{min-width:0}
+
+#viewMetas .decendioCard .decCardTotal{background:#eef4fb;border-color:#d5e0f0;transition:box-shadow .2s,border-color .2s}
+#viewMetas .decendioCard .decCardTotal:focus-within{border-color:#f0365a;box-shadow:0 0 0 3px rgba(231,27,74,.09)}
+#viewMetas .decendioCard .decCardTotal label{font-size:11px;font-weight:850;color:#485c79!important;line-height:1.4}
+#viewMetas .decendioCard .decCardTotal input:not(:disabled){
+  background:#fff!important;border:1px solid #ced9e8!important;border-radius:10px!important;
+  padding:10px 12px!important;min-height:44px!important;color:#102239!important;
+  font-size:17px!important;font-weight:900!important;box-shadow:inset 0 1px 3px rgba(30,40,70,.04);
+  outline:none;transition:box-shadow .2s,border-color .2s;
+}
+#viewMetas .decendioCard .decCardTotal input:focus{border-color:#ed1740!important;box-shadow:0 0 0 3px rgba(237,23,64,.12)}
+#viewMetas .decendioCard input:disabled{cursor:not-allowed!important;opacity:.65!important}
+#viewMetas .decendioCard.isClosed .decCardTotal{opacity:.85;background:#f2f6f7}
+#viewMetas .decendioCard.isClosed .decCardTotal input{border:0!important;background:transparent!important;color:#597084!important}
+#viewMetas .goalsSyncHint,#viewMetas .goalsVendorHint{margin:14px 0 8px;padding:12px 14px;border-radius:12px;
+  border:1px solid #cce2fa;background:#eef6ff;color:#254969!important;
+  font-size:12px;line-height:1.55}
+#viewMetas .goalsSyncHint.isError{border-color:#f3b2bc;background:#fff0f3;color:#a51434!important;font-weight:800}
+#viewMetas .goalsVendorHint{margin-top:0;margin-bottom:13px}
+#viewMetas #btnSaveGoals:disabled{opacity:.5;cursor:not-allowed}
+#viewMetas .goalsVendorGrid{grid-template-columns:repeat(4,minmax(0,1fr)) auto!important;gap:12px;align-items:end}
+#viewMetas .goalsVendorGrid .field{min-width:0}
+#viewMetas .goalsVendorGrid input{width:100%}
+@media(max-width:1360px){#viewMetas .goalsVendorGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #viewMetas .goalsVendorGrid #btnSaveVendorGoal{justify-self:start}}
+@media(max-width:760px){
+  #viewDados .dadosRevenueOverview{grid-template-columns:1fr;gap:15px;padding:19px;border-radius:18px}
+  #viewDados .dadosRevenuePeriod{padding:12px 14px}
+  #viewDados .dadosRevenueHero{align-items:flex-start;gap:12px}
+  #viewDados .dadosRevenueIcon{width:48px;height:48px;flex-basis:48px}
+  #viewMetas .goalsVendorGrid{grid-template-columns:1fr!important}
+  #viewMetas .goalsVendorGrid #btnSaveVendorGoal{width:100%}
+}
