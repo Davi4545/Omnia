@@ -172,3 +172,153 @@ body[data-ondis-catalog="otica"] .oticaFiltersToggle{display:none}
  body[data-ondis-catalog="otica"] .catalog-filter-title{margin:0;gap:8px}
  body[data-ondis-catalog="otica"] .catalog-filter-card.oticaFiltersOpen .catalog-filter-title{margin-bottom:13px}
 }
+
+/* =============================================================
+   ONDIS V12.1 — Correção de contraste do catálogo completo
+   Inclui óticas e o modo de vitrine geral. Somente apresentação.
+   A regra de cabeçalho do tema ONDIS (ondis-premium.css) era mais
+   específica e aplicava texto branco sobre fundo branco.
+   ============================================================= */
+
+/* Pares corretos de fundo e texto em todos os temas. */
+:root body[data-ondis-refresh="catalog"] > header {
+  background:var(--c6-paper,#fff)!important;
+  color:var(--c6-ink,#172338)!important;
+  border-color:var(--c6-border,#dce3ed)!important;
+}
+:root body[data-ondis-refresh="catalog"] > header :is(.brand,.brand h1,.brand h1 #lojaTitulo){
+  color:var(--c6-ink,#172338)!important;
+}
+:root body[data-ondis-refresh="catalog"] > header .brand h1 {
+  font-size:clamp(18px,1.8vw,22px)!important;
+  font-weight:900!important;
+  line-height:1.22!important;
+  letter-spacing:-.03em!important;
+}
+:root body[data-ondis-refresh="catalog"] > header :is(.brand .sub,#ctxInfo){
+  color:var(--c6-muted,#58677d)!important;
+  opacity:1!important;
+}
+:root body[data-ondis-refresh="catalog"] > header .onx-title-icon {
+  color:#b90e38!important;
+}
+:root body[data-ondis-refresh="catalog"] > header #modoChip {
+  background:color-mix(in srgb,#cf1643 9%,var(--c6-paper,#fff))!important;
+  border:1px solid color-mix(in srgb,#cf1643 25%,var(--c6-border,#dce3ed))!important;
+  color:#a30b31!important;
+}
+:root body[data-ondis-refresh="catalog"] > header #btnVoltar {
+  background:var(--c6-paper,#fff)!important;
+  color:var(--c6-ink,#172338)!important;
+  border:1px solid var(--c6-border,#dce3ed)!important;
+  box-shadow:none!important;
+}
+:root body[data-ondis-refresh="catalog"] > header #btnVoltar:hover {
+  background:var(--c6-soft,#f4f6fb)!important;
+}
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"])
+  body[data-ondis-refresh="catalog"] > header #modoChip,
+:root[data-theme="custom"][data-ondis-surface-tone="dark"]
+  body[data-ondis-refresh="catalog"] > header #modoChip {
+  color:#ffabc0!important;
+  background:rgba(226,64,105,.12)!important;
+  border-color:rgba(255,171,192,.32)!important;
+}
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"])
+  body[data-ondis-refresh="catalog"] > header .onx-title-icon,
+:root[data-theme="custom"][data-ondis-surface-tone="dark"]
+  body[data-ondis-refresh="catalog"] > header .onx-title-icon {color:#ffa1b5!important;}
+
+/* Tipografia das superfícies de gestão, vitrine, filtros e janelas.
+   Não afetar textos que ficam sobre banners preenchidos. */
+:root body[data-ondis-refresh="catalog"] :is(.catalog-filter-card,.catalog-tools-card,.catalogStat,.oticaManageHeader,.oticaManageStats,.oticaManageItem) {
+  color:var(--c6-ink,#172338)!important;
+}
+:root body[data-ondis-refresh="catalog"] :is(.catalog-filter-card,.catalog-tools-card,.oticaManageHeader) :is(h2,h3,h4,strong):not(.oticaEyebrow) {
+  color:var(--c6-ink,#172338)!important;
+}
+:root body[data-ondis-refresh="catalog"] :is(.catalog-filter-card,.catalog-tools-card,.oticaManageHeader) :is(small,.meta,.hint) {
+  color:var(--c6-muted,#58677d)!important;
+}
+:root body[data-ondis-refresh="catalog"] :is(.modal:not(.rankingModal),.oticaDetailModal) {
+  color:var(--c6-ink,#172338)!important;
+}
+:root body[data-ondis-refresh="catalog"] :is(.modal,.oticaDetailModal) :is(h2,h3,h4):not(.onx-inverse) {
+  color:var(--c6-ink,#172338)!important;
+}
+:root body[data-ondis-refresh="catalog"] :is(.modal,.oticaDetailModal) .field label {
+  color:var(--c6-muted,#58677d)!important;
+}
+:root body[data-ondis-refresh="catalog"] :is(.modal,.catalog-filter-card,.catalog-tools-card,.oticaManageHeader)
+  :is(input:not([type="checkbox"]):not([type="radio"]),select,textarea) {
+  color:var(--c6-input-ink,#172338)!important;
+  background:var(--c6-input,#fff)!important;
+  border-color:var(--c6-border,#dce3ed)!important;
+}
+:root body[data-ondis-refresh="catalog"] :is(.modal,.catalog-filter-card,.catalog-tools-card,.oticaManageHeader)
+  :is(input,textarea)::placeholder {color:var(--c6-muted,#58677d)!important;opacity:.92!important;}
+:root body[data-ondis-refresh="catalog"] :is(.modal,.catalog-filter-card,.catalog-tools-card,.oticaManageHeader)
+  select option {color:var(--c6-input-ink,#172338)!important;background:var(--c6-input,#fff)!important;}
+
+/* Modo de catálogo geral (vestuário), que não usa a camada ótica. */
+:root body[data-ondis-refresh="catalog"][data-ondis-catalog="geral"]
+  :is(.catalog-filter-card,.catalog-tools-card,.catalogStat,.prod,.modal) {
+  background:var(--c6-paper,#fff)!important;
+  color:var(--c6-ink,#172338)!important;
+  border-color:var(--c6-border,#dce3ed)!important;
+}
+:root body[data-ondis-refresh="catalog"][data-ondis-catalog="geral"]
+  :is(.prod .nome,.prod .preco,.prod .body,.catalogStat b,.catalog-filter-title strong) {
+  color:var(--c6-ink,#172338)!important;
+}
+:root body[data-ondis-refresh="catalog"][data-ondis-catalog="geral"]
+  :is(.prod .desc,.prod .ref,.prod .precoAntigo,.catalogStat small,.catCheck,.field label) {
+  color:var(--c6-muted,#58677d)!important;
+}
+:root body[data-ondis-refresh="catalog"][data-ondis-catalog="geral"]
+  :is(.tabs,.tab:not(.active)) {color:var(--c6-muted,#58677d)!important;}
+:root body[data-ondis-refresh="catalog"][data-ondis-catalog="geral"]
+  :is(.tabs,.catalog-filter-card,.catalog-tools-card) {background:var(--c6-paper,#fff)!important;}
+:root body[data-ondis-refresh="catalog"][data-ondis-catalog="geral"]
+  .prod .acts .btn:not(.good):not(.bad):not(.warn):not(.wa) {
+  background:var(--c6-paper,#fff)!important;color:var(--c6-ink,#172338)!important;border-color:var(--c6-border,#dce3ed)!important;
+}
+
+/* Destaques permanecem com texto branco, já que têm fundo forte. */
+:root body[data-ondis-refresh="catalog"] :is(.btn.good,.btn.wa,.cartFab) {color:#fff!important;}
+:root body[data-ondis-refresh="catalog"] .cartFab .cartCount{color:#bd0b35!important;background:#fff!important;}
+
+@media(max-width:600px){
+  :root body[data-ondis-refresh="catalog"] > header .brand h1{font-size:19px!important;}
+  :root body[data-ondis-refresh="catalog"] > header #btnVoltar{min-height:38px!important;}
+}
+
+/* Abas: a regra global V6 aplicava texto branco sobre rosa-claro.
+   Usar borda vermelha e texto escuro/vermelho no tema claro. */
+:root body[data-ondis-refresh="catalog"] .tabs .tab.active{
+  background:color-mix(in srgb,#bd0b35 8%,var(--c6-paper,#fff))!important;
+  color:#ab1032!important;
+  border-bottom:3px solid #bd0b35!important;
+}
+/* Nos temas escuros, vermelho de texto precisa ser mais luminoso. */
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"])
+ body[data-ondis-catalog="otica"],
+:root[data-theme="custom"][data-ondis-surface-tone="dark"] body[data-ondis-catalog="otica"]{
+  --ot-red:#ff9db3;
+}
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"])
+ body[data-ondis-refresh="catalog"] .tabs .tab.active,
+:root[data-theme="custom"][data-ondis-surface-tone="dark"]
+ body[data-ondis-refresh="catalog"] .tabs .tab.active {
+  background:color-mix(in srgb,#d71038 15%,var(--c6-paper,#141e2e))!important;
+  color:#ffb0c2!important;
+  border-bottom-color:#ff6f93!important;
+}
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"])
+ body[data-ondis-catalog="otica"] .btn.bad,
+:root[data-theme="custom"][data-ondis-surface-tone="dark"]
+ body[data-ondis-catalog="otica"] .btn.bad {
+  background:rgba(226,64,105,.13)!important;
+  border-color:rgba(255,171,192,.35)!important;
+  color:#ffb0c2!important;
+}
