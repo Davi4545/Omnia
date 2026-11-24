@@ -1,0 +1,115 @@
+/* ONDIS Metas V8.2 – visão visual com dados reais. Escopo exclusivo do módulo Metas. */
+#viewMetas .ondisGoalsCard{background:#fff;border:1px solid #e2e9f2;box-shadow:0 12px 42px rgba(21,33,54,.055)}
+#viewMetas .ondisGoalsCard>.cardHeader{background:linear-gradient(115deg,#fff,#f9fbff)!important;border-bottom:1px solid #e5ebf4!important;padding:22px 25px!important}
+#viewMetas .goalsHeading h2{color:#14213b!important;letter-spacing:-.04em!important}
+#viewMetas .goalsHeading p{color:#70809a!important}
+#viewMetas .goalsActions #btnSaveGoals{color:#fff!important;background:linear-gradient(180deg,#ec123e,#c30732)!important;border:1px solid #c30732!important;border-radius:11px!important;box-shadow:0 7px 16px rgba(218,13,59,.18)!important}
+#viewMetas .goalsActions #btnAutoRedistribute{background:#fff!important;color:#273854!important;border:1px solid #d6e0ee!important;border-radius:11px!important}
+#viewMetas .goalsInfo{margin-bottom:18px}
+#viewMetas .goalsMainFields{margin:12px 0 16px!important;padding:19px!important;border:1px solid #e1e8f4!important;background:linear-gradient(130deg,#f6faff,#fff)!important;border-radius:18px!important;box-shadow:0 5px 20px rgba(28,48,86,.035)}
+#viewMetas .goalsMainFields .field label,#viewMetas .goalLevelFields label{color:#586880!important;font-weight:800!important;font-size:11px!important;letter-spacing:.02em}
+#viewMetas .goalsMainFields input,#viewMetas .goalLevelFields input{
+  min-height:45px!important;padding:10px 13px!important;border:1px solid #d4deed!important;border-radius:11px!important;background:#fff!important;color:#15243e!important;box-shadow:0 2px 6px rgba(18,32,60,.025);font-weight:750!important}
+#viewMetas #goalMonthly{font-size:18px!important;font-weight:900!important;color:#c6153c!important}
+#viewMetas .goalLevelEditor{background:linear-gradient(140deg,#fff,#f6f9fe)!important;border:1px solid #e1e8f3!important;border-radius:18px!important;padding:19px!important;margin-bottom:15px;box-shadow:0 6px 20px rgba(23,40,70,.035)}
+#viewMetas .goalLevelIntro b{font-size:15px!important;color:#17243b!important;font-weight:900!important}
+#viewMetas .goalLevelIntro span{color:#718099!important}
+#viewMetas .goalsSectionHead h3{color:#16233a!important}
+#viewMetas .goalsSectionHead p{color:#71829a!important}
+#viewMetas .decendioCard{box-shadow:0 11px 24px rgba(20,38,71,.065)!important;border-radius:19px!important}
+#viewMetas .decCardTop h4{font-size:16px!important;color:#15233a!important}
+#viewMetas .decCardFoot{min-height:40px}
+#viewMetas .decCardFoot input:disabled{color:#475d76!important;background:#f1f5fa!important;border:1px solid #dae3ee!important;font-weight:900!important;opacity:1!important}
+#viewMetas .decendioCard.isSaved .decCardFoot input:disabled{color:#087a41!important;background:#e8f8ef!important;border-color:#b7e2c8!important}
+#viewMetas .decendioCard.hasPendingChanges .decCardFoot input:disabled{color:#b42348!important;background:#fff1f4!important;border-color:#f0c1ce!important}
+#viewMetas .decendioCard.isClosed .decCardFoot input:disabled{color:#315c74!important;background:#eaf3f8!important;border-color:#c7dbe7!important}
+#viewMetas .decendioCard .decendioSaveButton{font-size:13px!important;min-height:44px!important}
+
+/* Gráficos: cartões claros e texto escuro, inclusive no tema ONDIS. */
+#viewMetas .goalsInsightsV82{margin:18px 0 20px;padding:20px;border:1px solid #dae4f1;border-radius:22px;background:linear-gradient(155deg,#fff,#f8fbff);box-shadow:0 12px 30px rgba(24,40,75,.07);color:#14233d!important}
+#viewMetas .goalsInsightsHeader{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 16px}
+#viewMetas .goalsInsightsTitle{display:flex;align-items:center;gap:12px;min-width:0}
+#viewMetas .goalsInsightsIcon{display:grid;place-items:center;width:36px;height:36px;flex:0 0 36px;color:#e51442;background:#fff1f5;border:1px solid #f9dae4;border-radius:12px}
+#viewMetas .goalsInsightsIcon svg{width:20px;height:20px}
+#viewMetas .goalsInsightsTitle h3{margin:0;font-size:19px;line-height:1.25;letter-spacing:-.03em;color:#16243c!important;font-weight:900}
+#viewMetas .goalsInsightsTitle p{margin:3px 0 0;font-size:12px;line-height:1.5;color:#70809a!important}
+#viewMetas .goalsInsightsLive{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;color:#4c657d!important;background:#f4f8fe;border:1px solid #e1eaf6;border-radius:999px;padding:8px 11px;font-size:10px;font-weight:750}
+#viewMetas .goalsInsightsLive>span{width:7px;height:7px;border-radius:50%;background:#0fb77b;box-shadow:0 0 0 3px #e2f8ef}
+#viewMetas .goalsInsightsGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;align-items:stretch}
+#viewMetas .goalsInsightPanel{min-width:0;padding:16px 15px 14px;border:1px solid #dfe7f2;border-radius:17px;background:#fff;box-shadow:0 6px 16px rgba(25,42,73,.04);display:flex;flex-direction:column}
+#viewMetas .goalsInsightPanelHead{display:flex;align-items:flex-start;gap:9px;margin-bottom:9px;min-height:39px}
+#viewMetas .goalsInsightPanelIcon{color:#e2123e!important;font-size:24px;font-weight:850;line-height:1;flex:0 0 24px;text-align:center}
+#viewMetas .goalsInsightPanel h4{margin:0;font-size:14px;line-height:1.22;font-weight:900;color:#17263d!important;letter-spacing:-.025em}
+#viewMetas .goalsInsightPanel p{margin:3px 0 0;font-size:10.5px;line-height:1.35;color:#718098!important}
+#viewMetas .goalsChartBody{width:100%;min-width:0;flex:1;display:flex;align-items:center;justify-content:center;min-height:190px}
+#viewMetas .goalsSvg{display:block;width:100%;height:auto;max-height:245px;overflow:visible;color:#34425b}
+#viewMetas .goalsGridLine{stroke:#e6eaf2;stroke-width:1;stroke-dasharray:2 2}
+#viewMetas .goalsAxisValue{fill:#697990;font-size:12px;font-weight:650}
+#viewMetas .goalsAxisLabel{fill:#33455f;font-size:13px;font-weight:800}
+#viewMetas .goalsBarTarget{fill:#df0c38}
+#viewMetas .goalsBarReal{fill:#ff9eb0}
+#viewMetas .goalsBarTopLabel{fill:#172338;font-size:11px;font-weight:900}
+#viewMetas .goalsTrendPoint{fill:#fff;stroke:#e70f3d;stroke-width:3.5}
+#viewMetas .goalsTrendValue{fill:#d5143e;font-size:13px;font-weight:900}
+#viewMetas .goalsTargetLine{fill:none;stroke:#9aa6bb;stroke-width:3;stroke-dasharray:8 5;stroke-linejoin:round}
+#viewMetas .goalsRealLine{fill:none;stroke:#df123d;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
+#viewMetas .goalsChartLegend{display:flex;gap:13px;flex-wrap:wrap;align-items:center;justify-content:center;margin-top:1px;font-size:10px;color:#586a83!important}
+#viewMetas .goalsChartLegend>span{display:flex;align-items:center;gap:5px}
+#viewMetas .goalsChartLegend i{width:12px;height:5px;border-radius:4px;display:inline-block}
+#viewMetas .goalsChartLegend .goalLegendTarget{background:#dc143e}
+#viewMetas .goalsChartLegend .goalLegendReal{background:#ff9eb0}
+#viewMetas .goalsChartLegend .goalLegendExpected{background:#97a5bb}
+#viewMetas .goalsChartLegendBottom{margin-top:auto;padding-top:6px}
+#viewMetas .goalsChartLegendBottom .goalLegendReal{background:#df123d}
+#viewMetas .goalsAttainmentBody{min-height:210px;align-items:stretch}
+#viewMetas .goalsDonutRow{display:grid;grid-template-columns:minmax(0,1fr) minmax(120px,1fr);gap:12px;width:100%;align-items:center}
+#viewMetas .goalsDonutGraphic{position:relative;width:min(100%,195px);margin:0 auto;aspect-ratio:1}
+#viewMetas .goalsDonutGraphic svg{width:100%;height:100%;transform:rotate(-90deg);overflow:visible}
+#viewMetas .goalsRingTrack{stroke:#e8ecf2;fill:none;stroke-width:16}
+#viewMetas .goalsRingFill{stroke:#e10f3e;fill:none;stroke-width:16;stroke-linecap:round}
+#viewMetas .goalsDonutText{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px}
+#viewMetas .goalsDonutText strong{color:#16253d!important;line-height:1;font-size:clamp(18px,2.15vw,31px);letter-spacing:-.05em;font-weight:950}
+#viewMetas .goalsDonutText small{color:#657791!important;font-size:10px;font-weight:800}
+#viewMetas .goalsDonutMetrics{display:flex;flex-direction:column;gap:8px;border-left:1px solid #e5eaf2;padding-left:12px;min-width:0}
+#viewMetas .goalsDonutMetrics>div{display:flex;flex-direction:column;gap:3px;padding:5px 2px 8px;border-bottom:1px solid #e7ecf3;min-width:0}
+#viewMetas .goalsDonutMetrics>div:last-child{border:0}
+#viewMetas .goalsDonutMetrics span{font-size:10px;color:#72819a!important;line-height:1.3}
+#viewMetas .goalsDonutMetrics strong{font-size:14px;line-height:1.25;color:#15243c!important;font-weight:900;overflow-wrap:anywhere}
+#viewMetas .goalsDonutMetrics .goalsDonutRemaining{border-radius:10px;padding:9px 8px;background:#f1f6fc}
+#viewMetas .goalsNoMonthly{display:flex;flex-direction:column;gap:7px;align-items:center;justify-content:center;text-align:center;background:#f6f9fd;border:1px dashed #d8e2ee;border-radius:13px;padding:20px;min-height:170px;color:#1e3150}
+#viewMetas .goalsNoMonthly b{font-size:14px}
+#viewMetas .goalsNoMonthly span{color:#70849a;font-size:11px;line-height:1.5}
+#viewMetas .goalsInsightsFootnote{font-size:10.5px;line-height:1.5;color:#6a7890!important;margin:13px 3px 0!important}
+
+/* Painéis secundários abaixo da área gráfica. */
+#viewMetas .goalsKpis .kpi{background:linear-gradient(145deg,#fff,#f8faff)!important;border-radius:15px!important;border:1px solid #e4ebf4!important}
+#viewMetas .goalsProgressItem{background:linear-gradient(145deg,#fff,#f8fbff)!important;border:1px solid #dde6f2!important;box-shadow:0 5px 16px rgba(22,39,75,.03)}
+#viewMetas .goalsProgressItem .bar{border-radius:999px!important}
+#viewMetas .goalsProgressItem .bar i{border-radius:999px!important}
+
+@media(max-width:1280px){
+  #viewMetas .goalsInsightsGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #viewMetas .goalsInsightPanel:last-child{grid-column:1/-1}
+  #viewMetas .goalsInsightPanel:last-child .goalsChartBody{max-width:630px;margin:auto}
+}
+@media(max-width:1000px){
+  #viewMetas .goalsInsightsGrid{grid-template-columns:1fr}
+  #viewMetas .goalsInsightPanel:last-child{grid-column:auto}
+  #viewMetas .goalsInsightPanel .goalsChartBody{max-width:680px;margin:auto}
+  #viewMetas .goalsInsightPanel{padding:17px}
+}
+@media(max-width:650px){
+  #viewMetas .ondisGoalsCard>.cardHeader{padding:18px!important}
+  #viewMetas .goalsInsightsV82{padding:12px;border-radius:18px}
+  #viewMetas .goalsInsightsHeader{align-items:flex-start;flex-direction:column}
+  #viewMetas .goalsInsightsTitle h3{font-size:17px}
+  #viewMetas .goalsInsightsLive{font-size:9px}
+  #viewMetas .goalsInsightPanel{padding:13px 10px}
+  #viewMetas .goalsInsightPanel h4{font-size:13px}
+  #viewMetas .goalsAttainmentBody{min-height:180px}
+  #viewMetas .goalsDonutMetrics strong{font-size:12px}
+  #viewMetas .goalsDonutRow{grid-template-columns:minmax(0,1fr) minmax(108px,1fr);gap:5px}
+  #viewMetas .goalsDonutMetrics{padding-left:7px}
+  #viewMetas .goalsMainFields{padding:13px!important}
+}
+@media(prefers-reduced-motion:reduce){#viewMetas .goalsInsightsV82 *{transition:none!important;animation:none!important}}

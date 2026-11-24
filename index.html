@@ -1078,6 +1078,7 @@ body{ background-attachment: fixed; }
 <link rel="stylesheet" href="./ondis-contraste-global-v6.css?v=6.0.0">
 <link rel="stylesheet" href="./ondis-gamificacao-v7.css?v=7.0.0">
 <link rel="stylesheet" href="./ondis-dados-metas-v8.css?v=8.1.0">
+<link rel="stylesheet" href="./ondis-metas-visual-v8-2.css?v=8.2.0">
 </head>
 <body>
 <div class="appShell" id="appShell">
@@ -1263,6 +1264,29 @@ body{ background-attachment: fixed; }
       <article class="decendioCard" data-dec="2"><div class="decCardTop"><span>02</span><div><h4>2º decêndio</h4><small>Dias 11 a 20</small></div></div><div class="field"><label for="pW2">% da meta mensal</label><input id="pW2" inputmode="decimal" placeholder="33,3"/></div><div class="decCardTotal"><label for="goalW2">Meta do período (R$)</label><input id="goalW2" inputmode="decimal" autocomplete="off" aria-label="Meta em reais do 2º decêndio"/></div><div class="decCardFoot"><span>Situação</span><input disabled id="rpW2"/></div><button type="button" class="btn good decendioSaveButton" id="btnSaveDecendio2" data-dec-save="2">Salvar 2º decêndio</button></article>
       <article class="decendioCard" data-dec="3"><div class="decCardTop"><span>03</span><div><h4>3º decêndio</h4><small>Dias 21 ao último dia</small></div></div><div class="field"><label for="pW3">% da meta mensal</label><input id="pW3" inputmode="decimal" placeholder="33,4"/></div><div class="decCardTotal"><label for="goalW3">Meta do período (R$)</label><input id="goalW3" inputmode="decimal" autocomplete="off" aria-label="Meta em reais do 3º decêndio"/></div><div class="decCardFoot"><span>Situação</span><input disabled id="rpW3"/></div><button type="button" class="btn good decendioSaveButton" id="btnSaveDecendio3" data-dec-save="3">Salvar 3º decêndio</button></article>
     </div>
+    <section class="goalsInsightsV82" aria-labelledby="goalsInsightsTitle">
+      <header class="goalsInsightsHeader">
+        <div class="goalsInsightsTitle"><span class="goalsInsightsIcon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="12" width="3" height="8" rx="1"/><rect x="10" y="8" width="3" height="12" rx="1"/><rect x="17" y="4" width="3" height="16" rx="1"/></svg></span><div><h3 id="goalsInsightsTitle">Visão das metas</h3><p>Compare metas e resultados sem alterar os valores de cada decêndio.</p></div></div>
+        <span class="goalsInsightsLive"><span aria-hidden="true"></span> Atualizado com os dados da loja</span>
+      </header>
+      <div class="goalsInsightsGrid">
+        <article class="goalsInsightPanel" aria-labelledby="goalsBarsTitle">
+          <div class="goalsInsightPanelHead"><span class="goalsInsightPanelIcon" aria-hidden="true">▥</span><div><h4 id="goalsBarsTitle">Comparativo por decêndio</h4><p>Meta prevista e vendas realizadas (R$)</p></div></div>
+          <div class="goalsChartLegend"><span><i class="goalLegendTarget"></i> Meta</span><span><i class="goalLegendReal"></i> Realizado</span></div>
+          <div id="goalsChartBars" class="goalsChartBody" aria-live="off"></div>
+        </article>
+        <article class="goalsInsightPanel" aria-labelledby="goalsDonutTitle">
+          <div class="goalsInsightPanelHead"><span class="goalsInsightPanelIcon" aria-hidden="true">◎</span><div><h4 id="goalsDonutTitle">Atingimento da meta mensal</h4><p>Faturamento realizado vs. meta do mês</p></div></div>
+          <div id="goalsChartAttainment" class="goalsChartBody goalsAttainmentBody" aria-live="off"></div>
+        </article>
+        <article class="goalsInsightPanel" aria-labelledby="goalsTrendTitle">
+          <div class="goalsInsightPanelHead"><span class="goalsInsightPanelIcon" aria-hidden="true">↗</span><div><h4 id="goalsTrendTitle">Progresso do mês</h4><p>Participação acumulada sobre a meta mensal</p></div></div>
+          <div id="goalsChartTrend" class="goalsChartBody" aria-live="off"></div>
+          <div class="goalsChartLegend goalsChartLegendBottom"><span><i class="goalLegendExpected"></i> Metas acumuladas</span><span><i class="goalLegendReal"></i> Realizado acumulado</span></div>
+        </article>
+      </div>
+      <p class="goalsInsightsFootnote">Os gráficos usam somente vendas concluídas. Valores editados aparecem como prévia; o Firebase só recebe as mudanças após você salvar a meta correspondente.</p>
+    </section>
     <p class="goalsSyncHint" id="goalsSyncHint" role="status" aria-live="polite">Cada decêndio é independente: ao mudar R$, muda apenas a % dele, e vice-versa. Salve pelo botão do período ou use <b>Salvar metas</b> para confirmar todos os campos.</p>
     <div class="goalsFootActions"><div class="goalsClosed"><span>Decêndio atual encerrado?</span><input disabled id="goalWeekClosed" aria-label="Status do fechamento"/></div>
       <button class="btn warn" id="btnCloseWeek" type="button">Fechar decêndio atual</button><button class="btn ghost" id="btnReopenWeeks" type="button">Reabrir decêndios</button></div>
@@ -3348,6 +3372,7 @@ body{ background-attachment: fixed; }
         card.classList.toggle('isClosed',closed);
         card.classList.toggle('isCurrent',mk===monthKey() && i===decendioOfDate(todayKey()));
         card.classList.toggle('hasPendingChanges',modified);
+        card.classList.toggle('isSaved',!!g.decendios && !modified && !closed);
       }
       const t=Number(d.targets[i-1]||0);
       const pct=monthly>0?t/monthly*100:0;
@@ -3486,6 +3511,64 @@ body{ background-attachment: fixed; }
       {t:'Falta para meta',v:formatMoney(remaining)}
     ];
     $('kpisGoals').innerHTML=cards.map(c=>`<div class="kpi"><div class="t">${c.t}</div><div class="v">${c.v}</div></div>`).join('');
+    renderGoalsInsightsV82(mk,g,d,sold,monthRevenue);
+  }
+
+  /* Painel V8.2: visualização sem gravação nem recálculo das metas independentes. */
+  function renderGoalsInsightsV82(mk,g,d,sold,monthRevenue){
+    const elBars=$('goalsChartBars'),elAtt=$('goalsChartAttainment'),elTrend=$('goalsChartTrend');
+    if(!elBars||!elAtt||!elTrend)return;
+    const targets=Array.from({length:3},(_,i)=>Math.max(0,Number(d.targets[i]||0)));
+    const revenues=[1,2,3].map(dec=>sum(sold.filter(r=>decendioOfDate(r.dateKey)===dec).map(r=>Math.max(0,Number(r.value||0)))));
+    const monthly=Math.max(0,Number(g.monthly||0));
+    const total=Math.max(0,Number(monthRevenue||0));
+    const moneyShort=(n)=>'R$ '+new Intl.NumberFormat('pt-BR',{notation:'compact',maximumFractionDigits:1}).format(Number(n||0));
+    const decimal=(n)=>new Intl.NumberFormat('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1}).format(Number(n||0));
+    const safeId='goalsV82Fill';
+
+    // Comparativo: cada período tem seu alvo independente e seu próprio realizado.
+    const maxVal=Math.max(1,...targets,...revenues);
+    const niceStep=Math.pow(10,Math.floor(Math.log10(maxVal)));
+    const steps=[1,2,2.5,5,10].map(m=>m*niceStep);
+    const top=steps.find(v=>v>=maxVal*1.05)||10*niceStep;
+    const x0=58,x1=468,topY=29,baseY=195,barHeight=baseY-topY;
+    const y=v=>baseY-(v/top)*barHeight;
+    const grid=[0,1,2,3,4].map(i=>{
+      const val=top*i/4,Y=y(val);
+      return `<line x1="${x0}" x2="${x1}" y1="${Y.toFixed(1)}" y2="${Y.toFixed(1)}" class="goalsGridLine"/><text x="${x0-9}" y="${(Y+4).toFixed(1)}" text-anchor="end" class="goalsAxisValue">${moneyShort(val).replace('R$ ','')}</text>`;
+    }).join('');
+    const groups=targets.map((val,i)=>{
+      const gx=97+i*137, r=revenues[i],targetH=(val/top)*barHeight, realH=(r/top)*barHeight;
+      const at=Math.min(y(val),y(r))-8;
+      return `<g><rect x="${gx}" y="${y(val).toFixed(1)}" width="33" height="${Math.max(.1,targetH).toFixed(1)}" rx="6" class="goalsBarTarget"><title>Meta: ${formatMoney(val)}</title></rect><rect x="${gx+36}" y="${y(r).toFixed(1)}" width="33" height="${Math.max(.1,realH).toFixed(1)}" rx="6" class="goalsBarReal"><title>Realizado: ${formatMoney(r)}</title></rect><text x="${gx+35}" y="${Math.max(15,at).toFixed(1)}" text-anchor="middle" class="goalsBarTopLabel">${moneyShort(val)}</text><text x="${gx+35}" y="216" text-anchor="middle" class="goalsAxisLabel">${i+1}º decêndio</text></g>`;
+    }).join('');
+    elBars.innerHTML=`<svg class="goalsSvg" viewBox="0 0 488 230" role="img" aria-label="Metas e faturamento por decêndio. Metas: ${targets.map(formatMoney).join(', ')}. Realizado: ${revenues.map(formatMoney).join(', ')}.">${grid}${groups}</svg>`;
+
+    if(monthly<=0){
+      elAtt.innerHTML='<div class="goalsNoMonthly"><b>Defina a meta mensal</b><span>Assim que a meta for informada, o atingimento aparecerá aqui.</span></div>';
+      elTrend.innerHTML='<div class="goalsNoMonthly"><b>Sem meta mensal</b><span>O gráfico acumulado ficará disponível após definir uma meta.</span></div>';
+      return;
+    }
+    const attained=(total/monthly)*100,remaining=Math.max(0,monthly-total);
+    const ringPct=Math.min(100,Math.max(0,attained)),circleLen=2*Math.PI*70;
+    elAtt.innerHTML=`<div class="goalsDonutRow"><div class="goalsDonutGraphic"><svg viewBox="0 0 190 190" role="img" aria-label="${decimal(attained)}% da meta mensal atingida"><circle class="goalsRingTrack" cx="95" cy="95" r="70"/><circle class="goalsRingFill" cx="95" cy="95" r="70" stroke-dasharray="${(circleLen*ringPct/100).toFixed(2)} ${circleLen.toFixed(2)}"/></svg><div class="goalsDonutText"><strong>${decimal(attained)}%</strong><small>${attained>=100?'Meta atingida':'Atingimento'}</small></div></div><div class="goalsDonutMetrics"><div><span>Meta mensal</span><strong>${formatMoney(monthly)}</strong></div><div><span>Realizado no mês</span><strong>${formatMoney(total)}</strong></div><div class="goalsDonutRemaining"><span>${attained>=100?'Acima da meta':'Falta para a meta'}</span><strong>${formatMoney(attained>=100?total-monthly:remaining)}</strong></div></div></div>`;
+
+    // As metas decendiais são independentes; a linha pontilhada acumula os seus valores reais,
+    // sem forçar a soma a ser 100% da meta mensal.
+    const cumTarget=targets.map((_,i)=>sum(targets.slice(0,i+1))/monthly*100);
+    const cumReal=revenues.map((_,i)=>sum(revenues.slice(0,i+1))/monthly*100);
+    const topP=Math.max(100,...cumTarget,...cumReal);
+    const axisTop=Math.max(100,Math.ceil(topP/25)*25);
+    const ly=v=>188-(v/axisTop)*149,px=i=>91+i*149;
+    const linePoints=arr=>arr.map((v,i)=>`${px(i)},${ly(v).toFixed(1)}`).join(' ');
+    const areaPoints=`${px(0)},188 ${linePoints(cumReal)} ${px(2)},188`;
+    const ticks=[0,1,2,3,4].map(i=>{
+      const value=axisTop*i/4,Y=ly(value);
+      return `<line x1="61" x2="474" y1="${Y.toFixed(1)}" y2="${Y.toFixed(1)}" class="goalsGridLine"/><text x="52" y="${(Y+4).toFixed(1)}" text-anchor="end" class="goalsAxisValue">${Math.round(value)}%</text>`;
+    }).join('');
+    const circles=cumReal.map((v,i)=>`<circle cx="${px(i)}" cy="${ly(v).toFixed(1)}" r="5" class="goalsTrendPoint"><title>${i+1}º decêndio: ${formatMoney(sum(revenues.slice(0,i+1)))} — ${decimal(v)}% da meta mensal</title></circle><text x="${px(i)}" y="${Math.max(17,ly(v)-12).toFixed(1)}" text-anchor="middle" class="goalsTrendValue">${decimal(v)}%</text>`).join('');
+    const labels=[1,2,3].map((v,i)=>`<text x="${px(i)}" y="213" text-anchor="middle" class="goalsAxisLabel">${v}º decêndio</text>`).join('');
+    elTrend.innerHTML=`<svg class="goalsSvg" viewBox="0 0 500 232" role="img" aria-label="Metas decendiais acumuladas: ${cumTarget.map(decimal).join('%, ')}%. Realizado acumulado: ${cumReal.map(decimal).join('%, ')}%."><defs><linearGradient id="${safeId}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e71240" stop-opacity=".22"/><stop offset="100%" stop-color="#e71240" stop-opacity=".01"/></linearGradient></defs>${ticks}<polygon points="${areaPoints}" fill="url(#${safeId})"/><polyline points="${linePoints(cumTarget)}" class="goalsTargetLine"/><polyline points="${linePoints(cumReal)}" class="goalsRealLine"/>${circles}${labels}</svg>`;
   }
 
   // ======================
