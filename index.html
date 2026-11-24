@@ -1071,6 +1071,9 @@ body{ background-attachment: fixed; }
 .dashboardPanel{min-height:280px}.dashboardSvgChart{min-height:210px}.dashboardSvgChart.compact{min-height:170px}.dashboardBarList,.dashboardFunnel,.dashboardDonutWrap{min-height:190px;display:flex;flex-direction:column;justify-content:center}.dashboardEmptyList{padding:28px 14px;border:1px dashed var(--line);border-radius:14px;text-align:center;color:var(--muted);background:color-mix(in srgb,var(--panel) 85%,var(--bg))}.dashboardMainGrid .dashboardPanel,.dashboardSecondaryGrid .dashboardPanel{background:linear-gradient(180deg,var(--panel),color-mix(in srgb,var(--panel) 94%,var(--bg)));box-shadow:0 10px 28px rgba(15,23,42,.045)}
 </style><link rel="stylesheet" href="./ondis-v11.css?v=12.3.0"><script src="./ondis-v11.js?v=13.3" defer></script>  <link rel="stylesheet" href="./ondis-visual-refresh.css?v=1.0.0">
 <link rel="stylesheet" href="./ondis-metas-operacao.css?v=1.0.0">
+<link rel="stylesheet" href="./ondis-ui-v2.css?v=2.1.1"/>
+<script defer src="./ondis-theme-v2.js?v=2.1.0"></script>
+<link rel="stylesheet" href="./ondis-visual-v4.css?v=4.0.0"/>
 </head>
 <body>
 <div class="appShell" id="appShell">
@@ -1090,15 +1093,15 @@ body{ background-attachment: fixed; }
 
   <nav class="sideNav">
     <div class="sideSection">ONDIS</div>
-    <button class="navItem active" id="tabOps"><span class="ni">🛍️</span><span class="nl">Operação</span></button>
-    <button class="navItem" id="btnFrenteLoja" onclick="location.href='./frente-loja.html?view=venda'" title="Abrir a frente de loja e lançar venda"><span class="ni">🧾</span><span class="nl">Frente de Loja</span></button>
-    <button class="navItem" id="tabDados"><span class="ni">📁</span><span class="nl">Dados</span></button>
-    <button class="navItem" id="tabMetas"><span class="ni">🎯</span><span class="nl">Metas</span></button>
-    <button class="navItem" id="tabMetasRank"><span class="ni">📶</span><span class="nl">Ranking de Metas</span></button>
-    <button class="navItem" id="tabNoConv"><span class="ni">🔍</span><span class="nl">Não Convertidos</span></button>
-    <button class="navItem" id="tabDashboard"><span class="ni">📊</span><span class="nl">Dashboard</span></button>
-    <button class="navItem" id="tabSeller"><span class="ni">✦</span><span class="nl">Liga ONDIS</span></button>
-    <button class="navItem" id="btnRanking"><span class="ni">🏆</span><span class="nl">Ranking</span></button>
+    <button class="navItem active" id="tabOps"><span class="ni"><svg class="ondis-ui-icon" aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h16l-1 11H5L4 9Z"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/></svg></span><span class="nl">Operação</span></button>
+    <button class="navItem" id="btnFrenteLoja" onclick="location.href='./frente-loja.html?view=venda'" title="Abrir a frente de loja e lançar venda"><span class="ni"><svg class="ondis-ui-icon" aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14v18l-3-2-4 2-4-2-3 2V3Z"/><path d="M8 8h8M8 12h8"/></svg></span><span class="nl">Frente de Loja</span></button>
+    <button class="navItem" id="tabDados"><span class="ni"><svg class="ondis-ui-icon" aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h7l2 2h9v10H3V7Z"/></svg></span><span class="nl">Dados</span></button>
+    <button class="navItem" id="tabMetas"><span class="ni"><svg class="ondis-ui-icon" aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg></span><span class="nl">Metas</span></button>
+    <button class="navItem" id="tabMetasRank"><span class="ni"><svg class="ondis-ui-icon" aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5M4 19h16"/><path d="m7 16 4-4 3 2 5-7"/></svg></span><span class="nl">Ranking de Metas</span></button>
+    <button class="navItem" id="tabNoConv"><span class="ni"><svg class="ondis-ui-icon" aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg></span><span class="nl">Não Convertidos</span></button>
+    <button class="navItem" id="tabDashboard"><span class="ni"><svg class="ondis-ui-icon" aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span><span class="nl">Dashboard</span></button>
+    <button class="navItem" id="tabSeller"><span class="ni"><svg class="ondis-ui-icon" aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 2.1 6.9L21 11l-6.9 2.1L12 20l-2.1-6.9L3 11l6.9-2.1L12 2Z"/><path d="m19 17 .7 1.3L21 19l-1.3.7L19 21l-.7-1.3L17 19l1.3-.7L19 17Z"/></svg></span><span class="nl">Liga ONDIS</span></button>
+    <button class="navItem" id="btnRanking"><span class="ni"><svg class="ondis-ui-icon" aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8v7a4 4 0 0 1-8 0V3ZM8 5H4v2a4 4 0 0 0 4 4m8-6h4v2a4 4 0 0 1-4 4M12 14v4m-4 3h8M10 18h4"/></svg></span><span class="nl">Ranking</span></button>
 
     <div class="sideSection" id="modulosLabel">Módulos</div>
     <div id="modulosGroup"><!-- módulos injetados via JS --></div>
@@ -1112,16 +1115,16 @@ body{ background-attachment: fixed; }
 <!-- CONTEÚDO -->
 <div class="appContent">
 <div class="contentTopbar">
-  <button class="hamb" id="btnToggleSidebar" onclick="toggleSidebar()" title="Ocultar/mostrar menu">☰</button>
+  <button class="hamb" id="btnToggleSidebar" onclick="toggleSidebar()" title="Ocultar/mostrar menu" aria-label="Alternar menu"><svg class="ondis-ui-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   <div class="topbarTitle" id="viewTitle">Operação</div>
   <div class="accountMenu" id="accountMenu">
-    <button class="btn accBtn" id="btnAccount" onclick="toggleAccountMenu()">⚙️ <span style="margin-left:3px">Conta</span></button>
+    <button class="btn accBtn" id="btnAccount" onclick="toggleAccountMenu()" aria-label="Abrir menu da conta"><svg class="ondis-ui-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="m19 13 2-1-2-1-.5-2 1-2-2-2-2 1-2-.5-1-2-1 2-2 .5-2-1-2 2 1 2-.5 2-2 1 2 1 .5 2-1 2 2 2 2-1 2 .5 1 2 1-2 2-.5 2 1 2-2-1-2z"/></svg><span>Conta</span></button>
     <div class="accountDrop" id="accountDrop">
       <span id="userInfo" style="font-size:12px;color:var(--muted);padding:8px 12px;display:none"></span>
-      <button class="accItem" id="btnEditSelosFixo" style="display:none" onclick="closeAccountMenu();setTimeout(()=>{if(window.abrirEditorSelos){window.abrirEditorSelos()}else{alert('A configuração da Liga ainda está carregando. Tente novamente em um instante.')}},0)">🎮 Gamificação da Liga</button>
-      <button class="accItem" id="btnSettings">🛠️ Configurações</button>
-      <button class="accItem install" id="btnInstall" style="display:none">📲 Instalar app</button>
-      <button class="accItem bad" id="btnLogout" style="display:none">🚪 Sair</button>
+      <button class="accItem" id="btnEditSelosFixo" style="display:none" onclick="closeAccountMenu();setTimeout(()=>{if(window.abrirEditorSelos){window.abrirEditorSelos()}else{alert('A configuração da Liga ainda está carregando. Tente novamente em um instante.')}},0)"><span class="accIcon" aria-hidden="true">✧</span><span class="accLabel">Gamificação da Liga</span></button>
+      <button class="accItem" id="btnSettings"><span class="accIcon" aria-hidden="true">⚙</span><span class="accLabel">Configurações</span></button>
+      <button class="accItem install" id="btnInstall" style="display:none"><span class="accIcon" aria-hidden="true">↓</span><span class="accLabel">Instalar aplicativo</span></button>
+      <button class="accItem bad" id="btnLogout" style="display:none"><span class="accIcon" aria-hidden="true">↪</span><span class="accLabel">Sair</span></button>
     </div>
   </div>
 </div>
@@ -2308,7 +2311,7 @@ body{ background-attachment: fixed; }
               <button class="btn warn" data-act="pause" data-id="${sid}">${s.paused ? "▶ Retomar" : "⏸ Pausar"}</button>
               <button class="btn bad" data-act="remove" data-id="${sid}">↪ Tirar da fila</button>
               ${(window.OMNIA_USER && (window.OMNIA_USER.role==="admin"||window.OMNIA_USER.role==="superadmin")) ? `<button class="btn" data-act="edit" data-id="${sid}">✏️ Editar vendedor</button>` : ""}
-              ${(window.OMNIA_USER && (window.OMNIA_USER.role==="admin"||window.OMNIA_USER.role==="superadmin")) ? `<button class="btn bad" data-act="delete" data-id="${sid}">🗑 Excluir vendedor</button>` : ""}
+              ${(window.OMNIA_USER && (window.OMNIA_USER.role==="admin"||window.OMNIA_USER.role==="superadmin")) ? `<button class="btn bad" data-act="delete" data-id="${sid}">↪ Desligar vendedor</button>` : ""}
             </div>
           </details>
         </div>
@@ -2634,7 +2637,6 @@ body{ background-attachment: fixed; }
     const actives = state.sellers.filter(s=>s.active);
     if(actives.length === 0){
       list.innerHTML = `<div class="hint">Sem vendedores ativos para desativar.</div>`;
-      return;
     }
 
     actives.forEach((s)=>{
@@ -2659,6 +2661,31 @@ body{ background-attachment: fixed; }
         deactivateSeller(sid);
       });
     });
+    // Arquivados preservam id, nome e histórico. A gestão pode reintegrá-los
+    // sem criar outro id e sem perder as vendas já atribuídas ao vendedor.
+    const role = String(window.OMNIA_USER?.role || '').toLowerCase();
+    if(['admin','superadmin'].includes(role)){
+      const archived = (state.sellers||[]).filter(s=>s.archived===true && s.active===false);
+      if(archived.length){
+        const section=document.createElement('section');section.className='v4ArchivedSellers';
+        const title=document.createElement('h4');title.textContent=`Vendedores desligados (${archived.length})`;
+        section.appendChild(title);
+        archived.forEach(s=>{
+          const item=document.createElement('div');item.className='v4ArchivedSeller';
+          const label=document.createElement('span');label.textContent=s.name||'Vendedor';
+          const btn=document.createElement('button');btn.type='button';btn.className='btn';
+          btn.textContent='Reintegrar';btn.addEventListener('click',()=>{
+            if(!confirm(`Reintegrar "${s.name||'Vendedor'}" à equipe ativa? As vendas históricas continuam preservadas.`))return;
+            s.archived=false;s.active=true;s.paused=false;
+            delete s.archivedAt;
+            if(!state.queue.includes(s.id) && !state.pool.includes(s.id))state.pool.push(s.id);
+            save(state);renderAll();renderDeactivateModal();
+          });
+          item.append(label,btn);section.appendChild(item);
+        });
+        list.appendChild(section);
+      }
+    }
   }
 
   function deactivateSeller(sid){
@@ -3045,7 +3072,7 @@ body{ background-attachment: fixed; }
         wrap.innerHTML = `<div class="vazioDados">📊 Nenhuma venda neste mês.<br><span>Os dados aparecem aqui conforme a equipe registra os atendimentos.</span></div>`;
         return;
       }
-      const sellers = state.sellers.map(s=>s.id);
+      const sellers = [...new Set([...state.sellers.map(s=>s.id),...recsMonth.map(r=>r.sellerId).filter(Boolean)])];
       const header = ["Vendedor", ...dates];
       const body = sellers.map(sid=>{
         const s = getSeller(sid);
@@ -3367,6 +3394,9 @@ body{ background-attachment: fixed; }
   }
 
   function getVendorMonthlyTarget(mk, sid){
+    const seller = getSeller(sid);
+    const historical = seller?.archived && seller?.historicGoalSnapshots?.[mk];
+    if(historical && Number.isFinite(Number(historical.monthly))) return Number(historical.monthly);
     const store = getGoalsForMonth(mk);
     const storeMonthly = Number(store.monthly||0);
     if(storeMonthly<=0) return 0;
@@ -3958,7 +3988,7 @@ body{ background-attachment: fixed; }
         r.id,
         r.dateKey,
         `${hh}:${mm}`,
-        s?.name || "",
+        s?.name || r.sellerName || "Vendedor desligado",
         getOutcomeCsv(r.outcome),
         Number(r.value||0).toFixed(2),
         Number(r.pieces||0),
@@ -4073,41 +4103,43 @@ body{ background-attachment: fixed; }
     }
 
     if(act === "delete"){
-      const s = getSeller(sid);
-      const nome = s ? s.name : "este vendedor";
-      if(!confirm(`Excluir "${nome}" da operação? Ele sai da fila e da lista de vendedores.`)){
-        return;
-      }
+      const vendedor = getSeller(sid);
+      if(!vendedor || vendedor.active === false) return;
+      const nome = vendedor.name || "este vendedor";
+      const qtdHistorico = (state.records||[]).filter(r=>r.sellerId===sid).length;
+      if(!confirm(`Desligar "${nome}" da equipe ativa?\n\n` +
+        `Ele será removido da fila e dos atendimentos futuros.\n` +
+        `${qtdHistorico} registro(s) histórico(s) serão MANTIDOS no Firebase, nas metas, relatórios e no faturamento.\n\n` +
+        `Esta ação não exclui vendas. Confirma o desligamento?`)) return;
 
-      // Conta as vendas/registros desse vendedor
-      const regsDoVendedor = (state.records||[]).filter(r=> r.sellerId===sid);
-      if(regsDoVendedor.length > 0){
-        const apagarVendas = confirm(
-          `"${nome}" tem ${regsDoVendedor.length} registro(s) de atendimento/venda.\n\n` +
-          `Clique em OK para APAGAR também as vendas dele (some dos relatórios e gráficos).\n` +
-          `Clique em Cancelar para MANTER as vendas no histórico (só remove o vendedor).`
-        );
-        if(apagarVendas){
-          const ids = regsDoVendedor.map(r=>r.id);
-          // remove do state
-          state.records = state.records.filter(r=> r.sellerId!==sid);
-          // remove da coleção separada no Firebase
-          ids.forEach(id=>{ try{ if(window.OMNIA_DEL_RECORD) window.OMNIA_DEL_RECORD(id); }catch(e){} });
+      // Preserva a referência dos objetivos vigentes no desligamento.
+      // Não escreve nem substitui as metas da loja e de cada período.
+      vendedor.historicGoalSnapshots = vendedor.historicGoalSnapshots || {};
+      const meses = new Set([
+        ...(state.records||[]).filter(r=>r.sellerId===sid).map(r=>r.monthKey).filter(Boolean),
+        ...Object.keys(state.vendorGoalsByMonth||{}).filter(m=>
+          Object.prototype.hasOwnProperty.call(state.vendorGoalsByMonth[m]||{},sid))
+      ]);
+      for(const mk of meses){
+        if(!vendedor.historicGoalSnapshots[mk]){
+          vendedor.historicGoalSnapshots[mk] = {
+            monthly: sellerGoalMonthly(sid,mk),
+            weekly: [1,2,3,4].map(w=>sellerGoalWeek(sid,mk,w))
+          };
         }
       }
-
-      // remove o vendedor de tudo
-      state.queue = state.queue.filter(x=>x!==sid);
-      state.pool  = state.pool.filter(x=>x!==sid);
-      state.sellers = state.sellers.filter(x=>x.id!==sid);
-
-      // Redistribui os clientes desse vendedor no CRM entre os vendedores restantes (round-robin)
-      try{
-        if(window.OMNIA_CRM_REASSIGN){
-          const restantes = (state.sellers||[]).map(v=>({ nome: v.name, uid: "" }));
-          window.OMNIA_CRM_REASSIGN(nome, restantes);
-        }
-      }catch(e){ console.error("reassign:", e); }
+      // Arquivamento reversível, sem apagar o vendedor e sem alterar os registros históricos.
+      // Guardar o mesmo id é necessário: cada record.sellerId depende dele.
+      vendedor.active = false;
+      vendedor.paused = true;
+      vendedor.archived = true;
+      vendedor.archivedAt = Date.now();
+      state.queue = (state.queue||[]).filter(x=>x!==sid);
+      state.pool = (state.pool||[]).filter(x=>x!==sid);
+      state.currents = (state.currents||[]).filter(x=>x && x.sellerId!==sid);
+      if(state.current && state.current.sellerId===sid) state.current = null;
+      // Não excluir registros, não filtrar o histórico e não remover metas antigas.
+      // CRM: manter vínculos históricos e contatos intactos; nova redistribuição é uma ação separada.
     }
 
     save(state);
@@ -4213,6 +4245,7 @@ body{ background-attachment: fixed; }
       dateKey: tk,
       monthKey: mk,
       sellerId: sid,
+      sellerName: s.name || "Vendedor",
       outcome,
       value,
       pieces,
@@ -4442,6 +4475,9 @@ body{ background-attachment: fixed; }
   }
 
   function sellerGoalMonthly(sid, mk){
+    const seller = getSeller(sid);
+    const historical = seller?.archived && seller?.historicGoalSnapshots?.[mk];
+    if(historical && Number.isFinite(Number(historical.monthly))) return Number(historical.monthly);
     const ov = (state.vendorGoalsByMonth?.[mk]||{})[sid];
     if(Number(ov||0) > 0) return Number(ov);
     const g = getGoalsForMonth(mk);
@@ -4450,6 +4486,9 @@ body{ background-attachment: fixed; }
   }
 
   function sellerGoalWeek(sid, mk, week){
+    const seller = getSeller(sid);
+    const historical = seller?.archived && seller?.historicGoalSnapshots?.[mk];
+    if(historical?.weekly && Number.isFinite(Number(historical.weekly[week-1]))) return Number(historical.weekly[week-1]);
     const g = getGoalsForMonth(mk);
     const divisor = Number(state.options.vendorDivisor||0) || ((state.sellers||[]).filter(s=>s.active).length || 1);
     const ovM = (state.vendorGoalsByMonth?.[mk]||{})[sid];
@@ -4879,7 +4918,10 @@ body{ background-attachment: fixed; }
       const tmMonth = aMonth.sales>0 ? (aMonth.revenue/aMonth.sales) : 0;
 
       // Sala gamer: ranking da equipe, energia coletiva e missões do mês.
-      const allGameRows = (active.length ? active : any).map(seller=>{
+      const leagueSellers = (mk2 !== monthKey())
+        ? any.filter(s=>s.active!==false || (state.records||[]).some(r=>r.sellerId===s.id && r.monthKey===mk2))
+        : active;
+      const allGameRows = leagueSellers.map(seller=>{
         const sold = sellerSoldInMonth(seller.id, mk2);
         const revenue = sold.reduce((total, record)=> total + Number(record.value||0), 0);
         const goal = sellerGoalMonthly(seller.id, mk2);

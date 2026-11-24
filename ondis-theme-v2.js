@@ -31,22 +31,6 @@
     if(mutations.some(m=>m.attributeName==='data-theme'||m.attributeName==='style'))sync();
   });
   obs.observe(root,{attributes:true,attributeFilter:['data-theme','style']});
-  function setupAccountAccessibility(){
-    const button=document.getElementById('btnAccount');
-    const popup=document.getElementById('accountDrop');
-    if(!button||!popup)return;
-    button.setAttribute('aria-controls','accountDrop');
-    button.setAttribute('aria-haspopup','true');
-    const refresh=()=>button.setAttribute('aria-expanded',popup.classList.contains('show')?'true':'false');
-    new MutationObserver(refresh).observe(popup,{attributes:true,attributeFilter:['class']});
-    refresh();
-    document.addEventListener('keydown',event=>{
-      if(event.key!=='Escape'||!popup.classList.contains('show'))return;
-      if(typeof window.closeAccountMenu==='function')window.closeAccountMenu();
-      else popup.classList.remove('show');
-      button.focus();
-    });
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{sync();setupAccountAccessibility();},{once:true});
-  else {sync();setupAccountAccessibility();}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',sync,{once:true});
+  else sync();
 })();

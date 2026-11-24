@@ -1066,7 +1066,8 @@ body{ background-attachment: fixed; }
 </style>
 <link rel="stylesheet" href="./ondis-v9.css">
 <script src="./ondis-v9.js" defer></script>
-<link rel="stylesheet" href="./ondis-v11.css?v=12.3.0"><script src="./ondis-v11.js?v=12.3.0" defer></script></head>
+<link rel="stylesheet" href="./ondis-v11.css?v=12.3.0"><script src="./ondis-v11.js?v=12.3.0" defer></script><link rel="stylesheet" href="./ondis-visual-v4.css?v=4.0.0"/>
+</head>
 <body>
 <div class="appShell" id="appShell">
 <div class="mobileMask" onclick="toggleSidebar()"></div>
@@ -2331,7 +2332,7 @@ body{ background-attachment: fixed; }
               <button class="btn warn" data-act="pause" data-id="${sid}">${s.paused ? "▶ Retomar" : "⏸ Pausar"}</button>
               <button class="btn bad" data-act="remove" data-id="${sid}">↪ Tirar da fila</button>
               ${(window.OMNIA_USER && (window.OMNIA_USER.role==="admin"||window.OMNIA_USER.role==="superadmin")) ? `<button class="btn" data-act="edit" data-id="${sid}">✏️ Editar vendedor</button>` : ""}
-              ${(window.OMNIA_USER && (window.OMNIA_USER.role==="admin"||window.OMNIA_USER.role==="superadmin")) ? `<button class="btn bad" data-act="delete" data-id="${sid}">🗑 Excluir vendedor</button>` : ""}
+              ${(window.OMNIA_USER && (window.OMNIA_USER.role==="admin"||window.OMNIA_USER.role==="superadmin")) ? `<button class="btn bad" data-act="delete" data-id="${sid}">↪ Desligar vendedor</button>` : ""}
             </div>
           </details>
         </div>
@@ -3962,41 +3963,28 @@ body{ background-attachment: fixed; }
     }
 
     if(act === "delete"){
-      const s = getSeller(sid);
-      const nome = s ? s.name : "este vendedor";
-      if(!confirm(`Excluir "${nome}" da operação? Ele sai da fila e da lista de vendedores.`)){
-        return;
-      }
-
-      // Conta as vendas/registros desse vendedor
-      const regsDoVendedor = (state.records||[]).filter(r=> r.sellerId===sid);
-      if(regsDoVendedor.length > 0){
-        const apagarVendas = confirm(
-          `"${nome}" tem ${regsDoVendedor.length} registro(s) de atendimento/venda.\n\n` +
-          `Clique em OK para APAGAR também as vendas dele (some dos relatórios e gráficos).\n` +
-          `Clique em Cancelar para MANTER as vendas no histórico (só remove o vendedor).`
-        );
-        if(apagarVendas){
-          const ids = regsDoVendedor.map(r=>r.id);
-          // remove do state
-          state.records = state.records.filter(r=> r.sellerId!==sid);
-          // remove da coleção separada no Firebase
-          ids.forEach(id=>{ try{ if(window.OMNIA_DEL_RECORD) window.OMNIA_DEL_RECORD(id); }catch(e){} });
+      const vendedor=getSeller(sid);
+      if(!vendedor || vendedor.active===false) return;
+      const qtd=(state.records||[]).filter(r=>r.sellerId===sid).length;
+      if(!confirm(`Desligar "${vendedor.name||'Vendedor'}" da operação?\n\n${qtd} registros serão preservados, sem exclusão de vendas. Confirma?`)) return;
+      vendedor.historicGoalSnapshots=vendedor.historicGoalSnapshots||{};
+      const meses=new Set([
+        ...(state.records||[]).filter(r=>r.sellerId===sid).map(r=>r.monthKey).filter(Boolean),
+        ...Object.keys(state.vendorGoalsByMonth||{}).filter(m=>Object.prototype.hasOwnProperty.call(state.vendorGoalsByMonth[m]||{},sid))
+      ]);
+      for(const mk of meses){
+        if(!vendedor.historicGoalSnapshots[mk]){
+          vendedor.historicGoalSnapshots[mk]={monthly:sellerGoalMonthly(sid,mk),weekly:[1,2,3,4].map(w=>sellerGoalWeek(sid,mk,w))};
         }
       }
-
-      // remove o vendedor de tudo
-      state.queue = state.queue.filter(x=>x!==sid);
-      state.pool  = state.pool.filter(x=>x!==sid);
-      state.sellers = state.sellers.filter(x=>x.id!==sid);
-
-      // Redistribui os clientes desse vendedor no CRM entre os vendedores restantes (round-robin)
-      try{
-        if(window.OMNIA_CRM_REASSIGN){
-          const restantes = (state.sellers||[]).map(v=>({ nome: v.name, uid: "" }));
-          window.OMNIA_CRM_REASSIGN(nome, restantes);
-        }
-      }catch(e){ console.error("reassign:", e); }
+      vendedor.active=false;
+      vendedor.paused=true;
+      vendedor.archived=true;
+      vendedor.archivedAt=Date.now();
+      state.queue=state.queue.filter(x=>x!==sid);
+      state.pool=state.pool.filter(x=>x!==sid);
+      state.currents=(state.currents||[]).filter(x=>x&&x.sellerId!==sid);
+      if(state.current&&state.current.sellerId===sid)state.current=null;
     }
 
     save(state);
@@ -4348,6 +4336,8 @@ body{ background-attachment: fixed; }
   }
 
   function sellerGoalMonthly(sid, mk){
+    const historical=getSeller(sid)?.archived && getSeller(sid)?.historicGoalSnapshots?.[mk];
+    if(historical && Number.isFinite(Number(historical.monthly)))return Number(historical.monthly);
     const ov = (state.vendorGoalsByMonth?.[mk]||{})[sid];
     if(Number(ov||0) > 0) return Number(ov);
     const g = getGoalsForMonth(mk);
@@ -4356,6 +4346,8 @@ body{ background-attachment: fixed; }
   }
 
   function sellerGoalWeek(sid, mk, week){
+    const historical=getSeller(sid)?.archived && getSeller(sid)?.historicGoalSnapshots?.[mk];
+    if(historical?.weekly&&Number.isFinite(Number(historical.weekly[week-1])))return Number(historical.weekly[week-1]);
     const g = getGoalsForMonth(mk);
     const divisor = Number(state.options.vendorDivisor||0) || ((state.sellers||[]).filter(s=>s.active).length || 1);
     const ovM = (state.vendorGoalsByMonth?.[mk]||{})[sid];

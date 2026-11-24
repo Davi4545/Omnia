@@ -1,0 +1,192 @@
+/* ONDIS Visual V4 • 2026-11-24
+   Camada única de acabamento. Mantém os CSS anteriores por compatibilidade
+   e aplica as regras por último; não apaga estilos, não altera dados ou lógica. */
+
+:root{
+  --v4-ink:var(--ondis-text,#182235);
+  --v4-sub:var(--ondis-muted,#65738b);
+  --v4-paper:var(--ondis-surface,#fff);
+  --v4-soft:var(--ondis-surface-soft,#f6f8fc);
+  --v4-stroke:var(--ondis-line,#e0e6f0);
+  --v4-accent:var(--ondis-primary,#e51736);
+  --v4-focus:0 0 0 3px color-mix(in srgb,var(--v4-accent) 22%,transparent);
+}
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"]){color-scheme:dark}
+:root:is([data-theme="ondis"],[data-theme="executive"]){color-scheme:light}
+:root[data-theme="custom"][data-ondis-surface-tone="dark"]{color-scheme:dark}
+:root[data-theme="custom"][data-ondis-surface-tone="light"]{color-scheme:light}
+
+/* Tipografia e composição não interferem na disposição dos dados */
+body:not(.loginPage){font-feature-settings:'tnum' 1;-webkit-font-smoothing:antialiased}
+body:not(.loginPage) :is(.wrap,.appContent,main){min-width:0}
+body:not(.loginPage) :is(h1,h2,h3,h4){letter-spacing:-.025em}
+body:not(.loginPage) :is(.hint,.meta,.tiny,.sub){line-height:1.5}
+body:not(.loginPage) :is(input,select,textarea,button){font:inherit}
+body:not(.loginPage) :is(button,a,[role="button"]){-webkit-tap-highlight-color:transparent}
+body:not(.loginPage) :is(button,a,input,select,textarea,[tabindex]):focus-visible{
+  outline:2px solid var(--v4-accent)!important;outline-offset:2px;box-shadow:var(--v4-focus)!important;
+}
+
+/* Cards principais e inputs; cor segue superfície, nunca o papel do cabeçalho. */
+body:not(.loginPage) :is(.card,.panel,.modal,.kpi,.item,.dashChartCard,.barCard,.noteBox,.arenaBox,.onx-panel){
+  border-color:var(--v4-stroke)!important;
+  color:var(--v4-ink);
+}
+body:not(.loginPage) :is(.card,.panel,.modal,.kpi,.item,.dashChartCard,.barCard,.noteBox,.arenaBox,.onx-panel) :is(.hint,.meta,.tiny,.sub){color:var(--v4-sub)!important}
+body:not(.loginPage) :is(.field input,.field select,.field textarea,.input,textarea){
+  border-color:var(--v4-stroke)!important;border-radius:12px;
+  color:var(--v4-ink)!important;background:var(--v4-paper)!important;
+}
+body:not(.loginPage) :is(.field input,.field select,.field textarea,.input,textarea)::placeholder{color:var(--v4-sub)!important;opacity:.75}
+body:not(.loginPage) :is(.field label,.field .label){color:var(--v4-sub);font-weight:650}
+body:not(.loginPage) :is(.btn,.close){transition:background-color .18s ease,color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+body:not(.loginPage) :is(.btn,.close):not(:disabled):active{transform:translateY(1px)}
+body:not(.loginPage) :is(.btn,.close):disabled{opacity:.58;cursor:not-allowed}
+/* Controlar contraste de botões por superfície; nunca texto preto sobre vermelho. */
+body:not(.loginPage) :is(.btn.primary,.btn.good,.btn.bad,.btn.warn){font-weight:750}
+body:not(.loginPage) :is(.btn.primary,.btn.good){color:#fff!important}
+body:not(.loginPage) :is(.btn.bad,.btn.warn){color:var(--v4-ink)}
+/* Botões neutros herdam a cor do componente; não sobrescrever cabeçalhos escuros. */
+/* Segurança visual em regiões fixas de contraste próprio. */
+:root[data-theme="ondis"] .contentTopbar :is(.accBtn,.hamb),
+:root[data-theme="ondis"] .contentTopbar :is(.topbarTitle,#viewTitle){color:#fff!important}
+:root[data-theme="ondis"] .sidebar .navItem.active,
+:root[data-theme="ondis"] .sidebar .navItem.active :is(.ni,.nl){color:#fff!important}
+:root[data-theme="ondis"] :is(.btn.primary,.btn.good,.btn.bad,.btn.warn)[style*="background: rgb(2"],
+:root[data-theme="ondis"] :is(.btn.primary,.btn.good)[style*="background"]{color:#fff!important}
+/* O menu da conta é uma superfície própria, mesmo quando sobre cabeçalho vermelho. */
+.contentTopbar #accountDrop.accountDrop{
+  background:var(--v4-paper)!important;color:var(--v4-ink)!important;border-color:var(--v4-stroke)!important;
+}
+.contentTopbar #accountDrop.accountDrop :is(.accItem,.accLabel,#userInfo){color:var(--v4-ink)!important}
+.contentTopbar #accountDrop.accountDrop .accItem.bad :is(.accLabel,.accIcon){color:#b52a42!important}
+:root[data-ondis-surface-tone="dark"] .contentTopbar #accountDrop.accountDrop .accItem.bad :is(.accLabel,.accIcon){color:#ffa6b6!important}
+
+/* Menu lateral: visual robusto e estados indicados por texto e cor. */
+.sidebar .sideNav .navItem{transition:background .18s ease,border-color .18s ease,transform .18s ease}
+.sidebar .sideNav .navItem:hover:not(:disabled){transform:translateX(2px)}
+.sidebar .sideNav .navItem .ni{font-size:16px}
+.sidebar .sideNav .sideSection{letter-spacing:.12em}
+/* Regras de módulo/perm. de maior prioridade que a regra display:flex do v2. */
+.sidebar .sideNav .navItem.modHidden,
+.sidebar .sideNav .navItem.modOff,
+.sidebar .sideNav .navItem[hidden],
+.sidebar .sideNav .navItem[style*="display:none"],
+.sidebar .sideNav .navItem[style*="display: none"],
+.sidebar .sideNav .sideSection.modHidden{display:none!important}
+
+/* Tabelas com leitura sólida, mesmo em temas escuros. */
+body:not(.loginPage) :is(table,.table){border-color:var(--v4-stroke)!important}
+body:not(.loginPage) :is(table,.table) th{color:var(--v4-sub)!important;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;line-height:1.5}
+body:not(.loginPage) :is(table,.table) td{color:var(--v4-ink)!important;line-height:1.45;vertical-align:middle}
+body:not(.loginPage) :is(table,.table) tr+tr td{border-top-color:var(--v4-stroke)}
+body:not(.loginPage) :is(table,.table) tbody tr:hover{background:color-mix(in srgb,var(--v4-accent) 3%,var(--v4-paper))}
+
+/* Modais: paddings e cabeçalhos previsíveis, sem mudar estados de abertura. */
+body:not(.loginPage) .modal{box-shadow:0 26px 74px rgba(14,23,38,.17)!important}
+body:not(.loginPage) .modalHead{border-color:var(--v4-stroke)!important}
+body:not(.loginPage) .modalHead :is(h2,h3,h4){color:var(--v4-ink)!important}
+body:not(.loginPage) .modalBody{color:var(--v4-ink)}
+body:not(.loginPage) .modalBody .actions{display:flex;gap:9px;flex-wrap:wrap}
+
+/* Operação - estados da decisão. O botão de trocas/garantias deve ser legível. */
+#viewOps .attDecision{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+#viewOps .attDecision .btn{min-height:46px!important;text-wrap:balance;line-height:1.2!important;padding:10px 12px!important}
+#viewOps .attDecision .btn[data-act="exchange"]{
+  background:color-mix(in srgb,#eaab3b 14%,var(--v4-paper))!important;
+  border:1px solid color-mix(in srgb,#c18b2d 52%,var(--v4-stroke))!important;
+  color:var(--v4-ink)!important
+}
+#viewOps .attDecision .btn[data-act="exchange"].activeSelected{
+  outline:2px solid #d8972c!important;outline-offset:1px;
+  box-shadow:0 0 0 4px color-mix(in srgb,#d8972c 18%,transparent)!important;
+}
+#viewOps .attDecision .btn[data-act="nosold"]:not(.activeSelected){color:var(--v4-ink)!important}
+#viewOps .attDecision .btn[data-act="sold"].activeSelected{box-shadow:0 0 0 3px color-mix(in srgb,#1eaf79 22%,transparent)!important}
+#viewOps .attCard :is(#exchangeFields,div[id^="exchangeFields_"]) .field input{width:100%;min-height:42px}
+#viewOps .attCard div[id^="exchangeFields_"]{padding:16px;border:1px solid var(--v4-stroke);border-radius:14px;background:var(--v4-soft)}
+#viewOps .attRecentOne em{font-style:normal;font-weight:800}
+
+/* Mobile: manter foco na ação atual sem comprimir as tabelas. */
+@media(max-width:900px){
+  body:not(.loginPage) :is(.modal,.card,.panel){max-width:100%}
+  #viewOps .attDecision{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  #viewOps .attDecision .btn{font-size:11px!important;padding:10px 5px!important}
+  body:not(.loginPage) :is(.modalBody,.cardBody){min-width:0}
+}
+@media(max-width:520px){
+  #viewOps .attDecision{grid-template-columns:1fr}
+  #viewOps .attDecision .btn{font-size:13px!important;min-height:44px!important}
+  body:not(.loginPage) .modalBody .actions>:is(button,.btn){flex:1 1 auto}
+  body:not(.loginPage) :is(.field,.field input,.field select,.field textarea){min-width:0;max-width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+  body:not(.loginPage) :is(.btn,.close,.navItem,.item){animation:none!important;transition:none!important}
+  body:not(.loginPage) .sidebar .sideNav .navItem:hover{transform:none}
+}
+
+/* Reintegração segura de colaboradores desligados, acessível à gestão. */
+.v4ArchivedSellers{margin-top:18px;padding:16px;border-radius:15px;background:var(--v4-soft);border:1px solid var(--v4-stroke)}
+.v4ArchivedSellers h4{font-size:13px;font-weight:850;margin:0 0 10px;color:var(--v4-ink)}
+.v4ArchivedSeller{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid var(--v4-stroke);padding:10px 0;color:var(--v4-ink)}
+.v4ArchivedSeller span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;font-weight:720}
+.v4ArchivedSeller .btn{flex:none}
+
+/* Ajustes verificados após renderização desktop/mobile: contraste e KPI numérico. */
+:root[data-theme="ondis"] .contentTopbar button#btnAccount.accBtn,
+:root[data-theme="ondis"] .contentTopbar button#btnAccount.accBtn span,
+:root[data-theme="ondis"] .contentTopbar button#btnAccount.accBtn svg{
+  color:#fff!important;stroke:currentColor!important;
+}
+#viewOps .attDecision button[data-act="nosold"]{
+  color:#fff!important;text-shadow:0 1px 2px rgba(35,15,23,.13);
+}
+#viewOps #kpis .kpi .t{color:var(--v4-sub)!important;font-size:10px!important}
+#viewOps #kpis .kpi .v{color:var(--v4-ink)!important;font-size:clamp(16px,1.25vw,23px)!important;white-space:nowrap!important;letter-spacing:-.04em!important}
+#viewOps .attStatsGrid .attStat :is(small,b){color:var(--v4-ink)!important}
+#viewOps .attStatsGrid .attStat small{opacity:.72}
+#viewOps .attInfoBox{color:var(--v4-sub)!important}
+#viewOps .attInfoBox b{color:var(--v4-ink)!important}
+@media(max-width:520px){
+  #viewOps #kpis .kpi .v{font-size:clamp(14px,4vw,18px)!important}
+}
+
+/* Admin V3 usa cabeçalho grafite próprio, inclusive sob tema claro. */
+body[data-ondis-refresh="admin"] > header :is(.btn,.chip),
+body[data-ondis-refresh="superadmin"] > header :is(.btn,.chip),
+body[data-ondis-refresh="admin"] > header :is(.btn,.chip) *,
+body[data-ondis-refresh="superadmin"] > header :is(.btn,.chip) *{
+  color:#fff!important;
+}
+
+/* Acabamento de gráficos, telas vazias e feedback visual compartilhados. */
+body:not(.loginPage) :is(.dashboardChartCard,.dashChartCard,.rankChartCard,.barCard,.dashboardInsightCard){
+  border-color:var(--v4-stroke)!important;
+}
+body:not(.loginPage) :is(.dashChartCard,.barCard,.rankChartCard) :is(.hint,small,.legend,figcaption){color:var(--v4-sub)!important}
+body:not(.loginPage) :is(.dashChartCard,.barCard,.rankChartCard) :is(h3,h4,.title,.value){color:var(--v4-ink)!important}
+body:not(.loginPage) :is(.dashboardMiniBar,.rankMiniBar,.ligaV3Progress,.meter){
+  border-radius:999px;overflow:hidden;
+}
+body:not(.loginPage) :is(.vazioDados,.emptyState,.ligaEmptyAchievement){
+  color:var(--v4-sub)!important;
+  padding:clamp(20px,3vw,36px);
+  border:1px dashed var(--v4-stroke);
+  border-radius:16px;
+  background:var(--v4-soft);
+  text-align:center;
+  line-height:1.6;
+}
+body:not(.loginPage) :is(.loadingLine,.skeleton,.skeletonLine){
+  border-radius:8px;
+  background:linear-gradient(100deg,
+    color-mix(in srgb,var(--v4-stroke) 65%,var(--v4-paper)) 0%,
+    color-mix(in srgb,var(--v4-paper) 80%,var(--v4-stroke)) 50%,
+    color-mix(in srgb,var(--v4-stroke) 65%,var(--v4-paper)) 100%);
+  background-size:200% 100%;
+  animation:v4Skeleton 1.5s ease-in-out infinite;
+}
+@keyframes v4Skeleton{from{background-position:100% 0}to{background-position:-100% 0}}
+body:not(.loginPage) .modalBack:has(.modal){backdrop-filter:blur(7px)}
+body:not(.loginPage) .modalHead .close{min-width:40px;min-height:38px}
+@media(prefers-reduced-motion:reduce){body:not(.loginPage) :is(.loadingLine,.skeleton,.skeletonLine){animation:none!important}}
