@@ -1,0 +1,174 @@
+/* ONDIS V12 — Catálogo Ótica. Camada visual dedicada; carregue após os estilos globais. */
+body[data-ondis-catalog="otica"]{
+ --ot-ink:var(--c6-ink,#172338);--ot-sub:var(--c6-muted,#627087);--ot-paper:var(--c6-paper,#fff);--ot-soft:var(--c6-soft,#f4f6fb);--ot-border:var(--c6-border,#dce3ed);
+ --ot-input:var(--c6-input,#fff);--ot-input-ink:var(--c6-input-ink,#172338);--ot-red:#D71038;--ot-red-dark:#9f0a2d;--ot-green:#11774c;
+ --ot-shadow:0 12px 35px rgba(23,26,47,.075);
+ color:var(--ot-ink)!important;background:var(--ot-soft)!important;
+}
+body[data-ondis-catalog="otica"] :is(h1,h2,h3,h4){letter-spacing:-.028em}
+body[data-ondis-catalog="otica"] :is(button,input,select,textarea){font-family:inherit}
+body[data-ondis-catalog="otica"] :is(button,a,input,select,textarea):focus-visible{outline:2px solid #ed3156!important;outline-offset:2px}
+body[data-ondis-catalog="otica"] header{padding:15px max(20px,calc((100vw - 1500px)/2 + 20px))!important;background:var(--ot-paper)!important;border-bottom:1px solid var(--ot-border)!important;box-shadow:0 6px 25px rgba(20,26,53,.035);z-index:30}
+body[data-ondis-catalog="otica"] header .brand h1{font-size:21px!important;font-weight:900;color:var(--ot-ink)!important;display:flex;align-items:center;gap:6px}
+body[data-ondis-catalog="otica"] header .brand .sub{font-size:12px;color:var(--ot-sub)!important}
+body[data-ondis-catalog="otica"] header .onx-title-icon{color:var(--ot-red)}
+body[data-ondis-catalog="otica"] .wrap{max-width:1540px;margin-inline:auto;padding:24px 28px 50px}
+body[data-ondis-catalog="otica"] .tabs{top:76px!important;background:var(--ot-paper)!important;margin:-24px -28px 22px;padding:0 28px;box-shadow:none!important;border-bottom:1px solid var(--ot-border)!important}
+body[data-ondis-catalog="otica"] .tab{font-size:13px;font-weight:750;color:var(--ot-sub)!important;padding:15px 20px!important;border-bottom:3px solid transparent!important}
+body[data-ondis-catalog="otica"] .tab.active{color:var(--ot-red)!important;background:color-mix(in srgb,var(--ot-red) 8%,var(--ot-paper))!important;border-bottom-color:var(--ot-red)!important}
+body[data-ondis-catalog="otica"] .btn{background:var(--ot-paper)!important;color:var(--ot-ink)!important;border:1px solid var(--ot-border)!important;border-radius:12px!important;padding:10px 14px;font-size:12px;font-weight:800;box-shadow:none!important}
+body[data-ondis-catalog="otica"] .btn.good{background:linear-gradient(135deg,#ec1748,#b50830)!important;border-color:#b50830!important;color:#fff!important;box-shadow:0 9px 19px rgba(188,5,51,.16)!important}
+body[data-ondis-catalog="otica"] .btn.bad{background:color-mix(in srgb,#d72046 8%,var(--ot-paper))!important;color:#bc1738!important;border:1px solid #e5a9b6!important}
+body[data-ondis-catalog="otica"] .btn.warn{background:#fff2e3!important;border-color:#f2d1a7!important;color:#9e5d16!important}
+body[data-ondis-catalog="otica"] .btn.wa{background:#167c50!important;color:#fff!important;border-color:#167c50!important}
+body[data-ondis-catalog="otica"] .chip{background:color-mix(in srgb,var(--ot-red) 9%,var(--ot-paper))!important;border-color:color-mix(in srgb,var(--ot-red) 20%,var(--ot-paper))!important;color:var(--ot-red)!important}
+body[data-ondis-catalog="otica"] .oticaEyebrow{display:block;font-size:10px;font-weight:900;letter-spacing:.15em;color:var(--ot-red)}
+/* Dedicated editorial storefront hero */
+body[data-ondis-catalog="otica"] .oticaBanner{display:grid;grid-template-columns:minmax(0,1fr) 42%;align-items:center;min-height:230px;position:relative;overflow:hidden;margin-bottom:18px;border:1px solid #6d2739;border-radius:24px;background:linear-gradient(112deg,#350a18 0%,#5b0922 47%,#8c1b39 100%);box-shadow:0 22px 40px rgba(86,10,35,.13);isolation:isolate}
+body[data-ondis-catalog="otica"] .oticaBanner:after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 80% 44%,rgba(255,214,170,.22),transparent 50%);pointer-events:none;z-index:-1}
+body[data-ondis-catalog="otica"] .oticaBannerCopy{padding:30px 38px;position:relative;z-index:2}
+body[data-ondis-catalog="otica"] .oticaBanner .oticaEyebrow{color:#ffd4de}
+body[data-ondis-catalog="otica"] .oticaBanner h2{font-size:clamp(24px,3vw,38px);color:#fff!important;font-weight:900;margin:9px 0}
+body[data-ondis-catalog="otica"] .oticaBanner p{font-size:13px;color:#f7d9e0;line-height:1.65;max-width:550px}
+body[data-ondis-catalog="otica"] .oticaBannerPills{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}
+body[data-ondis-catalog="otica"] .oticaBannerPills span{border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.09);padding:7px 12px;border-radius:99px;color:#fff;font-size:11px;font-weight:700}
+body[data-ondis-catalog="otica"] .oticaBannerArt{display:flex;align-items:center;justify-content:center;padding:12px 24px;filter:drop-shadow(0 22px 12px rgba(10,3,12,.24))}
+body[data-ondis-catalog="otica"] .oticaBannerArt svg{max-width:100%;width:470px;height:auto}
+body[data-ondis-catalog="otica"] .oticaQuickCategories{display:flex;gap:9px;overflow-x:auto;scrollbar-width:thin;padding:3px 2px 15px;margin-bottom:2px}
+body[data-ondis-catalog="otica"] .oticaQuickCat{white-space:nowrap;cursor:pointer;padding:10px 16px;border:1px solid var(--ot-border);border-radius:99px;background:var(--ot-paper);color:var(--ot-sub);font-size:12px;font-weight:800;transition:.15s}
+body[data-ondis-catalog="otica"] .oticaQuickCat.active{background:#bd0b35;color:#fff;border-color:#bd0b35;box-shadow:0 6px 14px rgba(183,14,55,.13)}
+body[data-ondis-catalog="otica"] .catalog-shell{grid-template-columns:260px minmax(0,1fr);gap:18px}
+body[data-ondis-catalog="otica"] .catalog-hero{min-height:220px;border-radius:19px!important;background:radial-gradient(circle at 90% 100%,rgba(247,123,162,.28),transparent 48%),linear-gradient(145deg,#46101f,#740b2b)!important;box-shadow:var(--ot-shadow)!important}
+body[data-ondis-catalog="otica"] .catalog-hero::after{border-color:rgba(255,182,206,.32)}
+body[data-ondis-catalog="otica"] .catalog-hero h2{font-size:24px;margin:9px 0 12px;color:#fff!important}
+body[data-ondis-catalog="otica"] .catalog-hero p{max-width:220px;color:#f0ced8!important;font-size:12px}
+body[data-ondis-catalog="otica"] .oticaSideEyebrow{font-size:9px;letter-spacing:.13em;font-weight:900;color:#ffc9d8}
+body[data-ondis-catalog="otica"] .catalog-hero .btn{margin-top:25px;background:#fff!important;color:#760e2d!important;border-color:#fff!important;box-shadow:none!important}
+body[data-ondis-catalog="otica"] :is(.catalog-filter-card,.catalog-tools-card){background:var(--ot-paper)!important;color:var(--ot-ink)!important;border:1px solid var(--ot-border)!important;border-radius:19px!important;box-shadow:var(--ot-shadow)!important}
+body[data-ondis-catalog="otica"] .catalog-filter-card{padding:19px}
+body[data-ondis-catalog="otica"] .catalog-filter-title strong{font-size:15px;color:var(--ot-ink)!important}
+body[data-ondis-catalog="otica"] .catalog-filter-title button{color:var(--ot-red)!important}
+body[data-ondis-catalog="otica"] .filter-section{border-color:var(--ot-border)}
+body[data-ondis-catalog="otica"] .filter-section>strong{color:var(--ot-ink)!important;font-size:12px;letter-spacing:0}
+body[data-ondis-catalog="otica"] .catCheck{font-size:12px;color:var(--ot-sub)!important}
+body[data-ondis-catalog="otica"] .catCheck input{accent-color:var(--ot-red)}
+body[data-ondis-catalog="otica"] :is(.filter-section select,.priceInputs input,.toolbar select,.searchBox input){background:var(--ot-input)!important;color:var(--ot-input-ink)!important;border:1px solid var(--ot-border)!important;border-radius:11px!important;font-size:12px;width:100%;min-width:0;min-height:39px;padding:9px 10px}
+body[data-ondis-catalog="otica"] :is(.filter-section select,.priceInputs input,.toolbar select)::placeholder{color:var(--ot-sub)!important}
+body[data-ondis-catalog="otica"] .catalog-filter-card>.btn{background:color-mix(in srgb,var(--ot-red) 7%,var(--ot-paper))!important;color:var(--ot-red)!important;border-color:color-mix(in srgb,var(--ot-red) 18%,var(--ot-paper))!important}
+body[data-ondis-catalog="otica"] .sizeButtons button{background:var(--ot-paper);border-color:var(--ot-border);color:var(--ot-sub)}
+body[data-ondis-catalog="otica"] .sizeButtons button.active{background:#bd0b35;color:#fff;border-color:#bd0b35}
+body[data-ondis-catalog="otica"] .catalog-tools-card{padding:16px 17px}
+body[data-ondis-catalog="otica"] .searchBox{min-width:0}
+body[data-ondis-catalog="otica"] .searchBox input{min-height:45px!important}
+body[data-ondis-catalog="otica"] .viewToggle button{color:var(--ot-sub)!important;background:var(--ot-paper)!important;border-color:var(--ot-border)!important}
+body[data-ondis-catalog="otica"] .viewToggle button.active{color:var(--ot-red)!important;background:color-mix(in srgb,var(--ot-red) 7%,var(--ot-paper))!important}
+body[data-ondis-catalog="otica"] .catalogStats{gap:10px}
+body[data-ondis-catalog="otica"] .catalogStat{border-radius:14px!important;border:1px solid var(--ot-border)!important;background:var(--ot-soft)!important;min-width:0}
+body[data-ondis-catalog="otica"] .catalogStat i{font-style:normal;font-size:16px;font-weight:950;width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--ot-red) 10%,var(--ot-paper));color:var(--ot-red)!important}
+body[data-ondis-catalog="otica"] .catalogStat :is(small,b){color:var(--ot-ink)!important}
+body[data-ondis-catalog="otica"] .catalogStat small{color:var(--ot-sub)!important}
+body[data-ondis-catalog="otica"] .oticaResultsHeader{display:flex;justify-content:space-between;align-items:end;gap:8px;margin:17px 2px 0;padding-top:15px;border-top:1px solid var(--ot-border)}
+body[data-ondis-catalog="otica"] .oticaResultsHeader strong{display:block;font-size:16px;color:var(--ot-ink)}
+body[data-ondis-catalog="otica"] .oticaResultsHeader small,body[data-ondis-catalog="otica"] .oticaResultHint{font-size:11px;color:var(--ot-sub)}
+body[data-ondis-catalog="otica"] #gridVitrine.grid{grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:15px;margin-top:16px}
+body[data-ondis-catalog="otica"] .oticaProductCard{overflow:hidden;border:1px solid var(--ot-border)!important;background:var(--ot-paper)!important;border-radius:19px!important;box-shadow:var(--ot-shadow)!important;transition:transform .18s,box-shadow .18s}
+body[data-ondis-catalog="otica"] .oticaProductCard:hover{transform:translateY(-3px);box-shadow:0 20px 35px rgba(19,30,55,.1)!important}
+body[data-ondis-catalog="otica"] .oticaProductCard .photoWrap{background:color-mix(in srgb,var(--ot-soft) 80%,#eae4dc);overflow:hidden;position:relative}
+body[data-ondis-catalog="otica"] .oticaProductCard .foto{object-fit:contain;background:transparent;aspect-ratio:1.2/1;width:100%;padding:10px;display:block}
+body[data-ondis-catalog="otica"] .oticaPlaceholder{background:linear-gradient(135deg,#f8f1ef,#e8e1e4)!important;color:#87465a!important;display:grid;place-items:center;aspect-ratio:1.2/1!important;width:100%;font-size:12px;font-weight:700;text-align:center}
+body[data-ondis-catalog="otica"] .oticaPlaceholder svg{width:48%;max-width:120px;opacity:.75}
+body[data-ondis-catalog="otica"] .oticaProductCard .body{padding:15px 15px 11px;gap:7px!important;min-width:0}
+body[data-ondis-catalog="otica"] .oticaProductType{font-size:10px;font-weight:900;letter-spacing:.09em;text-transform:uppercase;color:var(--ot-red)}
+body[data-ondis-catalog="otica"] .oticaProductCard .nome{font-size:15px!important;line-height:1.35;color:var(--ot-ink)!important;min-height:41px}
+body[data-ondis-catalog="otica"] .oticaProductCard .ref{font-size:10px;color:var(--ot-sub)!important}
+body[data-ondis-catalog="otica"] .oticaProductSpecs{display:flex;gap:5px;flex-wrap:wrap;min-height:26px}
+body[data-ondis-catalog="otica"] .oticaProductSpecs span{font-size:10px;background:var(--ot-soft);color:var(--ot-sub);border:1px solid var(--ot-border);border-radius:99px;padding:3px 8px}
+body[data-ondis-catalog="otica"] .oticaProductCard .precos{margin-top:auto;gap:6px;min-height:35px}
+body[data-ondis-catalog="otica"] .oticaProductCard .preco{font-size:19px;font-weight:950;color:var(--ot-ink)!important}
+body[data-ondis-catalog="otica"] .oticaProductCard .precoAntigo{color:var(--ot-sub)!important}
+body[data-ondis-catalog="otica"] .oticaProductCard .acts{padding:0 15px 14px;display:flex;gap:6px}
+body[data-ondis-catalog="otica"] .oticaProductCard .acts>.btn{flex:1}
+body[data-ondis-catalog="otica"] .productBadge{top:12px;left:12px;border-radius:99px;padding:6px 10px;background:#bd0b35!important;color:#fff!important;border:0!important;font-size:10px;font-weight:900}
+body[data-ondis-catalog="otica"] .oticaAvailability{position:absolute;top:10px;right:10px;padding:6px 9px;border-radius:99px;background:#f0e5e7;color:#952540;font-size:10px;font-weight:900}
+body[data-ondis-catalog="otica"] #gridVitrine.listView{grid-template-columns:1fr}
+body[data-ondis-catalog="otica"] #gridVitrine.listView .oticaProductCard{display:grid;grid-template-columns:190px 1fr 200px;align-items:center}
+body[data-ondis-catalog="otica"] #gridVitrine.listView .oticaProductCard .photoWrap{height:165px}
+body[data-ondis-catalog="otica"] #gridVitrine.listView .oticaProductCard .foto,body[data-ondis-catalog="otica"] #gridVitrine.listView .oticaProductCard .oticaPlaceholder{height:165px!important;aspect-ratio:auto!important}
+body[data-ondis-catalog="otica"] #gridVitrine.listView .oticaProductCard .acts{flex-direction:column;padding:15px}
+/* Management */
+body[data-ondis-catalog="otica"] .oticaManageHeader{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin:8px 0 18px;padding:24px;background:var(--ot-paper);border:1px solid var(--ot-border);border-radius:20px;box-shadow:var(--ot-shadow)}
+body[data-ondis-catalog="otica"] .oticaManageHeader h2{font-size:26px;font-weight:900;margin:5px 0;color:var(--ot-ink)!important}
+body[data-ondis-catalog="otica"] .oticaManageHeader p{font-size:12px;color:var(--ot-sub);line-height:1.6;max-width:530px}
+body[data-ondis-catalog="otica"] .oticaManageStats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:15px}
+body[data-ondis-catalog="otica"] .oticaManageStats>div{display:flex;flex-direction:column;gap:7px;padding:19px;border-radius:16px;border:1px solid var(--ot-border);background:var(--ot-paper);box-shadow:var(--ot-shadow)}
+body[data-ondis-catalog="otica"] .oticaManageStats span{font-size:11px;color:var(--ot-sub);font-weight:700}
+body[data-ondis-catalog="otica"] .oticaManageStats strong{font-size:28px;font-weight:900;color:var(--ot-ink)}
+body[data-ondis-catalog="otica"] .oticaManageNotice{border:1px solid color-mix(in srgb,var(--ot-red) 18%,var(--ot-paper));background:color-mix(in srgb,var(--ot-red) 5%,var(--ot-paper));color:var(--ot-ink);border-radius:13px;padding:13px 16px;margin-bottom:15px;font-size:12px}
+body[data-ondis-catalog="otica"] #gridGerenciar.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+body[data-ondis-catalog="otica"] .oticaManageItem{display:grid;grid-template-columns:105px minmax(0,1fr) auto;align-items:center;gap:14px;padding:12px;border:1px solid var(--ot-border);border-radius:16px;background:var(--ot-paper);box-shadow:var(--ot-shadow);min-width:0}
+body[data-ondis-catalog="otica"] .oticaManageImage{border-radius:12px;overflow:hidden;background:var(--ot-soft)}
+body[data-ondis-catalog="otica"] .oticaManageImage :is(img,.oticaPlaceholder){height:95px;aspect-ratio:1/1;object-fit:contain;width:100%;font-size:10px}
+body[data-ondis-catalog="otica"] .oticaManageInfo{display:flex;flex-direction:column;gap:6px;min-width:0}
+body[data-ondis-catalog="otica"] .oticaManageInfo>strong{font-size:13px;line-height:1.25;color:var(--ot-ink);word-break:break-word}
+body[data-ondis-catalog="otica"] .oticaManageInfo>small{font-size:10px;color:var(--ot-sub)}
+body[data-ondis-catalog="otica"] .oticaManageBadges{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+body[data-ondis-catalog="otica"] .oticaManageBadges span{padding:5px 7px;background:var(--ot-soft);color:var(--ot-ink);border-radius:8px;font-size:10px;font-weight:850}
+body[data-ondis-catalog="otica"] .oticaManageBadges span.is-available{background:#e4f7ed;color:#0b7249}
+body[data-ondis-catalog="otica"] .oticaManageBadges span.is-unavailable{background:#fff0f1;color:#bd2344}
+body[data-ondis-catalog="otica"] .oticaManageActions{display:flex;flex-direction:column;gap:6px}
+body[data-ondis-catalog="otica"] .oticaManageActions .btn{font-size:11px;padding:8px 10px;white-space:nowrap}
+/* Product dialog and public details */
+body[data-ondis-catalog="otica"] .modal{background:var(--ot-paper)!important;color:var(--ot-ink)!important;border:1px solid var(--ot-border)!important;box-shadow:0 22px 80px rgba(15,24,41,.25)}
+body[data-ondis-catalog="otica"] #modalProduto .modal{max-width:880px;max-height:91vh;overflow-y:auto;padding:26px}
+body[data-ondis-catalog="otica"] #modalImportar .modal{background:var(--ot-paper)!important}
+body[data-ondis-catalog="otica"] .oticaEditorSection{border-radius:17px;background:var(--ot-soft);border:1px solid var(--ot-border);padding:20px;margin:12px 0 19px}
+body[data-ondis-catalog="otica"] .oticaEditorHeading{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+body[data-ondis-catalog="otica"] .oticaEditorHeading h3{font-size:17px;font-weight:900;margin:5px 0;color:var(--ot-ink)}
+body[data-ondis-catalog="otica"] .oticaOptional{font-size:11px;color:var(--ot-sub)}
+body[data-ondis-catalog="otica"] .oticaDimensions{border:1px solid var(--ot-border);border-radius:14px;background:var(--ot-paper);padding:14px;margin:2px 0 16px}
+body[data-ondis-catalog="otica"] .oticaDimensions>strong{font-size:12px;color:var(--ot-ink);display:block;margin-bottom:13px}
+body[data-ondis-catalog="otica"] .grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+body[data-ondis-catalog="otica"] .oticaFormTip{font-size:11px;color:var(--ot-sub);line-height:1.6;margin-top:8px}
+body[data-ondis-catalog="otica"] .field label{color:var(--ot-sub)!important;font-size:11px;font-weight:850}
+body[data-ondis-catalog="otica"] .field :is(input,select,textarea),body[data-ondis-catalog="otica"] .toolbar input{background:var(--ot-input)!important;color:var(--ot-input-ink)!important;border:1px solid var(--ot-border)!important}
+body[data-ondis-catalog="otica"] .field :is(input,select,textarea)::placeholder{color:var(--ot-sub)!important;opacity:.85}
+body[data-ondis-catalog="otica"] .oticaDetailModal{max-width:850px;max-height:92vh;overflow:auto;padding:24px}
+body[data-ondis-catalog="otica"] .oticaModalTitle{display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid var(--ot-border);padding-bottom:16px;margin-bottom:18px}
+body[data-ondis-catalog="otica"] .oticaModalTitle h2{font-size:23px;margin-top:7px;color:var(--ot-ink)}
+body[data-ondis-catalog="otica"] .oticaDetailGrid{display:grid;grid-template-columns:1fr 1fr;gap:23px}
+body[data-ondis-catalog="otica"] .oticaDetailImageWrap{background:var(--ot-soft);border-radius:16px;overflow:hidden}
+body[data-ondis-catalog="otica"] .oticaDetailMainImage{width:100%;aspect-ratio:1/1;object-fit:contain;display:grid;place-items:center}
+body[data-ondis-catalog="otica"] .oticaThumbs{display:flex;gap:8px;margin-top:9px}
+body[data-ondis-catalog="otica"] .oticaThumb{height:64px;width:64px;border-radius:9px;overflow:hidden;background:var(--ot-paper);border:1px solid var(--ot-border);cursor:pointer}
+body[data-ondis-catalog="otica"] .oticaThumb img{width:100%;height:100%;object-fit:contain}
+body[data-ondis-catalog="otica"] .oticaDetailGrid h3{font-size:22px;margin:9px 0;color:var(--ot-ink)}
+body[data-ondis-catalog="otica"] .oticaDetailGrid p{font-size:12px;line-height:1.6;color:var(--ot-sub)}
+body[data-ondis-catalog="otica"] .oticaDetailPrice{font-size:28px;font-weight:950;color:var(--ot-red);margin:16px 0}
+body[data-ondis-catalog="otica"] .oticaSpecTable{border-top:1px solid var(--ot-border)}
+body[data-ondis-catalog="otica"] .oticaSpecRow{display:flex;gap:20px;justify-content:space-between;border-bottom:1px solid var(--ot-border);padding:10px 0;font-size:12px}
+body[data-ondis-catalog="otica"] .oticaSpecRow span{color:var(--ot-sub)}
+body[data-ondis-catalog="otica"] .oticaSpecRow strong{color:var(--ot-ink);text-align:right}
+body[data-ondis-catalog="otica"] .oticaDetailDisclaimer{background:var(--ot-soft);border-radius:11px;padding:11px;margin-top:15px}
+body[data-ondis-catalog="otica"] .cartFab{background:#bd0b35!important;color:#fff!important;box-shadow:0 14px 32px rgba(171,10,52,.24)}
+body[data-ondis-catalog="otica"] .cartCount{background:#fff!important;color:#bd0b35!important}
+body[data-ondis-catalog="otica"] .cartItem{background:var(--ot-soft);color:var(--ot-ink);border-color:var(--ot-border)}
+body[data-ondis-catalog="otica"] .qtd button{background:var(--ot-paper);color:var(--ot-ink);border-color:var(--ot-border)}
+body[data-ondis-catalog="otica"] #cartTotal{color:var(--ot-red)!important}
+body[data-ondis-catalog="otica"] #modalImportar :is(td,th){color:var(--ot-ink)}
+body[data-ondis-catalog="otica"] .hint{color:var(--ot-sub)!important}
+/* Optic catalog remains reachable on tablet and mobile. */
+@media(max-width:1150px){body[data-ondis-catalog="otica"] .catalog-shell{grid-template-columns:230px minmax(0,1fr)}body[data-ondis-catalog="otica"] #gridVitrine.grid{grid-template-columns:repeat(2,minmax(0,1fr))}body[data-ondis-catalog="otica"] #gridGerenciar.grid{grid-template-columns:1fr}}
+@media(max-width:900px){body[data-ondis-catalog="otica"] .catalog-shell{grid-template-columns:1fr}body[data-ondis-catalog="otica"] .catalog-side{grid-template-columns:1fr 1fr}body[data-ondis-catalog="otica"] .catalog-filter-card{grid-column:1/-1}body[data-ondis-catalog="otica"] .oticaBanner{grid-template-columns:minmax(0,1fr) 36%}body[data-ondis-catalog="otica"] .oticaBannerCopy{padding:26px}body[data-ondis-catalog="otica"] .oticaManageStats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){body[data-ondis-catalog="otica"] .wrap{padding:14px 14px 36px}body[data-ondis-catalog="otica"] .tabs{margin:-14px -14px 16px;padding:0 14px;top:67px!important}body[data-ondis-catalog="otica"] .tab{white-space:nowrap;padding:12px 13px!important}body[data-ondis-catalog="otica"] .oticaBanner{min-height:0;grid-template-columns:1fr}body[data-ondis-catalog="otica"] .oticaBannerCopy{padding:23px 22px 12px}body[data-ondis-catalog="otica"] .oticaBanner h2{font-size:27px}body[data-ondis-catalog="otica"] .oticaBannerArt{max-height:110px;padding:0 15px 12px;opacity:.85}body[data-ondis-catalog="otica"] .oticaBannerArt svg{max-height:105px}body[data-ondis-catalog="otica"] .catalog-side{grid-template-columns:1fr}body[data-ondis-catalog="otica"] .catalog-hero{min-height:0;padding:19px}body[data-ondis-catalog="otica"] .catalog-hero .btn{margin-top:12px}body[data-ondis-catalog="otica"] .catalog-filter-card{grid-column:auto}body[data-ondis-catalog="otica"] .catalog-tools-card{padding:12px}body[data-ondis-catalog="otica"] .catalogStats{grid-template-columns:repeat(2,minmax(0,1fr))}body[data-ondis-catalog="otica"] .catalogStat{padding:11px!important}body[data-ondis-catalog="otica"] #gridVitrine.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}body[data-ondis-catalog="otica"] .oticaProductCard .body{padding:11px}body[data-ondis-catalog="otica"] .oticaProductCard .nome{font-size:13px!important}body[data-ondis-catalog="otica"] .oticaProductCard .preco{font-size:15px}body[data-ondis-catalog="otica"] .oticaProductCard .acts{padding:0 9px 9px;flex-direction:column}body[data-ondis-catalog="otica"] .oticaProductCard .acts .btn{width:100%;font-size:11px}body[data-ondis-catalog="otica"] #gridVitrine.listView .oticaProductCard{display:flex}body[data-ondis-catalog="otica"] .oticaManageItem{grid-template-columns:88px minmax(0,1fr)}body[data-ondis-catalog="otica"] .oticaManageActions{grid-column:1/-1;flex-direction:row}body[data-ondis-catalog="otica"] .oticaManageActions .btn{flex:1}body[data-ondis-catalog="otica"] #modalProduto .modal{padding:18px}body[data-ondis-catalog="otica"] .oticaEditorSection{padding:14px}body[data-ondis-catalog="otica"] .grid3{grid-template-columns:1fr}body[data-ondis-catalog="otica"] .oticaDetailGrid{grid-template-columns:1fr}body[data-ondis-catalog="otica"] .oticaDetailModal{padding:15px}body[data-ondis-catalog="otica"] .oticaResultsHeader{align-items:start;flex-direction:column}body[data-ondis-catalog="otica"] .toolbar{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:380px){body[data-ondis-catalog="otica"] #gridVitrine.grid{grid-template-columns:1fr}body[data-ondis-catalog="otica"] .catalogStats{grid-template-columns:1fr 1fr}body[data-ondis-catalog="otica"] .oticaBannerPills span{font-size:10px}}
+/* Collapsible filters on narrow screens, preserving desktop visibility. */
+body[data-ondis-catalog="otica"] .oticaFiltersActions{display:flex;align-items:center;gap:12px}
+body[data-ondis-catalog="otica"] .oticaFiltersToggle{display:none}
+@media(max-width:650px){
+ body[data-ondis-catalog="otica"] .oticaFiltersToggle{display:inline-flex;font-weight:850;font-size:11px;color:var(--ot-red);border:1px solid color-mix(in srgb,var(--ot-red) 20%,var(--ot-paper));background:var(--ot-paper);border-radius:9px;padding:7px 9px}
+ body[data-ondis-catalog="otica"] .catalog-filter-card .oticaFiltersBody{display:none}
+ body[data-ondis-catalog="otica"] .catalog-filter-card.oticaFiltersOpen .oticaFiltersBody{display:block}
+ body[data-ondis-catalog="otica"] .catalog-filter-card{padding:12px 16px}
+ body[data-ondis-catalog="otica"] .catalog-filter-title{margin:0;gap:8px}
+ body[data-ondis-catalog="otica"] .catalog-filter-card.oticaFiltersOpen .catalog-filter-title{margin-bottom:13px}
+}

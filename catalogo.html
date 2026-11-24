@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>ONDIS — Catálogo</title>
+<title>ONDIS — Catálogo Ótica</title>
 <meta content="#0b0f14" name="theme-color"/>
 <link href="./icon-192.png" rel="icon"/>
 <style>
@@ -116,14 +116,15 @@
 <link rel="stylesheet" href="./ondis-visual-v4.css?v=4.0.0"/>
 
 <link rel="stylesheet" href="./ondis-contraste-global-v6.css?v=6.0.0">
+<link rel="stylesheet" href="./ondis-catalogo-otica-v12.css?v=12.0.0">
 </head>
-<body data-ondis-refresh="catalog">
+<body data-ondis-refresh="catalog" data-ondis-catalog="general">
 
 <div class="loading show" id="loadingScreen"><div class="spinner"></div><div id="loadingMsg">Carregando...</div></div>
 
 <header>
   <div class="brand">
-    <h1><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14l1 13H4L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span><span id="lojaTitulo">Catálogo</span></h1>
+    <h1><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14l1 13H4L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span><span id="lojaTitulo">Catálogo Ótica</span></h1>
     <div class="sub" id="ctxInfo">—</div>
   </div>
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
@@ -136,46 +137,72 @@
 
   <!-- ABAS (só aparecem para o funcionário logado) -->
   <div class="tabs" id="abasFuncionario" style="display:none">
-    <button class="tab active" id="tabVitrine" onclick="showTab('vitrine')">🛍️ Vitrine</button>
-    <button class="tab" id="tabGerenciar" onclick="showTab('gerenciar')">📦 Gerenciar produtos</button>
-    <button class="tab" id="tabPerfil" onclick="showTab('perfil')">👤 Meu WhatsApp</button>
+    <button class="tab active" id="tabVitrine" onclick="showTab('vitrine')">Vitrine óptica</button>
+    <button class="tab" id="tabGerenciar" onclick="showTab('gerenciar')">Gerenciar catálogo</button>
+    <button class="tab" id="tabPerfil" onclick="showTab('perfil')">Meus links e WhatsApp</button>
   </div>
 
   <!-- VITRINE (cliente e funcionário) -->
   <div id="viewVitrine">
+    <section class="oticaBanner" aria-label="Coleção óptica ONDIS">
+      <div class="oticaBannerCopy">
+        <span class="oticaEyebrow">ONDIS · EXPERIÊNCIA ÓPTICA</span>
+        <h2>Encontre o olhar perfeito.</h2>
+        <p>Armações, óculos de sol, lentes e acessórios. Explore os detalhes e fale com o especialista da sua loja.</p>
+        <div class="oticaBannerPills"><span>Curadoria da loja</span><span>Atendimento personalizado</span></div>
+      </div>
+      <div class="oticaBannerArt" aria-hidden="true">
+        <svg viewBox="0 0 460 190" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="frameGold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#F9D9A5"/><stop offset=".55" stop-color="#D69E62"/><stop offset="1" stop-color="#F8E9CF"/></linearGradient><linearGradient id="lensGlow" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#E0F1F1" stop-opacity=".6"/><stop offset="1" stop-color="#E7D6C9" stop-opacity=".14"/></linearGradient></defs><circle cx="238" cy="98" r="88" fill="#FFF" fill-opacity=".05"/><ellipse cx="230" cy="165" rx="180" ry="9" fill="#050009" fill-opacity=".23"/><path d="M24 61 58 71M436 61 402 71" stroke="url(#frameGold)" stroke-width="8" stroke-linecap="round"/><path d="M76 66c-17 0-25 17-23 37 3 27 17 46 54 48 33 2 62-11 78-37 9-15 15-48-10-51-40-6-63-4-99 3ZM384 66c17 0 25 17 23 37-3 27-17 46-54 48-33 2-62-11-78-37-9-15-15-48 10-51 40-6 63-4 99 3Z" fill="url(#lensGlow)" stroke="url(#frameGold)" stroke-width="9"/><path d="M186 80c10-12 22-18 44-18s34 6 44 18" stroke="url(#frameGold)" stroke-width="8" stroke-linecap="round"/><path d="M76 86 135 75M285 75l59 11" stroke="#fff" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"/></svg>
+      </div>
+    </section>
     <div id="barraSelecao" style="display:none;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:#fff8e8;border:1px solid #f3d784;border-radius:12px;padding:12px 14px;margin-bottom:14px">
       <span style="font-size:14px;font-weight:700;color:#9a6a00">🎯 Selecionando peças para um cliente — <span id="selCount">0</span> escolhida(s)</span>
-      <button class="btn good" onclick="gerarLinkSelecao()">🔗 Gerar link personalizado</button>
+      <button class="btn good" onclick="gerarLinkSelecao()">Gerar link personalizado</button>
+    </div>
+    <div class="oticaQuickCategories" role="group" aria-label="Categorias ópticas">
+      <button type="button" class="oticaQuickCat active" data-otica-type="" onclick="setOpticaType('')">Todos os produtos</button>
+      <button type="button" class="oticaQuickCat" data-otica-type="armacao" onclick="setOpticaType('armacao')">Armações de grau</button>
+      <button type="button" class="oticaQuickCat" data-otica-type="solar" onclick="setOpticaType('solar')">Óculos de sol</button>
+      <button type="button" class="oticaQuickCat" data-otica-type="lente" onclick="setOpticaType('lente')">Lentes oftálmicas</button>
+      <button type="button" class="oticaQuickCat" data-otica-type="contato" onclick="setOpticaType('contato')">Lentes de contato</button>
+      <button type="button" class="oticaQuickCat" data-otica-type="acessorio" onclick="setOpticaType('acessorio')">Acessórios</button>
     </div>
     <div class="catalog-shell">
       <aside class="catalog-side">
         <section class="catalog-hero">
-          <h2>Sua vitrine</h2>
-          <p>Organize e destaque os produtos da sua loja para seus clientes.</p>
-          <div id="barraVendedorTopo" style="display:none"><button class="btn" id="btnModoSelecao" onclick="toggleModoSelecao()">🔗 Montar link p/ cliente</button></div>
+          <span class="oticaSideEyebrow">ATENDIMENTO PERSONALIZADO</span>
+          <h2>Sua seleção, seu estilo.</h2>
+          <p>Monte uma seleção de armações e lentes e envie ao cliente pelo WhatsApp.</p>
+          <div id="barraVendedorTopo" style="display:none"><button class="btn" id="btnModoSelecao" onclick="toggleModoSelecao()">Preparar seleção para cliente</button></div>
         </section>
         <section class="catalog-filter-card">
-          <div class="catalog-filter-title"><strong>Filtros</strong><button type="button" onclick="limparFiltrosCatalogo()">Limpar tudo</button></div>
+          <div class="catalog-filter-title"><strong>Filtros</strong><div class="oticaFiltersActions"><button type="button" class="oticaFiltersToggle" id="oticaFiltersToggle" aria-expanded="false" onclick="toggleOpticaFilters()">Mostrar filtros</button><button type="button" onclick="limparFiltrosCatalogo()">Limpar tudo</button></div></div><div class="oticaFiltersBody">
           <div class="filter-section"><strong>Categoria</strong><div class="catChecks" id="categoryChecks"></div></div>
           <div class="filter-section"><strong>Faixa de preço</strong><div class="priceInputs"><input id="precoMin" inputmode="decimal" placeholder="R$ mín." oninput="renderVitrine()"><input id="precoMax" inputmode="decimal" placeholder="R$ máx." oninput="renderVitrine()"></div></div>
-          <div class="filter-section"><strong>Tamanho</strong><div class="sizeButtons" id="sizeButtons"></div></div>
-          <button class="btn" style="width:100%;background:#eaf3ff!important;color:#1769e8!important;border-color:#b9d4fb!important" type="button" onclick="renderVitrine()">⌁ Aplicar filtros</button>
+          <div class="filter-section oticaOnlyFilter"><strong>Marca</strong><select id="filtroMarca" onchange="renderVitrine()" aria-label="Filtrar por marca"><option value="">Todas as marcas</option></select></div>
+          <div class="filter-section oticaOnlyFilter"><strong>Formato da armação</strong><select id="filtroFormato" onchange="renderVitrine()" aria-label="Filtrar por formato"><option value="">Todos os formatos</option></select></div>
+          <div class="filter-section oticaOnlyFilter"><strong>Material</strong><select id="filtroMaterial" onchange="renderVitrine()" aria-label="Filtrar por material"><option value="">Todos os materiais</option></select></div>
+          <div class="filter-section oticaOnlyFilter"><strong>Cor</strong><select id="filtroCor" onchange="renderVitrine()" aria-label="Filtrar por cor"><option value="">Todas as cores</option></select></div>
+          <div class="filter-section"><strong>Tamanho / medida</strong><div class="sizeButtons" id="sizeButtons"></div></div>
+          <button class="btn" style="width:100%" type="button" onclick="toggleOpticaFilters(false);renderVitrine()">Aplicar filtros</button>
+          </div>
         </section>
       </aside>
       <main class="catalog-main">
         <section class="catalog-tools-card">
           <div class="searchRow">
-            <div class="searchBox"><input id="busca" placeholder="Buscar produto..." oninput="renderVitrine()"/><span>⌕</span></div>
+            <div class="searchBox"><input id="busca" placeholder="Buscar armação, marca, modelo ou referência..." oninput="renderVitrine()"/><span>⌕</span></div>
             <div class="viewToggle"><button id="viewGridBtn" class="active" type="button" onclick="setCatalogView('grid')">▦ Grade</button><button id="viewListBtn" type="button" onclick="setCatalogView('list')">☷ Lista</button></div>
           </div>
           <div class="toolbar">
             <select id="filtroCategoria" onchange="syncCategoryFromSelect();renderVitrine()"><option value="">Todas categorias</option></select>
             <select id="filtroGenero" onchange="renderVitrine()"><option value="">Todos os gêneros</option><option value="feminino">Feminino</option><option value="masculino">Masculino</option><option value="unissex">Unissex</option><option value="infantil">Infantil</option></select>
-            <select id="filtroTamanho" onchange="syncSizeFromSelect();renderVitrine()"><option value="">Todos os tamanhos</option></select>
+            <select id="filtroTamanho" onchange="syncSizeFromSelect();renderVitrine()"><option value="">Todas as medidas</option></select>
             <select id="ordenar" onchange="renderVitrine()"><option value="nome">Ordenar: Nome (A-Z)</option><option value="menor">Menor preço</option><option value="maior">Maior preço</option><option value="promo">Só promoções</option></select>
             <button class="btn clearFiltersBtn" type="button" onclick="limparFiltrosCatalogo()">⌫ Limpar filtros</button>
           </div>
           <div class="catalogStats" id="catalogStats"></div>
+          <div class="oticaResultsHeader"><div><strong>Produtos da loja</strong><small id="oticaResultsCount" aria-live="polite">Carregando catálogo…</small></div><span class="oticaResultHint">Consulte a disponibilidade com seu vendedor</span></div>
         </section>
         <div class="grid" id="gridVitrine"><div class="hint">Carregando produtos...</div></div>
       </main>
@@ -184,14 +211,16 @@
 
   <!-- GERENCIAR (funcionário) -->
   <div id="viewGerenciar" style="display:none">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">
-      <h2 style="font-size:16px;font-weight:800"><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14l1 13H4L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span>Produtos da loja</h2>
+    <div class="oticaManageHeader">
+      <div><span class="oticaEyebrow">GESTÃO DA VITRINE</span><h2>Catálogo óptico</h2><p>Cadastre armações e lentes, atualize características e compartilhe produtos com seus clientes.</p></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <input type="file" id="importFile" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleImportFile(event)"/>
         <button class="btn" onclick="document.getElementById('importFile').click()">📥 Importar planilha</button>
         <button class="btn good" onclick="abrirNovoProduto()">+ Novo produto</button>
       </div>
     </div>
+    <div class="oticaManageStats" id="oticaManageStats"></div>
+    <div class="oticaManageNotice">Os produtos antigos continuam disponíveis. As informações ópticas são opcionais e podem ser preenchidas aos poucos.</div>
     <div class="grid" id="gridGerenciar"><div class="hint">Nenhum produto ainda.</div></div>
   </div>
 
@@ -239,7 +268,7 @@
 </div>
 
 <!-- FAB do carrinho (cliente) -->
-<button class="cartFab" id="cartFab" style="display:none" onclick="abrirCarrinho()">🛒 Carrinho <span class="cartCount" id="cartCount">0</span></button>
+<button class="cartFab" id="cartFab" style="display:none" onclick="abrirCarrinho()">Carrinho <span class="cartCount" id="cartCount">0</span></button>
 
 <!-- MODAL LINK GERADO (vendedor) -->
 <div class="modalBack" id="modalLinkGerado">
@@ -260,7 +289,7 @@
 <div class="modalBack" id="modalProduto">
   <div class="modal">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <h2 id="prodTitulo" style="font-size:18px;font-weight:900">Novo produto</h2>
+      <div><span class="oticaEyebrow">ADMINISTRAÇÃO DO CATÁLOGO</span><h2 id="prodTitulo" style="font-size:18px;font-weight:900">Novo produto óptico</h2></div>
       <button class="btn" onclick="fecharProduto()">✕</button>
     </div>
     <input type="hidden" id="prodId"/>
@@ -271,11 +300,11 @@
       <button class="btn" onclick="document.getElementById('prodFotoInput').click()" type="button">📷 Adicionar fotos</button>
     </div>
     <div class="grid2">
-      <div class="field"><label>Referência</label><input id="prodRef" placeholder="Ex: TXC-1234"/></div>
-      <div class="field"><label>Categoria</label><input id="prodCat" placeholder="Ex: Camiseta" list="catList"/><datalist id="catList"></datalist></div>
+      <div class="field"><label>Referência / SKU</label><input id="prodRef" placeholder="Ex: ARM-1024"/></div>
+      <div class="field"><label>Categoria</label><input id="prodCat" placeholder="Ex: Armações de grau" list="catList"/><datalist id="catList"><option value="Armações de grau"><option value="Óculos de sol"><option value="Lentes oftálmicas"><option value="Lentes de contato"><option value="Acessórios"></datalist></div>
     </div>
-    <div class="field"><label>Nome / descrição curta *</label><input id="prodNome" placeholder="Ex: Camiseta TXC Masculina Azul"/></div>
-    <div class="field"><label>Descrição (opcional)</label><textarea id="prodDesc" rows="2" placeholder="Detalhes, tamanhos, cores..."></textarea></div>
+    <div class="field"><label>Nome / descrição curta *</label><input id="prodNome" placeholder="Ex: Armação Acetato Havana 52"/></div>
+    <div class="field"><label>Descrição (opcional)</label><textarea id="prodDesc" rows="2" placeholder="Detalhes do produto, coleção e diferenciais..."></textarea></div>
     <div class="grid2">
       <div class="field"><label>Preço (R$) *</label><input id="prodPreco" inputmode="decimal" placeholder="Ex: 199,90"/></div>
       <div class="field"><label>Preço promocional (opcional)</label><input id="prodPromo" inputmode="decimal" placeholder="Ex: 149,90"/></div>
@@ -290,8 +319,31 @@
           <option value="infantil">Infantil</option>
         </select>
       </div>
-      <div class="field"><label>Tamanhos (separe por vírgula)</label><input id="prodTamanhos" placeholder="Ex: 36, 38, 40, 42"/></div>
+      <div class="field"><label>Variações / medidas disponíveis (separe por vírgula)</label><input id="prodTamanhos" placeholder="Ex: 50-18-140, 52-18-145"/></div>
     </div>
+    <section class="oticaEditorSection">
+      <div class="oticaEditorHeading"><div><span class="oticaEyebrow">ESPECIFICAÇÕES ÓPTICAS</span><h3>Detalhes para orientar a escolha</h3></div><span class="oticaOptional">Campos opcionais · sem dados de pacientes</span></div>
+      <div class="grid2">
+        <div class="field"><label>Tipo de produto</label><select id="optTipo"><option value="">Selecione</option><option value="armacao">Armação de grau</option><option value="solar">Óculos de sol</option><option value="lente">Lente oftálmica</option><option value="contato">Lente de contato</option><option value="acessorio">Acessório</option></select></div>
+        <div class="field"><label>Marca</label><input id="optMarca" maxlength="80" placeholder="Ex: Acetate / Marca da loja"/></div>
+        <div class="field"><label>Modelo</label><input id="optModelo" maxlength="100" placeholder="Ex: Classic 302"/></div>
+        <div class="field"><label>Material da armação</label><select id="optMaterial"><option value="">Não informado</option><option>Acetato</option><option>Metal</option><option>Titânio</option><option>TR-90</option><option>Injetado</option><option>Misto</option><option>Outro</option></select></div>
+        <div class="field"><label>Formato da armação</label><select id="optFormato"><option value="">Não informado</option><option>Redondo</option><option>Quadrado</option><option>Retangular</option><option>Aviador</option><option>Gatinho</option><option>Oval</option><option>Geométrico</option><option>Outro</option></select></div>
+        <div class="field"><label>Cor da armação / lente</label><input id="optCor" maxlength="70" placeholder="Ex: Havana / Preto fosco"/></div>
+      </div>
+      <div class="oticaDimensions"><strong>Medidas da armação (mm)</strong><div class="grid3">
+        <div class="field"><label>Largura da lente</label><input id="optLargura" inputmode="decimal" placeholder="52"/></div>
+        <div class="field"><label>Ponte</label><input id="optPonte" inputmode="decimal" placeholder="18"/></div>
+        <div class="field"><label>Haste</label><input id="optHaste" inputmode="decimal" placeholder="145"/></div>
+      </div></div>
+      <div class="grid2">
+        <div class="field"><label>Características da lente</label><select id="optLente"><option value="">Não informado</option><option>Sem lente</option><option>Demonstrativa</option><option>Monofocal</option><option>Multifocal</option><option>Fotossensível</option><option>Polarizada</option><option>Outras</option></select></div>
+        <div class="field"><label>Proteção UV</label><select id="optUV"><option value="">Não informado</option><option value="UV400">UV400 (quando comprovado)</option><option value="sim">Sim (quando comprovado)</option><option value="nao">Não</option></select></div>
+        <div class="field"><label>Tratamento / acabamento</label><input id="optTratamento" maxlength="120" placeholder="Ex: Antirreflexo, antirrisco"/></div>
+        <div class="field"><label>Coleção</label><input id="optColecao" maxlength="80" placeholder="Ex: Coleção 2026"/></div>
+      </div>
+      <p class="oticaFormTip">Informe somente especificações confirmadas pelo fabricante. Receitas e medidas pessoais de clientes não devem ser cadastradas no catálogo público.</p>
+    </section>
     <div class="field">
       <label>Disponibilidade</label>
       <select id="prodDisp"><option value="sim">✅ Disponível</option><option value="nao">❌ Esgotado</option></select>
@@ -364,7 +416,7 @@
   const SEL_PARAM = (params.get("sel")||"").split(",").filter(Boolean); // peças selecionadas pelo vendedor
 
   let MY=null, STORE_ID=null, LOJA_NOME="", LOJA_INFO={}, PRODUTOS=[], produtosRef=null;
-  let CAT_SELECTED="", SIZE_SELECTED="", CATALOG_VIEW="grid";
+  let CAT_SELECTED="", SIZE_SELECTED="", CATALOG_VIEW="grid", OPT_TYPE="", CATALOG_IS_OPTICAL=true;
   let MODO="cliente"; // "cliente" ou "funcionario"
   let VENDEDOR=null;   // dados do vendedor do link (nome + whats)
   let CART={};         // { produtoId: quantidade }
@@ -389,7 +441,19 @@
   }
   function money(v){ return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"}); }
   function brNum(s){ if(typeof s==="number") return s; s=(s||"").toString().trim().replace(/\./g,"").replace(",","."); const n=parseFloat(s); return isNaN(n)?0:n; }
-  function zap(tel){ const n=(tel||"").replace(/\D/g,""); return n.length>=10?("55"+n):n; }
+  function htm(v){return String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));}
+  function safePhoto(src){const x=String(src||"").trim();return (/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/i.test(x)||/^https:\/\/[^\s<>"']+$/i.test(x)||/^\.\/[\w\-./%]+$/i.test(x))?x:"";}
+  function normOpt(v){ return String(v??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim(); }
+  function opt(p){return (p&&p.optica&&typeof p.optica==="object"&&!Array.isArray(p.optica))?p.optica:{};}
+  function tipoOptico(p){const o=opt(p);if(o.tipo)return o.tipo;const c=normOpt(p.categoria);if(/solar|oculos de sol/.test(c))return "solar";if(/contato/.test(c))return "contato";if(/lente/.test(c))return "lente";if(/acessor|estojo|flanela/.test(c))return "acessorio";if(/armacao|oculos de grau/.test(c))return "armacao";return "outro";}
+  function nomeTipo(t){return ({armacao:"Armação de grau",solar:"Óculos de sol",lente:"Lente oftálmica",contato:"Lente de contato",acessorio:"Acessório"})[t]||"Produto";}
+  function medidaOpt(o){return [o.largura,o.ponte,o.haste].every(x=>x!==undefined&&x!==null&&String(x)!=="")?[o.largura,o.ponte,o.haste].join("–")+" mm":"";}
+  function optSpecs(p){const o=opt(p);return [["Marca",o.marca],["Modelo",o.modelo],["Material",o.material],["Formato",o.formato],["Cor",o.cor],["Medidas",medidaOpt(o)],["Tipo de lente",o.lente],["Proteção UV",o.uv],["Tratamento",o.tratamento],["Coleção",o.colecao]].filter(x=>x[1]);}
+  function getOptField(id){return document.getElementById(id)?.value?.trim()||"";}
+  function opticaDoFormulario(existente){const prev=opt(existente);return {...prev,tipo:getOptField("optTipo"),marca:getOptField("optMarca"),modelo:getOptField("optModelo"),material:getOptField("optMaterial"),formato:getOptField("optFormato"),cor:getOptField("optCor"),largura:getOptField("optLargura"),ponte:getOptField("optPonte"),haste:getOptField("optHaste"),lente:getOptField("optLente"),uv:getOptField("optUV"),tratamento:getOptField("optTratamento"),colecao:getOptField("optColecao")};}
+  function carregarFormularioOptica(p){const o=opt(p);const map={optTipo:"tipo",optMarca:"marca",optModelo:"modelo",optMaterial:"material",optFormato:"formato",optCor:"cor",optLargura:"largura",optPonte:"ponte",optHaste:"haste",optLente:"lente",optUV:"uv",optTratamento:"tratamento",optColecao:"colecao"};for(const [id,chave] of Object.entries(map)){const el=document.getElementById(id);if(el)el.value=o[chave]||"";}}
+  function validarMedidasOpticas(){for(const [id,label,min,max] of [["optLargura","Largura da lente",20,85],["optPonte","Ponte",8,35],["optHaste","Haste",90,175]]){const v=getOptField(id);if(!v)continue;const n=Number(v.replace(",","."));if(!Number.isFinite(n)||n<min||n>max){alert(label+" deve estar entre "+min+" e "+max+" mm ou ficar vazio.");document.getElementById(id).focus();return false;}}return true;}
+  function zap(tel){ const n=(tel||"").replace(/\D/g,""); return n.length>=10?(n.startsWith("55")?n:"55"+n):n; }
 
   // ===== INICIALIZAÇÃO =====
   // Se tem ?loja no link -> modo cliente (público, sem login).
@@ -421,6 +485,12 @@
       hideLoading();
       return false;
     }
+    const segmento=normOpt(LOJA_INFO.segmento||LOJA_INFO.segment||"otica");
+    CATALOG_IS_OPTICAL=(!segmento||/otica|optica/.test(segmento));
+    document.body.dataset.ondisCatalog=CATALOG_IS_OPTICAL?"otica":"geral";
+    document.title=CATALOG_IS_OPTICAL?"ONDIS — Catálogo Ótica":"ONDIS — Catálogo";
+    document.getElementById("tabVitrine").textContent=CATALOG_IS_OPTICAL?"Vitrine óptica":"Vitrine";
+    document.querySelectorAll(".oticaBanner,.oticaQuickCategories,.oticaResultsHeader,.oticaManageStats,.oticaManageNotice,.oticaEditorSection,.oticaFiltersActions,.oticaOnlyFilter").forEach(el=>{el.style.display=CATALOG_IS_OPTICAL?"":"none";});
     document.getElementById("lojaTitulo").textContent = LOJA_NOME;
     return true;
   }
@@ -432,7 +502,7 @@
       atualizarCategorias();
       renderVitrine();
       if(MODO==="funcionario") renderGerenciar();
-      if(MODO==="funcionario") tentarCriarDemoLojaTeste();
+      // Sem inserção automática de produtos de demonstração: o catálogo só exibe registros existentes.
       hideLoading();
     },(err)=>{ console.error(err); hideLoading(); document.getElementById("gridVitrine").innerHTML='<div class="hint">Erro ao carregar. Verifique as regras do Firestore.</div>'; });
   }
@@ -483,7 +553,7 @@
     document.getElementById("btnVoltar").style.display="inline-block";
     document.getElementById("modoChip").style.display="inline-block";
     document.getElementById("barraVendedorTopo").style.display="block";
-    document.getElementById("modoChip").textContent = MY.role==="admin"?"👑 Admin":(MY.role==="superadmin"?"⚡ Super":"🧑 Vendedor");
+    document.getElementById("modoChip").textContent = MY.role==="admin"?"Gestor":(MY.role==="superadmin"?"Super Admin":"Vendedor");
     document.getElementById("ctxInfo").textContent = "Loja: "+LOJA_NOME+" · "+(MY.name||MY.email);
     // Só admin/super cadastram produtos — vendedor não vê a aba "Gerenciar produtos"
     const ehGestor = (MY.role==="admin" || MY.role==="superadmin");
@@ -507,26 +577,40 @@
     });
   };
 
+  function atualizarOpticaSelect(id, values, placeholder){
+    const el=document.getElementById(id); if(!el)return;
+    const prev=el.value;
+    el.replaceChildren();
+    el.add(new Option(placeholder,""));
+    [...new Set(values.filter(Boolean).map(String))].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(v=>el.add(new Option(v,v)));
+    if([...el.options].some(o=>o.value===prev))el.value=prev;
+  }
+  window.setOpticaType=function(t){OPT_TYPE=t||"";document.querySelectorAll(".oticaQuickCat").forEach(el=>{const active=el.dataset.oticaType===OPT_TYPE;el.classList.toggle("active",active);el.setAttribute("aria-pressed",String(active));});renderVitrine();};
+  window.toggleOpticaFilters=function(force){const card=document.querySelector(".catalog-filter-card");if(!card)return;const open=typeof force==="boolean"?force:!card.classList.contains("oticaFiltersOpen");card.classList.toggle("oticaFiltersOpen",open);const b=document.getElementById("oticaFiltersToggle");if(b){b.textContent=open?"Ocultar filtros":"Mostrar filtros";b.setAttribute("aria-expanded",String(open));}};
   function atualizarCategorias(){
+    atualizarOpticaSelect("filtroMarca",PRODUTOS.map(p=>opt(p).marca),"Todas as marcas");
+    atualizarOpticaSelect("filtroFormato",PRODUTOS.map(p=>opt(p).formato),"Todos os formatos");
+    atualizarOpticaSelect("filtroMaterial",PRODUTOS.map(p=>opt(p).material),"Todos os materiais");
+    atualizarOpticaSelect("filtroCor",PRODUTOS.map(p=>opt(p).cor),"Todas as cores");
     const cats=[...new Set(PRODUTOS.map(p=>p.categoria).filter(Boolean))].sort();
     const sel=document.getElementById("filtroCategoria");
     const atual=CAT_SELECTED||sel.value;
-    sel.innerHTML='<option value="">Todas categorias</option>'+cats.map(c=>`<option value="${c}">${c}</option>`).join("");
+    sel.innerHTML='<option value="">Todas categorias</option>'+cats.map(c=>`<option value="${htm(c)}">${htm(c)}</option>`).join("");
     sel.value=atual;
     const dl=document.getElementById("catList");
-    if(dl) dl.innerHTML=cats.map(c=>`<option value="${c}">`).join("");
+    if(dl)dl.innerHTML=["Armações de grau","Óculos de sol","Lentes oftálmicas","Lentes de contato","Acessórios",...cats].filter((v,i,a)=>a.indexOf(v)===i).map(c=>`<option value="${htm(c)}">`).join("");
     const checks=document.getElementById("categoryChecks");
-    if(checks) checks.innerHTML=[`<label class="catCheck"><input type="radio" name="catSide" value="" ${!CAT_SELECTED?"checked":""} onchange="setCategoryFilter('')"> Todas as categorias</label>`]
-      .concat(cats.map(c=>`<label class="catCheck"><input type="radio" name="catSide" value="${c}" ${CAT_SELECTED===c?"checked":""} onchange="setCategoryFilter('${String(c).replace(/'/g,"\'")}')"> ${c}</label>`)).join("");
+    if(checks)checks.innerHTML=[`<label class="catCheck"><input type="radio" name="catSide" value="" ${!CAT_SELECTED?"checked":""} onchange="setCategoryFilter('')"> Todas as categorias</label>`]
+      .concat(cats.map(c=>`<label class="catCheck"><input type="radio" name="catSide" value="${htm(c)}" ${CAT_SELECTED===c?"checked":""} onchange="setCategoryFilter(this.value)"> ${htm(c)}</label>`)).join("");
     const tams=[...new Set(PRODUTOS.flatMap(p=>p.tamanhos||[]).filter(Boolean))].sort((a,b)=>{
       const ordem=["PP","P","M","G","GG","XG","XGG"]; const ia=ordem.indexOf(String(a).toUpperCase()),ib=ordem.indexOf(String(b).toUpperCase());
       if(ia>=0||ib>=0) return (ia<0?99:ia)-(ib<0?99:ib);
       const na=parseFloat(a), nb=parseFloat(b); if(!isNaN(na)&&!isNaN(nb)) return na-nb; return String(a).localeCompare(String(b));
     });
     const selT=document.getElementById("filtroTamanho");
-    if(selT){ selT.innerHTML='<option value="">Todos os tamanhos</option>'+tams.map(t=>`<option value="${t}">${t}</option>`).join(""); selT.value=SIZE_SELECTED; }
+    if(selT){ selT.innerHTML='<option value="">Todas as medidas</option>'+tams.map(t=>`<option value="${htm(t)}">${htm(t)}</option>`).join(""); selT.value=SIZE_SELECTED; }
     const sizeWrap=document.getElementById("sizeButtons");
-    if(sizeWrap) sizeWrap.innerHTML=tams.slice(0,10).map(t=>`<button type="button" class="${SIZE_SELECTED===t?"active":""}" onclick="setSizeFilter('${String(t).replace(/'/g,"\'")}')">${t}</button>`).join("")+`<button type="button" class="${!SIZE_SELECTED?"active":""}" onclick="setSizeFilter('')">Todos</button>`;
+    if(sizeWrap){sizeWrap.innerHTML=tams.slice(0,10).map(t=>`<button type="button" class="${SIZE_SELECTED===t?"active":""}" data-size="${htm(t)}">${htm(t)}</button>`).join("")+`<button type="button" class="${!SIZE_SELECTED?"active":""}" data-size="">Todos</button>`;sizeWrap.querySelectorAll("button").forEach(btn=>btn.addEventListener("click",()=>setSizeFilter(btn.dataset.size)));}
   }
 
   window.setCategoryFilter=function(v){ CAT_SELECTED=v||""; const s=document.getElementById("filtroCategoria"); if(s)s.value=CAT_SELECTED; atualizarCategorias(); renderVitrine(); };
@@ -534,7 +618,7 @@
   window.syncCategoryFromSelect=function(){CAT_SELECTED=document.getElementById("filtroCategoria").value||""; atualizarCategorias();};
   window.syncSizeFromSelect=function(){SIZE_SELECTED=document.getElementById("filtroTamanho").value||""; atualizarCategorias();};
   window.setCatalogView=function(v){ CATALOG_VIEW=v==="list"?"list":"grid"; document.getElementById("gridVitrine")?.classList.toggle("listView",CATALOG_VIEW==="list"); document.getElementById("viewGridBtn")?.classList.toggle("active",CATALOG_VIEW==="grid"); document.getElementById("viewListBtn")?.classList.toggle("active",CATALOG_VIEW==="list"); };
-  window.limparFiltrosCatalogo=function(){ CAT_SELECTED="";SIZE_SELECTED=""; ["busca","precoMin","precoMax"].forEach(id=>{const e=document.getElementById(id);if(e)e.value="";}); ["filtroCategoria","filtroGenero","filtroTamanho"].forEach(id=>{const e=document.getElementById(id);if(e)e.value="";}); const o=document.getElementById("ordenar");if(o)o.value="nome"; atualizarCategorias();renderVitrine(); };
+  window.limparFiltrosCatalogo=function(){ CAT_SELECTED="";SIZE_SELECTED="";OPT_TYPE="";document.querySelectorAll(".oticaQuickCat").forEach(el=>el.classList.toggle("active",el.dataset.oticaType==="")); ["busca","precoMin","precoMax"].forEach(id=>{const e=document.getElementById(id);if(e)e.value="";}); ["filtroCategoria","filtroGenero","filtroTamanho","filtroMarca","filtroFormato","filtroMaterial","filtroCor"].forEach(id=>{const e=document.getElementById(id);if(e)e.value="";}); const o=document.getElementById("ordenar");if(o)o.value="nome"; atualizarCategorias();renderVitrine(); };
   function firstPhoto(p){ return (Array.isArray(p.fotos)&&p.fotos.find(Boolean)) || p.foto || ""; }
 
   function precoFinal(p){ return (p.promo>0 && p.promo<p.preco) ? p.promo : p.preco; }
@@ -546,17 +630,23 @@
     const gen=(document.getElementById("filtroGenero")||{}).value||"";
     const tam=SIZE_SELECTED || (document.getElementById("filtroTamanho")||{}).value||"";
     const ord=document.getElementById("ordenar").value||"nome";
+    const brand=(document.getElementById("filtroMarca")||{}).value||"";
+    const shape=(document.getElementById("filtroFormato")||{}).value||"";
+    const material=(document.getElementById("filtroMaterial")||{}).value||"";
+    const color=(document.getElementById("filtroCor")||{}).value||"";
     const pmin=brNum((document.getElementById("precoMin")||{}).value||"");
     const pmax=brNum((document.getElementById("precoMax")||{}).value||"");
     let lista=PRODUTOS.filter(p=>{
-      const okB=!busca||(p.nome||"").toLowerCase().includes(busca)||(p.ref||"").toLowerCase().includes(busca)||(p.descricao||"").toLowerCase().includes(busca);
+      const o=opt(p);
+      const okB=!busca||[p.nome,p.ref,p.descricao,p.categoria,o.marca,o.modelo,o.material,o.formato,o.cor,o.colecao].some(v=>normOpt(v).includes(normOpt(busca)));
+      const okO=(!OPT_TYPE||tipoOptico(p)===OPT_TYPE)&&(!brand||o.marca===brand)&&(!shape||o.formato===shape)&&(!material||o.material===material)&&(!color||o.cor===color);
       const okC=!cat||p.categoria===cat;
       const okG=!gen||p.genero===gen;
       const okT=!tam||(p.tamanhos||[]).includes(tam);
       const pf=precoFinal(p);
       const okPromo = ord!=="promo" || (p.promo>0 && p.promo<p.preco);
       const okPrice=(!pmin||pf>=pmin)&&(!pmax||pf<=pmax);
-      return okB && okC && okG && okT && okPromo && okPrice;
+      return okB && okO && okC && okG && okT && okPromo && okPrice;
     });
     if(ord==="menor") lista.sort((a,b)=>precoFinal(a)-precoFinal(b));
     else if(ord==="maior") lista.sort((a,b)=>precoFinal(b)-precoFinal(a));
@@ -569,10 +659,15 @@
       const ativos=PRODUTOS.filter(p=>p.disponivel!=="nao").length;
       const promos=PRODUTOS.filter(p=>p.promo>0&&p.promo<p.preco).length;
       const novidades=PRODUTOS.filter(p=>/novo|novidade/i.test(p.destaque||"")).length;
-      const valor=PRODUTOS.reduce((s,p)=>s+precoFinal(p),0);
-      stats.innerHTML=`<article class="catalogStat blue"><i>♙</i><div><small>Total de produtos</small><b>${ativos}</b><small>ativos</small></div></article><article class="catalogStat orange"><i>↗</i><div><small>Promoções</small><b>${promos}</b><small>produtos</small></div></article><article class="catalogStat green"><i>✦</i><div><small>Novidades</small><b>${novidades}</b><small>produtos</small></div></article><article class="catalogStat purple"><i>▣</i><div><small>Valor da vitrine</small><b>${money(valor)}</b><small>seleção atual</small></div></article>`;
+      if(!CATALOG_IS_OPTICAL){const valor=PRODUTOS.reduce((acc,p)=>acc+precoFinal(p),0);stats.innerHTML=`<article class="catalogStat blue"><i>◈</i><div><small>Produtos ativos</small><b>${ativos}</b></div></article><article class="catalogStat orange"><i>%</i><div><small>Promoções</small><b>${promos}</b></div></article><article class="catalogStat green"><i>✦</i><div><small>Novidades</small><b>${novidades}</b></div></article><article class="catalogStat purple"><i>▣</i><div><small>Valor da vitrine</small><b>${money(valor)}</b></div></article>`;}
+      else {
+      const arma=PRODUTOS.filter(p=>tipoOptico(p)==="armacao").length;
+      const solares=PRODUTOS.filter(p=>tipoOptico(p)==="solar").length;
+      stats.innerHTML=`<article class="catalogStat blue"><i>A</i><div><small>Produtos disponíveis</small><b>${ativos}</b><small>na vitrine da loja</small></div></article><article class="catalogStat orange"><i>G</i><div><small>Armações</small><b>${arma}</b><small>modelos cadastrados</small></div></article><article class="catalogStat green"><i>S</i><div><small>Óculos de sol</small><b>${solares}</b><small>modelos cadastrados</small></div></article><article class="catalogStat purple"><i>%</i><div><small>Em promoção</small><b>${promos}</b><small>produtos com desconto</small></div></article>`;
+      }
     }
 
+    const resultCount=document.getElementById("oticaResultsCount");if(resultCount)resultCount.textContent=lista.length+" produto(s) encontrado(s)";
     // CLIENTE com link personalizado: separa "selecionadas para você" das demais
     const temSelecao = MODO==="cliente" && SEL_PARAM.length>0;
     let html="";
@@ -582,7 +677,7 @@
       // ordena as selecionadas na ordem do link
       selec.sort((a,b)=> SEL_PARAM.indexOf(a.id) - SEL_PARAM.indexOf(b.id));
       if(selec.length>0){
-        html += `<div style="grid-column:1/-1;margin:4px 0 2px"><h3 style="font-size:16px;font-weight:900;color:#ffd166">✨ Selecionadas para você${VENDEDOR&&VENDEDOR.nome?" por "+VENDEDOR.nome:""}</h3></div>`;
+        html += `<div style="grid-column:1/-1;margin:4px 0 2px"><h3 style="font-size:16px;font-weight:900;color:#ffd166">✨ Selecionadas para você${VENDEDOR&&VENDEDOR.nome?" por "+htm(VENDEDOR.nome):""}</h3></div>`;
         html += selec.map(cardProduto).join("");
         html += `<div style="grid-column:1/-1;margin:16px 0 2px;padding-top:12px;border-top:1px solid rgba(255,255,255,.1)"><h3 style="font-size:15px;font-weight:800;color:#9db0d0">🛍️ Ver todo o catálogo</h3></div>`;
       }
@@ -613,6 +708,38 @@
 
   // monta o card de um produto (usado na vitrine)
   function cardProduto(p){
+    if(!CATALOG_IS_OPTICAL)return cardProdutoBasico(p);
+    const esgotado=p.disponivel==="nao", temPromo=p.promo>0&&p.promo<p.preco;
+    const o=opt(p), nome=htm(p.nome||"Produto"), ref=htm(p.ref||""), badge=htm((p.destaque||"").trim());
+    const src=safePhoto(firstPhoto(p));
+    const foto=src?`<img class="foto" src="${htm(src)}" alt="${nome}" loading="lazy">`:`<div class="semFoto oticaPlaceholder" aria-label="Produto sem foto"><svg viewBox="0 0 120 58" aria-hidden="true"><path d="M8 17 22 19M112 17 98 19M22 17c-14 0-13 8-11 18s9 16 24 16c17 0 27-10 28-24M98 17c14 0 13 8 11 18s-9 16-24 16c-17 0-27-10-28-24M57 26q3-10 6-10t6 10" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><path d="M22 17q19-5 35 9M98 17q-19-5-35 9" fill="none" stroke="currentColor" stroke-width="4"/></svg></div>`;
+    const classes=/novo/i.test(badge)?"new":/%|desconto/.test(badge)?"sale":/premium/i.test(badge)?"premium":"";
+    const chips=[o.marca,o.formato,medidaOpt(o)].filter(Boolean).slice(0,3).map(v=>`<span>${htm(v)}</span>`).join("");
+    const id=JSON.stringify(String(p.id));
+    const ehGestor=MY&&(MY.role==="admin"||MY.role==="superadmin");
+    let acao="";
+    if(SEL_MODE){const selected=!!SELECIONADAS[p.id];acao=`<button class="btn sm ${selected?"good":""}" onclick='toggleSelecao(${htm(id)})'>${selected?"Selecionado ✓":"Selecionar para cliente"}</button>`;}
+    else if(MODO==="cliente"){acao=esgotado?'<button class="btn sm" disabled>Indisponível</button>':`<button class="btn good sm" onclick='addCart(${htm(id)})'>Adicionar</button>`;acao+=`<button class="btn sm" onclick='abrirDetalhesProduto(${htm(id)})'>Detalhes</button>`;}
+    else if(ehGestor){acao=`<button class="btn good sm" onclick='abrirEditarProduto(${htm(id)})'>Editar produto</button><button class="btn sm" onclick='abrirDetalhesProduto(${htm(id)})'>Ver</button>`;}
+    else{acao=`<button class="btn good sm" onclick="toggleModoSelecao()">Selecionar</button><button class="btn sm" onclick='abrirDetalhesProduto(${htm(id)})'>Detalhes</button>`;}
+    return `<article class="prod oticaProductCard"><div class="photoWrap">${foto}${badge?`<span class="productBadge ${classes}">${badge}</span>`:""}${esgotado?'<span class="oticaAvailability unavailable">Indisponível</span>':""}</div><div class="body"><div class="oticaProductType">${htm(nomeTipo(tipoOptico(p)))}</div><div class="nome">${nome}</div>${ref?`<div class="ref">Ref. ${ref}</div>`:""}<div class="oticaProductSpecs">${chips}</div><div class="precos"><span class="preco">${money(precoFinal(p))}</span>${temPromo?`<span class="precoAntigo">${money(p.preco)}</span>`:""}</div></div><div class="acts">${acao}</div></article>`;
+  }
+
+  window.abrirDetalhesProduto=function(id){
+    if(!CATALOG_IS_OPTICAL){abrirDetalhesProdutoBasico(id);return;}
+    const p=PRODUTOS.find(x=>x.id===id);if(!p)return;
+    const fotos=(Array.isArray(p.fotos)&&p.fotos.length?p.fotos:[p.foto]).map(safePhoto).filter(Boolean);
+    const specs=optSpecs(p).map(([label,value])=>`<div class="oticaSpecRow"><span>${htm(label)}</span><strong>${htm(value)}</strong></div>`).join("");
+    const nome=htm(p.nome||"Produto");
+    const src=fotos[0];
+    const hero=src?`<img id="detailMainImg" src="${htm(src)}" alt="${nome}" class="oticaDetailMainImage">`:`<div class="oticaPlaceholder oticaDetailMainImage">Sem foto cadastrada</div>`;
+    const thumbs=fotos.length>1?`<div class="oticaThumbs">${fotos.map(f=>`<button type="button" class="oticaThumb" data-photo="${htm(f)}"><img src="${htm(f)}" alt="Outra vista do produto"></button>`).join("")}</div>`:"";
+    const html=`<div class="modalBack show" id="modalDetalhesTemp" role="dialog" aria-modal="true" aria-label="Detalhes do produto"><div class="modal oticaDetailModal"><div class="oticaModalTitle"><div><span class="oticaEyebrow">FICHA DO PRODUTO</span><h2>${nome}</h2></div><button class="btn" onclick="document.getElementById('modalDetalhesTemp').remove()">Fechar</button></div><div class="oticaDetailGrid"><div><div class="oticaDetailImageWrap">${hero}</div>${thumbs}</div><div><span class="oticaProductType">${htm(nomeTipo(tipoOptico(p)))}</span><h3>${nome}</h3><p>${htm(p.descricao||"Consulte as características e disponibilidade com a loja.")}</p><div class="oticaDetailPrice">${money(precoFinal(p))}</div><div class="oticaSpecTable">${specs||'<p>Informações técnicas ainda não cadastradas.</p>'}</div><p class="oticaDetailDisclaimer">A escolha e o ajuste de lentes devem ser feitos com orientação profissional, conforme a necessidade do cliente.</p></div></div></div></div>`;
+    document.body.insertAdjacentHTML("beforeend",html);
+    document.querySelectorAll("#modalDetalhesTemp .oticaThumb").forEach(btn=>btn.addEventListener("click",()=>{const img=document.getElementById("detailMainImg");if(img)img.src=btn.dataset.photo;}));
+  };
+
+  function cardProdutoBasico(p){
     const temPromo=p.promo>0 && p.promo<p.preco;
     const esgotado=p.disponivel==="nao";
     const src=firstPhoto(p);
@@ -629,7 +756,7 @@
     return `<div class="prod"><div class="photoWrap">${badge?`<span class="productBadge ${badgeClass}">${badge}</span>`:""}${foto}</div><div class="body"><div class="nome">${p.nome||"—"}</div>${p.descricao?`<div class="desc">${p.descricao}</div>`:""}${infoTam}<div class="precos"><span class="preco">${money(precoFinal(p))}</span>${temPromo?`<span class="precoAntigo">${money(p.preco)}</span>`:""}</div></div><div class="acts">${acao}</div></div>`;
   }
 
-  window.abrirDetalhesProduto=function(id){
+  function abrirDetalhesProdutoBasico(id){
     const p=PRODUTOS.find(x=>x.id===id); if(!p)return;
     const fotos=(Array.isArray(p.fotos)&&p.fotos.length?p.fotos:[p.foto]).filter(Boolean);
     const html=`<div class="modalBack show" id="modalDetalhesTemp"><div class="modal" style="max-width:760px"><div style="display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:14px"><h2>${p.nome||"Produto"}</h2><button class="btn" onclick="document.getElementById('modalDetalhesTemp').remove()">✕</button></div><div style="display:grid;grid-template-columns:minmax(260px,1fr) 1fr;gap:18px"><div><img id="detailMainImg" src="${fotos[0]||""}" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:15px;background:#f2f5f9">${fotos.length>1?`<div style="display:flex;gap:8px;margin-top:8px">${fotos.map(f=>`<img src="${f}" onclick="document.getElementById('detailMainImg').src=this.src" style="width:62px;height:62px;object-fit:cover;border-radius:9px;cursor:pointer;border:1px solid #dce5f0">`).join("")}</div>`:""}</div><div><div style="color:#7b8798;font-size:12px">${p.ref||""}</div><h3 style="font-size:22px;margin:6px 0">${p.nome||""}</h3><p style="color:#66758a;line-height:1.55">${p.descricao||"Produto disponível na vitrine ONDIS."}</p><div style="margin:18px 0;font-size:24px;font-weight:900;color:#10a765">${money(precoFinal(p))}</div><div style="font-size:12px;color:#66758a">Tamanhos: ${(p.tamanhos||[]).join(", ")||"—"}</div></div></div></div></div>`;
@@ -640,7 +767,7 @@
   window.toggleModoSelecao=function(){
     SEL_MODE=!SEL_MODE;
     if(!SEL_MODE) SELECIONADAS={};
-    document.getElementById("btnModoSelecao").textContent = SEL_MODE ? "✖ Cancelar seleção" : "🎯 Montar link p/ cliente";
+    document.getElementById("btnModoSelecao").textContent = SEL_MODE ? "Cancelar seleção" : "Preparar seleção para cliente";
     document.getElementById("btnModoSelecao").className = SEL_MODE ? "btn bad" : "btn warn";
     document.getElementById("barraSelecao").style.display = SEL_MODE ? "flex" : "none";
     renderVitrine();
@@ -668,6 +795,19 @@
 
   // ===== GERENCIAR (funcionário) =====
   function renderGerenciar(){
+    if(!CATALOG_IS_OPTICAL){renderGerenciarBasico();return;}
+    const grid=document.getElementById("gridGerenciar"),stats=document.getElementById("oticaManageStats");
+    if(stats){const total=PRODUTOS.length,ativos=PRODUTOS.filter(p=>p.disponivel!=="nao").length,semFoto=PRODUTOS.filter(p=>!firstPhoto(p)).length,comFicha=PRODUTOS.filter(p=>optSpecs(p).length>=2).length;stats.innerHTML=`<div><span>Produtos cadastrados</span><strong>${total}</strong></div><div><span>Disponíveis</span><strong>${ativos}</strong></div><div><span>Sem foto</span><strong>${semFoto}</strong></div><div><span>Com ficha óptica</span><strong>${comFicha}</strong></div>`;}
+    if(PRODUTOS.length===0){grid.innerHTML=estadoVazio("","Seu catálogo começa aqui","Cadastre a primeira armação, lente ou acessório pelo botão Novo produto.");return;}
+    grid.innerHTML=PRODUTOS.slice().sort((a,b)=>(a.nome||"").localeCompare(b.nome||"", "pt-BR")).map(p=>{
+      const src=safePhoto(firstPhoto(p)), nome=htm(p.nome||"Produto"), ref=htm(p.ref||""),o=opt(p);
+      const foto=src?`<img class="foto" src="${htm(src)}" alt="${nome}" loading="lazy">`:'<div class="semFoto oticaPlaceholder">Sem foto</div>';
+      const id=htm(JSON.stringify(String(p.id)));
+      return `<article class="oticaManageItem"><div class="oticaManageImage">${foto}</div><div class="oticaManageInfo"><span class="oticaProductType">${htm(nomeTipo(tipoOptico(p)))}</span><strong>${nome}</strong><small>${ref?"Ref. "+ref:"Sem referência"}${o.marca?" · "+htm(o.marca):""}</small><div class="oticaManageBadges"><span>${money(precoFinal(p))}</span><span class="${p.disponivel==="nao"?"is-unavailable":"is-available"}">${p.disponivel==="nao"?"Indisponível":"Disponível"}</span></div></div><div class="oticaManageActions"><button class="btn good sm" onclick='abrirEditarProduto(${id})'>Editar</button><button class="btn sm" onclick='abrirDetalhesProduto(${id})'>Detalhes</button><button class="btn bad sm" onclick='excluirProduto(${id})'>Excluir</button></div></article>`;
+    }).join("");
+  }
+
+  function renderGerenciarBasico(){
     const grid=document.getElementById("gridGerenciar");
     if(PRODUTOS.length===0){ grid.innerHTML=estadoVazio("📦","Nenhum produto cadastrado","Clique em “+ Novo produto” para adicionar a primeira peça: foto, referência, preço, tamanhos e gênero. Leva menos de um minuto."); return; }
     grid.innerHTML=PRODUTOS.slice().sort((a,b)=>(a.nome||"").localeCompare(b.nome||"")).map(p=>{
@@ -696,14 +836,14 @@
       reader.onload=e=>{
         const img=new Image();
         img.onload=()=>{
-          const max=800;
+          const max=720;
           let w=img.width,h=img.height;
           if(w>h && w>max){ h=Math.round(h*max/w); w=max; }
           else if(h>max){ w=Math.round(w*max/h); h=max; }
           const canvas=document.createElement("canvas");
           canvas.width=w; canvas.height=h;
           canvas.getContext("2d").drawImage(img,0,0,w,h);
-          resolve(canvas.toDataURL("image/jpeg",0.75));
+          resolve(canvas.toDataURL("image/jpeg",0.65));
         };
         img.onerror=reject;
         img.src=e.target.result;
@@ -735,6 +875,8 @@
     ["prodRef","prodCat","prodNome","prodDesc","prodPreco","prodPromo","prodTamanhos","prodNcm","prodCfop","prodCsosn","prodUnidade"].forEach(id=>document.getElementById(id).value="");
     document.getElementById("prodGenero").value="";
     document.getElementById("prodDisp").value="sim";
+    carregarFormularioOptica({});
+    if(CATALOG_IS_OPTICAL){document.getElementById("prodCat").value="Armações de grau";document.getElementById("optTipo").value="armacao";}
     fotosTemp=[]; renderPhotoSlots();
     document.getElementById("btnExcluirProduto").style.display="none";
     document.getElementById("modalProduto").classList.add("show");
@@ -757,6 +899,8 @@
     document.getElementById("prodCfop").value=p.cfop||"";
     document.getElementById("prodCsosn").value=p.csosn||"";
     document.getElementById("prodUnidade").value=p.unidade||"";
+    carregarFormularioOptica(p);
+    if(!opt(p).tipo && tipoOptico(p)!=="outro")document.getElementById("optTipo").value=tipoOptico(p);
     fotosTemp=(Array.isArray(p.fotos)&&p.fotos.length?p.fotos:[p.foto]).filter(Boolean).slice(0,3);
     renderPhotoSlots();
     document.getElementById("btnExcluirProduto").style.display="inline-block";
@@ -782,6 +926,8 @@
     const preco=brNum(document.getElementById("prodPreco").value);
     if(!nome){ alert("Digite o nome do produto."); return; }
     if(preco<=0){ alert("Digite um preço válido."); return; }
+    if(!validarMedidasOpticas())return;
+    if(fotosTemp.reduce((sum,f)=>sum+String(f||"").length,0)>900000){alert("As fotos ficaram grandes demais para um documento do Firestore. Reduza ou remova alguma imagem antes de salvar.");return;}
     const id=document.getElementById("prodId").value || ("prod_"+Date.now()+"_"+Math.random().toString(36).slice(2,7));
     const existente=PRODUTOS.find(x=>x.id===id);
     const dados={
@@ -798,13 +944,14 @@
       cfop:document.getElementById("prodCfop").value.trim(),
       csosn:document.getElementById("prodCsosn").value.trim(),
       unidade:document.getElementById("prodUnidade").value.trim().toUpperCase(),
+      optica:opticaDoFormulario(existente),
       fotos:fotosTemp.slice(0,3),
       foto:fotosTemp[0]||"",
       criadoEm:existente?.criadoEm||new Date().toISOString(),
       atualizadoEm:new Date().toISOString()
     };
     showLoading("Salvando produto...");
-    try{ await setDoc(doc(produtosRef,id),dados); fecharProduto(); }
+    try{ await setDoc(doc(produtosRef,id),dados,{merge:true}); fecharProduto(); }
     catch(e){ console.error(e); alert("Erro ao salvar. A foto pode estar muito grande — tente outra."); }
     hideLoading();
   };
@@ -820,7 +967,7 @@
   const IMPORT_FIELDS = {
     ignorar:"— Ignorar —", nome:"Nome *", ref:"Referência/SKU", categoria:"Categoria", genero:"Gênero",
     tamanhos:"Tamanhos", descricao:"Descrição", preco:"Preço *", promo:"Preço promocional",
-    disponivel:"Disponível", ncm:"NCM", cfop:"CFOP", csosn:"CSOSN", unidade:"Unidade"
+    disponivel:"Disponível", marca:"Marca (ótica)", modelo:"Modelo (ótica)", material:"Material da armação", formato:"Formato da armação", cor:"Cor da armação", largura:"Largura da lente (mm)", ponte:"Ponte (mm)", haste:"Haste (mm)", tipoOptico:"Tipo óptico", ncm:"NCM", cfop:"CFOP", csosn:"CSOSN", unidade:"Unidade"
   };
   const IMPORT_ALIASES = {
     nome:["nome","produto","item","nomedoproduto","titulo","descricaocurta","descricaodoproduto","nomedoitem"],
@@ -832,6 +979,7 @@
     preco:["preco","valor","precovenda","valorvenda","precounitario","valorunitario","precodevenda"],
     promo:["promo","precopromocional","promocao","precodesconto","precooferta"],
     disponivel:["disponivel","situacao","status","ativo","estoque"],
+    marca:["marca","fabricante"],modelo:["modelo","modeloproduto"],material:["material","materialarmacao"],formato:["formato","formatoarmacao"],cor:["cor","corarmacao"],largura:["larguralente","calibre","largura"],ponte:["ponte"],haste:["haste"],tipoOptico:["tipooptico","tipodeoculos"],
     ncm:["ncm"], cfop:["cfop"], csosn:["csosn","cst"], unidade:["unidade","un","unidademedida","und","unid"]
   };
   function normH(s){ return String(s??"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]/g,""); }
@@ -868,8 +1016,8 @@
     const box=document.getElementById("importMapeamento");
     box.innerHTML = IMPORT_HEADERS.map((h,idx)=>{
       const sugestao = autoMapColuna(h);
-      const opts = Object.entries(IMPORT_FIELDS).map(([k,label])=>`<option value="${k}" ${k===sugestao?"selected":""}>${label}</option>`).join("");
-      return `<div class="field"><label>Coluna: "${h||"(sem nome, col. "+(idx+1)+")"}"</label><select data-col="${idx}" class="importColSelect" onchange="renderImportPreview()">${opts}</select></div>`;
+      const opts = Object.entries(IMPORT_FIELDS).map(([k,label])=>`<option value="${htm(k)}" ${k===sugestao?"selected":""}>${htm(label)}</option>`).join("");
+      return `<div class="field"><label>Coluna: "${htm(h||"(sem nome, col. "+(idx+1)+")")}"</label><select data-col="${idx}" class="importColSelect" onchange="renderImportPreview()">${opts}</select></div>`;
     }).join("");
     renderImportPreview();
   }
@@ -885,14 +1033,17 @@
     const camposUsados = Object.values(map).filter(v=>v!=="ignorar");
     const table=document.getElementById("importPreviewTable");
     const colsAtivas = IMPORT_HEADERS.map((h,idx)=>idx).filter(idx=>map[idx]!=="ignorar");
-    table.innerHTML = "<thead><tr>"+colsAtivas.map(idx=>`<th style="padding:8px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)">${IMPORT_FIELDS[map[idx]]}</th>`).join("")+"</tr></thead>"+
-      "<tbody>"+IMPORT_ROWS.slice(0,15).map(r=>"<tr>"+colsAtivas.map(idx=>`<td style="padding:8px;border-bottom:1px solid rgba(255,255,255,.05)">${String(r[idx]??"")}</td>`).join("")+"</tr>").join("")+"</tbody>";
+    table.innerHTML = "<thead><tr>"+colsAtivas.map(idx=>`<th style="padding:8px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)">${htm(IMPORT_FIELDS[map[idx]])}</th>`).join("")+"</tr></thead>"+
+      "<tbody>"+IMPORT_ROWS.slice(0,15).map(r=>"<tr>"+colsAtivas.map(idx=>`<td style="padding:8px;border-bottom:1px solid rgba(255,255,255,.05)">${htm(String(r[idx]??""))}</td>`).join("")+"</tr>").join("")+"</tbody>";
     const faltaNome = !camposUsados.includes("nome"), faltaPreco = !camposUsados.includes("preco");
     document.getElementById("importResumo").innerHTML =
       `${IMPORT_ROWS.length} linha(s) na planilha. Mostrando as 15 primeiras.` +
       (faltaNome?' <b style="color:#ff9090">Falta ligar a coluna do Nome.</b>':'') +
       (faltaPreco?' <b style="color:#ff9090">Falta ligar a coluna do Preço.</b>':'');
   }
+
+  // O seletor de colunas da planilha usa onchange em HTML; expose a função mesmo em módulo ES.
+  window.renderImportPreview=renderImportPreview;
 
   window.fecharImportar=function(){
     document.getElementById("modalImportar").style.display="none";
@@ -937,11 +1088,13 @@
           cfop:byField.cfop!==undefined?String(r[byField.cfop]??"").trim():(existente?.cfop||""),
           csosn:byField.csosn!==undefined?String(r[byField.csosn]??"").trim():(existente?.csosn||""),
           unidade:byField.unidade!==undefined?String(r[byField.unidade]??"").trim().toUpperCase():(existente?.unidade||"UN"),
+          // Mescla os campos ópticos conhecidos; os demais permanecem no Firestore.
+          optica:{...opt(existente),...Object.fromEntries([["marca","marca"],["modelo","modelo"],["material","material"],["formato","formato"],["cor","cor"],["largura","largura"],["ponte","ponte"],["haste","haste"],["tipo","tipoOptico"]].filter(([_,field])=>byField[field]!==undefined).map(([dest,field])=>[dest,String(r[byField[field]]??"").trim()]))},
           fotos:existente?.fotos||[], foto:existente?.foto||"",
           criadoEm:existente?.criadoEm||new Date().toISOString(),
           atualizadoEm:new Date().toISOString()
         };
-        batch.set(doc(produtosRef,id),dados);
+        batch.set(doc(produtosRef,id),dados,{merge:true});
         ok++;
       }
       try{ await batch.commit(); }
@@ -950,7 +1103,7 @@
     }
 
     progresso.innerHTML = `✅ ${ok} produto(s) importado(s)/atualizado(s).` +
-      (pulados.length?`<br><br>⚠️ ${pulados.length} linha(s) ignorada(s) por falta de nome ou preço válido:<br><small>${pulados.slice(0,20).join(", ")}${pulados.length>20?"…":""}</small>`:"") +
+      (pulados.length?`<br><br>⚠️ ${pulados.length} linha(s) ignorada(s) por falta de nome ou preço válido:<br><small>${htm(pulados.slice(0,20).join(", "))}${pulados.length>20?"…":""}</small>`:"") +
       `<br><br><button class="btn good" onclick="fecharImportar()">Concluir</button>`;
   };
 
@@ -1000,23 +1153,24 @@
     lista.innerHTML=ids.map(id=>{
       const p=PRODUTOS.find(x=>x.id===id); if(!p) return "";
       const q=CART[id]; const sub=precoFinal(p)*q; total+=sub;
-      const psrc=firstPhoto(p); const foto=psrc?`<img src="${psrc}"/>`:'<div style="width:48px;height:48px;border-radius:8px;background:rgba(255,255,255,.05);display:grid;place-items:center">📦</div>';
+      const psrc=safePhoto(firstPhoto(p)); const foto=psrc?`<img src="${htm(psrc)}" alt="${htm(p.nome||'Produto')}"/>`:'<div class="oticaPlaceholder" style="width:48px;height:48px;border-radius:8px">Ótica</div>';
       return `<div class="cartItem">
         ${foto}
         <div style="flex:1;min-width:0">
-          <div style="font-weight:700;font-size:13px">${p.nome}</div>
+          <div style="font-weight:700;font-size:13px">${htm(p.nome)}</div>
           <div style="font-size:12px;color:#9db0d0">${money(precoFinal(p))} · ${money(sub)}</div>
         </div>
         <div class="qtd">
-          <button onclick="mudarQtd('${id}',-1)">−</button>
+          <button data-cart-id="${htm(id)}" data-delta="-1">−</button>
           <span style="min-width:20px;text-align:center">${q}</span>
-          <button onclick="mudarQtd('${id}',1)">+</button>
+          <button data-cart-id="${htm(id)}" data-delta="1">+</button>
         </div>
       </div>`;
     }).join("");
+    lista.querySelectorAll("[data-cart-id]").forEach(btn=>btn.addEventListener("click",()=>mudarQtd(btn.dataset.cartId,Number(btn.dataset.delta))));
     document.getElementById("cartTotal").textContent=money(total);
     const vi=document.getElementById("vendedorInfo");
-    if(VENDEDOR&&VENDEDOR.whats) vi.innerHTML=`O pedido será enviado para <b style="color:#7fffc0">${VENDEDOR.nome||"o vendedor"}</b>.`;
+    if(VENDEDOR&&VENDEDOR.whats) vi.innerHTML=`O pedido será enviado para <b style="color:#7fffc0">${htm(VENDEDOR.nome||"o vendedor")}</b>.`;
     else vi.innerHTML='<span style="color:#ffd166">⚠️ Este link não tem um vendedor com WhatsApp cadastrado. Peça o link correto ao vendedor.</span>';
   }
   window.mudarQtd=function(id,delta){
