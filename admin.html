@@ -50,6 +50,7 @@
 <link rel="stylesheet" href="./ondis-v11.css?v=12.3.0"><script src="./ondis-v11.js?v=13.3" defer></script>  <link rel="stylesheet" href="./ondis-visual-refresh.css?v=1.0.0">
 <link rel="stylesheet" href="./ondis-ui-v2.css?v=2.1.0"/>
 <script defer src="./ondis-theme-v2.js?v=2.1.0"></script>
+<link rel="stylesheet" href="./ondis-admin-v3.css?v=3.0.0">
 </head>
 <body data-ondis-refresh="admin">
 
@@ -63,7 +64,7 @@
     <h1>ONDIS <span style="color:#ffd166">ADM</span></h1>
     <div class="sub" id="adminEmail">—</div>
   </div>
-  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+  <div class="adminv3-actions" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
     <span class="chip">👑 Administrador</span>
     <button class="btn" onclick="window.location.href='./index.html'">Ir para o app</button>
     <button class="btn bad" onclick="sair()">Sair</button>
@@ -71,6 +72,11 @@
 </header>
 
 <div class="wrap">
+  <section class="adminv3-hero" aria-label="Painel de administração">
+    <div class="adminv3-hero-copy"><span class="adminv3-kicker">GESTÃO DE EQUIPE · ONDIS</span>
+      <h2>Painel do administrador</h2><p>Gerencie os vendedores, acompanhe sua equipe e compartilhe convites de acesso.</p>
+    </div><div class="adminv3-hero-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+  </section>
   <!-- Seletor de loja (aparece se o ADM tem mais de uma) -->
   <div class="card" id="lojaSelectorCard" style="display:none">
     <div class="field">

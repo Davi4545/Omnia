@@ -72,6 +72,7 @@
   <link rel="stylesheet" href="./ondis-visual-refresh.css?v=1.0.0">
 <link rel="stylesheet" href="./ondis-ui-v2.css?v=2.1.0"/>
 <script defer src="./ondis-theme-v2.js?v=2.1.0"></script>
+<link rel="stylesheet" href="./ondis-admin-v3.css?v=3.0.0">
 </head>
 <body data-ondis-refresh="superadmin">
 
@@ -85,7 +86,7 @@
     <h1>ONDIS <span style="color:#c9b6ff">SUPER ADMIN</span></h1>
     <div class="sub" id="meEmail">—</div>
   </div>
-  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+  <div class="adminv3-actions" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
     <span class="chip">⚡ Super Admin</span>
     <button class="btn" onclick="window.location.href='./crm.html'">📇 CRM</button>
     <button class="btn" onclick="window.location.href='./catalogo.html'">🛍️ Catálogo</button>
@@ -95,6 +96,11 @@
 </header>
 
 <div class="wrap">
+  <section class="adminv3-hero" aria-label="Painel de super administração">
+    <div class="adminv3-hero-copy"><span class="adminv3-kicker">CONTROLE DA REDE · ONDIS</span>
+      <h2>Central de administração</h2><p>Visão das lojas, equipes e módulos em um único lugar. As configurações continuam vinculadas a cada loja.</p>
+    </div><div class="adminv3-hero-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 10h.01M15 10h.01M9 14h.01M15 14h.01M10 21v-4h4v4"/></svg></div>
+  </section>
   <div class="kpis" id="kpis"></div>
 
   <!-- Criar loja -->
