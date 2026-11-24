@@ -1079,6 +1079,7 @@ body{ background-attachment: fixed; }
 <link rel="stylesheet" href="./ondis-gamificacao-v7.css?v=7.0.0">
 <link rel="stylesheet" href="./ondis-dados-metas-v8.css?v=8.1.0">
 <link rel="stylesheet" href="./ondis-metas-visual-v8-2.css?v=8.2.0">
+<link rel="stylesheet" href="./ondis-nao-convertidos-v10.css?v=10.0.0">
 </head>
 <body>
 <div class="appShell" id="appShell">
@@ -1335,71 +1336,56 @@ body{ background-attachment: fixed; }
   <article class="rankPanel rankSpacePanel" id="rankSpacePanel" style="display:block"><div class="race2d" id="race"></div></article>
 </section>
 </div>
-<!-- NÃO CONVERTIDOS -->
+<!-- NÃO CONVERTIDOS — ONDIS V10: Inteligência de Conversão -->
 <div id="viewNoConv" style="display:none">
-<section class="card">
-<div class="cardHeader">
-<h2>Análise — Não Convertidos</h2>
-<div class="rowRight">
-<button class="btn" id="btnNoConvRefresh">Atualizar</button>
-</div>
-</div>
-<div class="cardBody">
-<div class="row">
-<div class="field">
-<label>Data (análise do dia)</label>
-<input id="ncDate" type="date"/>
-</div>
-<div class="field">
-<label>Mês (análise do mês)</label>
-<input id="ncMonth" type="month"/>
-</div>
-<div class="field">
-<label>Visão</label>
-<select id="ncView">
-<option selected="" value="day">Dia</option>
-<option value="month">Mês</option>
-</select>
-</div>
-</div>
-<div class="divider"></div>
-<div class="compare">
-<div class="barCard">
-<div class="row" style="justify-content:space-between">
-<div style="font-weight:900">✅ Convertidos</div>
-<div class="tag good" id="convCount">0</div>
-</div>
-<div class="meter good"><i id="convBar"></i></div>
-<div class="hint" id="convHint" style="margin-top:8px">—</div>
-</div>
-<div class="barCard">
-<div class="row" style="justify-content:space-between">
-<div style="font-weight:900">❌ Não convertidos</div>
-<div class="tag bad" id="noConvCount">0</div>
-</div>
-<div class="meter bad"><i id="noConvBar"></i></div>
-<div class="hint" id="noConvHint" style="margin-top:8px">—</div>
-</div>
-</div>
-<div class="divider"></div>
-<div class="kpis" id="ncKpis"></div>
-<div class="divider"></div>
-<div class="row" style="gap:14px">
-<div id="ncReasonsWrap" style="flex:1; min-width: 300px"></div>
-<div id="ncItemsWrap" style="flex:1; min-width: 300px"></div>
-</div>
-<div class="divider"></div>
-<div class="row" style="gap:14px">
-<div id="ncGenderWrap" style="flex:1; min-width: 300px"></div>
-<div id="ncSizesWrap" style="flex:1; min-width: 300px"></div>
-</div>
-<div class="divider"></div>
-<div class="hint">
-          Aqui você enxerga o que mais está travando as vendas: preço, numeração, falta de peça, etc.
-          Isso vira ação prática (estoque, mix, VM, argumentação do time).
-        </div>
-</div>
-</section>
+  <section class="ncPage" aria-label="Central de inteligência de conversão">
+    <header class="ncHead">
+      <div class="ncHeadIntro">
+        <span class="ncEyebrow">INTELIGÊNCIA COMERCIAL · ONDIS</span>
+        <div class="ncHeadTitle"><span class="ncIconMark" aria-hidden="true">⌕</span><h2>Não Convertidos</h2></div>
+        <p>Entenda as oportunidades perdidas, compare resultados e encontre ações para melhorar a conversão.</p>
+      </div>
+      <div class="ncHeaderActions">
+        <span id="ncUpdatedAt" class="ncUpdateTime" role="status">Dados carregados da operação</span>
+        <button type="button" class="ncBtn ncBtnSecondary" id="btnNoConvRefresh">↻ Atualizar</button>
+        <button type="button" class="ncBtn ncBtnPrimary" id="ncExportCsv">↓ Exportar CSV</button>
+      </div>
+    </header>
+
+    <div class="ncFilters" role="group" aria-label="Filtros do relatório">
+      <div class="ncFilter ncPeriodFilter"><label for="ncView">Período</label><select id="ncView"><option value="last30" selected>Últimos 30 dias</option><option value="month">Mês específico</option><option value="day">Dia específico</option></select></div>
+      <div class="ncFilter" id="ncDateWrap" hidden><label for="ncDate">Data</label><input id="ncDate" type="date"/></div>
+      <div class="ncFilter" id="ncMonthWrap" hidden><label for="ncMonth">Mês</label><input id="ncMonth" type="month"/></div>
+      <div class="ncFilter"><label for="ncSeller">Vendedor</label><select id="ncSeller"><option value="">Todos os vendedores</option></select></div>
+      <div class="ncFilter"><label for="ncCategory">Categoria</label><select id="ncCategory"><option value="">Todas as categorias</option></select></div>
+      <div class="ncFilter"><label for="ncStatus">Resultado no histórico</label><select id="ncStatus"><option value="all">Todos os resultados</option><option value="sold">Vendas</option><option value="nosold">Não vendas</option><option value="exchange">Trocas / garantias</option></select></div>
+      <div class="ncFilter ncSearchFilter"><label for="ncSearch">Pesquisa</label><input id="ncSearch" type="search" placeholder="Vendedor, cliente, motivo, observação..." autocomplete="off"/></div>
+      <button type="button" class="ncFilterReset" id="ncReset" title="Limpar filtros">Limpar filtros</button>
+    </div>
+
+    <div class="ncKpiGrid" id="ncKpis" aria-label="Indicadores de conversão"></div>
+    <div class="ncSegmentRow" id="ncSegments" aria-label="Resumo por resultado"></div>
+    <div class="ncChartsGrid">
+      <article class="ncPanel ncTrendPanel">
+        <div class="ncPanelHead"><div><h3>Evolução da conversão</h3><p>Vendas ÷ (vendas + não vendas). Trocas ficam de fora.</p></div><div class="ncToggle" role="group" aria-label="Agrupar evolução"><button type="button" data-nc-bucket="daily" class="active">Diário</button><button type="button" data-nc-bucket="weekly">Semanal</button></div></div>
+        <div id="ncTrendChart" class="ncTrendChart"></div>
+      </article>
+      <article class="ncPanel ncComparisonPanel"><div class="ncPanelHead"><div><h3>Comparativo de atendimentos</h3><p>Vendas, não vendas e trocas no período.</p></div></div><div id="ncCompareChart" class="ncCompareChart"></div></article>
+      <article class="ncPanel ncReasonPanel"><div class="ncPanelHead"><div><h3>Motivos de não conversão</h3><p>Percentual sobre as não vendas registradas.</p></div></div><div id="ncReasonChart" class="ncReasonChart"></div></article>
+    </div>
+    <div class="ncAnalysisGrid">
+      <article class="ncPanel ncVendorPanel"><div class="ncPanelHead"><div><h3>Análise por vendedor</h3><p>Atendimentos, resultados e objeções mais comuns.</p></div><button class="ncTextLink" type="button" id="ncShowAllVendors">Ver todos</button></div><div class="ncTableScroller"><table class="ncTable ncVendorTable"><thead><tr><th>Vendedor</th><th>Atend.</th><th>Vendas</th><th>Não vendas</th><th>Conversão</th><th>Principal objeção</th></tr></thead><tbody id="ncVendorRows"></tbody></table></div></article>
+      <article class="ncPanel ncInsightPanel"><div class="ncPanelHead"><div><h3>Insights e oportunidades</h3><p>Recomendações calculadas pelos motivos registrados.</p></div></div><div id="ncInsights" class="ncInsights"></div></article>
+    </div>
+    <details class="ncPanel ncDetailBreakdown"><summary><strong>Detalhamento adicional</strong><span>Produtos, categorias, gênero e numeração das não vendas</span></summary><div class="ncDetailGrid" id="ncDimensions"></div></details>
+    <article class="ncPanel ncHistoryPanel">
+      <div class="ncPanelHead"><div><h3>Histórico detalhado</h3><p>Consulte as informações originais dos atendimentos, sem modificar os registros.</p></div><span id="ncHistoryCount" class="ncHistoryCount"></span></div>
+      <div class="ncHistoryToolbar"><div id="ncHistoryTabs" class="ncHistoryTabs" role="group" aria-label="Filtrar registros"></div><span class="ncHistoryInfo">Ordenado do mais recente para o mais antigo</span></div>
+      <div class="ncTableScroller"><table class="ncTable ncHistoryTable"><thead><tr><th>Data</th><th>Vendedor</th><th>Cliente</th><th>Categoria</th><th>Motivo</th><th>Observação</th><th>Resultado</th></tr></thead><tbody id="ncHistoryRows"></tbody></table></div>
+      <div class="ncPager"><span id="ncPageInfo">—</span><div><button class="ncBtn ncBtnSecondary" id="ncPrevPage" type="button">Anterior</button><button class="ncBtn ncBtnSecondary" id="ncNextPage" type="button">Próxima</button></div></div>
+    </article>
+    <div class="ncFootNote">Os indicadores utilizam apenas os registros disponíveis da loja e os filtros escolhidos. Trocas e garantias são tratadas separadamente das oportunidades comerciais.</div>
+  </section>
 </div>
 <!-- DASHBOARD -->
 <div id="viewDashboard" style="display:none">
@@ -4105,72 +4091,204 @@ body{ background-attachment: fixed; }
   }
   window.renderDashboard = renderDashboard;
 
-  function renderNoConv(){
-    const { d, m, v } = getNoConvSelection();
-
-    const scope = (v==="day")
-      ? state.records.filter(r=> r.dateKey === d)
-      : state.records.filter(r=> r.monthKey === m);
-
-    const sold = scope.filter(r=> r.outcome==="sold");
-    const nos = scope.filter(r=> r.outcome!=="sold");
-
-    const soldCount = sold.length;
-    const nosCount = nos.length;
-    const total = soldCount + nosCount;
-
-    $("convCount").textContent = String(soldCount);
-    $("noConvCount").textContent = String(nosCount);
-
-    const soldPct = total>0 ? (soldCount/total)*100 : 0;
-    const nosPct  = total>0 ? (nosCount/total)*100 : 0;
-
-    $("convBar").style.width = soldPct.toFixed(1) + "%";
-    $("noConvBar").style.width = nosPct.toFixed(1) + "%";
-
-    $("convHint").textContent = total>0 ? `Convertidos: ${soldPct.toFixed(1)}%` : "—";
-    $("noConvHint").textContent = total>0 ? `Não convertidos: ${nosPct.toFixed(1)}%` : "—";
-
-    const rev = sold.reduce((s,r)=> s+Number(r.value||0), 0);
-    const kpis = $("ncKpis");
-    kpis.innerHTML = "";
-    const cards = [
-      { t:"Atendimentos", v: formatNum(total) },
-      { t:"Vendas", v: formatNum(soldCount), cls:"good" },
-      { t:"Não vendidos / trocas", v: formatNum(nosCount) },
-      { t:"Faturamento (R$)", v: formatMoney(rev) },
+  // ===== ONDIS V10 · Inteligência de conversão =====
+  // Apenas leitura: os filtros não alteram o estado e não escrevem no Firestore.
+  let ncPage = 1;
+  let ncShowAllSellers = false;
+  let ncTrendGrouping = 'daily';
+  const ncPageSize = 12;
+  const ncHtml = v => escOpt(v == null ? '' : String(v));
+  const ncMoney = v => formatMoney(Number(v)||0);
+  const ncFmt = v => Number(v||0).toLocaleString('pt-BR');
+  const ncPercent = v => `${(Number.isFinite(v)?v:0).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})}%`;
+  const ncKind = r => (r?.outcome==='exchange'||r?.noSale?.isExchange) ? 'exchange' : r?.outcome==='sold' ? 'sold':'nosold';
+  const ncKindName = k => ({sold:'Venda',nosold:'Não venda',exchange:'Troca / garantia'}[k]||'Não venda');
+  const ncCategoryOf = r => r?.noSale?.itemType || (Array.isArray(r?.soldCategories) ? r.soldCategories.filter(Boolean).join(', ') : '') || '';
+  const ncReasonOf = r => ncKind(r)==='nosold' ? (getNoSaleReason(r)||'Não informado') : ncKind(r)==='exchange' ? (r?.noSale?.reason||'Troca / garantia') : '';
+  const ncNameOf = r => getSeller(r?.sellerId)?.name || r?.sellerName || 'Vendedor não cadastrado';
+  const ncDateOf = r => /^\d{4}-\d{2}-\d{2}$/.test(String(r?.dateKey||'')) ? r.dateKey : (Number.isFinite(Number(r?.tsStart)) && Number(r.tsStart)>1e11 ? todayKey(new Date(Number(r.tsStart))) : '');
+  const ncDateFrom = s => {const [y,m,d] = String(s).split('-').map(Number);return new Date(y,m-1,d,12);};
+  const ncDateString = d => todayKey(d);
+  const ncShift = (dt,n) => { const d = new Date(dt.getTime());d.setDate(d.getDate()+n);return d;};
+  const ncRate = arr => {const s=arr.filter(r=>ncKind(r)==='sold').length, n=arr.filter(r=>ncKind(r)==='nosold').length;return s+n?s/(s+n)*100:0;};
+  const ncSummary = arr => {const sales=arr.filter(r=>ncKind(r)==='sold'),nos=arr.filter(r=>ncKind(r)==='nosold'),ex=arr.filter(r=>ncKind(r)==='exchange');const revenue=sales.reduce((n,r)=>n+(Number(r.value)||0),0);return {total:arr.length,sales:sales.length,nos:nos.length,ex:ex.length,revenue,ticket:sales.length?revenue/sales.length:0,conversion:(sales.length+nos.length)?sales.length/(sales.length+nos.length)*100:0};};
+  function ncSpan(){
+    const mode=$('ncView')?.value||'last30';
+    const today=ncDateFrom(todayKey());
+    if(mode==='day'){
+      const d=/^\d{4}-\d{2}-\d{2}$/.test($('ncDate')?.value||'') ? ncDateFrom($('ncDate').value):today;
+      return {mode,start:ncDateString(d),end:ncDateString(d),pastStart:ncDateString(ncShift(d,-1)),pastEnd:ncDateString(ncShift(d,-1)), label:ncDateString(d).split('-').reverse().join('/')};
+    }
+    if(mode==='month'){
+      const m=$('ncMonth')?.value||monthKey();const [y,mm]=m.split('-').map(Number);
+      const a=new Date(y,mm-1,1,12),b=new Date(y,mm,0,12),pA=new Date(y,mm-2,1,12),pB=new Date(y,mm-1,0,12);
+      return {mode,start:ncDateString(a),end:ncDateString(b),pastStart:ncDateString(pA),pastEnd:ncDateString(pB),label:m};
+    }
+    return {mode:'last30',start:ncDateString(ncShift(today,-29)),end:ncDateString(today),pastStart:ncDateString(ncShift(today,-59)),pastEnd:ncDateString(ncShift(today,-30)),label:'Últimos 30 dias'};
+  }
+  function ncSetOptions(id,items,emptyLabel){
+    const el=$(id);if(!el)return;
+    const prev=el.value;
+    const html=`<option value="">${ncHtml(emptyLabel)}</option>`+items.map(x=>`<option value="${ncHtml(x.value)}">${ncHtml(x.label)}</option>`).join('');
+    if(el.innerHTML!==html){el.innerHTML=html;el.value=prev;}
+  }
+  function ncOptions(){
+    const all=Array.isArray(state.records)?state.records:[];
+    const ids=new Map();
+    for(const s of (state.sellers||[])){if(s?.id)ids.set(String(s.id),s.name||'Vendedor');}
+    for(const r of all){if(r?.sellerId&&!ids.has(String(r.sellerId)))ids.set(String(r.sellerId),ncNameOf(r));}
+    ncSetOptions('ncSeller',[...ids].map(([value,label])=>({value,label})).sort((a,b)=>a.label.localeCompare(b.label,'pt-BR')),'Todos os vendedores');
+    const cats=new Set();for(const r of all){const raw=ncCategoryOf(r);if(raw){if(Array.isArray(r.soldCategories)&&r.soldCategories.length){r.soldCategories.forEach(c=>cats.add(String(c)));} else cats.add(String(raw));}}
+    ncSetOptions('ncCategory',[...cats].sort((a,b)=>a.localeCompare(b,'pt-BR')).map(c=>({value:c,label:c})),'Todas as categorias');
+  }
+  function ncFilterExtras(r){
+    const seller=$('ncSeller')?.value||'';
+    if(seller&&String(r.sellerId)!==seller)return false;
+    const category=$('ncCategory')?.value||'';
+    if(category&&!((Array.isArray(r.soldCategories)&&r.soldCategories.map(String).includes(category)) || ncCategoryOf(r)===category))return false;
+    const query=($('ncSearch')?.value||'').trim().toLocaleLowerCase('pt-BR');
+    if(query){const hay=[ncNameOf(r),r.clientName,ncCategoryOf(r),ncReasonOf(r),r.obs,r.noSale?.size,r.sellerName].filter(Boolean).join(' ').toLocaleLowerCase('pt-BR');if(!hay.includes(query))return false;}
+    return true;
+  }
+  function ncInRange(r,a,b){const d=ncDateOf(r);return d && d>=a && d<=b;}
+  function ncCountDifference(now,prev,type='count'){
+    if(!prev) return {text:'Sem base anterior',tone:'neutral'};
+    const delta=(now-prev)/Math.abs(prev)*100;
+    const good=type==='higher'?delta>=0:type==='lower'?delta<=0:null;
+    return {text:`${delta>0?'+':''}${ncPercent(delta)} vs. período anterior`,tone:good===null?'neutral':good?'positive':'negative'};
+  }
+  function ncEmpty(title,detail=''){return `<div class="ncEmpty"><strong>${ncHtml(title)}</strong><span>${ncHtml(detail)}</span></div>`;}
+  function ncRenderKpis(curr,prev){
+    const cards=[
+      {symbol:'◎',label:'Atendimentos',value:ncFmt(curr.total),delta:ncCountDifference(curr.total,prev.total),kind:'blue'},
+      {symbol:'✓',label:'Convertidos',value:ncFmt(curr.sales),delta:ncCountDifference(curr.sales,prev.sales,'higher'),kind:'green'},
+      {symbol:'⊘',label:'Não convertidos',value:ncFmt(curr.nos),delta:ncCountDifference(curr.nos,prev.nos,'lower'),kind:'red'},
+      {symbol:'%',label:'Taxa de conversão',value:ncPercent(curr.conversion),delta:prev.sales+prev.nos?{text:`${(curr.conversion-prev.conversion)>=0?'+':''}${(curr.conversion-prev.conversion).toFixed(1).replace('.',',')} p.p. vs. anterior`,tone:curr.conversion>=prev.conversion?'positive':'negative'}:{text:'Sem base anterior',tone:'neutral'},kind:'blue'},
+      {symbol:'R$',label:'Faturamento',value:ncMoney(curr.revenue),delta:ncCountDifference(curr.revenue,prev.revenue,'higher'),kind:'purple'},
+      {symbol:'◇',label:'Ticket médio',value:ncMoney(curr.ticket),delta:ncCountDifference(curr.ticket,prev.ticket,'higher'),kind:'teal'}
     ];
-    for(const k of cards){
-      const div = document.createElement("div");
-      div.className = "kpi";
-      div.innerHTML = `<div class="t">${k.t}</div><div class="v ${k.cls||""}">${k.v}</div>`;
-      kpis.appendChild(div);
+    $('ncKpis').innerHTML=cards.map(c=>`<div class="ncKpi ncKpi-${c.kind}"><div class="ncKpiTop"><span class="ncKpiIcon">${c.symbol}</span><span class="ncKpiWave">⌁</span></div><div class="ncKpiLabel">${c.label}</div><strong class="ncKpiValue">${c.value}</strong><small class="ncKpiDelta ${c.delta.tone}">${ncHtml(c.delta.text)}</small></div>`).join('');
+  }
+  function ncSegments(curr){
+    const items=[['all','Visão geral','Todos os atendimentos',curr.total,'all'],['sold','Vendas','Convertidos',curr.sales,'sold'],['nosold','Não vendas','Oportunidades perdidas',curr.nos,'nosold'],['exchange','Trocas / garantias','Não compõem a conversão',curr.ex,'exchange']];
+    const active=$('ncStatus')?.value||'all';
+    $('ncSegments').innerHTML=items.map(([k,label,detail,count,kind])=>`<button type="button" class="ncSegment ncSegment-${kind} ${k===active?'selected':''}" data-nc-status="${k}" aria-pressed="${k===active}"><span class="ncSegmentIcon">${({all:'▤',sold:'✓',nosold:'⊘',exchange:'↺'})[k]}</span><span><strong>${label}</strong><small>${detail}</small></span><b>${ncFmt(count)}</b></button>`).join('');
+  }
+  function ncBuildBins(rows,span,grouping){
+    const bins=[];
+    const start=ncDateFrom(span.start),end=ncDateFrom(span.end);
+    if(span.mode==='day'){
+      for(let i=0;i<6;i++)bins.push({label:`${String(i*4).padStart(2,'0')}h`,rows:[]});
+      for(const r of rows){const ts=Number(r.tsStart||r.tsEnd);const hour=ts>1e11?new Date(ts).getHours():12;bins[Math.min(5,Math.floor(hour/4))].rows.push(r);}
+    } else if(grouping==='weekly'){
+      for(let d=new Date(start.getTime());d<=end;d=ncShift(d,7)){
+        const e=ncShift(d,6);const finish=e>end?end:e;
+        bins.push({label:`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`,start:ncDateString(d),end:ncDateString(finish),rows:[]});
+      }
+      for(const r of rows){const date=ncDateOf(r);const bin=bins.find(b=>date>=b.start&&date<=b.end);if(bin)bin.rows.push(r);}
+    } else {
+      for(let d=new Date(start.getTime());d<=end;d=ncShift(d,1))bins.push({label:String(d.getDate()).padStart(2,'0'),key:ncDateString(d),rows:[]});
+      const byDay=new Map(bins.map(b=>[b.key,b]));
+      for(const r of rows){const b=byDay.get(ncDateOf(r));if(b)b.rows.push(r);}
     }
-
-    const reasons = countBy(nos, r=> getNoSaleReason(r) || "(sem motivo)");
-    const items   = countBy(nos, r=> r.noSale?.itemType || "(sem peça)");
-    const gender  = countBy(nos, r=> r.noSale?.gender || "(sem gênero)");
-    const sizes   = countBy(nos, r=> r.noSale?.size ? String(r.noSale.size).trim() : "(sem numeração)");
-
-    const rWrap = $("ncReasonsWrap");
-    const iWrap = $("ncItemsWrap");
-    const gWrap = $("ncGenderWrap");
-    const sWrap = $("ncSizesWrap");
-
-    rWrap.innerHTML = "";
-    iWrap.innerHTML = "";
-    gWrap.innerHTML = "";
-    sWrap.innerHTML = "";
-
-    if(nos.length === 0){
-      rWrap.innerHTML = `<div class="hint">Sem “não convertidos” nesse período. 👏</div>`;
-      return;
-    }
-
-    rWrap.appendChild(makeTable(["Motivo","Qtd"], reasons.map(x=>[x.k, String(x.v)])));
-    iWrap.appendChild(makeTable(["Peça","Qtd"], items.map(x=>[x.k, String(x.v)])));
-    gWrap.appendChild(makeTable(["Gênero","Qtd"], gender.map(x=>[x.k, String(x.v)])));
-    sWrap.appendChild(makeTable(["Numeração","Qtd"], sizes.map(x=>[x.k, String(x.v)])));
+    return bins.map(b=>({...b,stats:ncSummary(b.rows)}));
+  }
+  function ncLineChart(bins,divId){
+    const el=$(divId);if(!el)return;
+    if(!bins.some(b=>b.stats.sales+b.stats.nos)){el.innerHTML=ncEmpty('Sem dados comerciais no período','Registre vendas ou não vendas para visualizar a evolução.');return;}
+    const W=720,H=224,l=38,r=14,t=20,b=32;const pw=W-l-r,ph=H-t-b;
+    const p=bins.map((x,i)=>({x:l+i*pw/Math.max(1,bins.length-1),y:t+ph*(1-x.stats.conversion/100),label:x.label,conv:x.stats.conversion}));
+    const path=p.map((x,i)=>`${i?'L':'M'}${x.x.toFixed(1)},${x.y.toFixed(1)}`).join(' ');
+    const area=path+` L${p[p.length-1].x},${t+ph} L${p[0].x},${t+ph} Z`;
+    const grid=[0,25,50,75,100].map(v=>{const y=t+ph*(1-v/100);return `<line x1="${l}" x2="${W-r}" y1="${y}" y2="${y}" class="ncSvgGrid"/><text x="${l-8}" y="${y+4}" class="ncSvgAxis" text-anchor="end">${v}%</text>`;}).join('');
+    const labels=p.map((x,i)=> (i%Math.max(1,Math.ceil(p.length/7))===0 || i===p.length-1)?`<text x="${x.x}" y="${H-9}" text-anchor="middle" class="ncSvgAxis">${ncHtml(x.label)}</text>`:'').join('');
+    const dots=p.map(x=>`<circle cx="${x.x}" cy="${x.y}" r="3.5" class="ncSvgDot"><title>${ncHtml(x.label)}: ${ncPercent(x.conv)}</title></circle>`).join('');
+    el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Evolução da taxa de conversão no período" preserveAspectRatio="xMidYMid meet"><defs><linearGradient id="ncTrendFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e5173e" stop-opacity=".22"/><stop offset="100%" stop-color="#e5173e" stop-opacity="0"/></linearGradient></defs>${grid}<path d="${area}" fill="url(#ncTrendFill)"/><path d="${path}" class="ncSvgLine"/>${dots}${labels}</svg>`;
+  }
+  function ncCompare(bins){
+    const el=$('ncCompareChart');if(!el)return;
+    if(!bins.some(b=>b.stats.total)){el.innerHTML=ncEmpty('Sem atendimentos no período','Os gráficos aparecerão após os primeiros registros.');return;}
+    // Agrupamento semanal evita barras comprimidas em períodos longos.
+    const max=Math.max(1,...bins.map(b=>b.stats.total));
+    el.innerHTML=`<div class="ncBars">${bins.map(b=>{const s=b.stats;return `<div class="ncBarGroup"><div class="ncBarStack" title="${ncHtml(b.label)}: ${ncFmt(s.total)} atendimentos">${[['sold',s.sales],['nosold',s.nos],['exchange',s.ex]].map(([k,v])=>`<span class="ncBarChunk ncBar-${k}" style="height:${v/max*100}%" title="${ncKindName(k)}: ${v}"></span>`).join('')}</div><strong>${ncFmt(s.total)}</strong><small>${ncHtml(b.label)}</small></div>`}).join('')}</div><div class="ncChartLegend"><span><i class="ncLegendSold"></i>Vendas</span><span><i class="ncLegendNosold"></i>Não vendas</span><span><i class="ncLegendExchange"></i>Trocas / garantias</span></div>`;
+  }
+  function ncReasons(rows){
+    const only=rows.filter(r=>ncKind(r)==='nosold');
+    const items=countBy(only,r=>ncReasonOf(r)||'Não informado').slice(0,7);
+    const el=$('ncReasonChart');if(!el)return;
+    el.innerHTML=items.length?items.map(x=>{const share=100*x.v/only.length;return `<div class="ncReasonRow"><div class="ncReasonName" title="${ncHtml(x.k)}">${ncHtml(x.k)}</div><div class="ncReasonTrack"><i style="width:${share.toFixed(2)}%"></i><b>${ncPercent(share)}</b></div><strong>${ncFmt(x.v)}</strong></div>`}).join(''):ncEmpty('Nenhuma não venda registrada','Altere os filtros para visualizar os motivos de perda.');
+  }
+  function ncVendorTable(rows){
+    const bySeller=new Map();
+    for(const r of rows){const key=String(r.sellerId||`unknown:${r.sellerName||'?'}`);if(!bySeller.has(key))bySeller.set(key,{name:ncNameOf(r),photo:getSeller(r.sellerId)?.photo||'',records:[]});bySeller.get(key).records.push(r);}
+    const sellers=[...bySeller.values()].map(s=>({...s,stats:ncSummary(s.records),top:countBy(s.records.filter(r=>ncKind(r)==='nosold'),ncReasonOf)[0]?.k||'—'})).sort((a,b)=>b.stats.total-a.stats.total||b.stats.nos-a.stats.nos);
+    const displayed=ncShowAllSellers?sellers:sellers.slice(0,6);
+    $('ncShowAllVendors').textContent=ncShowAllSellers?'Ver menos':`Ver todos (${sellers.length})`;
+    $('ncShowAllVendors').disabled=sellers.length<=6;
+    $('ncVendorRows').innerHTML=displayed.length?displayed.map(s=>{const initials=s.name.split(/\s+/).slice(0,2).map(v=>v[0]).join('').toUpperCase();const photo=s.photo?`<img src="${ncHtml(s.photo)}" alt="" loading="lazy"/>`:`<span>${ncHtml(initials)}</span>`;return `<tr><td><div class="ncSellerCell"><div class="ncSellerAvatar">${photo}</div><span>${ncHtml(s.name)}</span></div></td><td>${ncFmt(s.stats.total)}</td><td>${ncFmt(s.stats.sales)}</td><td>${ncFmt(s.stats.nos)}</td><td><span class="ncRatePill ${s.stats.conversion>=60?'good':s.stats.conversion>=35?'middle':'low'}">${ncPercent(s.stats.conversion)}</span></td><td><span class="ncReasonPill">${ncHtml(s.top)}</span></td></tr>`;}).join(''):`<tr><td colspan="6">${ncEmpty('Nenhum vendedor encontrado','Tente alterar os filtros atuais.')}</td></tr>`;
+  }
+  function ncInsights(rows){
+    const unsold=rows.filter(r=>ncKind(r)==='nosold');const el=$('ncInsights');
+    if(!unsold.length){el.innerHTML=ncEmpty('Nenhuma oportunidade perdida no filtro','Ao registrar não vendas com motivos, o ONDIS exibirá sugestões baseadas nesses dados.');return;}
+    const tops=countBy(unsold,ncReasonOf);const first=tops[0];
+    const cats=countBy(unsold,r=>ncCategoryOf(r)||'Não informada');
+    const size=countBy(unsold.filter(r=>String(r.noSale?.size||'').trim()),r=>String(r.noSale.size).trim());
+    const price=unsold.filter(r=>/pre[çc]o|valor|caro|desconto/i.test(ncReasonOf(r))).length;
+    const stock=unsold.filter(r=>/numer[aá]|tamanho|estoque|n[aã]o tinha|sem pe[çc]a|indispon[ií]vel/i.test(ncReasonOf(r))).length;
+    const items=[];
+    if(first)items.push({kind:'red',mark:'◎',title:`Principal objeção: ${first.k}`,detail:`${ncPercent(first.v/unsold.length*100)} das não vendas (${ncFmt(first.v)} registros).`,action:'Revise os relatos e alinhe uma abordagem comercial para esse motivo.'});
+    if(stock)items.push({kind:'blue',mark:'▦',title:'Demanda não atendida',detail:`${ncFmt(stock)} atendimentos mencionaram numeração, falta de produto ou estoque.`,action:'Verifique a disponibilidade e as opções mais procuradas antes de definir reposições.'});
+    if(price)items.push({kind:'purple',mark:'◇',title:'Objeções relacionadas a preço',detail:`${ncFmt(price)} registros mencionam preço ou valor.`,action:'Avalie argumentação de valor, condições comerciais e políticas autorizadas.'});
+    if(cats[0]&&cats[0].k!=='Não informada')items.push({kind:'teal',mark:'▤',title:'Categoria com mais não vendas',detail:`${cats[0].k}: ${ncFmt(cats[0].v)} registro(s).`,action:'Revise mix, exposição, disponibilidade e treinamento nessa categoria.'});
+    if(size[0]&&size[0].k)items.push({kind:'amber',mark:'◈',title:'Detalhe mais citado',detail:`${size[0].k}: ${ncFmt(size[0].v)} registro(s).`,action:'Analise recorrência desse detalhe junto aos responsáveis da loja.'});
+    el.innerHTML=items.slice(0,4).map(x=>`<div class="ncInsight ncInsight-${x.kind}"><span class="ncInsightIcon">${x.mark}</span><div><strong>${ncHtml(x.title)}</strong><p>${ncHtml(x.detail)}</p><small><b>Ação sugerida:</b> ${ncHtml(x.action)}</small></div></div>`).join('');
+  }
+  function ncDimensions(rows){
+    const nos=rows.filter(r=>ncKind(r)==='nosold');
+    const data=[['Categoria',countBy(nos,r=>ncCategoryOf(r)||'Não informada')],['Gênero',countBy(nos,r=>r.noSale?.gender||'Não informado')],['Numeração / detalhe',countBy(nos,r=>r.noSale?.size||'Não informado')]];
+    $('ncDimensions').innerHTML=data.map(([title,items])=>`<section class="ncDimension"><h4>${ncHtml(title)}</h4>${items.length?items.slice(0,8).map(x=>`<div><span title="${ncHtml(x.k)}">${ncHtml(x.k)}</span><b>${ncFmt(x.v)}</b></div>`).join(''):ncEmpty('Sem registros')}</section>`).join('');
+  }
+  function ncFormatRecordDate(r){
+    const d=ncDateOf(r)||'—';const stamp=Number(r.tsStart||r.tsEnd);const hh=stamp>1e11?new Date(stamp).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'';
+    return /^\d{4}-\d{2}-\d{2}$/.test(d)?`${d.slice(8,10)}/${d.slice(5,7)}/${d.slice(0,4)} ${hh}`:d;
+  }
+  function ncHistory(rows){
+    const all=rows.slice().sort((a,b)=>{const ad=ncDateOf(a),bd=ncDateOf(b);return bd.localeCompare(ad)||(Number(b.tsStart||b.tsEnd||0)-Number(a.tsStart||a.tsEnd||0));});
+    const pages=Math.max(1,Math.ceil(all.length/ncPageSize));ncPage=Math.max(1,Math.min(ncPage,pages));
+    const shown=all.slice((ncPage-1)*ncPageSize,ncPage*ncPageSize);
+    $('ncHistoryRows').innerHTML=shown.length?shown.map(r=>{const kind=ncKind(r);return `<tr><td>${ncHtml(ncFormatRecordDate(r))}</td><td>${ncHtml(ncNameOf(r))}</td><td>${ncHtml(r.clientName||'—')}</td><td>${ncHtml(ncCategoryOf(r)||'—')}</td><td>${ncHtml(ncReasonOf(r)||'—')}</td><td class="ncObservation" title="${ncHtml(r.obs||'')}">${ncHtml(r.obs||r.noSale?.exchangeObservation||'—')}</td><td><span class="ncStatusTag ncStatus-${kind}">${ncKindName(kind)}</span></td></tr>`;}).join(''):`<tr><td colspan="7">${ncEmpty('Nenhum atendimento encontrado','Revise o período ou os filtros selecionados.')}</td></tr>`;
+    $('ncHistoryCount').textContent=`${ncFmt(all.length)} registro(s)`;
+    $('ncPageInfo').textContent=all.length?`Exibindo ${(ncPage-1)*ncPageSize+1}–${Math.min(all.length,ncPage*ncPageSize)} de ${ncFmt(all.length)}`:'Sem resultados';
+    $('ncPrevPage').disabled=ncPage<=1;$('ncNextPage').disabled=ncPage>=pages;
+  }
+  function ncTimeVisible(){const mode=$('ncView')?.value||'last30';$('ncDateWrap').hidden=mode!=='day';$('ncMonthWrap').hidden=mode!=='month';}
+  function ncExport(){
+    const span=ncSpan(),status=$('ncStatus')?.value||'all';
+    const rows=(state.records||[]).filter(r=>ncInRange(r,span.start,span.end)&&ncFilterExtras(r)&&(status==='all'||ncKind(r)===status));
+    const heads=['Data','Vendedor','Cliente','Categoria','Motivo','Observação','Resultado','Valor da venda'];
+    const values=rows.map(r=>[ncFormatRecordDate(r),ncNameOf(r),r.clientName||'',ncCategoryOf(r),ncReasonOf(r),r.obs||r.noSale?.exchangeObservation||'',ncKindName(ncKind(r)),ncKind(r)==='sold'?Number(r.value||0).toFixed(2):'']);
+    const safe=v=>{let s=String(v??'');if(/^[\s]*[=+@\-]/.test(s))s="'"+s;return '"'+s.replaceAll('"','""')+'"';};
+    const csv='\ufeff'+[heads,...values].map(row=>row.map(safe).join(';')).join('\r\n');
+    downloadBlob(csv,`ONDIS_nao_convertidos_${span.start}_${span.end}.csv`,'text/csv;charset=utf-8');
+  }
+  function renderNoConv(){
+    if(!$('ncKpis'))return;
+    ncTimeVisible();ncOptions();
+    const span=ncSpan(),all=(state.records||[]).filter(ncFilterExtras);
+    const currRecords=all.filter(r=>ncInRange(r,span.start,span.end));
+    const prevRecords=all.filter(r=>ncInRange(r,span.pastStart,span.pastEnd));
+    const current=ncSummary(currRecords),previous=ncSummary(prevRecords);
+    const status=$('ncStatus')?.value||'all';
+    const visible=status==='all'?currRecords:currRecords.filter(r=>ncKind(r)===status);
+    ncRenderKpis(current,previous);ncSegments(current);
+    const trendBins=ncBuildBins(currRecords,span,ncTrendGrouping);
+    const comparisonBins=ncBuildBins(currRecords,span,'weekly');
+    ncLineChart(trendBins,'ncTrendChart');ncCompare(comparisonBins);
+    // Indicadores gerenciais permanecem completos; o filtro de resultado seleciona os registros no histórico.
+    ncReasons(currRecords);ncVendorTable(currRecords);ncInsights(currRecords);ncDimensions(currRecords);
+    ncHistory(visible);
+    $('ncUpdatedAt').textContent=`${span.label} · ${ncFmt(current.total)} atendimentos`;
+    $('ncHistoryTabs').innerHTML=[['all','Todos',current.total],['sold','Vendas',current.sales],['nosold','Não vendas',current.nos],['exchange','Trocas / garantias',current.ex]].map(([k,n,v])=>`<button type="button" data-nc-status="${k}" class="${status===k?'active':''}" aria-pressed="${status===k}">${n} <b>${ncFmt(v)}</b></button>`).join('');
   }
 
   // ======================
@@ -6111,11 +6229,21 @@ body{ background-attachment: fixed; }
   $("metaRankMonth").addEventListener("change", renderMetaRank);
   $("metaRankMode").addEventListener("change", renderMetaRank);
 
-  // Não convertidos
+  // Não convertidos V10 — filtros, relatório e paginação (sem gravações).
   $("btnNoConvRefresh").addEventListener("click", renderNoConv);
-  $("ncView").addEventListener("change", renderNoConv);
-  $("ncDate").addEventListener("change", renderNoConv);
-  $("ncMonth").addEventListener("change", renderNoConv);
+  ["ncView","ncDate","ncMonth","ncSeller","ncCategory","ncStatus"].forEach(id=>$(id)?.addEventListener("change",()=>{ncPage=1;renderNoConv();}));
+  let ncQueryTimeout;
+  $("ncSearch")?.addEventListener("input",()=>{ncPage=1;clearTimeout(ncQueryTimeout);ncQueryTimeout=setTimeout(renderNoConv,180);});
+  $("ncReset")?.addEventListener("click",()=>{ $("ncView").value="last30";$("ncSeller").value="";$("ncCategory").value="";$("ncStatus").value="all";$("ncSearch").value="";ncPage=1;renderNoConv(); });
+  $("ncExportCsv")?.addEventListener("click",ncExport);
+  $("ncShowAllVendors")?.addEventListener("click",()=>{ncShowAllSellers=!ncShowAllSellers;renderNoConv();});
+  $("ncPrevPage")?.addEventListener("click",()=>{ncPage--;renderNoConv();});
+  $("ncNextPage")?.addEventListener("click",()=>{ncPage++;renderNoConv();});
+  $("viewNoConv")?.addEventListener("click",e=>{
+    const b=e.target.closest("[data-nc-status],[data-nc-bucket]");if(!b)return;
+    if(b.dataset.ncStatus){$("ncStatus").value=b.dataset.ncStatus;ncPage=1;renderNoConv();}
+    if(b.dataset.ncBucket){ncTrendGrouping=b.dataset.ncBucket;document.querySelectorAll('[data-nc-bucket]').forEach(x=>x.classList.toggle('active',x.dataset.ncBucket===ncTrendGrouping));renderNoConv();}
+  });
 
   // Theme buttons
   $("themeDefault").addEventListener("click", ()=>{ state.ui.theme = "default"; save(state); renderAll(); });
