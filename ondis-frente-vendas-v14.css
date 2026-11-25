@@ -1,0 +1,200 @@
+/* ONDIS V14 — Frente de Loja / Venda. Camada visual; sem regras de Firebase/PDV.
+   Estilos restritos à Frente de Loja e ao seu painel de vendas. */
+body.ondis-front{
+  --pos14-bg:#090b11;--pos14-surface:#10141d;--pos14-surface2:#151a25;
+  --pos14-edge:#292f3c;--pos14-text:#f5f6f9;--pos14-sub:#a4afc0;
+  --pos14-red:#e20b31;--pos14-rose:#ff445d;--pos14-shadow:0 16px 40px rgba(0,0,0,.22);
+  background:#090c12!important;color:var(--pos14-text);
+}
+body.ondis-front .app{grid-template-columns:206px minmax(0,1fr)!important;min-height:100vh;background:#090c12}
+body.ondis-front .side{background:linear-gradient(165deg,#0c0e14 0%,#111018 76%,#260710 100%)!important;border-right:1px solid #2a2530!important;box-shadow:none;padding:18px 12px}
+body.ondis-front .brand{padding:7px 10px 22px;align-items:center;gap:10px}
+body.ondis-front .brandMark{height:39px;width:39px;flex:0 0 39px;background:linear-gradient(145deg,#f21b43,#ac092a)!important;color:#fff;border-radius:12px;box-shadow:0 9px 22px #d50e3140}
+body.ondis-front .brandMark svg{height:20px;width:20px}
+body.ondis-front .brand b{font-size:19px;letter-spacing:-.04em;color:#fff!important}
+body.ondis-front .brand small{color:#a6aab6!important;font-size:10px;letter-spacing:.025em}
+body.ondis-front #nav{gap:5px}
+body.ondis-front #nav button{color:#b7becb!important;border:1px solid transparent;border-radius:11px;min-height:38px;font-size:12px;font-weight:650;text-align:left}
+body.ondis-front #nav button:hover{background:#22212b!important;color:#fff!important}
+body.ondis-front #nav button.active{background:linear-gradient(110deg,#ef153c,#ad0a29)!important;color:#fff!important;border:1px solid #ff44625c;box-shadow:0 9px 19px #dc123f35}
+body.ondis-front .sideFoot{margin-top:15px}
+body.ondis-front .sideFoot .back{color:#dce0e9!important;border:1px solid #3d3541!important;background:#16151c!important}
+body.ondis-front .main{min-width:0;background:radial-gradient(ellipse at 60% -12%,#66081e 0%,#180e17 22%,transparent 48%),#090c12!important}
+body.ondis-front .posTop{position:relative;z-index:25;min-height:82px;height:auto;gap:18px;padding:16px clamp(15px,2.2vw,29px)!important;border:0!important;border-bottom:1px solid #332430!important;background:linear-gradient(108deg,#13121b 0%,#210b16 58%,#45091c 100%)!important;backdrop-filter:none!important;box-shadow:inset 0 -1px 0 #ff28510e}
+body.ondis-front .posTop::before{content:"";position:absolute;right:16%;top:0;width:280px;height:100%;pointer-events:none;opacity:.3;background:radial-gradient(ellipse,#e515421a,transparent 70%)}
+body.ondis-front .posTitleWrap{display:flex;align-items:center;gap:13px;min-width:0}
+body.ondis-front .posTitleWrap h1{font-size:clamp(19px,2vw,25px)!important;letter-spacing:-.035em!important;line-height:1.17;font-weight:850;color:#fff!important}
+body.ondis-front .posTitleWrap h1 span{font-weight:600;color:#e7dbe0!important}
+body.ondis-front .posTitleWrap small{font-size:11px!important;margin-top:5px;color:#c6b8c4!important}
+body.ondis-front .posPageIcon{display:grid;place-items:center;flex-shrink:0;width:41px;height:41px;border:1px solid #f3355747;border-radius:12px;background:linear-gradient(135deg,#4c0c21,#260e1b);color:#ff526b}
+body.ondis-front .posPageIcon svg{width:21px;height:21px}
+body.ondis-front .posBack{display:grid;place-items:center;flex-shrink:0;width:29px;height:29px;border:1px solid #52404c!important;border-radius:9px;color:#e7d7df!important;background:#1a1721!important}
+body.ondis-front .topActions{gap:8px;flex-wrap:wrap;justify-content:flex-end}
+body.ondis-front .topActions .btn{min-height:37px;font-size:12px;display:inline-flex;align-items:center;gap:7px;justify-content:center;border-color:#49404c!important;background:#201a24!important;color:#e9e2e6!important}
+body.ondis-front .topActions .btn.primary{background:linear-gradient(110deg,#ed153b,#ba0b2d)!important;color:#fff!important;border-color:transparent!important}
+body.ondis-front .topActions kbd,.posV14 kbd{font:700 10px ui-monospace,monospace;border:1px solid #ffffff40;border-radius:5px;padding:3px 5px;background:#00000023;color:inherit}
+body.ondis-front .badgeFiscal{background:#30271c!important;color:#ffdc9d!important;border:1px solid #6d5531!important;padding:7px 9px}
+body.ondis-front .moreActionsMenu{background:#171c25!important;border:1px solid #3b4353!important;box-shadow:0 24px 54px #0008!important}
+body.ondis-front .moreActionsMenu button{color:#f6f6f9!important}
+body.ondis-front .moreActionsMenu button:hover{background:#252d38!important}
+body.ondis-front .moreActionsMenu small{color:#b5bece!important}
+body.ondis-front .content{padding:16px clamp(12px,1.65vw,24px) 34px!important}
+/* Painel principal, mais compacto e sem CRM */
+body.ondis-front #view-venda.posV14{color:var(--pos14-text)!important;max-width:1750px;margin:0 auto}
+body.ondis-front .posV14Stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin-bottom:11px}
+body.ondis-front .posV14Stat{position:relative;min-width:0;display:flex;gap:11px;align-items:center;padding:15px 14px;background:linear-gradient(155deg,#151923,#0e121a);border:1px solid #303746;border-radius:15px;box-shadow:0 8px 24px #0002;overflow:hidden}
+body.ondis-front .posV14Stat::after{content:"";position:absolute;right:0;bottom:0;width:60px;height:50px;opacity:.12;background:repeating-linear-gradient(90deg,transparent 0 8px,currentColor 8px 12px,transparent 12px 16px);clip-path:polygon(0 80%,20% 65%,37% 75%,55% 48%,73% 56%,100% 6%,100% 100%,0 100%)}
+body.ondis-front .posV14Stat.green{color:#32d994}body.ondis-front .posV14Stat.red{color:#ff455f}body.ondis-front .posV14Stat.purple{color:#b47bff}body.ondis-front .posV14Stat.blue{color:#36bbf2}
+body.ondis-front .posV14StatIcon{display:grid;place-items:center;flex-shrink:0;border-radius:13px;width:41px;height:41px;background:color-mix(in srgb,currentColor 13%,transparent)}
+body.ondis-front .posV14StatIcon svg{width:21px;height:21px}
+body.ondis-front .posV14Stat>div{min-width:0;position:relative;z-index:1;display:flex;flex-direction:column;gap:3px}
+body.ondis-front .posV14Stat small{font-size:11px;font-weight:750;color:#d1d7e0!important}
+body.ondis-front .posV14Stat strong{font-size:clamp(18px,2.2vw,26px);line-height:1.18;font-weight:850;letter-spacing:-.04em;white-space:nowrap;color:#fff!important}
+body.ondis-front .posV14Stat em{font-size:10px;font-style:normal;color:currentColor!important;font-weight:650}
+body.ondis-front .posV14CashBar{display:flex;align-items:stretch;gap:10px;min-width:0;margin-bottom:13px}
+body.ondis-front .posV14CashBar .posCashState{display:flex;flex:1 1 auto;min-width:0;gap:10px;align-items:center;padding:9px 12px!important;background:#161a23!important;border:1px solid #343a48!important;border-radius:12px;color:#fff!important}
+body.ondis-front .posV14CashBar .posStatusIcon{width:31px;height:31px;border-radius:9px;color:#ffbe60;display:grid;place-items:center;background:#5d3a122d}
+body.ondis-front .posV14CashBar .posCashState.open .posStatusIcon{color:#36df9a;background:#0b6f4430}
+body.ondis-front .posV14CashBar .posStateLine{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+body.ondis-front .posV14CashBar .posStateLine b{font-size:11px;color:#fff!important}
+body.ondis-front .posV14CashBar small{font-size:10px;color:#aab5c5!important}
+body.ondis-front .posV14CashBar .status{font-size:9px;padding:3px 6px;color:#f7cf8b!important;background:#413220!important;border-color:#715031!important}
+body.ondis-front .posV14CashBar .status.good{background:#123f30!important;color:#90eac3!important}
+body.ondis-front .posV14CashBar .cashDeskActions{margin-left:auto;display:flex;gap:7px}
+body.ondis-front .posV14CashBar .btn{padding:7px 11px;font-size:10px;white-space:nowrap}
+body.ondis-front .posV14CashBar .btn.primary{background:#b91232!important;color:#fff!important;border:0!important}
+body.ondis-front .posV14Last{display:flex;flex-direction:column;justify-content:center;gap:3px;min-width:175px;padding:8px 13px;border-radius:12px;background:#161a23;border:1px solid #343a48}
+body.ondis-front .posV14Last span{color:#aab5c5;font-size:9px;text-transform:uppercase;letter-spacing:.08em}
+body.ondis-front .posV14Last b{font-size:12px;color:#fff!important}
+body.ondis-front .posV14Last small{font-size:10px;color:#aab5c5!important}
+body.ondis-front .posV14 .posWorkspace{display:grid;grid-template-columns:minmax(0,1.52fr) minmax(340px,.95fr);align-items:start;gap:13px}
+body.ondis-front .posV14 .panel{min-width:0;background:linear-gradient(150deg,#131821,#0e1219)!important;border:1px solid #313746!important;border-radius:17px!important;box-shadow:var(--pos14-shadow)!important;color:#fff!important}
+body.ondis-front .posV14 .posCatalog{padding:0 15px 16px;min-height:510px}
+body.ondis-front .posV14PanelHead{border-bottom:1px solid #29313d;min-height:65px;padding:13px 1px!important;display:flex;align-items:center;justify-content:space-between;gap:10px;background:transparent!important}
+body.ondis-front .posV14PanelHead>div:first-child{display:flex;align-items:center;gap:10px;min-width:0}
+body.ondis-front .posV14AccentIcon{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;background:#6d10263b;color:#ff3c60;flex-shrink:0}
+body.ondis-front .posV14AccentIcon svg{width:18px;height:18px}
+body.ondis-front .posV14PanelHead h2{font-size:15px;font-weight:850;line-height:1.2;margin:0!important;color:#fff!important}
+body.ondis-front .posV14PanelHead small{font-size:10px;color:#aab5c5!important;display:block;margin-top:3px}
+body.ondis-front .posV14ProductCount{font-size:10px;color:#c4cfde!important;border:1px solid #384051;border-radius:20px;padding:5px 8px;white-space:nowrap}
+body.ondis-front .posV14 .posSearchRow{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:9px;margin:14px 0 11px}
+body.ondis-front .posV14 .posSearchField{display:flex;align-items:center;gap:9px;min-width:0;height:41px;padding:0 12px;border:1px solid #414958!important;border-radius:11px;background:#1b212b!important;color:#b4bfcc!important}
+body.ondis-front .posV14 .posSearchField:focus-within{border-color:#f43d60!important;box-shadow:0 0 0 3px #e3193930}
+body.ondis-front .posV14 .posSearchField input{width:100%;min-width:0;border:0!important;box-shadow:none!important;outline:none!important;background:transparent!important;color:#f9fafc!important;font-size:12px;padding:5px 0}
+body.ondis-front .posV14 input::placeholder{color:#9ba7b7!important;opacity:1}
+body.ondis-front .posV14 .posScanBtn{background:#232832!important;border:1px solid #414957!important;color:#e9edf6!important;display:flex;align-items:center;justify-content:center;gap:7px;height:41px;padding:0 13px;font-size:11px}
+body.ondis-front .posV14 .posProductTabs{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin:0 0 12px}
+body.ondis-front .posV14 .posProductTabs button{border-radius:10px!important;display:inline-flex;align-items:center;gap:6px;min-height:35px;padding:7px 11px;border:1px solid #343c49!important;background:#20252e!important;color:#d9e0eb!important;cursor:pointer;font-size:11px;font-weight:750;transition:.15s ease}
+body.ondis-front .posV14 .posProductTabs button:hover{border-color:#864256!important;background:#32242d!important}
+body.ondis-front .posV14 .posProductTabs button.active{background:linear-gradient(115deg,#ea173f,#aa0b2b)!important;border-color:#fa466a!important;color:#fff!important;box-shadow:0 5px 13px #d3163c40}
+body.ondis-front .posV14 .posProductTabs svg{width:14px;height:14px}
+body.ondis-front .posV14 .posHighlights{display:flex!important;align-items:center;justify-content:space-between;gap:10px;margin:0 0 8px;border-top:1px solid #252c37;padding-top:12px;color:#d5dce6;font-size:11px}
+body.ondis-front .posV14 .posHighlights>span{color:#cbd4e1;font-weight:700}
+body.ondis-front .posV14 .posHighlights label{display:flex;align-items:center;gap:7px;color:#aeb8c6;font-size:10px}
+body.ondis-front .posV14 .posHighlights select{width:auto;max-width:210px;background:#20252e!important;color:#e5edf7!important;border:1px solid #3b4350!important;font-size:11px;border-radius:9px;padding:7px 10px;min-height:34px}
+body.ondis-front .posV14 .posProductGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:0}
+body.ondis-front .posV14 .product{position:relative;min-width:0;background:#141920!important;border:1px solid #373e4c!important;border-radius:12px!important;overflow:hidden;color:#f6f8fb!important;transition:transform .15s,border-color .15s;box-shadow:none!important}
+body.ondis-front .posV14 .product:hover{transform:translateY(-2px);border-color:#fe365d!important;box-shadow:0 8px 22px #bc17402a!important}
+body.ondis-front .posV14 .product:focus-visible{outline:2px solid #ff385b;outline-offset:2px}
+body.ondis-front .posV14 .productImg{height:105px;display:grid;place-items:center;background:linear-gradient(140deg,#202633,#10151f)!important;overflow:hidden}
+body.ondis-front .posV14 .productImg img{width:100%;height:100%;object-fit:contain;mix-blend-mode:normal}
+body.ondis-front .posV14 .productImg span{display:grid;place-items:center;color:#d5a4b2}
+body.ondis-front .posV14 .productImg span svg{width:42px;height:42px}
+body.ondis-front .posV14 .productInfo{min-width:0;padding:9px 9px 12px}
+body.ondis-front .posV14 .productInfo b{color:#f9fafc!important;font-size:11px;font-weight:750;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:30px}
+body.ondis-front .posV14 .productInfo small{color:#a2adbd!important;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.ondis-front .posV14 .productMeta{margin-top:9px;display:flex;flex-direction:column;align-items:flex-start;gap:5px}
+body.ondis-front .posV14 .price{color:#ff445f!important;font-weight:850;font-size:13px}
+body.ondis-front .posV14 .stock{font-size:9px;color:#a3b2c0!important;font-weight:600}
+body.ondis-front .posV14 .stock.low{color:#ffaf7f!important}
+body.ondis-front .posV14 .product::after{content:"+";position:absolute;bottom:9px;right:9px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#f32547,#b6092d);color:#fff;width:22px;height:22px;font-size:18px;line-height:1;box-shadow:0 4px 8px #dd092e33;pointer-events:none}
+body.ondis-front .posV14 .cart.posCart{position:sticky;top:12px;overflow:hidden;align-self:start}
+body.ondis-front .posV14 .posCart .panelHead{padding:13px 15px!important;background:transparent!important;border-color:#29313d!important}
+body.ondis-front .posV14Bubble{background:#a40c2c;border-radius:99px;font-size:9px;font-weight:800;color:#fff;padding:2px 6px;vertical-align:middle}
+body.ondis-front .posV14 .posClear{color:#ff7186!important;border:0!important;background:transparent!important;font-size:10px;font-weight:800;cursor:pointer}
+body.ondis-front .posV14 .posCart .panelBody{padding:14px 15px 16px!important}
+body.ondis-front .posV14 .cartList{display:grid;gap:7px;max-height:min(40vh,290px);min-height:100px;overflow-y:auto}
+body.ondis-front .posV14 .cartItem{background:#171d26!important;border:1px solid #303948!important;border-radius:11px!important;padding:12px 11px;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px}
+body.ondis-front .posV14 .cartItem b{color:#eef2f7!important;font-weight:750;font-size:11px;overflow-wrap:anywhere}
+body.ondis-front .posV14 .cartItem small{color:#aeb9c8!important;font-size:10px;margin-top:5px}
+body.ondis-front .posV14 .qty{gap:5px;align-items:center}
+body.ondis-front .posV14 .qty button{background:#29303d!important;color:#fff!important;border:1px solid #4a5361!important;height:25px;width:25px}
+body.ondis-front .posV14 .qty>b{font-size:12px}
+body.ondis-front .posV14 .cartList>.empty{color:#bbc3d1!important;padding:35px 10px;display:flex;flex-direction:column;align-items:center;gap:7px;font-size:12px}
+body.ondis-front .posV14 .empty{color:#bfc9d7!important}
+body.ondis-front .posV14CartDetails{margin-top:11px;border:1px solid #323a48;border-radius:11px;padding:9px 11px;background:#141923}
+body.ondis-front .posV14CartDetails summary{cursor:pointer;font-size:11px;font-weight:700;color:#bcc8d9;list-style:disclosure-closed}
+body.ondis-front .posV14CartDetails[open] summary{margin-bottom:10px}
+body.ondis-front .posV14 .posObservation{display:flex;align-items:center;gap:8px;color:#d6e0eb!important;border:1px dashed #435064!important;background:#212835!important;padding:9px;border-radius:9px;font-size:11px;width:100%;text-align:left}
+body.ondis-front .posV14 .posObservation svg{width:16px}
+body.ondis-front .posV14 .posGiftInline{margin:9px 0 0;padding:9px;border-color:#3d4653!important;background:#1d2530!important;color:#e6eef9!important}
+body.ondis-front .posV14 .posGiftInline b{color:#f6f8fc!important;font-size:11px}
+body.ondis-front .posV14 .posGiftInline small{color:#bac6d5!important;font-size:10px}
+body.ondis-front .posV14 .totals{margin-top:14px;padding:13px 0 0;border-top:1px solid #3b4351}
+body.ondis-front .posV14 .totalLine{margin:9px 0;display:flex;align-items:center;gap:7px;font-size:12px;color:#adb9c8!important}
+body.ondis-front .posV14 .totalLine b{color:#edf2fa!important;font-weight:750}
+body.ondis-front .posV14 .totalLine.grand{margin-top:13px;padding-top:13px;border-top:1px solid #3a4350;font-size:16px;font-weight:850;color:#fff!important}
+body.ondis-front .posV14 .totalLine.grand b{font-size:clamp(18px,2vw,25px);font-weight:850;color:#ff4562!important;letter-spacing:-.03em;white-space:nowrap}
+body.ondis-front .posV14 .posV14Discount{border:1px solid #753448!important;border-radius:8px;background:#381b29!important;color:#ff7d94!important;font-weight:800;font-size:10px;padding:5px 8px;display:flex;align-items:center;gap:5px;margin-left:auto;cursor:pointer}
+body.ondis-front .posV14 .posV14Discount svg{height:13px;width:13px}
+body.ondis-front .posV14 .posFinish{width:100%;min-height:49px;border-radius:12px!important;margin-top:14px;background:linear-gradient(115deg,#f0153e,#ba0b2e)!important;color:#fff!important;border:1px solid #ff2e50!important;box-shadow:0 10px 22px #eb18344b!important;font-size:14px!important;font-weight:850!important;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer}
+body.ondis-front .posV14 .posFinish kbd{margin-left:auto}
+body.ondis-front .posV14Secure{display:flex;align-items:center;gap:6px;justify-content:center;font-size:10px;color:#9eafc2!important;margin:9px 0 0}
+body.ondis-front .posV14Secure svg{width:12px;height:12px;color:#37c391}
+body.ondis-front .posV14Extras{margin-top:13px;border:1px solid #303746;border-radius:14px;background:#141821;color:#e5edf5}
+body.ondis-front .posV14Extras>summary{padding:12px 16px;display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;font-weight:750;list-style:none}
+body.ondis-front .posV14Extras>summary::after{content:'▾';margin-left:auto;color:#aeb9c8}
+body.ondis-front .posV14Extras>summary::-webkit-details-marker{display:none}
+body.ondis-front .posV14Extras .posBottomGrid{display:grid;grid-template-columns:1.2fr 1fr;gap:11px;padding:0 12px 12px;margin:0}
+body.ondis-front .posV14Extras .panel{background:#191e28!important;border:1px solid #353d4b!important;border-radius:12px!important}
+body.ondis-front .posV14Extras .panelHead{background:transparent!important;border-bottom:1px solid #333b49!important;padding:10px 12px!important;color:#fff!important}
+body.ondis-front .posV14Extras .panelHead h3{color:#fff!important;font-size:12px}
+body.ondis-front .posV14Extras .posQuickActions,body.ondis-front .posV14Extras .posQuickPay{display:flex;gap:6px;flex-wrap:wrap;padding:9px}
+body.ondis-front .posV14Extras .posQuickActions button,body.ondis-front .posV14Extras .posQuickPay button{display:flex;align-items:center;gap:6px;padding:8px 10px;background:#242b36!important;color:#eaf0f7!important;border:1px solid #3f4957!important;border-radius:9px;cursor:pointer;font-size:10px;font-weight:750}
+body.ondis-front .posV14Extras button svg{width:14px;height:14px;color:#fe536b}
+/* Explicit theme contrast fallback: POS remains dark even if store's global theme is light. */
+body.ondis-front #view-venda.posV14 input:focus-visible,body.ondis-front #view-venda.posV14 select:focus-visible,body.ondis-front #view-venda.posV14 button:focus-visible{outline:2px solid #ff6380!important;outline-offset:2px}
+body.ondis-front #view-venda.posV14 button:disabled{opacity:.48;cursor:not-allowed}
+@media(max-width:1330px){body.ondis-front .posV14 .posProductGrid{grid-template-columns:repeat(3,minmax(0,1fr))}body.ondis-front .posV14 .posWorkspace{grid-template-columns:minmax(0,1.3fr) minmax(305px,.95fr)}}
+@media(max-width:1060px){body.ondis-front .app{grid-template-columns:72px minmax(0,1fr)!important}body.ondis-front .side{padding:15px 7px}body.ondis-front .brand{justify-content:center;padding:0 0 20px}body.ondis-front .brand>div:last-child,body.ondis-front .sideFoot .back{font-size:0}body.ondis-front #nav button{padding:10px 7px!important;text-align:center}body.ondis-front .posV14Stats{grid-template-columns:repeat(2,minmax(0,1fr))}body.ondis-front .posV14 .posWorkspace{grid-template-columns:minmax(0,1fr) minmax(275px,.85fr)}body.ondis-front .posV14 .posProductGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:740px){body.ondis-front .app{grid-template-columns:minmax(0,1fr)!important}body.ondis-front .side{position:relative!important;width:100%!important;height:auto!important;display:block;padding:7px 12px;border-bottom:1px solid #303442!important}body.ondis-front .brand{justify-content:flex-start;padding:5px 2px}body.ondis-front .brand>div:last-child{display:block;font-size:initial}body.ondis-front .side #nav,body.ondis-front .sideFoot{display:none!important}body.ondis-front .posTop{padding:12px!important;align-items:flex-start}body.ondis-front .posTitleWrap h1{font-size:19px!important}body.ondis-front .posTitleWrap small{font-size:10px!important}body.ondis-front .posPageIcon{width:35px;height:35px}body.ondis-front .topActions{gap:5px}body.ondis-front .topActions .btn{font-size:11px;padding:8px 9px}body.ondis-front .badgeFiscal{display:none!important}body.ondis-front .content{padding:12px!important}body.ondis-front .posV14CashBar{flex-direction:column}body.ondis-front .posV14Last{flex-direction:row;justify-content:space-between;align-items:center;min-width:0}body.ondis-front .posV14 .posWorkspace{grid-template-columns:minmax(0,1fr)}body.ondis-front .posV14 .posCart{position:relative;top:auto}body.ondis-front .posV14 .posProductGrid{grid-template-columns:repeat(3,minmax(0,1fr))}body.ondis-front .posV14Extras .posBottomGrid{grid-template-columns:1fr}}
+@media(max-width:520px){body.ondis-front .posTop{flex-wrap:wrap}body.ondis-front .topActions{width:100%;justify-content:space-between}body.ondis-front .topActions .moreActionsWrap{margin-left:auto}body.ondis-front .posV14Stats{gap:8px}body.ondis-front .posV14Stat{padding:11px 9px;gap:7px}body.ondis-front .posV14StatIcon{width:33px;height:33px;flex:0 0 33px}body.ondis-front .posV14Stat strong{font-size:18px}body.ondis-front .posV14Stat small{font-size:10px}body.ondis-front .posV14Stat em{font-size:9px}body.ondis-front .posV14 .posProductGrid{grid-template-columns:repeat(2,minmax(0,1fr))}body.ondis-front .posV14 .posCatalog{padding:0 11px 12px;min-height:0}body.ondis-front .posV14 .posProductTabs button{padding:7px 9px}body.ondis-front .posV14 .posHighlights{align-items:flex-start;flex-wrap:wrap}body.ondis-front .posV14 .posScanBtn span{display:none}}
+@media(prefers-reduced-motion:reduce){body.ondis-front .posV14 .product,body.ondis-front .posV14 .posProductTabs button{transition:none!important}}
+/* Overrides de compatibilidade: folhas V9/V10 anteriores ocultavam a barra lateral do PDV. */
+@media(min-width:741px){body.ondis-front .app{display:grid!important}body.ondis-front .side{display:flex!important}body.ondis-front #nav{display:grid!important}body.ondis-front .brand>div:last-child{display:block!important}body.ondis-front #nav button[data-view="venda"]{height:auto!important;font-size:12px!important;justify-content:flex-start!important}body.ondis-front #nav button[data-view="venda"] .ico{font-size:18px!important}}
+@media(max-width:740px){body.ondis-front .app{display:block!important}body.ondis-front .side{display:block!important}}
+/* Preserva o estado operacional do caixa contra temas legados. */
+body.ondis-front .posV14CashBar #cashDesk.open,body.ondis-front .posV14CashBar #cashDesk.closed{background:#161a23!important;border-color:#343a48!important}
+/* Corrige interferências das abas antigas (que tinham borda inferior de tab bar). */
+body.ondis-front .posV14 .posProductTabs{padding:0!important;border:0!important}
+/* Os status de estoque e produto permanecem pequenos, porém legíveis. */
+body.ondis-front .posV14 .productImg{height:105px!important}
+@media(max-width:740px){body.ondis-front .posV14 .posCart{top:auto!important;position:relative!important}}
+body.ondis-front #nav button[data-view="venda"]{display:flex!important;align-items:center;gap:10px!important;color:#fff!important;background:linear-gradient(110deg,#e9143d,#af0b2a)!important;white-space:nowrap!important}
+body.ondis-front #nav button[data-view="venda"] span:last-child{display:inline!important;font-size:12px!important;color:#fff!important}
+body.ondis-front #nav button[data-view="venda"] .ico{display:inline-flex!important;align-items:center;justify-content:center;min-width:19px;font-size:18px!important;color:#fff!important}
+body.ondis-front .sideFoot .back{display:flex!important;align-items:center;justify-content:center;min-height:41px;padding:9px!important;background:#201823!important;border:1px solid #4e3541!important;color:#f0dce5!important;font-size:10px!important;box-shadow:none!important}
+body.ondis-front .sideFoot .back::after{content:none!important}
+@media(max-width:1060px) and (min-width:741px){body.ondis-front #nav button[data-view="venda"] span:last-child{display:none!important}body.ondis-front #nav button[data-view="venda"]{justify-content:center!important}body.ondis-front .sideFoot .back{font-size:0!important}body.ondis-front .sideFoot .back::after{content:'←'!important;font-size:19px!important}}
+/* Correções finais dos estilos legados e responsividade. */
+html body.ondis-front #nav{align-content:start!important;grid-auto-rows:min-content!important;grid-template-rows:none!important;align-items:start!important}
+html body.ondis-front #nav button[data-view="venda"]{height:42px!important;min-height:42px!important;align-self:start!important;max-height:42px!important}
+html body.ondis-front .app .side .sideFoot button.posV14Back{background:#1b1d27!important;background-image:none!important;color:#e9edf6!important;border:1px solid #404658!important;box-shadow:none!important;filter:none!important;-webkit-text-fill-color:#e9edf6!important;font-size:10px!important}
+html body.ondis-front .app .side .sideFoot button.posV14Back:hover{background:#292b36!important}
+html body.ondis-front .posTop{height:auto!important;min-height:82px!important}
+@media(max-width:740px){html body.ondis-front .posTop{height:auto!important;min-height:0!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:10px!important;padding:12px!important}html body.ondis-front .posTop .topActions{width:100%;display:flex!important;justify-content:flex-end!important;min-height:37px!important;position:static!important}html body.ondis-front .posTop .posTitleWrap{width:100%;min-width:0}body.ondis-front .posTop .topActions .moreActionsWrap{margin:0!important}}
+/* Checkout e janelas: superfície clara, texto escuro, mesmo com POS em tema escuro.
+   Não altera lógica de pagamento nem validações existentes. */
+html body.ondis-front .modalBack .modal{background:#fbfcff!important;color:#142035!important;border:1px solid #d8e0ec!important;box-shadow:0 26px 80px #0008!important}
+html body.ondis-front .modalBack .modal h3,html body.ondis-front .modalBack .modal h4,html body.ondis-front .modalBack .modal b,html body.ondis-front .modalBack .modal strong{color:#162438!important}
+html body.ondis-front .modalBack .modal p,html body.ondis-front .modalBack .modal small,html body.ondis-front .modalBack .modal label{color:#546780!important}
+html body.ondis-front .modalBack .modal input:not([type="checkbox"]),html body.ondis-front .modalBack .modal select,html body.ondis-front .modalBack .modal textarea{background:#fff!important;color:#15243a!important;border:1px solid #cfd9e7!important;box-shadow:none}
+html body.ondis-front .modalBack .modal input::placeholder,html body.ondis-front .modalBack .modal textarea::placeholder{color:#6b7b91!important}
+html body.ondis-front .modalBack .modal .btn:not(.primary):not(.bad):not(.good):not(.warn){background:#edf2f9!important;color:#263850!important;border:1px solid #d1dce9!important}
+html body.ondis-front .modalBack .modal .btn.primary{background:linear-gradient(110deg,#e9143d,#b50c2e)!important;color:#fff!important;border-color:transparent!important}
+html body.ondis-front .modalBack .modal .btn.bad{background:#fff0f2!important;color:#af1835!important}
+html body.ondis-front .modalBack .modal .btn.good{background:#e7f8ef!important;color:#06794d!important}
+html body.ondis-front .modalBack .modal .modalHead{background:#fff!important;border-bottom:1px solid #dce4f0!important}
+html body.ondis-front .modalBack .modal .modalBody{background:#fbfcff!important}
+html body.ondis-front .modalBack .modal .modalFoot{background:#fff!important;border-top:1px solid #dce4f0!important}
+html body.ondis-front .modalBack .modal .receipt{background:#fff!important;color:#202d40!important}

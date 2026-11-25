@@ -116,7 +116,7 @@
 <link rel="stylesheet" href="./ondis-visual-v4.css?v=4.0.0"/>
 
 <link rel="stylesheet" href="./ondis-contraste-global-v6.css?v=6.0.0">
-<link rel="stylesheet" href="./ondis-catalogo-otica-v12.css?v=12.1.0">
+<link rel="stylesheet" href="./ondis-catalogo-otica-v12.css?v=12.2.0">
 </head>
 <body data-ondis-refresh="catalog" data-ondis-catalog="general">
 
@@ -154,6 +154,15 @@
       <div class="oticaBannerArt" aria-hidden="true">
         <svg viewBox="0 0 460 190" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="frameGold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#F9D9A5"/><stop offset=".55" stop-color="#D69E62"/><stop offset="1" stop-color="#F8E9CF"/></linearGradient><linearGradient id="lensGlow" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#E0F1F1" stop-opacity=".6"/><stop offset="1" stop-color="#E7D6C9" stop-opacity=".14"/></linearGradient></defs><circle cx="238" cy="98" r="88" fill="#FFF" fill-opacity=".05"/><ellipse cx="230" cy="165" rx="180" ry="9" fill="#050009" fill-opacity=".23"/><path d="M24 61 58 71M436 61 402 71" stroke="url(#frameGold)" stroke-width="8" stroke-linecap="round"/><path d="M76 66c-17 0-25 17-23 37 3 27 17 46 54 48 33 2 62-11 78-37 9-15 15-48-10-51-40-6-63-4-99 3ZM384 66c17 0 25 17 23 37-3 27-17 46-54 48-33 2-62-11-78-37-9-15-15-48 10-51 40-6 63-4 99 3Z" fill="url(#lensGlow)" stroke="url(#frameGold)" stroke-width="9"/><path d="M186 80c10-12 22-18 44-18s34 6 44 18" stroke="url(#frameGold)" stroke-width="8" stroke-linecap="round"/><path d="M76 86 135 75M285 75l59 11" stroke="#fff" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"/></svg>
       </div>
+    </section>
+    <section class="ondisCuratedHero" id="ondisCuratedHero" hidden aria-label="Seleção exclusiva da loja">
+      <div class="ondisCuratedHeroMain">
+        <span class="ondisCuratedEyebrow">SELEÇÃO EXCLUSIVA · ONDIS</span>
+        <h2>Uma seleção especial para você.</h2>
+        <p id="ondisCuratedIntro">Seu vendedor separou produtos pensando no seu estilo.</p>
+        <div class="ondisCuratedChips"><span id="ondisCuratedCount">Peças selecionadas</span><span id="ondisCuratedSeller">Atendimento personalizado</span></div>
+      </div>
+      <div class="ondisCuratedArt" aria-hidden="true"><svg viewBox="0 0 170 110" fill="none"><path d="M13 27 36 31M157 27 134 31M36 27Q13 21 21 64Q29 91 58 84Q79 80 83 48M134 27Q157 21 149 64Q141 91 112 84Q91 80 87 48M82 42Q85 35 88 42" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><path d="M36 27Q59 22 82 42M134 27Q111 22 88 42" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg></div>
     </section>
     <div id="barraSelecao" style="display:none;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:#fff8e8;border:1px solid #f3d784;border-radius:12px;padding:12px 14px;margin-bottom:14px">
       <span style="font-size:14px;font-weight:700;color:#9a6a00">🎯 Selecionando peças para um cliente — <span id="selCount">0</span> escolhida(s)</span>
@@ -257,8 +266,8 @@
       <div class="field"><label>Seu WhatsApp (com DDD)</label><input id="meuWhats" inputmode="tel" placeholder="(00) 00000-0000"/></div>
       <button class="btn good" onclick="salvarMeuWhats()">Salvar número</button>
       <div class="divider" style="height:1px;background:rgba(255,255,255,.08);margin:18px 0"></div>
-      <h3 style="font-size:14px;font-weight:800;margin-bottom:6px"><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14l1 13H4L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span>Meu link do catálogo</h3>
-      <p class="hint" style="text-align:left;padding:0 0 8px">Mande este link para seus clientes. Os pedidos vêm direto pro seu WhatsApp.</p>
+      <h3 style="font-size:14px;font-weight:800;margin-bottom:6px"><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14l1 13H4L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span>Meu link do catálogo completo</h3>
+      <p class="hint" style="text-align:left;padding:0 0 8px">Este link mostra <b>todos os produtos</b> da loja. Para enviar apenas produtos específicos, use <b>Preparar seleção para cliente</b> na vitrine.</p>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
         <input id="meuLink" readonly style="flex:1;min-width:200px;padding:9px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#7fffc0;font-size:12px"/>
         <button class="btn" onclick="copiarLink()">Copiar</button>
@@ -272,15 +281,17 @@
 
 <!-- MODAL LINK GERADO (vendedor) -->
 <div class="modalBack" id="modalLinkGerado">
-  <div class="modal" style="max-width:480px">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-      <h2 style="font-size:18px;font-weight:900"><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 9 9 0 0 1-4-.9L3 21l1.9-5.5a9 9 0 0 1-.9-4A8.5 8.5 0 0 1 12.5 3 8.5 8.5 0 0 1 21 11.5Z"/></svg></span>Link personalizado</h2>
-      <button class="btn" onclick="fecharLinkGerado()">✕</button>
+  <div class="modal ondisShareModal" role="dialog" aria-modal="true" aria-labelledby="ondisShareTitle">
+    <div class="ondisShareHead">
+      <div><span class="ondisShareEyebrow">SELEÇÃO PARA O CLIENTE</span><h2 id="ondisShareTitle">Seu link está pronto</h2></div>
+      <button type="button" class="ondisShareClose" onclick="fecharLinkGerado()" aria-label="Fechar">×</button>
     </div>
-    <p class="hint" style="text-align:left;padding:0 0 12px">Mande este link para seu cliente. Ao abrir, ele verá primeiro as peças que você separou — e depois pode explorar o catálogo completo.</p>
-    <div style="display:flex;gap:6px;flex-wrap:wrap">
-      <input id="linkGeradoInput" readonly style="flex:1;min-width:200px;padding:9px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#7fffc0;font-size:12px"/>
-      <button class="btn good" onclick="copiarLinkGerado()">Copiar</button>
+    <p class="ondisShareDescription">O cliente verá <strong>somente os produtos que você selecionou</strong>, com o nome da loja e atendimento pelo seu WhatsApp.</p>
+    <label class="ondisShareLabel" for="linkGeradoInput">Link exclusivo da seleção</label>
+    <input id="linkGeradoInput" readonly aria-label="Link personalizado para copiar"/>
+    <div class="ondisShareActions">
+      <button type="button" class="btn" onclick="fecharLinkGerado()">Fechar</button>
+      <button type="button" class="btn good" onclick="copiarLinkGerado()">Copiar link</button>
     </div>
   </div>
 </div>
@@ -413,7 +424,9 @@
   const params = new URLSearchParams(location.search);
   const LOJA_PARAM = params.get("loja");
   const VEND_PARAM = params.get("vend");
-  const SEL_PARAM = (params.get("sel")||"").split(",").filter(Boolean); // peças selecionadas pelo vendedor
+  const SEL_PARAM = [...new Set((params.get("sel")||"").split(",").map(v=>{try{return decodeURIComponent(v)}catch{return v}}).filter(v=>v && v.length<=180))].slice(0,120); // seleção exclusiva do cliente
+  const CLIENTE_SELECAO = !!LOJA_PARAM && params.has("sel");
+  const SELECAO_IDS = new Set(SEL_PARAM);
 
   let MY=null, STORE_ID=null, LOJA_NOME="", LOJA_INFO={}, PRODUTOS=[], produtosRef=null;
   let CAT_SELECTED="", SIZE_SELECTED="", CATALOG_VIEW="grid", OPT_TYPE="", CATALOG_IS_OPTICAL=true;
@@ -423,9 +436,21 @@
   let SEL_MODE=false;  // vendedor no modo "selecionar peças para um cliente"
   let SELECIONADAS={}; // { produtoId: true } peças que o vendedor escolheu
   // chave do carrinho por loja (mantém ao recarregar)
-  function cartKey(){ return "omnia_cart_"+(STORE_ID||"x"); }
-  function salvarCart(){ try{ localStorage.setItem(cartKey(), JSON.stringify(CART)); }catch(e){} }
-  function carregarCart(){ try{ const s=localStorage.getItem(cartKey()); CART = s?JSON.parse(s):{}; }catch(e){ CART={}; } }
+  function cartKey(){
+    // Links de seleção e vendedores distintos não compartilham carrinhos.
+    if(CLIENTE_SELECAO){
+      const seed=[STORE_ID,VEND_PARAM,...SEL_PARAM].join("|");
+      let hash=2166136261;for(let i=0;i<seed.length;i++)hash=Math.imul(hash^seed.charCodeAt(i),16777619)>>>0;
+      return "omnia_cart_sel_"+(STORE_ID||"x")+"_"+hash.toString(36);
+    }
+    return "omnia_cart_"+(STORE_ID||"x");
+  }
+  function filtrarCarrinho(){
+    // Um produto excluído ou ausente da curadoria nunca é mostrado no pedido.
+    if(CLIENTE_SELECAO) CART=Object.fromEntries(Object.entries(CART||{}).filter(([id,q])=>SELECAO_IDS.has(id)&&Number.isInteger(q)&&q>0));
+  }
+  function salvarCart(){ try{ filtrarCarrinho();localStorage.setItem(cartKey(), JSON.stringify(CART)); }catch(e){} }
+  function carregarCart(){ try{ const s=localStorage.getItem(cartKey()); CART = s?JSON.parse(s):{};if(!CART||typeof CART!=="object"||Array.isArray(CART))CART={}; filtrarCarrinho(); }catch(e){ CART={}; } }
 
   function showLoading(m){ document.getElementById("loadingScreen").classList.add("show"); document.getElementById("loadingMsg").textContent=m||"Carregando..."; }
   function hideLoading(){ document.getElementById("loadingScreen").classList.remove("show"); }
@@ -540,6 +565,19 @@
       }catch(e){ console.error(e); }
     }
     document.getElementById("ctxInfo").textContent = VENDEDOR&&VENDEDOR.nome ? ("Atendimento: "+VENDEDOR.nome) : "Faça seu pedido";
+    if(CLIENTE_SELECAO){
+      document.body.dataset.ondisSelection="exclusive";
+      document.title="Sua seleção · "+LOJA_NOME;
+      const hero=document.getElementById("ondisCuratedHero");
+      hero.hidden=false;
+      const vendedor=VENDEDOR?.nome?.trim();
+      document.getElementById("ondisCuratedIntro").textContent=vendedor
+        ? vendedor+" selecionou estes produtos especialmente para você. Confira os detalhes e envie seu pedido diretamente pelo WhatsApp."
+        : "Confira os produtos escolhidos especialmente para você. Veja os detalhes e envie seu pedido à loja.";
+      document.getElementById("ondisCuratedSeller").textContent=vendedor ? "Selecionado por "+vendedor : "Escolhas da loja";
+      document.getElementById("ondisCuratedCount").textContent=SEL_PARAM.length+" produto(s) na seleção";
+      const title=document.getElementById("lojaTitulo");if(title)title.textContent=LOJA_NOME;
+    }
     document.getElementById("cartFab").style.display="flex";
     carregarCart();           // recupera o carrinho salvo (mantém ao recarregar)
     atualizarCartFab();
@@ -636,7 +674,7 @@
     const color=(document.getElementById("filtroCor")||{}).value||"";
     const pmin=brNum((document.getElementById("precoMin")||{}).value||"");
     const pmax=brNum((document.getElementById("precoMax")||{}).value||"");
-    let lista=PRODUTOS.filter(p=>{
+    let lista=PRODUTOS.filter(p=>!CLIENTE_SELECAO||SELECAO_IDS.has(p.id)).filter(p=>{
       const o=opt(p);
       const okB=!busca||[p.nome,p.ref,p.descricao,p.categoria,o.marca,o.modelo,o.material,o.formato,o.cor,o.colecao].some(v=>normOpt(v).includes(normOpt(busca)));
       const okO=(!OPT_TYPE||tipoOptico(p)===OPT_TYPE)&&(!brand||o.marca===brand)&&(!shape||o.formato===shape)&&(!material||o.material===material)&&(!color||o.cor===color);
@@ -655,7 +693,7 @@
     const grid=document.getElementById("gridVitrine");
     if(grid) grid.classList.toggle("listView",CATALOG_VIEW==="list");
     const stats=document.getElementById("catalogStats");
-    if(stats){
+    if(stats && !CLIENTE_SELECAO){
       const ativos=PRODUTOS.filter(p=>p.disponivel!=="nao").length;
       const promos=PRODUTOS.filter(p=>p.promo>0&&p.promo<p.preco).length;
       const novidades=PRODUTOS.filter(p=>/novo|novidade/i.test(p.destaque||"")).length;
@@ -668,21 +706,13 @@
     }
 
     const resultCount=document.getElementById("oticaResultsCount");if(resultCount)resultCount.textContent=lista.length+" produto(s) encontrado(s)";
-    // CLIENTE com link personalizado: separa "selecionadas para você" das demais
-    const temSelecao = MODO==="cliente" && SEL_PARAM.length>0;
-    let html="";
-    if(temSelecao){
-      const selec = lista.filter(p=> SEL_PARAM.includes(p.id));
-      const resto = lista.filter(p=> !SEL_PARAM.includes(p.id));
-      // ordena as selecionadas na ordem do link
-      selec.sort((a,b)=> SEL_PARAM.indexOf(a.id) - SEL_PARAM.indexOf(b.id));
-      if(selec.length>0){
-        html += `<div style="grid-column:1/-1;margin:4px 0 2px"><h3 style="font-size:16px;font-weight:900;color:#ffd166">✨ Selecionadas para você${VENDEDOR&&VENDEDOR.nome?" por "+htm(VENDEDOR.nome):""}</h3></div>`;
-        html += selec.map(cardProduto).join("");
-        html += `<div style="grid-column:1/-1;margin:16px 0 2px;padding-top:12px;border-top:1px solid rgba(255,255,255,.1)"><h3 style="font-size:15px;font-weight:800;color:#9db0d0">🛍️ Ver todo o catálogo</h3></div>`;
-      }
-      html += resto.map(cardProduto).join("");
-      grid.innerHTML = html || '<div class="hint">Nenhum produto encontrado.</div>';
+    // Link exclusivo: somente a seleção enviada pelo vendedor, na ordem do link.
+    if(CLIENTE_SELECAO){
+      const selecionados=lista.slice().sort((a,b)=>SEL_PARAM.indexOf(a.id)-SEL_PARAM.indexOf(b.id));
+      if(resultCount) resultCount.textContent=selecionados.length+" produto(s) selecionado(s)";
+      grid.innerHTML=selecionados.length
+        ? selecionados.map(cardProduto).join("")
+        : '<div class="ondisCuratedEmpty"><strong>Esta seleção não está mais disponível.</strong><p>Alguns produtos podem ter sido removidos pela loja. Solicite uma nova seleção ao vendedor.</p></div>';
       return;
     }
 
@@ -718,8 +748,8 @@
     const id=JSON.stringify(String(p.id));
     const ehGestor=MY&&(MY.role==="admin"||MY.role==="superadmin");
     let acao="";
-    if(SEL_MODE){const selected=!!SELECIONADAS[p.id];acao=`<button class="btn sm ${selected?"good":""}" onclick='toggleSelecao(${htm(id)})'>${selected?"Selecionado ✓":"Selecionar para cliente"}</button>`;}
-    else if(MODO==="cliente"){acao=esgotado?'<button class="btn sm" disabled>Indisponível</button>':`<button class="btn good sm" onclick='addCart(${htm(id)})'>Adicionar</button>`;acao+=`<button class="btn sm" onclick='abrirDetalhesProduto(${htm(id)})'>Detalhes</button>`;}
+    if(SEL_MODE){const selected=!!SELECIONADAS[p.id];acao=`<button type="button" class="btn sm ondisSelectProduct ${selected?"good is-selected":""}" onclick='toggleSelecao(${htm(id)})' aria-pressed="${selected}">${selected?"✓ Selecionado":"+ Selecionar"}</button>`;}
+    else if(MODO==="cliente"){acao=esgotado?'<button class="btn sm ondisCartAdd" disabled>Indisponível</button>':`<button type="button" class="btn good sm ondisCartAdd" onclick='addCart(${htm(id)})'>+ Adicionar</button>`;acao+=`<button type="button" class="btn sm ondisCartDetails" onclick='abrirDetalhesProduto(${htm(id)})'>Detalhes</button>`;}
     else if(ehGestor){acao=`<button class="btn good sm" onclick='abrirEditarProduto(${htm(id)})'>Editar produto</button><button class="btn sm" onclick='abrirDetalhesProduto(${htm(id)})'>Ver</button>`;}
     else{acao=`<button class="btn good sm" onclick="toggleModoSelecao()">Selecionar</button><button class="btn sm" onclick='abrirDetalhesProduto(${htm(id)})'>Detalhes</button>`;}
     return `<article class="prod oticaProductCard"><div class="photoWrap">${foto}${badge?`<span class="productBadge ${classes}">${badge}</span>`:""}${esgotado?'<span class="oticaAvailability unavailable">Indisponível</span>':""}</div><div class="body"><div class="oticaProductType">${htm(nomeTipo(tipoOptico(p)))}</div><div class="nome">${nome}</div>${ref?`<div class="ref">Ref. ${ref}</div>`:""}<div class="oticaProductSpecs">${chips}</div><div class="precos"><span class="preco">${money(precoFinal(p))}</span>${temPromo?`<span class="precoAntigo">${money(p.preco)}</span>`:""}</div></div><div class="acts">${acao}</div></article>`;
@@ -782,14 +812,19 @@
     if(ids.length===0){ alert("Selecione pelo menos uma peça."); return; }
     if(!MY.catalogoWhats){ if(!confirm("Você ainda não cadastrou seu WhatsApp (aba 'Meu WhatsApp'). O link vai funcionar, mas o pedido do cliente não terá pra onde ir. Gerar mesmo assim?")) return; }
     const base=location.origin+location.pathname;
-    const link=`${base}?loja=${STORE_ID}&vend=${MY.uid}&sel=${ids.join(",")}`;
+    const query=new URLSearchParams({loja:STORE_ID,vend:MY.uid,sel:ids.map(encodeURIComponent).join(",")});
+    const link=base+"?"+query.toString();
     document.getElementById("linkGeradoInput").value=link;
     document.getElementById("modalLinkGerado").classList.add("show");
   };
-  window.copiarLinkGerado=function(){
-    const inp=document.getElementById("linkGeradoInput");
-    inp.select(); inp.setSelectionRange(0,99999);
-    try{ document.execCommand("copy"); alert("Link copiado! Mande para seu cliente."); }catch(e){ alert("Copie manualmente."); }
+  window.copiarLinkGerado=async function(){
+    const inp=document.getElementById("linkGeradoInput"),link=inp?.value||"";
+    if(!link)return;
+    try{
+      if(navigator.clipboard && window.isSecureContext)await navigator.clipboard.writeText(link);
+      else {inp.focus();inp.select();inp.setSelectionRange(0,inp.value.length);if(!document.execCommand("copy"))throw Error("copy unsupported");}
+      alert("Link copiado! Envie ao seu cliente.");
+    }catch(e){inp.focus();inp.select();alert("Selecione e copie o link para enviá-lo ao cliente.");}
   };
   window.fecharLinkGerado=function(){ document.getElementById("modalLinkGerado").classList.remove("show"); };
 
@@ -1130,23 +1165,31 @@
 
   // ===== CARRINHO (cliente) =====
   window.addCart=function(id){
-    CART[id]=(CART[id]||0)+1;
+    if(CLIENTE_SELECAO && !SELECAO_IDS.has(String(id)))return;
+    const p=PRODUTOS.find(x=>x.id===id);
+    if(!p || p.disponivel==="nao")return;
+    CART[id]=Math.min(99,(Number(CART[id])||0)+1);
     salvarCart();
     atualizarCartFab();
-    const p=PRODUTOS.find(x=>x.id===id);
-    // feedback rápido
     const fab=document.getElementById("cartFab");
-    fab.style.transform="scale(1.1)"; setTimeout(()=>fab.style.transform="scale(1)",150);
+    if(fab){fab.classList.remove("ondisCartPulse");void fab.offsetWidth;fab.classList.add("ondisCartPulse");}
+    let note=document.getElementById("ondisAddToast");
+    if(!note){note=document.createElement("div");note.id="ondisAddToast";note.setAttribute("role","status");document.body.appendChild(note);}
+    note.textContent="Produto adicionado · "+String(p.nome||"Item");
+    note.classList.add("show");
+    clearTimeout(window._ondisToastTimeout);
+    window._ondisToastTimeout=setTimeout(()=>note.classList.remove("show"),1800);
   };
   function atualizarCartFab(){
     const total=Object.values(CART).reduce((s,q)=>s+q,0);
     document.getElementById("cartCount").textContent=total;
   }
-  window.abrirCarrinho=function(){ renderCarrinho(); document.getElementById("modalCarrinho").classList.add("show"); };
+  window.abrirCarrinho=function(){ filtrarCarrinho();renderCarrinho(); document.getElementById("modalCarrinho").classList.add("show"); };
   window.fecharCarrinho=function(){ document.getElementById("modalCarrinho").classList.remove("show"); };
 
   function renderCarrinho(){
-    const ids=Object.keys(CART).filter(id=>CART[id]>0);
+    filtrarCarrinho();
+    const ids=Object.keys(CART).filter(id=>CART[id]>0 && PRODUTOS.some(p=>p.id===id));
     const lista=document.getElementById("cartLista");
     if(ids.length===0){ lista.innerHTML=estadoVazio("🛒","Carrinho vazio","Adicione peças pelo catálogo e elas aparecem aqui para você enviar o pedido no WhatsApp."); document.getElementById("cartTotal").textContent=money(0); return; }
     let total=0;
