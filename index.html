@@ -1153,6 +1153,10 @@ body{ background-attachment: fixed; }
 <div class="hint opsIntro">Regra ONDIS: atendimento só termina quando você <b>finalizar</b> (vendeu / não vendeu). Isso garante conversão real.</div>
 <div class="divider"></div>
 <div class="kpis" id="kpis"></div>
+<section class="exchangeReportPanel opsExchangePanel" aria-label="Trocas do dia">
+  <header><div><span class="exchangeOverline">TROCAS DO DIA</span><h3>Valores e diferenças do atendimento</h3><p>O acompanhamento das trocas fica separado das vendas concluídas.</p></div><span class="exchangeReportPill" id="opsExchangePeriod">Hoje</span></header>
+  <div class="exchangeReportGrid" id="opsExchangeSummary"></div>
+</section>
 <div class="divider"></div>
 <div class="list" id="queueList"></div>
 <div class="divider"></div>
@@ -1293,6 +1297,10 @@ body{ background-attachment: fixed; }
       </div>
       <p class="goalsInsightsFootnote">Os gráficos usam somente vendas concluídas. Diferenças recebidas por trocas não aumentam automaticamente metas ou comissões.</p>
       <div id="goalsExchangeNote" class="exchangeGoalNote" role="status"></div>
+      <section class="exchangeReportPanel goalsExchangePanel" aria-label="Trocas do mês das metas">
+        <header><div><span class="exchangeOverline">TROCAS DO PERÍODO</span><h3>Impacto financeiro paralelo à meta</h3><p>Os valores abaixo ajudam a acompanhar diferenças e pendências sem alterar o atingimento.</p></div><span class="exchangeReportPill" id="goalsExchangePeriod">Mês selecionado</span></header>
+        <div class="exchangeReportGrid" id="goalsExchangeSummary"></div>
+      </section>
     </section>
     <p class="goalsSyncHint" id="goalsSyncHint" role="status" aria-live="polite">Cada decêndio é independente: ao mudar R$, muda apenas a % dele, e vice-versa. Salve pelo botão do período ou use <b>Salvar metas</b> para confirmar todos os campos.</p>
     <div class="goalsFootActions"><div class="goalsClosed"><span>Decêndio atual encerrado?</span><input disabled id="goalWeekClosed" aria-label="Status do fechamento"/></div>
@@ -1332,6 +1340,10 @@ body{ background-attachment: fixed; }
   </div>
   <div class="rankKpiStrip" id="metaRankKpis"></div>
   <div class="exchangeGoalNote" id="metaRankExchangeNote" role="status"></div>
+  <section class="exchangeReportPanel rankExchangePanel" aria-label="Resumo de trocas do ranking de metas">
+    <header><div><span class="exchangeOverline">TROCAS NO MÊS</span><h3>Recebimentos paralelos ao ranking</h3><p>Acompanhe trocas, diferenças e créditos sem mexer na classificação por vendas.</p></div><span class="exchangeReportPill" id="metaRankExchangePeriod">Mês selecionado</span></header>
+    <div class="exchangeReportGrid" id="metaRankExchangeSummary"></div>
+  </section>
   <div class="rankGoalGrid">
     <article class="rankPanel rankProgressCard"><div class="rankPanelHead"><div><span>Progresso Geral da Meta</span><small id="rankProgressSubtitle">Mês selecionado</small></div></div><div id="rankProgressRing"></div></article>
     <article class="rankPanel rankEvolutionCard"><div class="rankPanelHead"><div><span>Evolução no mês</span><small>Meta × realizado acumulado</small></div><span class="rankPill">Diário</span></div><div class="rankEvolutionChart" id="rankEvolutionChart"></div></article>
@@ -2164,6 +2176,31 @@ body{ background-attachment: fixed; }
       credit:exchangeMoneyFromCents(info.reduce((n,v)=>n+exchangeCents(v.creditAmount),0))
     };
   }
+  function exchangeSummaryCards(ex, labels={}){
+    const cfg = Object.assign({
+      count:'Trocas registradas',
+      returned:'Valor devolvido',
+      newProducts:'Novo produto',
+      received:'Diferenças recebidas',
+      pending:'Diferenças pendentes',
+      credit:'Crédito do cliente'
+    }, labels || {});
+    const data=[
+      [cfg.count,formatNum(ex?.count||0),'blue'],
+      [cfg.returned,formatMoney(ex?.returned||0),'blue'],
+      [cfg.newProducts,formatMoney(ex?.newProducts||0),'blue'],
+      [cfg.received,formatMoney(ex?.received||0),'green'],
+      [cfg.pending,formatMoney(ex?.pending||0),'amber'],
+      [cfg.credit,formatMoney(ex?.credit||0),'amber']
+    ];
+    return data.map(([label,value,color])=>`<div class="exchangeMetric ${color}"><span>${label}</span><strong>${value}</strong></div>`).join('');
+  }
+  function renderExchangeSummary(target, ex, labels={}){
+    const el=typeof target==='string'?$(target):target;
+    if(!el) return;
+    el.innerHTML = exchangeSummaryCards(ex||exchangeTotals([]), labels);
+  }
+
   function exchangeResultText(r){
     if(!(r?.outcome==='exchange'||r?.noSale?.isExchange))return '';
     const v=exchangeDetails(r);
@@ -2361,6 +2398,9 @@ body{ background-attachment: fixed; }
       div.innerHTML = `<span class="kpiIco">${k.ico||""}</span><div><span class="t">${k.t}</span><div class="v">${k.v}</div><div class="kpiTrend">${k.trend}</div></div>${spark(k.cor)}`;
       el.appendChild(div);
     }
+    const exToday=exchangeTotals(recsToday);
+    const opsPill=$('opsExchangePeriod'); if(opsPill) opsPill.textContent = 'Hoje · '+tk.split('-').reverse().join('/');
+    renderExchangeSummary('opsExchangeSummary', exToday, {count:'Trocas do dia', returned:'Produto devolvido', newProducts:'Novo produto', received:'Diferença recebida', pending:'Saldo pendente', credit:'Crédito do cliente'});
   }
 
   function renderQueue(){
@@ -2921,6 +2961,10 @@ body{ background-attachment: fixed; }
       </div>
       ${summary}
       <div class="exchangeGoalNote" role="status">Trocas do dia: ${exToday.count} · Recebido nas trocas: ${formatMoney(exToday.received)} · Diferenças pendentes: ${formatMoney(exToday.pending)}. Separadas das vendas do ranking.</div>
+      <section class="exchangeReportPanel" aria-label="Resumo das trocas do ranking do dia">
+        <header><div><span class="exchangeOverline">TROCAS DO DIA</span><h3>Valores paralelos ao ranking</h3><p>Os recebimentos das trocas ficam separados da classificação comercial.</p></div><span class="exchangeReportPill">${tk.split('-').reverse().join('/')}</span></header>
+        <div class="exchangeReportGrid">${exchangeSummaryCards(exToday,{count:'Trocas do dia', returned:'Valor devolvido', newProducts:'Novo produto', received:'Diferença recebida', pending:'Saldo pendente', credit:'Crédito do cliente'})}</div>
+      </section>
       <div class="rankingPodiumWrap">${podium}</div>
       <div class="rankingBoard">
         <div class="rankingBoardHead">
@@ -3126,14 +3170,7 @@ body{ background-attachment: fixed; }
     $('dadosRevenueMonthLabel').textContent='No mês de '+chosenMonth.slice(5,7)+'/'+chosenMonth.slice(0,4);
     const exchangeMonth=exchangeTotals(recsMonth);
     $('dataExchangePeriod').textContent='Mês '+chosenMonth.slice(5,7)+'/'+chosenMonth.slice(0,4);
-    $('dataExchangeSummary').innerHTML=[
-      ['Trocas registradas',formatNum(exchangeMonth.count),'green'],
-      ['Valor devolvido',formatMoney(exchangeMonth.returned),'blue'],
-      ['Produtos entregues',formatMoney(exchangeMonth.newProducts),'blue'],
-      ['Diferenças recebidas',formatMoney(exchangeMonth.received),'green'],
-      ['Diferenças pendentes',formatMoney(exchangeMonth.pending),'amber'],
-      ['Créditos do cliente',formatMoney(exchangeMonth.credit),'amber']
-    ].map(([name,val,color])=>`<div class="exchangeMetric ${color}"><span>${name}</span><strong>${val}</strong></div>`).join('');
+    renderExchangeSummary('dataExchangeSummary', exchangeMonth, {count:'Trocas registradas', returned:'Valor devolvido', newProducts:'Produtos entregues', received:'Diferenças recebidas', pending:'Diferenças pendentes', credit:'Créditos do cliente'});
 
     const kpis = [
       { t:"Atendimentos (mês)", v: formatNum(a.atend) },
@@ -3647,6 +3684,8 @@ body{ background-attachment: fixed; }
     const ex=exchangeTotals(state.records.filter(r=>r.monthKey===mk));
     const exInfo=$('goalsExchangeNote');
     if(exInfo)exInfo.textContent=`Trocas no período: ${ex.count} · Diferenças recebidas: ${formatMoney(ex.received)} · Pendentes: ${formatMoney(ex.pending)}. Valores separados do atingimento da meta.`;
+    const exPeriod=$('goalsExchangePeriod'); if(exPeriod) exPeriod.textContent = 'Mês '+mk.slice(5,7)+'/'+mk.slice(0,4);
+    renderExchangeSummary('goalsExchangeSummary', ex, {count:'Trocas do mês', returned:'Valor devolvido', newProducts:'Novo produto', received:'Diferença recebida', pending:'Saldo pendente', credit:'Crédito do cliente'});
     const moneyShort=(n)=>'R$ '+new Intl.NumberFormat('pt-BR',{notation:'compact',maximumFractionDigits:1}).format(Number(n||0));
     const decimal=(n)=>new Intl.NumberFormat('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1}).format(Number(n||0));
     const safeId='goalsV82Fill';
@@ -3923,6 +3962,8 @@ body{ background-attachment: fixed; }
     const ex=exchangeTotals(monthRecords);
     const exNote=$('metaRankExchangeNote');
     if(exNote)exNote.textContent=`Trocas/garantias: ${ex.count} · Valor pago nas trocas: ${formatMoney(ex.received)} · Pendente: ${formatMoney(ex.pending)}. Não entram nas metas e no ranking de vendas.`;
+    const exPeriod=$('metaRankExchangePeriod'); if(exPeriod) exPeriod.textContent = 'Mês '+mk.slice(5,7)+'/'+mk.slice(0,4);
+    renderExchangeSummary('metaRankExchangeSummary', ex, {count:'Trocas do mês', returned:'Valor devolvido', newProducts:'Novo produto', received:'Pago na troca', pending:'Pendente', credit:'Crédito do cliente'});
 
     const kpis = $("metaRankKpis");
     const cards=[
@@ -4147,14 +4188,7 @@ body{ background-attachment: fixed; }
     const ticket=a.sales>0?a.revenue/a.sales:0;
     const noSales=recs.filter(r=>r.outcome==='nosold').length;
     const exchanges=exchangeTotals(recs);
-    const dex=$('dashExchangeSummary');
-    if(dex)dex.innerHTML=[['Trocas / garantias',formatNum(exchanges.count),'blue'],
-      ['Devolvido',formatMoney(exchanges.returned),'blue'],
-      ['Novo produto',formatMoney(exchanges.newProducts),'blue'],
-      ['Recebido a mais',formatMoney(exchanges.received),'green'],
-      ['Pendente',formatMoney(exchanges.pending),'amber'],
-      ['Crédito do cliente',formatMoney(exchanges.credit),'amber']]
-      .map(([label,val,color])=>`<div class="exchangeMetric ${color}"><span>${label}</span><strong>${val}</strong></div>`).join('');
+    renderExchangeSummary('dashExchangeSummary', exchanges, {count:'Trocas / garantias', returned:'Devolvido', newProducts:'Novo produto', received:'Recebido a mais', pending:'Pendente', credit:'Crédito do cliente'});
     const goalMonth=sel.mode==="month"?Number(getGoalsForMonth(sel.month)?.monthly||0):0;
     const goalPct=goalMonth>0?(a.revenue/goalMonth)*100:0;
 
@@ -4431,8 +4465,7 @@ body{ background-attachment: fixed; }
     const prevRecords=all.filter(r=>ncInRange(r,span.pastStart,span.pastEnd));
     const current=ncSummary(currRecords),previous=ncSummary(prevRecords);
     const exsum=exchangeTotals(currRecords);
-    const exel=$('ncExchangeSummary');
-    if(exel)exel.innerHTML=[['Trocas',formatNum(exsum.count),'blue'],['Devolvidos',formatMoney(exsum.returned),'blue'],['Novos produtos',formatMoney(exsum.newProducts),'blue'],['Pagamentos recebidos',formatMoney(exsum.received),'green'],['Pendente',formatMoney(exsum.pending),'amber'],['Crédito do cliente',formatMoney(exsum.credit),'amber']].map(([label,value,color])=>`<div class="exchangeMetric ${color}"><span>${label}</span><strong>${value}</strong></div>`).join('');
+    renderExchangeSummary('ncExchangeSummary', exsum, {count:'Trocas', returned:'Devolvidos', newProducts:'Novos produtos', received:'Pagamentos recebidos', pending:'Pendente', credit:'Crédito do cliente'});
     const status=$('ncStatus')?.value||'all';
     const visible=status==='all'?currRecords:currRecords.filter(r=>ncKind(r)===status);
     ncRenderKpis(current,previous);ncSegments(current);
@@ -5291,6 +5324,7 @@ body{ background-attachment: fixed; }
               </div>
               <aside class="ligaHomeRail">
                 <div id="arenaOverviewBest"></div>
+                <section class="ligaHomeDarkCard"><div class="ligaHomeCardHead"><b>TROCAS DA LIGA</b><span>Valores</span></div><div id="arenaOverviewExchange"></div></section>
                 <section class="ligaHomeDarkCard"><div class="ligaHomeCardHead"><b>MURAL DA LIGA</b><span>Time ONDIS</span></div><div id="arenaOverviewMural"></div></section>
                 <section class="ligaHomeDarkCard"><div class="ligaHomeCardHead"><b>PRÓXIMAS RECOMPENSAS</b><button type="button" data-arena-go="rewards">Ver todas</button></div><div id="arenaOverviewRewards"></div></section>
               </aside>
@@ -5339,6 +5373,7 @@ body{ background-attachment: fixed; }
     const overviewMissionsEl = document.getElementById('arenaOverviewMissions');
     const overviewAchievementsEl = document.getElementById('arenaOverviewAchievements');
     const overviewBestEl = document.getElementById('arenaOverviewBest');
+    const overviewExchangeEl = document.getElementById('arenaOverviewExchange');
     const overviewMuralEl = document.getElementById('arenaOverviewMural');
     const overviewRewardsEl = document.getElementById('arenaOverviewRewards');
     const overviewRewardEl = document.getElementById('arenaOverviewReward');
@@ -5636,6 +5671,8 @@ body{ background-attachment: fixed; }
       rewardEl.innerHTML = `<div class="ondisV7RewardIntro"><div><span class="ligaEyebrow">TEMPORADA DE CONQUISTAS</span><h3>Recompensas da Liga</h3><p>Ganhe XP e desbloqueie suas recompensas. A gestão configura os prêmios e os pontos necessários.</p></div>${['admin','superadmin'].includes(arenaRole)?'<button class="btn ondisV7Configure" id="btnEditRewardArena">Configurar recompensas</button>':''}</div><div class="ondisV7RewardGallery">${rewardCollection.map(r=>{const pct=clamp(seasonXP/Math.max(1,r.xp)*100,0,100);return `<article class="ondisV7RewardCard"><img src="${ligaRewardImage(r)}" alt="${safeArenaText(r.title)}"><span class="ondisV7RewardType">${safeArenaText(r.type)}</span><h4>${safeArenaText(r.title)}</h4><p>${safeArenaText(r.description||'Recompensa da temporada')}</p><strong>${Number(r.xp).toLocaleString('pt-BR')} XP</strong><div class="ligaV3Progress"><i style="width:${pct}%"></i></div><small>${pct>=100?'Desbloqueada':'Progresso: '+pct.toFixed(0)+'%'}</small></article>`}).join('')||'<div class="hint">Nenhuma recompensa ativa.</div>'}</div><div class="ligaRewardCard ${teamEnergy>=100?'unlocked':''}"><img src="./ondis-lenda-premium.png" alt="Lenda ONDIS"><div><span class="ligaEyebrow">${teamEnergy>=100?'Recompensa coletiva liberada':'Recompensa coletiva'}</span><h3>${safeArenaText(teamReward.title)}</h3><p>${safeArenaText(teamReward.description)}</p><div class="meter good"><i style="width:${teamEnergy}%"></i></div><small>${formatMoney(teamRevenue)} de ${formatMoney(teamGoal)} · ${teamEnergy.toFixed(0)}%</small></div></div>`;
       const rewardEditButton=document.getElementById('btnEditRewardArena');if(rewardEditButton)rewardEditButton.onclick=abrirEditorSelos;
       if(overviewRewardEl) overviewRewardEl.innerHTML = `<div class="ligaExactCollective"><img class="ondisV7CollectiveArt" src="./ondis-reward-legendary.png" alt="Baú coletivo"><div><span>RECOMPENSA COLETIVA DA TEMPORADA</span><h3>${safeArenaText(teamReward.title)}</h3><p>${safeArenaText(teamReward.description)}</p></div><div class="ligaCollectiveProgress"><div class="ligaV3Progress"><i style="width:${teamEnergy}%"></i></div><b>${formatMoney(teamRevenue)} de ${formatMoney(teamGoal)} · ${teamEnergy.toFixed(0)}%</b></div>${['admin','superadmin'].includes(arenaRole)?'<button class="btn" id="btnOverviewEditReward">Editar recompensa</button>':''}</div>`; const overviewEdit=document.getElementById('btnOverviewEditReward'); if(overviewEdit) overviewEdit.onclick=abrirEditorSelos;
+      const ligaExchange = exchangeTotals(state.records.filter(r=> r.dateKey>=fromKey && r.dateKey<=toKey));
+      if(overviewExchangeEl) overviewExchangeEl.innerHTML = `<div class="exchangeReportGrid">${exchangeSummaryCards(ligaExchange,{count:'Trocas', returned:'Devolvido', newProducts:'Novo produto', received:'Diferença recebida', pending:'Saldo pendente', credit:'Crédito do cliente'})}</div><div class="exchangeGoalNote" style="margin-top:10px">Período ${safeArenaText(rangeLabel)} · trocas acompanhadas à parte do XP, das metas e do ranking da Liga.</div>`;
       maybeCelebrateTeamChest(teamEnergy,teamReward,mk2);
 
       // Records for seller in chosen date range (for KPIs && chart)
