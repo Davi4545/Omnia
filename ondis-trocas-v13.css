@@ -1,0 +1,53 @@
+/* ONDIS V13 — valores de trocas: somente interface, sem alterar estilos globais */
+#viewOps .exchangeFinance,
+.exchangeFinance{margin-top:14px;padding:16px;border:1px solid #d5e2f2;border-radius:17px;background:linear-gradient(145deg,#f6f9ff,#ffffff);color:#19273d;box-shadow:0 6px 20px rgba(38,62,97,.05)}
+.exchangeFinanceHeader{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.exchangeFinanceHeader>div{display:flex;flex-direction:column;gap:3px}
+.exchangeFinanceHeader b{font-size:15px;font-weight:850;color:#16243a}
+.exchangeFinanceHeader small{font-size:11px;color:#566984}
+.exchangeFinanceHeader>span{font-size:10px;font-weight:850;color:#8a2341;background:#fce7ed;border:1px solid #f6ced8;padding:7px 10px;border-radius:999px}
+.exchangeFinanceFields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.exchangeFinanceFields .field{min-width:0!important;display:flex;flex-direction:column;gap:5px}
+.exchangeFinanceFields label{font-size:12px!important;font-weight:750!important;color:#2f4764!important}
+.exchangeFinanceFields input{background:#fff!important;border:1px solid #cbd8e8!important;color:#152338!important;box-shadow:none!important;width:100%;min-width:0;min-height:43px;border-radius:11px!important;font-size:16px;font-weight:750}
+.exchangeFinanceFields input:focus{outline:2px solid #a8bfdc!important;outline-offset:1px}
+.exchangeFinanceFields input:disabled{opacity:.6;background:#e9edf3!important}
+.exchangeFinanceFields .field small{font-size:10px;color:#69778a}
+.exchangeFinanceSummary{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:13px;padding:12px 14px;border:1px solid #bfe5d3;border-radius:12px;background:#eaf9f1;flex-wrap:wrap}
+.exchangeFinanceSummary strong{font-size:14px;color:#095d3a}
+.exchangeFinanceSummary small{font-size:12px;color:#28634c}
+.exchangeFinanceSummary[data-kind="credit"]{background:#fff7e5;border-color:#ead6ad}
+.exchangeFinanceSummary[data-kind="credit"] strong,.exchangeFinanceSummary[data-kind="credit"] small{color:#855015}
+.exchangeFinanceSummary[data-kind="even"]{background:#eaf2ff;border-color:#cedbee}
+.exchangeFinanceSummary[data-kind="even"] strong,.exchangeFinanceSummary[data-kind="even"] small{color:#24486e}
+.exchangeFinance #exObs,.exchangeFinance textarea,
+#viewOps textarea[id^="exObs_"]{width:100%;min-height:76px;resize:vertical;color:#152338!important;background:#fff!important;border:1px solid #cbd8e8!important;border-radius:11px!important;padding:10px!important;font-size:13px}
+.exchangeReportPanel{--exchangeBg:#ffffff;--exchangeText:#162337;--exchangeSub:#657388;--exchangeBorder:#e1e8f2;--exchangeChip:#f6f8fc;margin:16px 0;padding:18px;border:1px solid var(--exchangeBorder);border-radius:20px;background:var(--exchangeBg);box-shadow:0 8px 28px rgba(29,49,78,.06);color:var(--exchangeText)!important}
+.exchangeReportPanel header{display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:12px!important;min-height:initial!important;margin:0 0 15px!important;border:0!important;padding:0!important;background:transparent!important;box-shadow:none!important;position:static!important;backdrop-filter:none!important}
+.exchangeReportPanel header h3{font-size:17px!important;font-weight:850!important;letter-spacing:-.02em!important;line-height:1.25!important;margin:4px 0 5px!important;color:var(--exchangeText)!important}
+.exchangeReportPanel header p{font-size:12px!important;margin:0!important;line-height:1.55!important;color:var(--exchangeSub)!important}
+.exchangeOverline{display:block;font-size:10px;letter-spacing:.12em;color:#c51b42!important;font-weight:850}
+.exchangeReportPill{align-self:center;padding:8px 11px;border-radius:999px;border:1px solid var(--exchangeBorder);background:var(--exchangeChip);color:var(--exchangeText);font-size:11px;font-weight:700;white-space:nowrap}
+.exchangeReportGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.exchangeMetric{padding:14px 15px;border:1px solid var(--exchangeBorder);border-radius:14px;background:var(--exchangeChip);display:flex;flex-direction:column;gap:9px;min-width:0}
+.exchangeMetric span{font-size:11px;font-weight:750;color:var(--exchangeSub)!important}
+.exchangeMetric strong{font-size:clamp(16px,1.8vw,21px);font-variant-numeric:tabular-nums;letter-spacing:-.025em;color:var(--exchangeText)!important;overflow-wrap:anywhere}
+.exchangeMetric.green{border-bottom:3px solid #21a179}
+.exchangeMetric.blue{border-bottom:3px solid #3b82f6}
+.exchangeMetric.amber{border-bottom:3px solid #e6aa44}
+.exchangeGoalNote{margin-top:12px;border-left:3px solid #2563eb;background:#edf5ff;padding:12px 14px;border-radius:9px;font-size:12px;line-height:1.6;color:#23486e}
+#viewNoConv .ncExchangeCell{font-size:11px;min-width:240px;line-height:1.5;color:#30445f}
+.dashboardDonutLegend .exch{color:#2766c2;display:flex;gap:5px;align-items:center}
+.dashboardDonutLegend .exch i{display:inline-block;background:#3988e8;width:8px;height:8px;border-radius:50%}
+/* Contrast on explicitly light cards, even when a global theme inherits white text. */
+.exchangeReportPanel *:not(header):not(.exchangeReportGrid):not(.exchangeMetric){text-shadow:none}
+[data-theme="neon"] .exchangeReportPanel,[data-theme="ocean"] .exchangeReportPanel,[data-theme="sunset"] .exchangeReportPanel,[data-theme="purple"] .exchangeReportPanel{--exchangeBg:#172333;--exchangeText:#f2f6ff;--exchangeSub:#c0ccdc;--exchangeBorder:#3c5066;--exchangeChip:#233148}
+[data-theme="neon"] .exchangeMetric,[data-theme="ocean"] .exchangeMetric,[data-theme="sunset"] .exchangeMetric,[data-theme="purple"] .exchangeMetric{color:#f2f6ff}
+@media(max-width:900px){.exchangeReportGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.exchangeFinanceFields{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:580px){.exchangeFinanceFields,.exchangeReportGrid{grid-template-columns:1fr}.exchangeReportPanel{padding:14px}.exchangeMetric{padding:11px 12px}.exchangeMetric strong{font-size:19px}.exchangeFinance{padding:12px}}
+
+.exchangeClientFields{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:13px;padding-top:12px;border-top:1px dashed #c8d5e5}
+.exchangeClientFields .field{min-width:0!important;display:flex;flex-direction:column;gap:5px}
+.exchangeClientFields .field label{color:#304761!important;font-weight:740!important;font-size:12px!important}
+.exchangeClientFields input{width:100%;min-width:0;background:#fff!important;color:#18253b!important;border:1px solid #cbd8e8!important;border-radius:10px!important}
+@media(max-width:580px){.exchangeClientFields{grid-template-columns:1fr}}

@@ -1080,6 +1080,7 @@ body{ background-attachment: fixed; }
 <link rel="stylesheet" href="./ondis-dados-metas-v8.css?v=8.1.0">
 <link rel="stylesheet" href="./ondis-metas-visual-v8-2.css?v=8.2.0">
 <link rel="stylesheet" href="./ondis-nao-convertidos-v10.css?v=10.0.0">
+<link rel="stylesheet" href="./ondis-trocas-v13.css?v=13.1"/>
 </head>
 <body>
 <div class="appShell" id="appShell">
@@ -1212,12 +1213,16 @@ body{ background-attachment: fixed; }
   </div>
   <div class="dadosRevenuePeriod"><span id="dadosRevenueMonthLabel">No mês selecionado</span><strong id="dadosRevenueMonth">R$ 0,00</strong><small>Somente vendas concluídas</small></div>
 </div>
+<section class="exchangeReportPanel" aria-label="Resumo de trocas do mês">
+  <header><div><span class="exchangeOverline">ACOMPANHAMENTO DE TROCAS</span><h3>Trocas e diferenças de valores</h3><p>Os valores recebidos em trocas são informados separadamente das vendas, metas e comissões.</p></div><span class="exchangeReportPill" id="dataExchangePeriod">Mês selecionado</span></header>
+  <div class="exchangeReportGrid" id="dataExchangeSummary"></div>
+</section>
 <div class="kpis" id="kpisData"></div>
 <div class="divider"></div>
 <div id="dataTableWrap"></div>
 <div class="divider"></div>
 <div class="hint">
-          • <b>Conversão</b> = vendas ÷ atendimentos<br/>
+          • <b>Conversão comercial</b> = vendas ÷ (vendas + não vendas); trocas não compõem a taxa.<br/>
           • <b>P.A. por venda</b> = peças ÷ vendas<br/>
           • <b>P.A. por atendimento</b> = peças ÷ atendimentos
         </div>
@@ -1286,7 +1291,8 @@ body{ background-attachment: fixed; }
           <div class="goalsChartLegend goalsChartLegendBottom"><span><i class="goalLegendExpected"></i> Metas acumuladas</span><span><i class="goalLegendReal"></i> Realizado acumulado</span></div>
         </article>
       </div>
-      <p class="goalsInsightsFootnote">Os gráficos usam somente vendas concluídas. Valores editados aparecem como prévia; o Firebase só recebe as mudanças após você salvar a meta correspondente.</p>
+      <p class="goalsInsightsFootnote">Os gráficos usam somente vendas concluídas. Diferenças recebidas por trocas não aumentam automaticamente metas ou comissões.</p>
+      <div id="goalsExchangeNote" class="exchangeGoalNote" role="status"></div>
     </section>
     <p class="goalsSyncHint" id="goalsSyncHint" role="status" aria-live="polite">Cada decêndio é independente: ao mudar R$, muda apenas a % dele, e vice-versa. Salve pelo botão do período ou use <b>Salvar metas</b> para confirmar todos os campos.</p>
     <div class="goalsFootActions"><div class="goalsClosed"><span>Decêndio atual encerrado?</span><input disabled id="goalWeekClosed" aria-label="Status do fechamento"/></div>
@@ -1325,6 +1331,7 @@ body{ background-attachment: fixed; }
     </div>
   </div>
   <div class="rankKpiStrip" id="metaRankKpis"></div>
+  <div class="exchangeGoalNote" id="metaRankExchangeNote" role="status"></div>
   <div class="rankGoalGrid">
     <article class="rankPanel rankProgressCard"><div class="rankPanelHead"><div><span>Progresso Geral da Meta</span><small id="rankProgressSubtitle">Mês selecionado</small></div></div><div id="rankProgressRing"></div></article>
     <article class="rankPanel rankEvolutionCard"><div class="rankPanelHead"><div><span>Evolução no mês</span><small>Meta × realizado acumulado</small></div><span class="rankPill">Diário</span></div><div class="rankEvolutionChart" id="rankEvolutionChart"></div></article>
@@ -1365,6 +1372,7 @@ body{ background-attachment: fixed; }
 
     <div class="ncKpiGrid" id="ncKpis" aria-label="Indicadores de conversão"></div>
     <div class="ncSegmentRow" id="ncSegments" aria-label="Resumo por resultado"></div>
+    <section class="exchangeReportPanel ncExchangePanel"><header><div><span class="exchangeOverline">DETALHAMENTO DAS TROCAS</span><h3>Produtos, diferenças e recebimentos</h3><p>Veja o movimento financeiro das trocas sem contabilizar como vendas novas.</p></div></header><div class="exchangeReportGrid" id="ncExchangeSummary"></div></section>
     <div class="ncChartsGrid">
       <article class="ncPanel ncTrendPanel">
         <div class="ncPanelHead"><div><h3>Evolução da conversão</h3><p>Vendas ÷ (vendas + não vendas). Trocas ficam de fora.</p></div><div class="ncToggle" role="group" aria-label="Agrupar evolução"><button type="button" data-nc-bucket="daily" class="active">Diário</button><button type="button" data-nc-bucket="weekly">Semanal</button></div></div>
@@ -1381,7 +1389,7 @@ body{ background-attachment: fixed; }
     <article class="ncPanel ncHistoryPanel">
       <div class="ncPanelHead"><div><h3>Histórico detalhado</h3><p>Consulte as informações originais dos atendimentos, sem modificar os registros.</p></div><span id="ncHistoryCount" class="ncHistoryCount"></span></div>
       <div class="ncHistoryToolbar"><div id="ncHistoryTabs" class="ncHistoryTabs" role="group" aria-label="Filtrar registros"></div><span class="ncHistoryInfo">Ordenado do mais recente para o mais antigo</span></div>
-      <div class="ncTableScroller"><table class="ncTable ncHistoryTable"><thead><tr><th>Data</th><th>Vendedor</th><th>Cliente</th><th>Categoria</th><th>Motivo</th><th>Observação</th><th>Resultado</th></tr></thead><tbody id="ncHistoryRows"></tbody></table></div>
+      <div class="ncTableScroller"><table class="ncTable ncHistoryTable"><thead><tr><th>Data</th><th>Vendedor</th><th>Cliente</th><th>Categoria</th><th>Motivo</th><th>Observação</th><th>Resultado</th><th>Valores da troca</th></tr></thead><tbody id="ncHistoryRows"></tbody></table></div>
       <div class="ncPager"><span id="ncPageInfo">—</span><div><button class="ncBtn ncBtnSecondary" id="ncPrevPage" type="button">Anterior</button><button class="ncBtn ncBtnSecondary" id="ncNextPage" type="button">Próxima</button></div></div>
     </article>
     <div class="ncFootNote">Os indicadores utilizam apenas os registros disponíveis da loja e os filtros escolhidos. Trocas e garantias são tratadas separadamente das oportunidades comerciais.</div>
@@ -1423,6 +1431,10 @@ body{ background-attachment: fixed; }
   </div>
 
   <div class="dashboardExecutiveKpis" id="dashKpis"></div>
+  <section class="exchangeReportPanel exchangeDashReport" aria-label="Trocas e saldos do período">
+    <header><div><span class="exchangeOverline">TROCAS E GARANTIAS</span><h3>Diferenças dos atendimentos</h3><p>Recebimentos de trocas não entram automaticamente nas metas ou comissões.</p></div></header>
+    <div class="exchangeReportGrid" id="dashExchangeSummary"></div>
+  </section>
 
   <div class="dashboardMainGrid">
     <article class="dashboardPanel dashboardRevenuePanel">
@@ -2103,18 +2115,85 @@ body{ background-attachment: fixed; }
     let atend=records.length;
     let sales=0, revenue=0, pieces=0, totalTime=0;
     for(const r of records){
-      if(r.outcome === "sold") sales++;
-      revenue += Number(r.value||0);
-      pieces += Number(r.pieces||0);
+      if(r.outcome === "sold"){
+        sales++;
+        revenue += Number(r.value||0);
+        pieces += Number(r.pieces||0);
+      }
       totalTime += Math.max(0, (r.tsEnd||r.tsStart||0) - (r.tsStart||0));
     }
-    const conv = atend>0 ? (sales/atend)*100 : 0;
+    const commercial=records.filter(r=>r.outcome==='sold'||r.outcome==='nosold').length;
+    const conv = commercial>0 ? (sales/commercial)*100 : 0;
     const paPerSale = sales>0 ? (pieces/sales) : 0;
     const paPerAttend = atend>0 ? (pieces/atend) : 0;
     const avgTimeSec = atend>0 ? Math.round((totalTime/atend)/1000) : 0;
     return { atend, sales, revenue, pieces, conv, paPerSale, paPerAttend, avgTimeSec };
   }
 
+  // ===== ONDIS V13 · Trocas com valores (sem duplicar vendas) =====
+  // Produtos envolvidos NÃO são novas vendas: só o adicional efetivamente recebido
+  // entra no demonstrativo de entradas de troca, separado das metas/comissões.
+  function exchangeCents(v){
+    const n=Number(v);
+    return Number.isFinite(n)&&n>=0?Math.round(n*100):0;
+  }
+  function exchangeMoneyFromCents(c){return Math.round(c)/100;}
+  function exchangeCalc(oldValue,newValue,paidValue){
+    const oldC=exchangeCents(oldValue),newC=exchangeCents(newValue);
+    const delta=newC-oldC;
+    const paid=Math.min(Math.max(0,exchangeCents(paidValue)),Math.max(0,delta));
+    return {oldValue:exchangeMoneyFromCents(oldC),newValue:exchangeMoneyFromCents(newC),difference:exchangeMoneyFromCents(delta),paidAmount:exchangeMoneyFromCents(paid),pendingAmount:exchangeMoneyFromCents(Math.max(0,delta-paid)),creditAmount:exchangeMoneyFromCents(Math.max(0,-delta))};
+  }
+  function exchangeDetails(r){
+    if(!r || !(r.outcome==='exchange'||r.noSale?.isExchange)) return null;
+    const ex=r.exchange||{};
+    const old=Number(ex.oldValue??ex.originalValue);
+    const news=Number(ex.newValue??ex.replacementValue);
+    if(!Number.isFinite(old)||!Number.isFinite(news))return null; // legacy sem valores
+    return exchangeCalc(old,news,Number(ex.paidAmount||0));
+  }
+  function exchangeTotals(records){
+    const exchanges=records.filter(r=>r?.outcome==='exchange'||r?.noSale?.isExchange);
+    const info=exchanges.map(exchangeDetails).filter(Boolean);
+    return {
+      count:exchanges.length,valued:info.length,
+      returned:exchangeMoneyFromCents(info.reduce((n,v)=>n+exchangeCents(v.oldValue),0)),
+      newProducts:exchangeMoneyFromCents(info.reduce((n,v)=>n+exchangeCents(v.newValue),0)),
+      received:exchangeMoneyFromCents(info.reduce((n,v)=>n+exchangeCents(v.paidAmount),0)),
+      pending:exchangeMoneyFromCents(info.reduce((n,v)=>n+exchangeCents(v.pendingAmount),0)),
+      credit:exchangeMoneyFromCents(info.reduce((n,v)=>n+exchangeCents(v.creditAmount),0))
+    };
+  }
+  function exchangeResultText(r){
+    if(!(r?.outcome==='exchange'||r?.noSale?.isExchange))return '';
+    const v=exchangeDetails(r);
+    if(!v)return 'Troca / garantia sem valores registrados';
+    if(v.difference>0)return `${formatMoney(v.oldValue)} → ${formatMoney(v.newValue)} · pago ${formatMoney(v.paidAmount)} · pendente ${formatMoney(v.pendingAmount)}`;
+    if(v.difference<0)return `${formatMoney(v.oldValue)} → ${formatMoney(v.newValue)} · crédito cliente ${formatMoney(v.creditAmount)}`;
+    return `${formatMoney(v.oldValue)} → ${formatMoney(v.newValue)} · sem diferença`;
+  }
+  function exchangeFieldValue(id){
+    const el=$(id),raw=String(el?.value||'').trim();
+    if(!raw || !/^(?:\d{1,3}(?:\.\d{3})+|\d+)(?:,\d{1,2})?$/.test(raw)) return null;
+    const v=parseBRNumber(raw);
+    return Number.isFinite(v)&&v>=0?v:null;
+  }
+  function updateExchangePreview(cid){
+    const target=$('exFinanceSummary_'+cid);if(!target)return;
+    const old=exchangeFieldValue('exOldValue_'+cid),newer=exchangeFieldValue('exNewValue_'+cid);
+    if(old===null||newer===null){target.innerHTML='<strong>Informe os dois valores</strong><small>Os valores devem ser positivos, usando vírgula para centavos.</small>';return;}
+    const paidEl=$('exPaid_'+cid),diff=exchangeCalc(old,newer,0);
+    if(diff.difference<=0 && paidEl)paidEl.value='0,00';
+    if(paidEl)paidEl.disabled=diff.difference<=0;
+    const paid=exchangeFieldValue('exPaid_'+cid);
+    const check=exchangeCalc(old,newer,paid||0);
+    target.innerHTML=diff.difference>0
+      ? `<strong>Cliente paga ${formatMoney(check.difference)}</strong><small>Recebido agora: ${formatMoney(check.paidAmount)} · Ainda falta: ${formatMoney(check.pendingAmount)}.</small>`
+      : diff.difference<0
+        ? `<strong>Crédito do cliente: ${formatMoney(check.creditAmount)}</strong><small>Não é faturamento. Resolva eventual estorno ou crédito no caixa.</small>`
+        : `<strong>Troca sem diferença de valor</strong><small>Nenhum pagamento adicional necessário.</small>`;
+    target.dataset.kind=diff.difference>0?'positive':diff.difference<0?'credit':'even';
+  }
   function getOutcomeLabel(outcome){
     if(outcome === "sold") return "Vendeu";
     if(outcome === "exchange") return "Troca";
@@ -2483,7 +2562,20 @@ body{ background-attachment: fixed; }
               <div class="field" style="min-width:220px"><label>Categoria do produto</label><select id="exItemType_${cid}"><option value="">Selecione…</option>${PRODUCT_CATEGORIES.map(i=>`<option value="${escOpt(i)}">${escOpt(i)}</option>`).join("")}</select></div>
               <div class="field" style="min-width:180px"><label>${escOpt(DETALHE_CAMPO.rotulo)}</label><input id="exSize_${cid}" placeholder="${escOpt(DETALHE_CAMPO.exemplo)}" /></div>
             </div>
-            <div class="field" style="min-width:100%;margin-top:8px"><label>O que aconteceu?</label><input id="exObs_${cid}" placeholder="Ex: cliente voltou para garantia / troca de tamanho, cor ou modelo" /></div>
+            <section class="exchangeFinance" aria-label="Valores da troca">
+              <div class="exchangeFinanceHeader"><div><b>Valores da troca</b><small>Preencha o produto entregue e o novo produto</small></div><span>Troca / Garantia</span></div>
+              <div class="exchangeFinanceFields">
+                <div class="field"><label for="exOldValue_${cid}">Produto devolvido (R$)</label><input id="exOldValue_${cid}" inputmode="decimal" autocomplete="off" placeholder="Ex: 350,00" data-ex-change="${cid}"/></div>
+                <div class="field"><label for="exNewValue_${cid}">Produto novo (R$)</label><input id="exNewValue_${cid}" inputmode="decimal" autocomplete="off" placeholder="Ex: 490,00" data-ex-change="${cid}"/></div>
+                <div class="field"><label for="exPaid_${cid}">Valor pago agora (R$)</label><input id="exPaid_${cid}" inputmode="decimal" autocomplete="off" value="0,00" data-ex-change="${cid}"/><small>Não contabiliza valores pendentes como recebidos.</small></div>
+              </div>
+              <div class="exchangeFinanceSummary" id="exFinanceSummary_${cid}" role="status"><strong>Informe os valores para calcular a diferença</strong></div>
+              <div class="exchangeClientFields">
+                <div class="field"><label for="exClientName_${cid}">Cliente (opcional)</label><input id="exClientName_${cid}" autocomplete="name" placeholder="Nome para localizar no histórico"/></div>
+                <div class="field"><label for="exClientPhone_${cid}">Telefone (opcional)</label><input id="exClientPhone_${cid}" inputmode="tel" autocomplete="tel" placeholder="Contato do cliente"/></div>
+              </div>
+            </section>
+            <div class="field" style="min-width:100%;margin-top:8px"><label>O que aconteceu?</label><textarea id="exObs_${cid}" rows="2" placeholder="Ex: garantia da armação ou troca de tamanho/modelo"></textarea></div>
           </div>
           <div class="field" style="min-width:100%;margin-top:8px"><label>Observação (opcional)</label><input id="saleObs_${cid}" placeholder="Ex: cliente só pesquisando / voltou depois / detalhes do atendimento" /></div>
           <div class="actions" style="margin-top:9px"><button class="btn good" data-act="finalize" data-cid="${cid}">Finalizar</button><button class="btn" data-act="cancel" data-cid="${cid}">Cancelar</button></div>
@@ -2500,6 +2592,8 @@ body{ background-attachment: fixed; }
       recentBox.innerHTML=`<div class="attRecentHead"><b>Últimos atendimentos</b><span>Ver todos</span></div><div class="attRecentList">${recent.map(r=>{const rs=getSeller(r.sellerId),nm=(r.clientName||rs?.name||'Atendimento');return `<div class="attRecentOne"><span class="attRecentAvatar">${rs?.photo?`<img src="${rs.photo}">`:(nm[0]||'?')}</span><b>${nm}</b><em>${getOutcomeShortSymbol(r.outcome)}</em></div>`}).join('')}</div>`;
       panel.appendChild(recentBox);
     }
+
+    panel.querySelectorAll('[data-ex-change]').forEach(input=>input.addEventListener('input',()=>updateExchangePreview(input.dataset.exChange)));
 
     // delegation within panel
     panel.querySelectorAll('button[data-act]').forEach(btn=>{
@@ -2762,6 +2856,7 @@ body{ background-attachment: fixed; }
     const avgConv = rows.length ? rows.reduce((sum,row)=> sum + Number(row.conv||0), 0) / rows.length : 0;
     const leader = rows[0];
     const topThree = rows.slice(0,3);
+    const exToday=exchangeTotals(recsToday);
 
     const avatar = (seller)=> seller?.photo
       ? `<img src="${seller.photo}" alt="${seller.name||'Vendedor'}">`
@@ -2825,6 +2920,7 @@ body{ background-attachment: fixed; }
         <div class="hint">Ordenado por <b>Conversão</b>. Empate por <b>mais vendas</b> e, em seguida, <b>faturamento</b>.</div>
       </div>
       ${summary}
+      <div class="exchangeGoalNote" role="status">Trocas do dia: ${exToday.count} · Recebido nas trocas: ${formatMoney(exToday.received)} · Diferenças pendentes: ${formatMoney(exToday.pending)}. Separadas das vendas do ranking.</div>
       <div class="rankingPodiumWrap">${podium}</div>
       <div class="rankingBoard">
         <div class="rankingBoardHead">
@@ -3028,6 +3124,16 @@ body{ background-attachment: fixed; }
     $('dadosRevenueAllTime').textContent=formatMoney(allRevenue);
     $('dadosRevenueMonth').textContent=formatMoney(monthRevenue);
     $('dadosRevenueMonthLabel').textContent='No mês de '+chosenMonth.slice(5,7)+'/'+chosenMonth.slice(0,4);
+    const exchangeMonth=exchangeTotals(recsMonth);
+    $('dataExchangePeriod').textContent='Mês '+chosenMonth.slice(5,7)+'/'+chosenMonth.slice(0,4);
+    $('dataExchangeSummary').innerHTML=[
+      ['Trocas registradas',formatNum(exchangeMonth.count),'green'],
+      ['Valor devolvido',formatMoney(exchangeMonth.returned),'blue'],
+      ['Produtos entregues',formatMoney(exchangeMonth.newProducts),'blue'],
+      ['Diferenças recebidas',formatMoney(exchangeMonth.received),'green'],
+      ['Diferenças pendentes',formatMoney(exchangeMonth.pending),'amber'],
+      ['Créditos do cliente',formatMoney(exchangeMonth.credit),'amber']
+    ].map(([name,val,color])=>`<div class="exchangeMetric ${color}"><span>${name}</span><strong>${val}</strong></div>`).join('');
 
     const kpis = [
       { t:"Atendimentos (mês)", v: formatNum(a.atend) },
@@ -3060,7 +3166,7 @@ body{ background-attachment: fixed; }
         return b.revenue - a.revenue;
       });
       const table = document.createElement("table");
-      table.innerHTML = `<thead><tr><th>#</th><th>Vendedor</th><th>Atend.</th><th>Vendas</th><th>Conv.</th><th>P.A.(venda)</th><th>Fat.</th></tr></thead>`;
+      table.innerHTML = `<thead><tr><th>#</th><th>Vendedor</th><th>Atend.</th><th>Vendas</th><th>Trocas</th><th>Conv.</th><th>P.A.(venda)</th><th>Fat.</th></tr></thead>`;
       const tb = document.createElement("tbody");
       rows.forEach((r, idx)=>{
         const s = getSeller(r.sellerId);
@@ -3068,6 +3174,7 @@ body{ background-attachment: fixed; }
         tr.innerHTML = `<td>${idx+1}</td>
           <td><button class="linkVend" data-sid="${r.sellerId}" style="background:none;border:none;color:#62a8ff;font-weight:700;cursor:pointer;text-decoration:underline;font-size:13px;padding:0">${s?.name || "Vendedor"}</button></td>
           <td>${formatNum(r.atend)}</td><td>${formatNum(r.sales)}</td>
+          <td>${formatNum(recsDay.filter(x=>x.sellerId===r.sellerId&&x.outcome==='exchange').length)}</td>
           <td>${r.conv.toFixed(1)}%</td><td>${r.paPerSale.toFixed(2)}</td><td>${formatMoney(r.revenue)}</td>`;
         tb.appendChild(tr);
       });
@@ -3114,7 +3221,7 @@ body{ background-attachment: fixed; }
         for(const d of dates){
           const rr = (byDate.get(d)||[]).filter(x=>x.sellerId===sid);
           const aa = agg(rr);
-          row.push(aa.atend ? `${aa.conv.toFixed(0)}% (${aa.sales}/${aa.atend})` : "-");
+          row.push(aa.atend ? `${aa.conv.toFixed(0)}% (${aa.sales}/${rr.filter(r=>r.outcome==='sold'||r.outcome==='nosold').length})` : "-");
         }
         return row;
       }).filter(r=> r.slice(1).some(x=>x!=="-"));
@@ -3134,7 +3241,7 @@ body{ background-attachment: fixed; }
         return b.revenue - a.revenue;
       });
       const table = document.createElement("table");
-      table.innerHTML = `<thead><tr><th>#</th><th>Vendedor</th><th>Atend.</th><th>Vendas</th><th>Conv.</th><th>P.A.(venda)</th><th>Fat.</th></tr></thead>`;
+      table.innerHTML = `<thead><tr><th>#</th><th>Vendedor</th><th>Atend.</th><th>Vendas</th><th>Trocas</th><th>Conv.</th><th>P.A.(venda)</th><th>Fat.</th></tr></thead>`;
       const tb = document.createElement("tbody");
       rows.forEach((r, idx)=>{
         const s = getSeller(r.sellerId);
@@ -3142,6 +3249,7 @@ body{ background-attachment: fixed; }
         tr.innerHTML = `<td>${idx+1}</td>
           <td><button class="linkVend" data-sid="${r.sellerId}" style="background:none;border:none;color:#62a8ff;font-weight:700;cursor:pointer;text-decoration:underline;font-size:13px;padding:0">${s?.name || "Vendedor"}</button></td>
           <td>${formatNum(r.atend)}</td><td>${formatNum(r.sales)}</td>
+          <td>${formatNum(recsMonth.filter(x=>x.sellerId===r.sellerId&&x.outcome==='exchange').length)}</td>
           <td>${r.conv.toFixed(1)}%</td><td>${r.paPerSale.toFixed(2)}</td><td>${formatMoney(r.revenue)}</td>`;
         tb.appendChild(tr);
       });
@@ -3164,14 +3272,14 @@ body{ background-attachment: fixed; }
         return;
       }
 
-      const isAdmin = (window.OMNIA_USER && window.OMNIA_USER.role === "admin");
+      const isAdmin = (window.OMNIA_USER && ["admin","superadmin"].includes(window.OMNIA_USER.role));
 
       const sorted = recsMonth.slice().sort((a,b)=> (b.tsEnd||b.tsStart) - (a.tsEnd||a.tsStart));
 
       // Monta a tabela manualmente para poder incluir botão de excluir (só ADM)
       const table = document.createElement("table");
       const thead = document.createElement("thead");
-      const headers = ["Dia","Hora","Vendedor","Resultado","Valor","Peças","Obs"];
+      const headers = ["Dia","Hora","Vendedor","Resultado","Venda","Devolvido","Novo produto","Pago na troca","Pendente / crédito","Peças","Obs"];
       if(isAdmin) headers.push("Ação");
       const trh = document.createElement("tr");
       headers.forEach(h=>{ const th=document.createElement("th"); th.textContent=h; trh.appendChild(th); });
@@ -3185,7 +3293,12 @@ body{ background-attachment: fixed; }
         const hh = String(dt.getHours()).padStart(2,"0");
         const mm = String(dt.getMinutes()).padStart(2,"0");
         const res = getOutcomeLabel(r.outcome);
-        const cells = [r.dateKey, `${hh}:${mm}`, s?.name || "Vendedor", res, formatMoney(r.value||0), formatNum(r.pieces||0), (r.obs || "").slice(0,40)];
+        const ex=exchangeDetails(r);
+        const balance=ex?(ex.pendingAmount>0?`Pendente ${formatMoney(ex.pendingAmount)}`:ex.creditAmount>0?`Crédito ${formatMoney(ex.creditAmount)}`:'Sem saldo'):'—';
+        const cells = [r.dateKey, `${hh}:${mm}`, s?.name || r.sellerName || "Vendedor", res,
+          r.outcome==='sold'?formatMoney(r.value||0):'—', ex?formatMoney(ex.oldValue):'—',
+          ex?formatMoney(ex.newValue):'—',ex?formatMoney(ex.paidAmount):'—',balance,
+          formatNum(r.pieces||0), (r.obs || "").slice(0,80)];
 
         const tr = document.createElement("tr");
         cells.forEach(c=>{ const td=document.createElement("td"); td.textContent=c; tr.appendChild(td); });
@@ -3208,6 +3321,29 @@ body{ background-attachment: fixed; }
             try{ renderKpis(); }catch(e){}
             try{ renderAll(); }catch(e){}
           });
+          if(r.outcome==='exchange' && ex && ex.pendingAmount>0){
+            const payBtn=document.createElement('button');
+            payBtn.className='btn good';payBtn.textContent='Receber diferença';
+            payBtn.style.marginRight='6px';payBtn.style.fontSize='11px';
+            payBtn.addEventListener('click',async()=>{
+              const raw=prompt(`Diferença pendente: ${formatMoney(ex.pendingAmount)}\nQuanto foi recebido agora?`,
+                ex.pendingAmount.toFixed(2).replace('.',','));
+              if(raw===null)return;
+              if(!/^(?:\d{1,3}(?:\.\d{3})+|\d+)(?:,\d{1,2})?$/.test(raw.trim())){alert('Informe um valor válido em reais.');return;}
+              const received=parseBRNumber(raw.trim());
+              if(!Number.isFinite(received)||exchangeCents(received)<1||exchangeCents(received)>exchangeCents(ex.pendingAmount)){
+                alert('O pagamento deve ser maior que zero e não pode ultrapassar o saldo pendente.');return;
+              }
+              if(!window.OMNIA_ADD_EXCHANGE_PAYMENT){alert('Conexão ao Firebase indisponível para confirmar o recebimento.');return;}
+              payBtn.disabled=true;payBtn.textContent='Registrando…';
+              try{
+                await window.OMNIA_ADD_EXCHANGE_PAYMENT(r.id,received);
+                alert(`Recebimento de ${formatMoney(received)} registrado. O saldo será atualizado automaticamente.`);
+              }catch(err){console.error('Pagamento da troca:',err);alert('Não foi possível registrar o pagamento no Firebase. Nenhum valor foi atualizado.');}
+              finally{payBtn.disabled=false;payBtn.textContent='Receber diferença';}
+            });
+            tdAcao.appendChild(payBtn);
+          }
           tdAcao.appendChild(btn);
           tr.appendChild(tdAcao);
         }
@@ -3508,6 +3644,9 @@ body{ background-attachment: fixed; }
     const revenues=[1,2,3].map(dec=>sum(sold.filter(r=>decendioOfDate(r.dateKey)===dec).map(r=>Math.max(0,Number(r.value||0)))));
     const monthly=Math.max(0,Number(g.monthly||0));
     const total=Math.max(0,Number(monthRevenue||0));
+    const ex=exchangeTotals(state.records.filter(r=>r.monthKey===mk));
+    const exInfo=$('goalsExchangeNote');
+    if(exInfo)exInfo.textContent=`Trocas no período: ${ex.count} · Diferenças recebidas: ${formatMoney(ex.received)} · Pendentes: ${formatMoney(ex.pending)}. Valores separados do atingimento da meta.`;
     const moneyShort=(n)=>'R$ '+new Intl.NumberFormat('pt-BR',{notation:'compact',maximumFractionDigits:1}).format(Number(n||0));
     const decimal=(n)=>new Intl.NumberFormat('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1}).format(Number(n||0));
     const safeId='goalsV82Fill';
@@ -3781,6 +3920,9 @@ body{ background-attachment: fixed; }
     const lack = Math.max(0,monthlyTarget-monthRevenue);
     const activeCount = (state.sellers||[]).filter(s=>s.active!==false).length;
     const ticket = aStore.sales>0 ? aStore.revenue/aStore.sales : 0;
+    const ex=exchangeTotals(monthRecords);
+    const exNote=$('metaRankExchangeNote');
+    if(exNote)exNote.textContent=`Trocas/garantias: ${ex.count} · Valor pago nas trocas: ${formatMoney(ex.received)} · Pendente: ${formatMoney(ex.pending)}. Não entram nas metas e no ranking de vendas.`;
 
     const kpis = $("metaRankKpis");
     const cards=[
@@ -4003,7 +4145,16 @@ body{ background-attachment: fixed; }
     const sold=recs.filter(r=>r.outcome==="sold");
     const a=agg(recs);
     const ticket=a.sales>0?a.revenue/a.sales:0;
-    const noSales=Math.max(0,a.atend-a.sales);
+    const noSales=recs.filter(r=>r.outcome==='nosold').length;
+    const exchanges=exchangeTotals(recs);
+    const dex=$('dashExchangeSummary');
+    if(dex)dex.innerHTML=[['Trocas / garantias',formatNum(exchanges.count),'blue'],
+      ['Devolvido',formatMoney(exchanges.returned),'blue'],
+      ['Novo produto',formatMoney(exchanges.newProducts),'blue'],
+      ['Recebido a mais',formatMoney(exchanges.received),'green'],
+      ['Pendente',formatMoney(exchanges.pending),'amber'],
+      ['Crédito do cliente',formatMoney(exchanges.credit),'amber']]
+      .map(([label,val,color])=>`<div class="exchangeMetric ${color}"><span>${label}</span><strong>${val}</strong></div>`).join('');
     const goalMonth=sel.mode==="month"?Number(getGoalsForMonth(sel.month)?.monthly||0):0;
     const goalPct=goalMonth>0?(a.revenue/goalMonth)*100:0;
 
@@ -4062,12 +4213,13 @@ body{ background-attachment: fixed; }
 
     const donut=$("dashOutcomeDonut");
     if(donut){
-      const soldPct=a.atend?Math.min(100,(a.sales/a.atend)*100):0;
-      donut.innerHTML=`<div class="dashboardDonut" style="--pct:${soldPct.toFixed(2)}"><div><strong>${formatNum(a.atend)}</strong><span>Total</span></div></div><div class="dashboardDonutLegend"><span class="good"><i></i>Vendas <b>${formatNum(a.sales)} (${soldPct.toFixed(1)}%)</b></span><span class="bad"><i></i>Não convertidos <b>${formatNum(noSales)} (${(100-soldPct).toFixed(1)}%)</b></span></div>`;
+      const commercial=a.sales+noSales;
+      const soldPct=commercial?Math.min(100,(a.sales/commercial)*100):0;
+      donut.innerHTML=`<div class="dashboardDonut" style="--pct:${soldPct.toFixed(2)}"><div><strong>${formatNum(commercial)}</strong><span>Comerciais</span></div></div><div class="dashboardDonutLegend"><span class="good"><i></i>Vendas <b>${formatNum(a.sales)} (${soldPct.toFixed(1)}%)</b></span><span class="bad"><i></i>Não convertidos <b>${formatNum(noSales)} (${commercial?(100-soldPct).toFixed(1):'0,0'}%)</b></span><span class="exch"><i></i>Trocas/garantias <b>${formatNum(exchanges.count)}</b></span></div>`;
     }
 
     const reasonsMap=new Map();
-    recs.filter(r=>r.outcome!=="sold").forEach(r=>{
+    recs.filter(r=>r.outcome==="nosold").forEach(r=>{
       const reason=getNoSaleReason(r);
       reasonsMap.set(reason,(reasonsMap.get(reason)||0)+1);
     });
@@ -4147,7 +4299,7 @@ body{ background-attachment: fixed; }
     const category=$('ncCategory')?.value||'';
     if(category&&!((Array.isArray(r.soldCategories)&&r.soldCategories.map(String).includes(category)) || ncCategoryOf(r)===category))return false;
     const query=($('ncSearch')?.value||'').trim().toLocaleLowerCase('pt-BR');
-    if(query){const hay=[ncNameOf(r),r.clientName,ncCategoryOf(r),ncReasonOf(r),r.obs,r.noSale?.size,r.sellerName].filter(Boolean).join(' ').toLocaleLowerCase('pt-BR');if(!hay.includes(query))return false;}
+    if(query){const hay=[ncNameOf(r),r.clientName,ncCategoryOf(r),ncReasonOf(r),r.obs,r.noSale?.size,r.sellerName,exchangeResultText(r)].filter(Boolean).join(' ').toLocaleLowerCase('pt-BR');if(!hay.includes(query))return false;}
     return true;
   }
   function ncInRange(r,a,b){const d=ncDateOf(r);return d && d>=a && d<=b;}
@@ -4256,7 +4408,7 @@ body{ background-attachment: fixed; }
     const all=rows.slice().sort((a,b)=>{const ad=ncDateOf(a),bd=ncDateOf(b);return bd.localeCompare(ad)||(Number(b.tsStart||b.tsEnd||0)-Number(a.tsStart||a.tsEnd||0));});
     const pages=Math.max(1,Math.ceil(all.length/ncPageSize));ncPage=Math.max(1,Math.min(ncPage,pages));
     const shown=all.slice((ncPage-1)*ncPageSize,ncPage*ncPageSize);
-    $('ncHistoryRows').innerHTML=shown.length?shown.map(r=>{const kind=ncKind(r);return `<tr><td>${ncHtml(ncFormatRecordDate(r))}</td><td>${ncHtml(ncNameOf(r))}</td><td>${ncHtml(r.clientName||'—')}</td><td>${ncHtml(ncCategoryOf(r)||'—')}</td><td>${ncHtml(ncReasonOf(r)||'—')}</td><td class="ncObservation" title="${ncHtml(r.obs||'')}">${ncHtml(r.obs||r.noSale?.exchangeObservation||'—')}</td><td><span class="ncStatusTag ncStatus-${kind}">${ncKindName(kind)}</span></td></tr>`;}).join(''):`<tr><td colspan="7">${ncEmpty('Nenhum atendimento encontrado','Revise o período ou os filtros selecionados.')}</td></tr>`;
+    $('ncHistoryRows').innerHTML=shown.length?shown.map(r=>{const kind=ncKind(r);return `<tr><td>${ncHtml(ncFormatRecordDate(r))}</td><td>${ncHtml(ncNameOf(r))}</td><td>${ncHtml(r.clientName||'—')}</td><td>${ncHtml(ncCategoryOf(r)||'—')}</td><td>${ncHtml(ncReasonOf(r)||'—')}</td><td class="ncObservation" title="${ncHtml(r.obs||'')}">${ncHtml(r.obs||r.noSale?.exchangeObservation||'—')}</td><td><span class="ncStatusTag ncStatus-${kind}">${ncKindName(kind)}</span></td><td class="ncExchangeCell">${kind==='exchange'?ncHtml(exchangeResultText(r)):'—'}</td></tr>`;}).join(''):`<tr><td colspan="8">${ncEmpty('Nenhum atendimento encontrado','Revise o período ou os filtros selecionados.')}</td></tr>`;
     $('ncHistoryCount').textContent=`${ncFmt(all.length)} registro(s)`;
     $('ncPageInfo').textContent=all.length?`Exibindo ${(ncPage-1)*ncPageSize+1}–${Math.min(all.length,ncPage*ncPageSize)} de ${ncFmt(all.length)}`:'Sem resultados';
     $('ncPrevPage').disabled=ncPage<=1;$('ncNextPage').disabled=ncPage>=pages;
@@ -4265,8 +4417,8 @@ body{ background-attachment: fixed; }
   function ncExport(){
     const span=ncSpan(),status=$('ncStatus')?.value||'all';
     const rows=(state.records||[]).filter(r=>ncInRange(r,span.start,span.end)&&ncFilterExtras(r)&&(status==='all'||ncKind(r)===status));
-    const heads=['Data','Vendedor','Cliente','Categoria','Motivo','Observação','Resultado','Valor da venda'];
-    const values=rows.map(r=>[ncFormatRecordDate(r),ncNameOf(r),r.clientName||'',ncCategoryOf(r),ncReasonOf(r),r.obs||r.noSale?.exchangeObservation||'',ncKindName(ncKind(r)),ncKind(r)==='sold'?Number(r.value||0).toFixed(2):'']);
+    const heads=['Data','Vendedor','Cliente','Categoria','Motivo','Observação','Resultado','Valor da venda','Valor devolvido','Valor novo','Diferença','Valor recebido','Saldo pendente','Crédito do cliente'];
+    const values=rows.map(r=>[ncFormatRecordDate(r),ncNameOf(r),r.clientName||'',ncCategoryOf(r),ncReasonOf(r),r.obs||r.noSale?.exchangeObservation||'',ncKindName(ncKind(r)),ncKind(r)==='sold'?Number(r.value||0).toFixed(2):'',...(exchangeDetails(r)?Object.values(exchangeDetails(r)).map(v=>Number(v).toFixed(2)):['','','','','',''])]);
     const safe=v=>{let s=String(v??'');if(/^[\s]*[=+@\-]/.test(s))s="'"+s;return '"'+s.replaceAll('"','""')+'"';};
     const csv='\ufeff'+[heads,...values].map(row=>row.map(safe).join(';')).join('\r\n');
     downloadBlob(csv,`ONDIS_nao_convertidos_${span.start}_${span.end}.csv`,'text/csv;charset=utf-8');
@@ -4278,6 +4430,9 @@ body{ background-attachment: fixed; }
     const currRecords=all.filter(r=>ncInRange(r,span.start,span.end));
     const prevRecords=all.filter(r=>ncInRange(r,span.pastStart,span.pastEnd));
     const current=ncSummary(currRecords),previous=ncSummary(prevRecords);
+    const exsum=exchangeTotals(currRecords);
+    const exel=$('ncExchangeSummary');
+    if(exel)exel.innerHTML=[['Trocas',formatNum(exsum.count),'blue'],['Devolvidos',formatMoney(exsum.returned),'blue'],['Novos produtos',formatMoney(exsum.newProducts),'blue'],['Pagamentos recebidos',formatMoney(exsum.received),'green'],['Pendente',formatMoney(exsum.pending),'amber'],['Crédito do cliente',formatMoney(exsum.credit),'amber']].map(([label,value,color])=>`<div class="exchangeMetric ${color}"><span>${label}</span><strong>${value}</strong></div>`).join('');
     const status=$('ncStatus')?.value||'all';
     const visible=status==='all'?currRecords:currRecords.filter(r=>ncKind(r)===status);
     ncRenderKpis(current,previous);ncSegments(current);
@@ -4345,7 +4500,7 @@ body{ background-attachment: fixed; }
     const recsMonth = state.records.filter(r => r.monthKey === chosenMonth);
     const recs = (view === "dayRank") ? recsDay : recsMonth;
 
-    const header = ["id","date","time","seller","result","value","pieces","reason","gender","itemType","size","soldCategories","obs","tsStart","tsEnd"];
+    const header = ["id","date","time","seller","result","value","pieces","reason","gender","itemType","size","soldCategories","obs","tsStart","tsEnd","exchangeOldValue","exchangeNewValue","exchangeDifference","exchangePaid","exchangePending","exchangeCredit"];
     const lines = [header.join(",")];
 
     const sorted = recs.slice().sort((a,b)=> (a.tsStart||0) - (b.tsStart||0));
@@ -4372,7 +4527,8 @@ body{ background-attachment: fixed; }
         (Array.isArray(r.soldCategories) ? r.soldCategories.join(" | ") : ""),
         r.obs || "",
         r.tsStart || "",
-        r.tsEnd || ""
+        r.tsEnd || "",
+        ...(exchangeDetails(r)?Object.values(exchangeDetails(r)).map(v=>Number(v).toFixed(2)):['','','','','',''])
       ].map(csvEscape);
       lines.push(row.join(","));
     }
@@ -4583,7 +4739,7 @@ body{ background-attachment: fixed; }
     const tk = todayKey(new Date(c.startTs));
     const mk = monthKey(new Date(c.startTs));
 
-    let value = 0, pieces = 0, noSale = null, soldCategories = [];
+    let value = 0, pieces = 0, noSale = null, soldCategories = [], exchange = null;
 
     if(outcome==="sold"){
       soldCategories = Array.from(document.querySelectorAll("#soldCats_"+cid+" input:checked")).map(i=>i.value);
@@ -4596,10 +4752,18 @@ body{ background-attachment: fixed; }
       const size = ($("nsSize_"+cid)?.value || "").trim();
       noSale = { reason, gender, itemType, size };
     } else {
+      const oldValue=exchangeFieldValue('exOldValue_'+cid),newValue=exchangeFieldValue('exNewValue_'+cid);
+      if(oldValue===null||newValue===null){alert('Informe os dois valores da troca em reais (ex.: 350,00).');return;}
+      const delta=exchangeCalc(oldValue,newValue,0);
+      const paidValue=exchangeFieldValue('exPaid_'+cid);
+      if(delta.difference>0 && paidValue===null){alert('Informe quanto o cliente efetivamente pagou, mesmo que seja zero.');return;}
+      if(delta.difference>0 && exchangeCents(paidValue)>exchangeCents(delta.difference)){alert('O valor pago não pode superar a diferença da troca.');return;}
       const reason = $("exReason_"+cid)?.value || "Troca";
       const itemType = $("exItemType_"+cid)?.value || "";
       const size = ($("exSize_"+cid)?.value || "").trim();
       const exchangeObservation = ($("exObs_"+cid)?.value || "").trim();
+      exchange = {...exchangeCalc(oldValue,newValue,delta.difference>0 ? paidValue : 0),
+        kind:reason, itemType, size, observation:exchangeObservation, currency:'BRL', version:1};
       noSale = { reason, gender: "", itemType, size, exchangeObservation, isExchange: true };
     }
 
@@ -4612,6 +4776,10 @@ body{ background-attachment: fixed; }
       clientName: ($("cliNome_"+cid)?.value || "").trim(),
       clientPhone: ($("cliTel_"+cid)?.value || "").trim(),
       clientBirth: ($("cliNasc_"+cid)?.value || "").trim()
+    } : outcome === "exchange" ? {
+      clientName: ($("exClientName_"+cid)?.value || "").trim(),
+      clientPhone: ($("exClientPhone_"+cid)?.value || "").trim(),
+      clientBirth: ""
     } : { clientName:"", clientPhone:"", clientBirth:"" };
 
     const newRec = {
@@ -4626,6 +4794,7 @@ body{ background-attachment: fixed; }
       value,
       pieces,
       noSale,
+      ...(exchange ? {exchange} : {}),
       soldCategories,
       obs,
       ...clientRef
@@ -6833,7 +7002,7 @@ body{ background-attachment: fixed; }
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut, sendEmailVerification }
     from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-  import { getFirestore, doc, getDoc, getDocs, setDoc, onSnapshot, collection, deleteDoc }
+  import { getFirestore, doc, getDoc, getDocs, setDoc, onSnapshot, collection, deleteDoc, runTransaction }
     from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -7179,6 +7348,31 @@ body{ background-attachment: fixed; }
     window.OMNIA_DEL_RECORD = function(id){
       if(!id) return;
       try{ deleteDoc(doc(recordsRef, id)); }catch(e){ console.error("OMNIA_DEL_RECORD:", e); }
+    };
+
+    // Recebimento posterior de diferença: transação atômica, sem alterar vendas
+    // nem recalcular/comissionar o preço integral da peça trocada.
+    window.OMNIA_ADD_EXCHANGE_PAYMENT = async function(id,amount){
+      const user=window.OMNIA_USER;
+      if(!user || !['admin','superadmin'].includes(user.role))throw Error('Permissão administrativa necessária');
+      if(!id||!Number.isFinite(amount)||amount<=0)throw Error('Pagamento inválido');
+      const refRecord=doc(recordsRef,id);
+      const cents=v=>Math.round(Number(v||0)*100);
+      return await runTransaction(db,async trx=>{
+        const snap=await trx.get(refRecord);
+        if(!snap.exists())throw Error('Troca não encontrada');
+        const record=snap.data(),ex=record.exchange;
+        if(record.outcome!=='exchange'||!ex)throw Error('Registro não é troca com valores');
+        const max=Math.max(0,cents(ex.newValue)-cents(ex.oldValue));
+        const oldPaid=Math.max(0,cents(ex.paidAmount));
+        const additional=cents(amount);
+        if(additional<=0||oldPaid+additional>max)throw Error('Pagamento maior que saldo atual');
+        const payment={value:additional/100,recordedAt:new Date().toISOString(),recordedBy:user.uid};
+        trx.update(refRecord,{'exchange':{...ex,
+          paidAmount:(oldPaid+additional)/100,
+          pendingAmount:(max-oldPaid-additional)/100,
+          paymentHistory:[...(Array.isArray(ex.paymentHistory)?ex.paymentHistory:[]),payment]}});
+      });
     };
 
     // Tempo real: carrega todas as vendas da loja e alimenta o state.records
