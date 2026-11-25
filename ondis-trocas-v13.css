@@ -23,9 +23,9 @@
 .exchangeFinance #exObs,.exchangeFinance textarea,
 #viewOps textarea[id^="exObs_"]{width:100%;min-height:76px;resize:vertical;color:#152338!important;background:#fff!important;border:1px solid #cbd8e8!important;border-radius:11px!important;padding:10px!important;font-size:13px}
 .exchangeReportPanel{--exchangeBg:#ffffff;--exchangeText:#162337;--exchangeSub:#657388;--exchangeBorder:#e1e8f2;--exchangeChip:#f6f8fc;margin:16px 0;padding:18px;border:1px solid var(--exchangeBorder);border-radius:20px;background:var(--exchangeBg);box-shadow:0 8px 28px rgba(29,49,78,.06);color:var(--exchangeText)!important}
-.exchangeReportPanel header{display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:12px!important;min-height:initial!important;margin:0 0 15px!important;border:0!important;padding:0!important;background:transparent!important;box-shadow:none!important;position:static!important;backdrop-filter:none!important}
-.exchangeReportPanel header h3{font-size:17px!important;font-weight:850!important;letter-spacing:-.02em!important;line-height:1.25!important;margin:4px 0 5px!important;color:var(--exchangeText)!important}
-.exchangeReportPanel header p{font-size:12px!important;margin:0!important;line-height:1.55!important;color:var(--exchangeSub)!important}
+.exchangeReportPanel > .exchangeReportHead{display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:12px!important;min-height:initial!important;margin:0 0 15px!important;border:0!important;padding:0!important;background:transparent!important;box-shadow:none!important;position:static!important;backdrop-filter:none!important}
+.exchangeReportPanel > .exchangeReportHead h3{font-size:17px!important;font-weight:850!important;letter-spacing:-.02em!important;line-height:1.25!important;margin:4px 0 5px!important;color:var(--exchangeText)!important}
+.exchangeReportPanel > .exchangeReportHead p{font-size:12px!important;margin:0!important;line-height:1.55!important;color:var(--exchangeSub)!important}
 .exchangeOverline{display:block;font-size:10px;letter-spacing:.12em;color:#c51b42!important;font-weight:850}
 .exchangeReportPill{align-self:center;padding:8px 11px;border-radius:999px;border:1px solid var(--exchangeBorder);background:var(--exchangeChip);color:var(--exchangeText);font-size:11px;font-weight:700;white-space:nowrap}
 .exchangeReportGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
@@ -40,7 +40,7 @@
 .dashboardDonutLegend .exch{color:#2766c2;display:flex;gap:5px;align-items:center}
 .dashboardDonutLegend .exch i{display:inline-block;background:#3988e8;width:8px;height:8px;border-radius:50%}
 /* Contrast on explicitly light cards, even when a global theme inherits white text. */
-.exchangeReportPanel *:not(header):not(.exchangeReportGrid):not(.exchangeMetric){text-shadow:none}
+.exchangeReportPanel *:not(.exchangeReportGrid):not(.exchangeMetric){text-shadow:none}
 [data-theme="neon"] .exchangeReportPanel,[data-theme="ocean"] .exchangeReportPanel,[data-theme="sunset"] .exchangeReportPanel,[data-theme="purple"] .exchangeReportPanel{--exchangeBg:#172333;--exchangeText:#f2f6ff;--exchangeSub:#c0ccdc;--exchangeBorder:#3c5066;--exchangeChip:#233148}
 [data-theme="neon"] .exchangeMetric,[data-theme="ocean"] .exchangeMetric,[data-theme="sunset"] .exchangeMetric,[data-theme="purple"] .exchangeMetric{color:#f2f6ff}
 @media(max-width:900px){.exchangeReportGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.exchangeFinanceFields{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -51,3 +51,141 @@
 .exchangeClientFields .field label{color:#304761!important;font-weight:740!important;font-size:12px!important}
 .exchangeClientFields input{width:100%;min-width:0;background:#fff!important;color:#18253b!important;border:1px solid #cbd8e8!important;border-radius:10px!important}
 @media(max-width:580px){.exchangeClientFields{grid-template-columns:1fr}}
+
+
+/* V13.2: cabeçalho encapsulado dos painéis de Trocas em TODAS as abas.
+   Evita conflito com `header` genérico, temas, painéis decorativos e pseudo-elementos. */
+#viewOps .exchangeReportPanel,
+#viewDados .exchangeReportPanel,
+#viewMetas .exchangeReportPanel,
+#viewMetasRank .exchangeReportPanel,
+#viewNoConv .exchangeReportPanel,
+#viewDashboard .exchangeReportPanel,
+#rankingBack .exchangeReportPanel {
+  background:var(--exchangeBg) !important;
+  background-image:none !important;
+  color:var(--exchangeText) !important;
+  isolation:isolate;
+  overflow:hidden;
+}
+.exchangeReportPanel > .exchangeReportHead {
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:flex-start !important;
+  justify-content:space-between !important;
+  flex-wrap:wrap !important;
+  gap:12px !important;
+  padding:0 0 14px !important;
+  margin:0 0 14px !important;
+  border:0 !important;
+  border-bottom:1px solid var(--exchangeBorder) !important;
+  border-radius:0 !important;
+  width:100%;
+  height:auto !important;
+  min-height:0 !important;
+  position:relative !important;
+  top:auto !important;
+  left:auto !important;
+  transform:none !important;
+  z-index:auto !important;
+  box-sizing:border-box;
+  background:transparent !important;
+  background-color:transparent !important;
+  background-image:none !important;
+  box-shadow:none !important;
+  color:var(--exchangeText) !important;
+  text-align:left;
+  opacity:1 !important;
+  filter:none !important;
+  clip-path:none !important;
+}
+.exchangeReportPanel > .exchangeReportHead::before,
+.exchangeReportPanel > .exchangeReportHead::after {
+  content:none !important;
+  display:none !important;
+  background:none !important;
+}
+.exchangeReportPanel > .exchangeReportHead > div { flex:1 1 240px; min-width:0; }
+.exchangeReportPanel > .exchangeReportHead h3,
+.exchangeReportPanel > .exchangeReportHead h3 * {
+  display:block;
+  color:var(--exchangeText) !important;
+  opacity:1 !important;
+  -webkit-text-fill-color:var(--exchangeText) !important;
+  text-shadow:none !important;
+  background:none !important;
+  -webkit-background-clip:initial !important;
+  font-size:clamp(15px,1.5vw,18px) !important;
+  font-weight:850 !important;
+  line-height:1.32 !important;
+}
+.exchangeReportPanel > .exchangeReportHead p {
+  color:var(--exchangeSub) !important;
+  -webkit-text-fill-color:var(--exchangeSub) !important;
+  text-shadow:none !important;
+  opacity:1 !important;
+  line-height:1.5 !important;
+}
+.exchangeReportPanel > .exchangeReportHead .exchangeOverline {
+  color:#bb153a !important;
+  -webkit-text-fill-color:#bb153a !important;
+  opacity:1 !important;
+}
+.exchangeReportPanel .exchangeReportPill {
+  color:var(--exchangeText) !important;
+  -webkit-text-fill-color:var(--exchangeText) !important;
+  background:var(--exchangeChip) !important;
+  border-color:var(--exchangeBorder) !important;
+  max-width:100%;
+}
+.exchangeReportPanel .exchangeMetric span {
+  color:var(--exchangeSub) !important;
+  -webkit-text-fill-color:var(--exchangeSub) !important;
+  opacity:1 !important;
+}
+.exchangeReportPanel .exchangeMetric strong {
+  color:var(--exchangeText) !important;
+  -webkit-text-fill-color:var(--exchangeText) !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+}
+[data-theme="neon"] .exchangeReportPanel > .exchangeReportHead .exchangeOverline,
+[data-theme="ocean"] .exchangeReportPanel > .exchangeReportHead .exchangeOverline,
+[data-theme="sunset"] .exchangeReportPanel > .exchangeReportHead .exchangeOverline,
+[data-theme="purple"] .exchangeReportPanel > .exchangeReportHead .exchangeOverline {
+  color:#ff8098 !important;
+  -webkit-text-fill-color:#ff8098 !important;
+}
+/* Rail da Liga: cartões de 6 métricas adaptados à largura pequena, sem texto escondido. */
+#arenaOverviewExchange { min-width:0; padding:10px 12px 14px; }
+#arenaOverviewExchange .exchangeReportGrid {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) !important;
+  gap:7px;
+}
+#arenaOverviewExchange .exchangeMetric {
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  flex-wrap:wrap;
+  gap:6px 12px;
+  padding:10px 12px !important;
+  border-radius:11px;
+  color:var(--exchangeText, #162337) !important;
+  background:var(--exchangeChip, #f6f8fc) !important;
+}
+#arenaOverviewExchange .exchangeMetric span {font-size:11px !important; color:var(--exchangeSub, #52627b) !important;}
+#arenaOverviewExchange .exchangeMetric strong {font-size:14px !important; color:var(--exchangeText, #162337) !important;}
+#arenaOverviewExchange .exchangeGoalNote { margin:10px 0 0; font-size:11px !important; }
+@media(max-width:600px){
+  .exchangeReportPanel > .exchangeReportHead {gap:8px !important;}
+  .exchangeReportPanel > .exchangeReportHead > div {flex-basis:100%;}
+  .exchangeReportPanel > .exchangeReportHead .exchangeReportPill {align-self:flex-start;}
+}
+
+#arenaOverviewExchange {--exchangeText:#19283f;--exchangeSub:#576780;--exchangeChip:#f7f9fd;}
+[data-theme="neon"] #arenaOverviewExchange,
+[data-theme="ocean"] #arenaOverviewExchange,
+[data-theme="sunset"] #arenaOverviewExchange,
+[data-theme="purple"] #arenaOverviewExchange {--exchangeText:#f4f7ff;--exchangeSub:#c7d2e4;--exchangeChip:#233148;}

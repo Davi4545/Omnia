@@ -1080,7 +1080,7 @@ body{ background-attachment: fixed; }
 <link rel="stylesheet" href="./ondis-dados-metas-v8.css?v=8.1.0">
 <link rel="stylesheet" href="./ondis-metas-visual-v8-2.css?v=8.2.0">
 <link rel="stylesheet" href="./ondis-nao-convertidos-v10.css?v=10.0.0">
-<link rel="stylesheet" href="./ondis-trocas-v13.css?v=13.1"/>
+<link rel="stylesheet" href="./ondis-trocas-v13.css?v=13.2"/>
 </head>
 <body>
 <div class="appShell" id="appShell">
@@ -1150,11 +1150,11 @@ body{ background-attachment: fixed; }
 </div>
 </div>
 <div class="cardBody">
-<div class="hint opsIntro">Regra ONDIS: atendimento só termina quando você <b>finalizar</b> (vendeu / não vendeu). Isso garante conversão real.</div>
+<div class="hint opsIntro">Regra ONDIS: atendimento só termina quando você <b>finalizar</b> (vendeu / não vendeu / troca). Isso garante conversão real.</div>
 <div class="divider"></div>
 <div class="kpis" id="kpis"></div>
 <section class="exchangeReportPanel opsExchangePanel" aria-label="Trocas do dia">
-  <header><div><span class="exchangeOverline">TROCAS DO DIA</span><h3>Valores e diferenças do atendimento</h3><p>O acompanhamento das trocas fica separado das vendas concluídas.</p></div><span class="exchangeReportPill" id="opsExchangePeriod">Hoje</span></header>
+  <div class="exchangeReportHead"><div><span class="exchangeOverline">TROCAS DO DIA</span><h3>Valores e diferenças do atendimento</h3><p>O acompanhamento das trocas fica separado das vendas concluídas.</p></div><span class="exchangeReportPill" id="opsExchangePeriod">Hoje</span></div>
   <div class="exchangeReportGrid" id="opsExchangeSummary"></div>
 </section>
 <div class="divider"></div>
@@ -1218,7 +1218,7 @@ body{ background-attachment: fixed; }
   <div class="dadosRevenuePeriod"><span id="dadosRevenueMonthLabel">No mês selecionado</span><strong id="dadosRevenueMonth">R$ 0,00</strong><small>Somente vendas concluídas</small></div>
 </div>
 <section class="exchangeReportPanel" aria-label="Resumo de trocas do mês">
-  <header><div><span class="exchangeOverline">ACOMPANHAMENTO DE TROCAS</span><h3>Trocas e diferenças de valores</h3><p>Os valores recebidos em trocas são informados separadamente das vendas, metas e comissões.</p></div><span class="exchangeReportPill" id="dataExchangePeriod">Mês selecionado</span></header>
+  <div class="exchangeReportHead"><div><span class="exchangeOverline">ACOMPANHAMENTO DE TROCAS</span><h3>Trocas e diferenças de valores</h3><p>Os valores recebidos em trocas são informados separadamente das vendas, metas e comissões.</p></div><span class="exchangeReportPill" id="dataExchangePeriod">Mês selecionado</span></div>
   <div class="exchangeReportGrid" id="dataExchangeSummary"></div>
 </section>
 <div class="kpis" id="kpisData"></div>
@@ -1298,7 +1298,7 @@ body{ background-attachment: fixed; }
       <p class="goalsInsightsFootnote">Os gráficos usam somente vendas concluídas. Diferenças recebidas por trocas não aumentam automaticamente metas ou comissões.</p>
       <div id="goalsExchangeNote" class="exchangeGoalNote" role="status"></div>
       <section class="exchangeReportPanel goalsExchangePanel" aria-label="Trocas do mês das metas">
-        <header><div><span class="exchangeOverline">TROCAS DO PERÍODO</span><h3>Impacto financeiro paralelo à meta</h3><p>Os valores abaixo ajudam a acompanhar diferenças e pendências sem alterar o atingimento.</p></div><span class="exchangeReportPill" id="goalsExchangePeriod">Mês selecionado</span></header>
+        <div class="exchangeReportHead"><div><span class="exchangeOverline">TROCAS DO PERÍODO</span><h3>Impacto financeiro paralelo à meta</h3><p>Os valores abaixo ajudam a acompanhar diferenças e pendências sem alterar o atingimento.</p></div><span class="exchangeReportPill" id="goalsExchangePeriod">Mês selecionado</span></div>
         <div class="exchangeReportGrid" id="goalsExchangeSummary"></div>
       </section>
     </section>
@@ -1341,7 +1341,7 @@ body{ background-attachment: fixed; }
   <div class="rankKpiStrip" id="metaRankKpis"></div>
   <div class="exchangeGoalNote" id="metaRankExchangeNote" role="status"></div>
   <section class="exchangeReportPanel rankExchangePanel" aria-label="Resumo de trocas do ranking de metas">
-    <header><div><span class="exchangeOverline">TROCAS NO MÊS</span><h3>Recebimentos paralelos ao ranking</h3><p>Acompanhe trocas, diferenças e créditos sem mexer na classificação por vendas.</p></div><span class="exchangeReportPill" id="metaRankExchangePeriod">Mês selecionado</span></header>
+    <div class="exchangeReportHead"><div><span class="exchangeOverline">TROCAS NO MÊS</span><h3>Recebimentos paralelos ao ranking</h3><p>Acompanhe trocas, diferenças e créditos sem mexer na classificação por vendas.</p></div><span class="exchangeReportPill" id="metaRankExchangePeriod">Mês selecionado</span></div>
     <div class="exchangeReportGrid" id="metaRankExchangeSummary"></div>
   </section>
   <div class="rankGoalGrid">
@@ -1384,7 +1384,7 @@ body{ background-attachment: fixed; }
 
     <div class="ncKpiGrid" id="ncKpis" aria-label="Indicadores de conversão"></div>
     <div class="ncSegmentRow" id="ncSegments" aria-label="Resumo por resultado"></div>
-    <section class="exchangeReportPanel ncExchangePanel"><header><div><span class="exchangeOverline">DETALHAMENTO DAS TROCAS</span><h3>Produtos, diferenças e recebimentos</h3><p>Veja o movimento financeiro das trocas sem contabilizar como vendas novas.</p></div></header><div class="exchangeReportGrid" id="ncExchangeSummary"></div></section>
+    <section class="exchangeReportPanel ncExchangePanel"><div class="exchangeReportHead"><div><span class="exchangeOverline">DETALHAMENTO DAS TROCAS</span><h3>Produtos, diferenças e recebimentos</h3><p>Veja o movimento financeiro das trocas sem contabilizar como vendas novas.</p></div></div><div class="exchangeReportGrid" id="ncExchangeSummary"></div></section>
     <div class="ncChartsGrid">
       <article class="ncPanel ncTrendPanel">
         <div class="ncPanelHead"><div><h3>Evolução da conversão</h3><p>Vendas ÷ (vendas + não vendas). Trocas ficam de fora.</p></div><div class="ncToggle" role="group" aria-label="Agrupar evolução"><button type="button" data-nc-bucket="daily" class="active">Diário</button><button type="button" data-nc-bucket="weekly">Semanal</button></div></div>
@@ -1444,7 +1444,7 @@ body{ background-attachment: fixed; }
 
   <div class="dashboardExecutiveKpis" id="dashKpis"></div>
   <section class="exchangeReportPanel exchangeDashReport" aria-label="Trocas e saldos do período">
-    <header><div><span class="exchangeOverline">TROCAS E GARANTIAS</span><h3>Diferenças dos atendimentos</h3><p>Recebimentos de trocas não entram automaticamente nas metas ou comissões.</p></div></header>
+    <div class="exchangeReportHead"><div><span class="exchangeOverline">TROCAS E GARANTIAS</span><h3>Diferenças dos atendimentos</h3><p>Recebimentos de trocas não entram automaticamente nas metas ou comissões.</p></div></div>
     <div class="exchangeReportGrid" id="dashExchangeSummary"></div>
   </section>
 
@@ -2962,7 +2962,7 @@ body{ background-attachment: fixed; }
       ${summary}
       <div class="exchangeGoalNote" role="status">Trocas do dia: ${exToday.count} · Recebido nas trocas: ${formatMoney(exToday.received)} · Diferenças pendentes: ${formatMoney(exToday.pending)}. Separadas das vendas do ranking.</div>
       <section class="exchangeReportPanel" aria-label="Resumo das trocas do ranking do dia">
-        <header><div><span class="exchangeOverline">TROCAS DO DIA</span><h3>Valores paralelos ao ranking</h3><p>Os recebimentos das trocas ficam separados da classificação comercial.</p></div><span class="exchangeReportPill">${tk.split('-').reverse().join('/')}</span></header>
+        <div class="exchangeReportHead"><div><span class="exchangeOverline">TROCAS DO DIA</span><h3>Valores paralelos ao ranking</h3><p>Os recebimentos das trocas ficam separados da classificação comercial.</p></div><span class="exchangeReportPill">${tk.split('-').reverse().join('/')}</span></div>
         <div class="exchangeReportGrid">${exchangeSummaryCards(exToday,{count:'Trocas do dia', returned:'Valor devolvido', newProducts:'Novo produto', received:'Diferença recebida', pending:'Saldo pendente', credit:'Crédito do cliente'})}</div>
       </section>
       <div class="rankingPodiumWrap">${podium}</div>
