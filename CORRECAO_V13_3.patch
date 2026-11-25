@@ -1,0 +1,41 @@
+--- a/index.html
++++ b/index.html
+@@ -5429,6 +5429,8 @@
+         chartEl.innerHTML = '<div class="hint">—</div>';
+         xpEl.innerHTML = '<div class="hint">—</div>';
+         badgesEl.innerHTML = '';
++        personalRouteEl.innerHTML = '<div class="ligaEmptyAchievement">Cadastre um vendedor ativo para visualizar seu progresso.</div>';
++        missionsEl.innerHTML = '<div class="ligaEmptyAchievement">As missões aparecerão quando houver um vendedor cadastrado.</div>';
+         const btn = document.getElementById('btnSellerDownloadBadges');
+         if(btn) btn.onclick = ()=> alert('Cadastre um vendedor primeiro.');
+         return;
+@@ -5671,8 +5673,18 @@
+       rewardEl.innerHTML = `<div class="ondisV7RewardIntro"><div><span class="ligaEyebrow">TEMPORADA DE CONQUISTAS</span><h3>Recompensas da Liga</h3><p>Ganhe XP e desbloqueie suas recompensas. A gestão configura os prêmios e os pontos necessários.</p></div>${['admin','superadmin'].includes(arenaRole)?'<button class="btn ondisV7Configure" id="btnEditRewardArena">Configurar recompensas</button>':''}</div><div class="ondisV7RewardGallery">${rewardCollection.map(r=>{const pct=clamp(seasonXP/Math.max(1,r.xp)*100,0,100);return `<article class="ondisV7RewardCard"><img src="${ligaRewardImage(r)}" alt="${safeArenaText(r.title)}"><span class="ondisV7RewardType">${safeArenaText(r.type)}</span><h4>${safeArenaText(r.title)}</h4><p>${safeArenaText(r.description||'Recompensa da temporada')}</p><strong>${Number(r.xp).toLocaleString('pt-BR')} XP</strong><div class="ligaV3Progress"><i style="width:${pct}%"></i></div><small>${pct>=100?'Desbloqueada':'Progresso: '+pct.toFixed(0)+'%'}</small></article>`}).join('')||'<div class="hint">Nenhuma recompensa ativa.</div>'}</div><div class="ligaRewardCard ${teamEnergy>=100?'unlocked':''}"><img src="./ondis-lenda-premium.png" alt="Lenda ONDIS"><div><span class="ligaEyebrow">${teamEnergy>=100?'Recompensa coletiva liberada':'Recompensa coletiva'}</span><h3>${safeArenaText(teamReward.title)}</h3><p>${safeArenaText(teamReward.description)}</p><div class="meter good"><i style="width:${teamEnergy}%"></i></div><small>${formatMoney(teamRevenue)} de ${formatMoney(teamGoal)} · ${teamEnergy.toFixed(0)}%</small></div></div>`;
+       const rewardEditButton=document.getElementById('btnEditRewardArena');if(rewardEditButton)rewardEditButton.onclick=abrirEditorSelos;
+       if(overviewRewardEl) overviewRewardEl.innerHTML = `<div class="ligaExactCollective"><img class="ondisV7CollectiveArt" src="./ondis-reward-legendary.png" alt="Baú coletivo"><div><span>RECOMPENSA COLETIVA DA TEMPORADA</span><h3>${safeArenaText(teamReward.title)}</h3><p>${safeArenaText(teamReward.description)}</p></div><div class="ligaCollectiveProgress"><div class="ligaV3Progress"><i style="width:${teamEnergy}%"></i></div><b>${formatMoney(teamRevenue)} de ${formatMoney(teamGoal)} · ${teamEnergy.toFixed(0)}%</b></div>${['admin','superadmin'].includes(arenaRole)?'<button class="btn" id="btnOverviewEditReward">Editar recompensa</button>':''}</div>`; const overviewEdit=document.getElementById('btnOverviewEditReward'); if(overviewEdit) overviewEdit.onclick=abrirEditorSelos;
+-      const ligaExchange = exchangeTotals(state.records.filter(r=> r.dateKey>=fromKey && r.dateKey<=toKey));
+-      if(overviewExchangeEl) overviewExchangeEl.innerHTML = `<div class="exchangeReportGrid">${exchangeSummaryCards(ligaExchange,{count:'Trocas', returned:'Devolvido', newProducts:'Novo produto', received:'Diferença recebida', pending:'Saldo pendente', credit:'Crédito do cliente'})}</div><div class="exchangeGoalNote" style="margin-top:10px">Período ${safeArenaText(rangeLabel)} · trocas acompanhadas à parte do XP, das metas e do ranking da Liga.</div>`;
++      // Painel informativo: não pode impedir a renderização de Meu Progresso e Missões.
++      if(overviewExchangeEl){
++        try{
++          const ligaExchange = exchangeTotals(state.records.filter(r=> r.dateKey>=fromKey && r.dateKey<=toKey));
++          const formatLigaDate = (key)=> String(key||'').split('-').reverse().join('/');
++          const periodCaption = fromKey===toKey ? formatLigaDate(fromKey) : `${formatLigaDate(fromKey)} a ${formatLigaDate(toKey)}`;
++          overviewExchangeEl.innerHTML = `<div class="exchangeReportGrid">${exchangeSummaryCards(ligaExchange,{count:'Trocas', returned:'Devolvido', newProducts:'Novo produto', received:'Diferença recebida', pending:'Saldo pendente', credit:'Crédito do cliente'})}</div><div class="exchangeGoalNote" style="margin-top:10px">Período ${safeArenaText(periodCaption)} · trocas acompanhadas à parte do XP, das metas e do ranking da Liga.</div>`;
++        }catch(exchangeViewError){
++          console.warn('Resumo de trocas da Liga indisponível:',exchangeViewError);
++          overviewExchangeEl.innerHTML = '<div class="ligaEmptyAchievement">Resumo de trocas indisponível. O progresso e as missões continuam acessíveis.</div>';
++        }
++      }
+       maybeCelebrateTeamChest(teamEnergy,teamReward,mk2);
+ 
+       // Records for seller in chosen date range (for KPIs && chart)
+@@ -5735,7 +5747,7 @@
+         const currentLabel=mission.unit==='valor'?formatMoney(mission.current):mission.unit==='percent'?`${mission.current.toFixed(1)}%`:mission.unit==='pa'?mission.current.toFixed(2):`${mission.current} vendas`;
+         const targetLabel=mission.unit==='valor'?formatMoney(mission.target):mission.unit==='percent'?`${mission.target.toFixed(0)}%`:mission.unit==='pa'?mission.target.toFixed(2):`${mission.target} vendas`;
+         return `<article class="ligaMission ligaV3Mission ${done?'done':''}"><div class="ligaV3MissionTop"><div class="ligaV3MissionIcon ligaMissionBadgeArt">${badgeArt(mission.badge||'',mission.title,mission.iconId) || ligaUiIcon('target',24)}</div><div><span>${done?'MISSÃO CONCLUÍDA':'MISSÃO ATIVA'}</span><b>${safeArenaText(mission.title)}</b></div><em>+${Number(mission.points||0)} XP</em></div><strong>${currentLabel} <small>/ ${targetLabel}</small></strong><div class="meter good"><i style="width:${progress}%"></i></div><small class="ligaV3MissionRule">Base: ${safeArenaText(mission.badgeDef?.title||'regra da Liga')}</small></article>`;
+-      }).join('')}</div>`;
++      }).join('') || '<div class="ligaEmptyAchievement">Nenhuma missão está ativa no momento. A gestão pode habilitar os desafios em Configurar gamificação.</div>'}</div>`;
+       const missionConfigButton=document.getElementById('btnConfigMissions'); if(missionConfigButton) missionConfigButton.onclick=abrirEditorSelos;
+       if(overviewMissionsEl) overviewMissionsEl.innerHTML = missionDefinitions.slice(0,4).map(mission=>{const progress=mission.target>0?clamp((mission.current/mission.target)*100,0,100):0;const cur=mission.unit==='valor'?formatMoney(mission.current):mission.unit==='percent'?`${mission.current.toFixed(1)}%`:mission.unit==='pa'?mission.current.toFixed(2):`${mission.current}`;const tar=mission.unit==='valor'?formatMoney(mission.target):mission.unit==='percent'?`${mission.target.toFixed(0)}%`:mission.unit==='pa'?mission.target.toFixed(2):`${mission.target}`;return `<div class="ligaMiniMission"><span class="ligaMiniMissionBadge">${badgeArt(mission.badge||'',mission.title,mission.iconId) || ligaUiIcon('target',24)}</span><div><b>${safeArenaText(mission.title)}</b><small>${safeArenaText(mission.badgeDef?.desc||'Desafio ativo')}</small><div class="ligaV3Progress"><i style="width:${progress}%"></i></div></div><em class="ligaMissionNumbers"><span>${cur}</span><small>de ${tar}</small><b>+${Number(mission.points||0)} XP</b></em></div>`}).join('');
+       const bestTag = document.getElementById('arenaBestSaleTag');
