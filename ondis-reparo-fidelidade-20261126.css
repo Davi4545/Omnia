@@ -1,0 +1,68 @@
+/* ONDIS interface consolidada | folha exclusiva desta página | 2026-11-26 */
+
+/* início: base */
+
+/* ONDIS V17 · scoped visual system; no global body/header selectors. */
+body[data-ondis-refresh]{--v17-red:#d51035;--v17-red-dark:#aa0929;--v17-bordeaux:#72172d;--v17-text:#182338;--v17-muted:#586b84;--v17-bg:#f5f7fb;--v17-border:#dfe6f0;--v17-surface:#fff;--v17-soft:#f8fafc;color:var(--v17-text)!important;background:var(--v17-bg)!important;font-family:Inter,system-ui,-apple-system,'Segoe UI',sans-serif!important;line-height:1.5}
+body[data-ondis-refresh] :is(button,input,select,textarea){font:inherit;letter-spacing:normal}
+body[data-ondis-refresh] :is(input:not([type="checkbox"]):not([type="radio"]),select,textarea){background-color:#fff!important;color:#182338!important;-webkit-text-fill-color:#182338!important;border:1px solid #cfd9e7!important;border-radius:11px!important;min-height:39px;outline-offset:2px}
+body[data-ondis-refresh] :is(input,select,textarea):focus-visible{outline:2px solid #da2448!important;outline-offset:1px!important}
+body[data-ondis-refresh] :is(input,textarea)::placeholder{color:#718096!important;-webkit-text-fill-color:#718096!important;opacity:1}
+body[data-ondis-refresh] :is(.card,.section-card,.table-card){background:#fff!important;background-image:none!important;color:#182338!important;border:1px solid var(--v17-border)!important;border-radius:17px!important;box-shadow:0 7px 24px rgba(27,45,71,.05)!important}
+body[data-ondis-refresh] :is(.card,.section-card,.table-card) :is(h1,h2,h3,h4,strong,b){color:#182338}
+body[data-ondis-refresh] :is(.sub,.hint,.muted){color:#586b84!important}
+body[data-ondis-refresh] :is(button,.btn){cursor:pointer;transition:background-color .15s,color .15s,border-color .15s,box-shadow .15s}
+body[data-ondis-refresh] :is(button,.btn):focus-visible{outline:3px solid #ff6882!important;outline-offset:2px!important}
+body[data-ondis-refresh] :is(button,.btn)[disabled]{cursor:not-allowed;opacity:.56}
+body[data-ondis-refresh] :is(.btn.primary,.btn.good,.btn-primary,button.primary){background:#d51035!important;background-image:none!important;border:1px solid #d51035!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-shadow:none!important;font-weight:750!important;box-shadow:0 6px 15px #d5103524!important}
+body[data-ondis-refresh] :is(.btn.primary,.btn.good,.btn-primary,button.primary):hover{background:#ad0e2d!important;border-color:#ad0e2d!important}
+body[data-ondis-refresh] :is(.tag,.chip){border-radius:999px}
+body[data-ondis-refresh] table{border-collapse:separate;border-spacing:0;width:100%}
+body[data-ondis-refresh] :is(th,td){color:#1d2a3f!important;border-bottom:1px solid #e6ebf2}
+body[data-ondis-refresh] th{background:#f3f6fa!important;color:#526079!important;font-size:11px!important;font-weight:800!important}
+body[data-ondis-refresh] :is(.modal,.modalCx,.crm-dialog){background:#fff!important;background-image:none!important;color:#182338!important;border:1px solid #dfe6f0!important;border-radius:19px!important;box-shadow:0 28px 85px #11182750!important}
+body[data-ondis-refresh] :is(.modal,.modalCx,.crm-dialog) :is(h2,h3,h4,strong,b,label){color:#182338!important}
+body[data-ondis-refresh] :is(.modal,.modalCx,.crm-dialog) :is(p,small,.hint){color:#586b84!important}
+body[data-ondis-refresh] :is(.modal,.modalCx,.crm-dialog) :is(input,select,textarea){background:#fff!important;color:#182338!important;-webkit-text-fill-color:#182338!important}
+body[data-ondis-refresh] :is(.modal,.modalCx,.crm-dialog) :is(.btn.primary,.btn.good,.btn-primary){color:#fff!important;-webkit-text-fill-color:#fff!important}
+body[data-ondis-refresh] .ondisBrandModern{max-width:100%;min-width:0}
+@media(max-width:760px){body[data-ondis-refresh] .wrap{width:min(100%,100%)!important;padding:14px!important;margin-inline:auto!important}body[data-ondis-refresh] :is(.card,.section-card){border-radius:13px!important}body[data-ondis-refresh] :is(.card,.section-card) h2{font-size:clamp(18px,5vw,24px)}}
+
+
+/* início: fidelidade */
+
+body[data-ondis-refresh="loyalty"]{background:#f5f7fb!important;color:#182338!important}
+body[data-ondis-refresh="loyalty"] .top{min-height:66px!important;background:#101722!important;background-image:none!important;color:#fff!important;display:flex!important;align-items:center!important;gap:12px!important;padding:12px 23px!important;border-bottom:3px solid #d51035!important}
+body[data-ondis-refresh="loyalty"] .top :is(.brand,.brand *,small){color:#fff!important;-webkit-text-fill-color:#fff!important}
+body[data-ondis-refresh="loyalty"] .top .back{background:#ffffff18!important;border:1px solid #ffffff30!important;border-radius:10px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:8px 12px!important}
+body[data-ondis-refresh="loyalty"] .wrap{max-width:1280px!important;margin:25px auto!important;padding:0 22px!important}
+body[data-ondis-refresh="loyalty"] .hero{background:linear-gradient(110deg,#fff,#fff3f5)!important;color:#182338!important;border:1px solid #eddae0!important;border-radius:18px!important;padding:24px!important}
+body[data-ondis-refresh="loyalty"] .hero :is(h1,h2,h3,strong){color:#182338!important;-webkit-text-fill-color:#182338!important}
+body[data-ondis-refresh="loyalty"] .hero :is(p,small){color:#586980!important;-webkit-text-fill-color:#586980!important}
+body[data-ondis-refresh="loyalty"] :is(.grid,.chips){gap:14px!important}
+body[data-ondis-refresh="loyalty"] .card{padding:18px!important}
+body[data-ondis-refresh="loyalty"] .agent{background:#fff!important;color:#172238!important;border:1px solid #dce4f0!important;box-shadow:0 10px 32px #13253b19!important}
+body[data-ondis-refresh="loyalty"] .agent :is(h3,p,strong,small){color:#172238!important}
+@media(max-width:640px){body[data-ondis-refresh="loyalty"] .top{padding:10px 13px!important}body[data-ondis-refresh="loyalty"] .wrap{padding:0 12px!important;margin:12px auto!important}}
+
+
+/* início: ia */
+/* ONDIS V17 — Assistente visual, isolado nas páginas do pacote. */
+body[data-ondis-refresh] #v11Agent{background:#fff!important;color:#182338!important;border:1px solid #dce5f0!important;box-shadow:0 22px 80px #17223835!important;border-radius:19px!important;overflow:hidden!important}
+body[data-ondis-refresh] #v11Agent .v11-agent-head{background:linear-gradient(110deg,#72172d,#c70d34)!important;color:#fff!important;border:0!important}
+body[data-ondis-refresh] #v11Agent .v11-agent-head :is(h2,h3,span,strong,b,small){color:#fff!important;-webkit-text-fill-color:#fff!important}
+body[data-ondis-refresh] #v11Agent .v11-agent-head button{color:#fff!important;-webkit-text-fill-color:#fff!important;background:#ffffff21!important;border-color:#ffffff4a!important}
+body[data-ondis-refresh] #v11Agent :is(.v11-agent-body,.v11-agent-foot){background:#fff!important;color:#172238!important}
+body[data-ondis-refresh] #v11Agent .v11-agent-msg.ai{background:#f5f7fb!important;border:1px solid #e4eaf1!important;color:#182338!important}
+body[data-ondis-refresh] #v11Agent .v11-agent-msg.user{background:#af1535!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+body[data-ondis-refresh] #v11Agent #v11AgentSend{background:#cb1034!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:#cb1034!important}
+body[data-ondis-refresh="crm-full"] .super-drawer{background:#fff!important;color:#182338!important;box-shadow:0 20px 50px #10223d24!important;border-left:1px solid #dfe7f0!important}
+body[data-ondis-refresh="crm-full"] .super-drawer .super-head{background:linear-gradient(105deg,#75142e,#c91036)!important;color:#fff!important}
+body[data-ondis-refresh="crm-full"] .super-drawer .super-head :is(strong,small,button,span){color:#fff!important;-webkit-text-fill-color:#fff!important}
+body[data-ondis-refresh="crm-full"] .super-drawer .super-body{background:#fff!important;color:#182338!important}
+
+
+/* Verificações de interação */
+body[data-ondis-refresh] :is(button,a,input,select,textarea):focus-visible{outline:2px solid #e5092f;outline-offset:2px}
+body[data-ondis-refresh] :is(button,a){touch-action:manipulation}
+body[data-ondis-refresh] :is(dialog[open],[role="dialog"]){max-width:min(96vw,900px)}
