@@ -1,0 +1,120 @@
+/* ONDIS CRM 18 — Simplificado | Componente visual isolado nesta página
+   Identidade: branco e vermelho ONDIS, bordô discreto, texto azul-noite.
+   Todas as funções e IDs permanecem no HTML original. */
+body[data-ondis-refresh="crm-simple"]{
+  --crm18-red:#d50930;--crm18-darkred:#9e0a27;--crm18-wine:#720c27;
+  --crm18-ink:#151e32;--crm18-muted:#607089;--crm18-border:#e5e9f2;
+  --crm18-bg:#f6f7fb;--crm18-soft:#fff4f6;
+  background:var(--crm18-bg)!important;color:var(--crm18-ink)!important;
+  font-family:Inter,system-ui,-apple-system,'Segoe UI',Arial,sans-serif!important;
+  line-height:1.5;
+}
+body[data-ondis-refresh="crm-simple"] > header{
+  position:sticky!important;top:0!important;z-index:70!important;min-height:76px;
+  display:flex!important;justify-content:space-between!important;align-items:center!important;
+  gap:12px!important; padding:12px 22px 12px 268px!important;
+  background:linear-gradient(123deg,#fff 0%,#fff 77%,#fff0f2 91%,#fae7eb 100%)!important;
+  border-bottom:1px solid var(--crm18-border)!important;box-shadow:0 2px 15px #152b4c0a!important;
+}
+body[data-ondis-refresh="crm-simple"] > header .brand{
+  position:absolute!important;top:0;left:0;width:244px;height:76px;display:flex;
+  flex-direction:column;align-items:flex-start;justify-content:center;
+  padding:12px 19px!important;background:#fff!important;border-right:1px solid var(--crm18-border);
+}
+body[data-ondis-refresh="crm-simple"] > header .brand h1{font-size:23px!important;line-height:1.05!important;letter-spacing:-.05em!important;color:var(--crm18-ink)!important;display:flex;align-items:center;gap:7px}
+body[data-ondis-refresh="crm-simple"] .crm18-mark{display:inline-grid;place-items:center;background:linear-gradient(140deg,#ed123d,#9e0724);color:#fff!important;width:33px;height:33px;border-radius:9px;font-size:24px;font-weight:900}
+body[data-ondis-refresh="crm-simple"] .crm18-brand-sub{font-size:12px;font-weight:750;letter-spacing:0;background:#fce7eb;color:var(--crm18-red)!important;border-radius:7px;padding:5px 7px}
+body[data-ondis-refresh="crm-simple"] > header .brand .sub{color:var(--crm18-muted)!important;font-size:10px!important;padding-left:40px;max-width:205px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body[data-ondis-refresh="crm-simple"] > header .crmV15BrandCaption{display:none!important}
+body[data-ondis-refresh="crm-simple"] > header .chip{background:#fff0f3!important;color:#a60b2d!important;border:1px solid #f5cbd5!important;font-size:11px!important;font-weight:800!important}
+body[data-ondis-refresh="crm-simple"] > header .btn{border-color:#e1e6ef!important;background:#fff!important;color:var(--crm18-ink)!important;padding:10px 14px!important}
+body[data-ondis-refresh="crm-simple"] > header .btn.bad{border-color:#f8d8df!important;background:#fff0f3!important;color:#ad1737!important}
+body[data-ondis-refresh="crm-simple"] > .wrap{margin:0 0 0 244px!important;max-width:none!important;width:calc(100% - 244px)!important;padding:23px clamp(16px,2.2vw,34px)!important;min-width:0!important}
+/* Sidebar uses the existing tab controls and showTab() — no duplicate navigation state */
+body[data-ondis-refresh="crm-simple"] .crmV15Simple > .tabs{
+  display:flex!important;flex-direction:column!important;flex-wrap:nowrap!important;
+  position:fixed!important;inset:76px auto 0 0!important;width:244px!important;
+  background:#fff!important;border:0!important;border-right:1px solid var(--crm18-border)!important;
+  border-radius:0!important;padding:23px 13px 16px!important;margin:0!important;
+  box-shadow:4px 0 18px #1d355909!important;z-index:56!important;overflow-y:auto!important;gap:5px!important;
+}
+body[data-ondis-refresh="crm-simple"] .crm18-nav-heading{display:flex;flex-direction:column;gap:3px;padding:0 13px 17px;margin-bottom:6px;border-bottom:1px solid #e7ebf3}
+body[data-ondis-refresh="crm-simple"] .crm18-nav-heading span{font-size:10px;font-weight:850;letter-spacing:.12em;color:#8793a6}
+body[data-ondis-refresh="crm-simple"] .crm18-nav-heading strong{font-size:14px;color:#293246}
+body[data-ondis-refresh="crm-simple"] .crmV15Simple > .tabs .tab{
+  display:flex!important;align-items:center!important;text-align:left!important;width:100%!important;
+  flex:0 0 auto!important;min-height:43px!important;padding:10px 13px!important;
+  border:1px solid transparent!important;background:#fff!important;background-image:none!important;
+  color:#48566d!important;-webkit-text-fill-color:#48566d!important;
+  border-radius:11px!important;box-shadow:none!important;font-size:12px!important;font-weight:750!important;
+}
+body[data-ondis-refresh="crm-simple"] .crmV15Simple > .tabs .tab:hover{background:#fff4f6!important;color:#ac0c2c!important;-webkit-text-fill-color:#ac0c2c!important}
+body[data-ondis-refresh="crm-simple"] .crmV15Simple > .tabs .tab.active{
+  color:#fff!important;-webkit-text-fill-color:#fff!important;background:linear-gradient(110deg,#ec103d,#bb092b)!important;
+  border-color:transparent!important;box-shadow:0 6px 14px #cf163b30!important;
+}
+body[data-ondis-refresh="crm-simple"] .crm18-nav-footer{display:grid;gap:4px;margin-top:auto;padding-top:14px;border-top:1px solid var(--crm18-border)}
+body[data-ondis-refresh="crm-simple"] .crm18-nav-footer a{display:block;padding:11px 12px;color:#4c5b73!important;text-decoration:none;font-size:12px;font-weight:750;border-radius:9px}
+body[data-ondis-refresh="crm-simple"] .crm18-nav-footer a:hover{background:#fff0f3;color:#b20b2d!important}
+body[data-ondis-refresh="crm-simple"] .crmV15Hero{
+  background:linear-gradient(110deg,#fff 0%,#fff 64%,#fff2f5 91%,#fae3e8 100%)!important;
+  color:var(--crm18-ink)!important;border:1px solid #f0d7df!important;
+  border-radius:20px!important;box-shadow:0 8px 22px #8d2d450c!important;
+  padding:26px 28px!important;margin:0 0 16px!important;min-height:145px;
+}
+body[data-ondis-refresh="crm-simple"] .crmV15Hero::after{background:conic-gradient(from 5deg,#d70e38 0 27%,#f290a4 27% 36%,transparent 36% 46%,#fbcad4 46% 54%,transparent 54% 100%);border:0!important;opacity:.15;width:250px;height:250px;right:-75px;top:-105px;transform:rotate(-24deg)}
+body[data-ondis-refresh="crm-simple"] .crmV15Hero .crmV15Eyebrow{color:#c61135!important;font-size:10px!important}
+body[data-ondis-refresh="crm-simple"] .crmV15Hero h2{color:var(--crm18-ink)!important;-webkit-text-fill-color:var(--crm18-ink)!important;font-size:clamp(23px,2.2vw,32px)!important;line-height:1.18!important}
+body[data-ondis-refresh="crm-simple"] .crmV15Hero p{color:#607087!important;-webkit-text-fill-color:#607087!important;max-width:580px!important;font-size:13px!important}
+body[data-ondis-refresh="crm-simple"] .crmV15Shortcut{background:#fff!important;color:#b10b2e!important;-webkit-text-fill-color:#b10b2e!important;border:1px solid #eec1cb!important}
+body[data-ondis-refresh="crm-simple"] .crmV15Shortcut.primary{background:linear-gradient(120deg,#eb0b38,#b7082a)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:0!important}
+body[data-ondis-refresh="crm-simple"] .crmV15SegmentBanner{border-radius:14px!important;background:#fff!important;border-color:#e5eaf1!important;padding:13px 17px!important;box-shadow:none!important}
+body[data-ondis-refresh="crm-simple"] .crmV15SegmentBanner strong{color:#202b3d!important}
+body[data-ondis-refresh="crm-simple"] .crmV15Simple .card,
+body[data-ondis-refresh="crm-simple"] .crmV15Simple .kpi,
+body[data-ondis-refresh="crm-simple"] .crmV15Simple .col{
+  background:#fff!important;color:#19263b!important;border:1px solid var(--crm18-border)!important;
+  border-radius:16px!important;box-shadow:0 5px 18px #1227480a!important;
+}
+body[data-ondis-refresh="crm-simple"] .crmV15Simple .kpis{grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:13px!important}
+body[data-ondis-refresh="crm-simple"] .crmV15Simple .kpi{position:relative;padding:17px 17px 16px!important;border-top:0!important;overflow:hidden;min-height:103px}
+body[data-ondis-refresh="crm-simple"] .crmV15Simple .kpi::before{content:'';position:absolute;inset:0 auto 0 0;width:3px;background:linear-gradient(#ef1947,#bc0b2f)}
+body[data-ondis-refresh="crm-simple"] .crmV15Simple .kpi::after{content:'';position:absolute;right:-20px;top:-20px;width:85px;height:85px;background:radial-gradient(circle,#ffe3e9 0 30%,transparent 70%);pointer-events:none}
+body[data-ondis-refresh="crm-simple"] .crmV15Simple .kpi .t{font-size:11px!important;font-weight:750!important;color:#68768b!important}
+body[data-ondis-refresh="crm-simple"] .crmV15Simple .kpi .v{font-size:clamp(20px,1.9vw,28px)!important;color:#172238!important}
+body[data-ondis-refresh="crm-simple"] .crmV15Simple .cardHead h2{font-size:16px!important;color:#182237!important}
+body[data-ondis-refresh="crm-simple"] .crmV15Simple .btn.good,body[data-ondis-refresh="crm-simple"] .crmV15Simple .btn.warn{background:#d30a30!important;border-color:#d30a30!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+body[data-ondis-refresh="crm-simple"] .crmV15Simple .btn:not(.good):not(.bad):not(.warn){background:#fff!important;color:#27344a!important;-webkit-text-fill-color:#27344a!important;border:1px solid #dce3ec!important}
+body[data-ondis-refresh="crm-simple"] .crmV15Simple .card :is(input:not([type="checkbox"]),select,textarea),body[data-ondis-refresh="crm-simple"] .modal :is(input:not([type="checkbox"]),select,textarea){background:#fff!important;color:#1b293e!important;-webkit-text-fill-color:#1b293e!important;border:1px solid #d8e0eb!important;border-radius:10px!important}
+body[data-ondis-refresh="crm-simple"] .crmV15Simple :is(th,td){color:#29374c!important;border-color:#e6ebf2!important}
+body[data-ondis-refresh="crm-simple"] .crmV15Simple th{background:#f8f9fc!important;color:#5e6d81!important}
+body[data-ondis-refresh="crm-simple"] .crmV15Simple .hint{color:#6b798d!important}
+body[data-ondis-refresh="crm-simple"] .crmV15Simple .leadCard{background:#fff!important;color:#1b283b!important;border:1px solid #e3e8f1!important}
+body[data-ondis-refresh="crm-simple"] .crmV15Simple .col{background:#f9fafc!important}
+body[data-ondis-refresh="crm-simple"] .crmV15Simple .col.dragover{background:#fff0f4!important;border-color:#e7224b!important}
+body[data-ondis-refresh="crm-simple"] .modalBack{background:#0c172d99!important;z-index:99999!important}
+body[data-ondis-refresh="crm-simple"] .modal{background:#fff!important;border:1px solid #e0e5ee!important;color:#1c283b!important;box-shadow:0 28px 80px #111a303d!important}
+body[data-ondis-refresh="crm-simple"] :is(.onx-title-icon,.onx-title-icon svg){max-width:36px;max-height:36px}
+body[data-ondis-refresh="crm-simple"] .onx-title-icon svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8}
+body[data-ondis-refresh="crm-simple"] select{color-scheme:light!important}
+body[data-ondis-refresh="crm-simple"] button:focus-visible,body[data-ondis-refresh="crm-simple"] a:focus-visible{outline:3px solid #ff7291!important;outline-offset:2px!important}
+@media(max-width:850px){
+ body[data-ondis-refresh="crm-simple"] > header{padding:10px 14px!important;min-height:74px}
+ body[data-ondis-refresh="crm-simple"] > header .brand{position:static!important;flex:1!important;width:auto!important;height:auto!important;border-right:0!important;padding:0!important}
+ body[data-ondis-refresh="crm-simple"] > header .brand h1{font-size:18px!important}
+ body[data-ondis-refresh="crm-simple"] > header .brand .sub{display:none!important}
+ body[data-ondis-refresh="crm-simple"] > header .chip{display:none!important}
+ body[data-ondis-refresh="crm-simple"] > .wrap{margin:0!important;width:100%!important;padding:13px!important}
+ body[data-ondis-refresh="crm-simple"] .crmV15Simple>.tabs{position:sticky!important;top:74px!important;inset:auto!important;width:100%!important;display:flex!important;flex-direction:row!important;overflow-x:auto!important;overflow-y:hidden!important;gap:4px!important;padding:8px!important;margin:0 0 12px!important;border:1px solid #e0e7f1!important;border-radius:12px!important;z-index:30!important;box-shadow:0 5px 16px #1934520f!important}
+ body[data-ondis-refresh="crm-simple"] .crmV15Simple>.tabs .tab{width:auto!important;white-space:nowrap!important;min-height:39px!important}
+ body[data-ondis-refresh="crm-simple"] .crm18-nav-heading,body[data-ondis-refresh="crm-simple"] .crm18-nav-footer{display:none!important}
+ body[data-ondis-refresh="crm-simple"] .crmV15Hero{padding:20px!important;min-height:0}
+ body[data-ondis-refresh="crm-simple"] .crmV15HeroActions{margin-top:12px}
+ body[data-ondis-refresh="crm-simple"] .crmV15SegmentBanner{flex-wrap:wrap}
+}
+@media(max-width:530px){body[data-ondis-refresh="crm-simple"] >header .btn{padding:8px!important;font-size:11px!important}body[data-ondis-refresh="crm-simple"] .crmV15Simple .kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}body[data-ondis-refresh="crm-simple"] .crmV15Simple .kpi{padding:12px!important}body[data-ondis-refresh="crm-simple"] .crmV15Simple .kpi .v{font-size:18px!important}body[data-ondis-refresh="crm-simple"] .crmV15Hero h2{font-size:22px!important}}
+
+/* Símbolo geométrico da própria identidade ONDIS; ícones da interface em vermelho. */
+body[data-ondis-refresh="crm-simple"] .crm18-mark svg{display:block;width:26px;height:26px;max-width:26px;max-height:26px;color:#fff;stroke:#fff;fill:none}
+body[data-ondis-refresh="crm-simple"] .crmV15Simple .cardHead .onx-title-icon{background:#fff0f3!important;color:#d40a33!important;border-color:#f4d6df!important}
+body[data-ondis-refresh="crm-simple"] .crmV15Simple .cardHead .onx-title-icon svg{stroke:#d40a33!important}

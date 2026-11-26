@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>ONDIS CRM</title>
-<meta content="#0b0f14" name="theme-color"/>
+<meta content="#CB082D" name="theme-color"/>
 <link href="./icon-192.png" rel="icon"/>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
@@ -93,9 +93,10 @@
 <script defer src="./ondis-theme-v2.js?v=2.1.0"></script>
 <link rel="stylesheet" href="./ondis-visual-v4.css?v=4.0.0"/>
 
-<link rel="stylesheet" href="./ondis-contraste-global-v6.css?v=6.0.0">
+<!-- A folha V6 tinha um seletor global que deixava botões do CRM sem contraste. -->
 <link rel="stylesheet" href="./ondis-crm-retail-v15.css?v=15.0.0">
-<link rel="stylesheet" href="./ondis-reparo-crm-20261126.css?v=20261126.1">
+
+<link rel="stylesheet" href="./ondis-crm18-simples.css?v=18.1.0">
 </head>
 <body data-ondis-refresh="crm-simple">
 
@@ -103,7 +104,7 @@
 
 <header>
   <div class="brand">
-    <h1>ONDIS <span style="color:#e61b38">CRM</span></h1>
+    <h1><span class="crm18-mark" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" focusable="false"><path d="M24 3 43 13.5v21L24 45 5 34.5v-21L24 3Z" stroke="currentColor" stroke-width="3"/><path d="m12 16 12-7 12 7-12 7-12-7Zm0 8 12 7 12-7M12 32l12 7 12-7" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/></svg></span> ONDIS <span class="crm18-brand-sub">CRM</span></h1>
     <div class="sub" id="ctxInfo">—</div><div class="crmV15BrandCaption">Relacionamento para óticas e moda</div>
   </div>
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
@@ -114,16 +115,18 @@
 </header>
 
 <div class="wrap crmV15Simple">
-  <div class="crmV15Hero"><div><span class="crmV15Eyebrow">RELACIONAMENTO · ONDIS</span><h2>CRM Simplificado</h2><p>Atenda melhor, acompanhe retornos e crie oportunidades de recompra.</p></div><div class="crmV15HeroActions"><button type="button" class="crmV15Shortcut" data-crm-simple-go="clientes">Ver clientes</button><button type="button" class="crmV15Shortcut primary" data-crm-simple-go="lembretes">Acompanhar retornos</button></div></div>
+  <div class="crmV15Hero"><div><span class="crmV15Eyebrow">CRM SIMPLIFICADO · ONDIS</span><h2>Relacionamento descomplicado.</h2><p>Seus clientes, retornos e oportunidades em um único lugar. Mais tempo para atender, menos tempo para procurar.</p></div><div class="crmV15HeroActions"><button type="button" class="crmV15Shortcut" data-crm-simple-go="clientes">Ver clientes</button><button type="button" class="crmV15Shortcut primary" data-crm-simple-go="lembretes">Acompanhar retornos</button></div></div>
   <div class="crmV15SegmentBanner" role="note"><span class="crmV15SegIcon">◉</span><div><strong>CRM de varejo · Ótica e Moda</strong><small>Priorize preferências, atendimento, pós-venda e fidelização. O cadastro existente permanece preservado.</small></div><a href="./crm-completo.html">Abrir CRM Completo →</a></div>
-  <div class="tabs">
+  <nav class="tabs" aria-label="Navegação do CRM Simplificado">
+    <div class="crm18-nav-heading"><span>MENU PRINCIPAL</span><strong>Relacionamento</strong></div>
     <button class="tab active" id="tabHoje" onclick="showTab('hoje')">Visão geral</button>
     <button class="tab" id="tabClientes" onclick="showTab('clientes')">Clientes 360°</button>
     <button class="tab" id="tabFunil" onclick="showTab('funil')">Jornada de compra</button>
     <button class="tab" id="tabMetricas" onclick="showTab('metricas')">Indicadores</button>
     <button class="tab" id="tabLembretes" onclick="showTab('lembretes')">Retornos</button>
     <button class="tab" id="tabCampanhas" onclick="showTab('campanhas')">Campanhas</button>
-  </div>
+    <div class="crm18-nav-footer"><a href="./crm-completo.html">◈ &nbsp; Abrir CRM Completo</a><a href="./index.html">← &nbsp; Voltar ao ONDIS</a></div>
+  </nav>
 
   <!-- HOJE (ações do dia) -->
   <div id="viewHoje">
