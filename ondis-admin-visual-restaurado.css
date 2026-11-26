@@ -1,0 +1,535 @@
+/* Restauracao do visual de Admin e Super Admin anterior a V16. Escopo: apenas estas paginas. */
+/* ============================================================
+   ONDIS ADMIN V3 — Admin + Super Admin
+   Escopo: somente body[data-ondis-refresh="admin"|"superadmin"].
+   Camada visual. Nenhuma mudança em regras, dados, JS ou operações.
+   ============================================================ */
+
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]){
+  --adm-bg:#f3f5f9;
+  --adm-paper:#ffffff;
+  --adm-ink:#182235;
+  --adm-heading:#101828;
+  --adm-muted:#64748b;
+  --adm-line:#e1e7f0;
+  --adm-soft:#f6f8fc;
+  --adm-accent:#e51635;
+  --adm-accent-hover:#be112c;
+  --adm-shadow:0 10px 32px rgba(29,42,67,.06);
+  --adm-good:#08784b;
+  --adm-good-bg:#e8f8ef;
+  --adm-warn:#946012;
+  --adm-warn-bg:#fff6e4;
+  --adm-danger:#bc2540;
+  --adm-danger-bg:#fff0f3;
+  --adm-purple:#6134af;
+  --adm-purple-bg:#f4efff;
+  background:radial-gradient(ellipse 750px 380px at 95% -100px,rgba(229,22,53,.07),transparent 70%),var(--adm-bg)!important;
+  color:var(--adm-ink)!important;
+  color-scheme:light;
+  min-height:100vh;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif!important;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* Escuro é definido pelo tema, não pelo nome da página. */
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"])
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]),
+:root[data-theme="custom"][data-ondis-surface-tone="dark"]
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]){
+  --adm-bg:#0e1522;
+  --adm-paper:#182333;
+  --adm-ink:#eaf0fa;
+  --adm-heading:#ffffff;
+  --adm-muted:#bcc9db;
+  --adm-line:#36475c;
+  --adm-soft:#222f42;
+  --adm-accent:#f33152;
+  --adm-accent-hover:#d71a3d;
+  --adm-shadow:0 16px 46px rgba(0,0,0,.23);
+  --adm-good:#83edb6;
+  --adm-good-bg:#173a32;
+  --adm-warn:#f4d08a;
+  --adm-warn-bg:#39301f;
+  --adm-danger:#ff9cad;
+  --adm-danger-bg:#41232f;
+  --adm-purple:#d5b9ff;
+  --adm-purple-bg:#332846;
+  background:radial-gradient(ellipse 700px 350px at 92% -100px,rgba(231,45,78,.12),transparent 75%),var(--adm-bg)!important;
+  color-scheme:dark;
+}
+
+/* Cabeçalho. Cor própria, não confundir com cartões da área principal. */
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) > header{
+  position:sticky!important;
+  top:0!important;
+  z-index:50!important;
+  width:100%;min-height:78px!important;
+  display:flex!important;align-items:center!important;justify-content:space-between!important;
+  padding:14px clamp(20px,4vw,60px)!important;
+  gap:18px!important;
+  background:linear-gradient(110deg,#111722 0%,#1b1a27 65%,#2d1522 100%)!important;
+  border:0!important;border-bottom:1px solid rgba(255,255,255,.10)!important;
+  box-shadow:0 7px 28px rgba(7,13,28,.16)!important;
+  color:#f9fafb!important;
+  backdrop-filter:blur(16px);
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) > header .brand{
+  display:flex;flex-direction:column;gap:4px;min-width:0;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) > header .brand h1{
+  color:#fff!important;
+  font-size:clamp(20px,2vw,25px)!important;
+  font-weight:900!important;letter-spacing:-.045em!important;
+  line-height:1.12!important;white-space:nowrap;
+  text-shadow:none!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) > header .brand h1 span{
+  display:inline-block;vertical-align:2px;
+  color:#ffb2bd!important;
+  margin-left:5px;font-size:11px!important;font-weight:850!important;
+  letter-spacing:.09em!important;
+  background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.16);
+  padding:5px 9px;border-radius:8px;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) > header .brand .sub{
+  font-size:11px!important;line-height:1.4!important;color:#afc0d3!important;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) > header .adminv3-actions{
+  display:flex!important;align-items:center!important;justify-content:flex-end!important;
+  flex-wrap:wrap!important;gap:8px!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) > header .chip{
+  background:rgba(255,255,255,.10)!important;
+  color:#f9fafb!important;
+  border:1px solid rgba(255,255,255,.18)!important;
+  padding:10px 13px!important;
+  border-radius:11px!important;line-height:1.2;
+  font-size:12px!important;font-weight:760!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) > header .btn{
+  min-height:40px!important;background:rgba(255,255,255,.09)!important;
+  color:#ffffff!important;border:1px solid rgba(255,255,255,.17)!important;
+  box-shadow:none!important;border-radius:10px!important;
+  font-size:12px!important;padding:9px 13px!important;font-weight:750!important;
+  text-shadow:none!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) > header .btn:hover{
+  background:rgba(255,255,255,.17)!important;color:#fff!important;border-color:rgba(255,255,255,.35)!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) > header .btn.bad{
+  background:rgba(234,46,77,.20)!important;color:#ffd9e1!important;
+  border-color:rgba(255,131,151,.35)!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) > header .btn.bad:hover{
+  background:rgba(234,46,77,.35)!important;color:#fff!important;
+}
+
+/* Apresentação editorial e layout */
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) > .wrap{
+  width:100%!important;max-width:1500px!important;
+  margin:0 auto!important;padding:clamp(18px,2.3vw,32px) clamp(18px,3vw,44px) 64px!important;
+  min-width:0!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .adminv3-hero{
+  position:relative;isolation:isolate;
+  display:flex;justify-content:space-between;align-items:center;gap:18px;
+  margin-bottom:24px;min-height:154px;
+  padding:26px clamp(22px,3vw,36px);
+  border-radius:22px;overflow:hidden;
+  background:linear-gradient(112deg,#181b2a 0%,#29192b 63%,#541a33 100%);
+  color:#fff!important;box-shadow:0 16px 42px rgba(28,21,43,.14);
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .adminv3-hero:before{
+  content:"";position:absolute;z-index:-1;width:360px;height:360px;
+  right:-65px;top:-190px;border:1px solid rgba(255,255,255,.14);border-radius:50%;
+  box-shadow:0 0 0 38px rgba(255,255,255,.024),0 0 0 95px rgba(255,255,255,.024);
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .adminv3-kicker{
+  display:block;margin-bottom:10px;letter-spacing:.19em;font-weight:880;font-size:10px;color:#ffb5c3!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .adminv3-hero h2{
+  font-size:clamp(22px,2.8vw,31px)!important;font-weight:900!important;
+  line-height:1.15!important;letter-spacing:-.038em!important;color:#fff!important;margin:0 0 8px!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .adminv3-hero p{
+  color:#d5d9e5!important;font-size:12px!important;max-width:680px;line-height:1.65;margin:0!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .adminv3-hero-mark{
+  width:82px;height:82px;display:grid;place-items:center;flex:0 0 82px;
+  background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);
+  border-radius:24px;transform:rotate(-5deg);
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .adminv3-hero-mark svg{
+  width:38px;height:38px;stroke:#ffb9c8;stroke-width:1.65;fill:none;stroke-linecap:round;stroke-linejoin:round;
+}
+
+/* Cards e KPIs */
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .wrap > .card,
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .wrap > .kpis .kpi{
+  background:var(--adm-paper)!important;color:var(--adm-ink)!important;
+  border:1px solid var(--adm-line)!important;
+  box-shadow:var(--adm-shadow)!important;border-radius:21px!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .wrap > .card{
+  padding:clamp(18px,2.2vw,30px)!important;margin-bottom:22px!important;
+  overflow:hidden;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .kpis{
+  display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;margin-bottom:22px!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .kpi{
+  padding:20px 22px!important;position:relative;overflow:hidden;min-width:0;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .kpi:before{
+  content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--adm-accent);
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .kpi:nth-child(2):before{background:#387de1}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .kpi:nth-child(3):before{background:#14a783}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .kpi:nth-child(4):before{background:#9061d4}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .kpi .t{
+  font-size:10px!important;font-weight:850!important;letter-spacing:.075em!important;
+  color:var(--adm-muted)!important;text-transform:uppercase;margin:0 0 10px!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .kpi .v{
+  color:var(--adm-heading)!important;font-size:clamp(22px,2.6vw,31px)!important;
+  font-weight:900!important;letter-spacing:-.045em!important;overflow-wrap:anywhere;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .cardHead{
+  display:flex!important;align-items:center!important;justify-content:space-between!important;
+  gap:14px!important;padding:0 0 20px!important;margin:0 0 20px!important;
+  border:0!important;border-bottom:1px solid var(--adm-line)!important;
+  background:transparent!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .cardHead h2{
+  margin:0!important;font-size:19px!important;font-weight:880!important;
+  letter-spacing:-.026em!important;color:var(--adm-heading)!important;
+  display:flex;align-items:center;gap:12px;line-height:1.3!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .cardHead h2 .onx-title-icon,
+body[data-ondis-refresh="superadmin"] .mmHead h2 .onx-title-icon,
+body[data-ondis-refresh="superadmin"] .mulTitulo .onx-title-icon{
+  display:inline-grid;place-items:center;flex:0 0 38px;width:38px;height:38px;
+  background:var(--adm-danger-bg)!important;color:var(--adm-accent)!important;
+  border:1px solid color-mix(in srgb,var(--adm-accent) 22%,var(--adm-line))!important;
+  border-radius:12px!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .onx-title-icon svg{
+  width:19px!important;height:19px!important;stroke:currentColor!important;
+  fill:none!important;stroke-width:1.75!important;stroke-linecap:round;stroke-linejoin:round;
+}
+
+/* Campos e formulários — cor do texto vem da superfície atual. */
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) :is(.field label,th){
+  color:var(--adm-muted)!important;font-size:10px!important;
+  font-weight:850!important;letter-spacing:.075em!important;text-transform:uppercase;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .field{min-width:0}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) :is(input:not([type="checkbox"]):not([type="radio"]),select,textarea){
+  background:var(--adm-paper)!important;
+  color:var(--adm-ink)!important;
+  border:1px solid var(--adm-line)!important;
+  border-radius:12px!important;
+  min-height:43px!important;padding:10px 13px!important;
+  font-size:13px!important;font-weight:550!important;line-height:1.4!important;
+  box-shadow:none!important;color-scheme:inherit!important;
+  max-width:100%;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) :is(input,textarea)::placeholder{
+  color:var(--adm-muted)!important;opacity:.77;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) :is(input:not([type="checkbox"]),select,textarea):focus{
+  border-color:var(--adm-accent)!important;
+  outline:3px solid color-mix(in srgb,var(--adm-accent) 15%,transparent)!important;
+  outline-offset:0!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) :is(select option,select optgroup){
+  background:var(--adm-paper)!important;color:var(--adm-ink)!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) #conviteLink{
+  background:var(--adm-soft)!important;color:var(--adm-ink)!important;
+  flex:1 1 300px!important;min-width:0!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) #lojaSelectorCard{
+  background:var(--adm-soft)!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) #lojaSelectorCard .field select{width:min(460px,100%)}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) :is(.hint,.meta,.sub,.tiny){
+  color:var(--adm-muted)!important;line-height:1.6!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) :is(h2,h3,h4,strong,b):not(.btn){
+  color:var(--adm-heading);
+}
+
+/* Botões: neutral / primary / danger / alert / purple, sempre com contraste. */
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .wrap .btn,
+body[data-ondis-refresh="superadmin"] .modalCx .btn{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  min-height:40px!important;max-width:100%;padding:9px 14px!important;
+  border-radius:11px!important;border:1px solid var(--adm-line)!important;
+  background:var(--adm-paper)!important;color:var(--adm-ink)!important;
+  font-size:12px!important;font-weight:750!important;line-height:1.25!important;
+  text-shadow:none!important;box-shadow:0 1px 2px rgba(12,22,38,.025)!important;
+  cursor:pointer;transition:background-color .16s ease,border-color .16s ease,transform .16s ease!important;
+  white-space:normal;text-align:center;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .wrap .btn:hover,
+body[data-ondis-refresh="superadmin"] .modalCx .btn:hover{
+  background:var(--adm-soft)!important;border-color:color-mix(in srgb,var(--adm-accent) 25%,var(--adm-line))!important;
+  color:var(--adm-heading)!important;transform:translateY(-1px);
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .wrap .btn.good,
+body[data-ondis-refresh="superadmin"] .modalCx .btn.good{
+  background:var(--adm-accent)!important;border-color:var(--adm-accent)!important;color:#fff!important;
+  box-shadow:0 6px 14px rgba(210,22,56,.14)!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .wrap .btn.good:hover,
+body[data-ondis-refresh="superadmin"] .modalCx .btn.good:hover{
+  background:var(--adm-accent-hover)!important;border-color:var(--adm-accent-hover)!important;color:#fff!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .wrap .btn.bad,
+body[data-ondis-refresh="superadmin"] .modalCx .btn.bad{
+  background:var(--adm-danger-bg)!important;border-color:color-mix(in srgb,var(--adm-danger) 25%,var(--adm-line))!important;
+  color:var(--adm-danger)!important;box-shadow:none!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .wrap .btn.bad:hover,
+body[data-ondis-refresh="superadmin"] .modalCx .btn.bad:hover{
+  background:color-mix(in srgb,var(--adm-danger) 16%,var(--adm-paper))!important;color:var(--adm-danger)!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .wrap .btn.warn,
+body[data-ondis-refresh="superadmin"] .modalCx .btn.warn{
+  color:var(--adm-warn)!important;background:var(--adm-warn-bg)!important;
+  border-color:color-mix(in srgb,var(--adm-warn) 23%,var(--adm-line))!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .wrap .btn.purple,
+body[data-ondis-refresh="superadmin"] .modalCx .btn.purple{
+  color:var(--adm-purple)!important;background:var(--adm-purple-bg)!important;
+  border-color:color-mix(in srgb,var(--adm-purple) 22%,var(--adm-line))!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) :is(.btn,select,input,textarea,a):focus-visible{
+  outline:3px solid color-mix(in srgb,var(--adm-accent) 45%,transparent)!important;outline-offset:2px!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .btn:disabled{
+  cursor:not-allowed;opacity:.55!important;transform:none!important;
+}
+
+/* Tabelas: sem quebra das ações, mas com rolagem LOCAL no celular. */
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) :is(#tabelaLojas,#tabelaUsuarios,#tabelaVendedores),
+body[data-ondis-refresh="superadmin"] .mulBody{
+  max-width:100%;min-width:0;overflow-x:auto!important;
+  scrollbar-color:var(--adm-line) transparent;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) :is(#tabelaLojas,#tabelaUsuarios,#tabelaVendedores) table,
+body[data-ondis-refresh="superadmin"] .mulBody table{
+  width:100%!important;min-width:740px;border-collapse:separate!important;border-spacing:0!important;
+  border:1px solid var(--adm-line)!important;border-radius:15px;overflow:hidden;
+  background:var(--adm-paper)!important;
+  color:var(--adm-ink)!important;font-size:12px!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) table th{
+  padding:14px 13px!important;background:var(--adm-soft)!important;
+  border-bottom:1px solid var(--adm-line)!important;white-space:nowrap;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) table td{
+  color:var(--adm-ink)!important;background:var(--adm-paper)!important;
+  padding:15px 13px!important;border-bottom:1px solid var(--adm-line)!important;
+  vertical-align:middle!important;line-height:1.45!important;
+  overflow-wrap:anywhere;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) table td b,
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) table td strong{
+  font-weight:800!important;color:var(--adm-heading)!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) table tr:last-child td{border-bottom:0!important;}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) table tbody tr:hover td{
+  background:var(--adm-soft)!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) table td:last-child .btn{
+  margin:3px 3px 3px 0!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .tag{
+  display:inline-flex!important;align-items:center;gap:5px;padding:6px 10px!important;
+  background:var(--adm-soft)!important;color:var(--adm-ink)!important;
+  border:1px solid var(--adm-line)!important;border-radius:999px!important;
+  font-size:11px!important;font-weight:770!important;line-height:1.2!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .tag.code{
+  background:var(--adm-soft)!important;color:var(--adm-heading)!important;
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace!important;letter-spacing:.02em!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .tag.admin{
+  background:var(--adm-warn-bg)!important;color:var(--adm-warn)!important;
+  border-color:color-mix(in srgb,var(--adm-warn) 18%,var(--adm-line))!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .tag.seller{
+  background:var(--adm-soft)!important;color:var(--adm-ink)!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .tag.super{
+  background:var(--adm-purple-bg)!important;color:var(--adm-purple)!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .tag.inactive,
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .tag[style*="#ff9090"]{
+  background:var(--adm-danger-bg)!important;color:var(--adm-danger)!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .tag[style*="#7fffc0"],
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .tag.good{
+  background:var(--adm-good-bg)!important;color:var(--adm-good)!important;
+}
+body[data-ondis-refresh="superadmin"] .storesChk label{
+  background:var(--adm-soft)!important;color:var(--adm-ink)!important;
+  border:1px solid var(--adm-line)!important;border-radius:9px!important;
+  padding:7px 9px!important;font-size:11px!important;
+}
+body[data-ondis-refresh="superadmin"] input[type="checkbox"]{accent-color:var(--adm-accent)!important;}
+
+/* Modais do Super Admin: inclusive Módulos, Segmento e Usuários. */
+body[data-ondis-refresh="superadmin"] .modalBack{
+  background:rgba(10,17,31,.68)!important;backdrop-filter:blur(5px);
+  padding:clamp(12px,3vw,32px)!important;
+}
+body[data-ondis-refresh="superadmin"] .modalCx{
+  background:var(--adm-paper)!important;color:var(--adm-ink)!important;
+  border:1px solid var(--adm-line)!important;border-radius:22px!important;
+  padding:clamp(18px,2.5vw,28px)!important;
+  box-shadow:0 28px 85px rgba(6,15,29,.32)!important;
+  width:min(100%,740px)!important;max-width:740px!important;
+}
+body[data-ondis-refresh="superadmin"] .modalModulos{max-width:740px!important;}
+body[data-ondis-refresh="superadmin"] .mmHead{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding-bottom:16px;margin-bottom:16px;border-bottom:1px solid var(--adm-line);
+}
+body[data-ondis-refresh="superadmin"] .mmHead h2,
+body[data-ondis-refresh="superadmin"] .mulTitulo{
+  font-size:19px!important;color:var(--adm-heading)!important;font-weight:850!important;
+  display:flex;align-items:center;gap:10px;line-height:1.3!important;
+}
+body[data-ondis-refresh="superadmin"] .mmSub,
+body[data-ondis-refresh="superadmin"] .mulSub{font-size:12px!important;color:var(--adm-muted)!important;}
+body[data-ondis-refresh="superadmin"] .mmPresets{
+  display:flex;gap:8px;flex-wrap:wrap;margin:16px 0!important;
+}
+body[data-ondis-refresh="superadmin"] .mmGroup{
+  color:var(--adm-muted)!important;font-size:10px!important;font-weight:900!important;
+  letter-spacing:.09em!important;margin:17px 0 9px!important;
+}
+body[data-ondis-refresh="superadmin"] .mmList{
+  max-height:min(50vh,480px);overflow:auto;padding:0 3px 0 0;
+}
+body[data-ondis-refresh="superadmin"] .mmRow{
+  display:flex;align-items:center;gap:14px;padding:13px 15px!important;
+  border:1px solid var(--adm-line)!important;background:var(--adm-soft)!important;
+  border-radius:13px!important;margin-bottom:8px!important;color:var(--adm-ink)!important;
+}
+body[data-ondis-refresh="superadmin"] .mmRow:has(input:checked){
+  border-color:color-mix(in srgb,var(--adm-accent) 32%,var(--adm-line))!important;
+  background:color-mix(in srgb,var(--adm-accent) 5%,var(--adm-paper))!important;
+}
+body[data-ondis-refresh="superadmin"] .mmRow b{font-size:13px!important;color:var(--adm-heading)!important;}
+body[data-ondis-refresh="superadmin"] .mmRow span{font-size:11px!important;color:var(--adm-muted)!important;line-height:1.5!important;}
+body[data-ondis-refresh="superadmin"] .mmFoot{
+  border-top:1px solid var(--adm-line)!important;
+  margin-top:18px!important;padding-top:17px!important;justify-content:flex-end;
+}
+body[data-ondis-refresh="superadmin"] .mmFoot > .btn.warn:first-child{margin-right:auto;}
+body[data-ondis-refresh="superadmin"] :is(#sgCategorias,#sgMotivos){min-height:180px!important;resize:vertical;}
+
+/* A tela de loading original mantém a função, só recebe contraste. */
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .loading{
+  background:rgba(9,15,26,.92)!important;color:#ffffff!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .spinner{
+  border:3px solid rgba(255,255,255,.17)!important;border-top-color:#ff4261!important;
+}
+
+/* Tablet e celular: navegação legível e tabelas contidas nos cards. */
+@media(max-width:1040px){
+  body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .kpis{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+  body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) > header{
+    padding:12px 20px!important;
+  }
+}
+@media(max-width:700px){
+  body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) > header{
+    position:relative!important;align-items:flex-start!important;flex-direction:column!important;
+    gap:12px!important;padding:15px 17px!important;
+  }
+  body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) > header .adminv3-actions{
+    justify-content:flex-start!important;width:100%;gap:7px!important;
+  }
+  body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) > header .chip{display:none!important;}
+  body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) > header .btn{min-height:37px!important;font-size:11px!important;}
+  body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) > .wrap{
+    padding:16px 13px 40px!important;
+  }
+  body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .adminv3-hero{
+    padding:20px!important;min-height:auto;border-radius:18px;margin-bottom:17px;
+  }
+  body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .adminv3-hero-mark{display:none;}
+  body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .wrap > .card{
+    padding:18px 14px!important;border-radius:17px!important;margin-bottom:16px!important;
+  }
+  body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .kpis{gap:9px!important;}
+  body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .kpi{padding:16px 14px!important;border-radius:15px!important;}
+  body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .cardHead{
+    align-items:flex-start!important;gap:12px!important;flex-wrap:wrap!important;
+  }
+  body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .cardHead h2{font-size:16px!important;}
+  body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .row{gap:10px!important;}
+  body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .row .field{flex:1 1 100%!important;min-width:0!important;}
+  body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .row > .btn{width:100%;}
+  body[data-ondis-refresh="superadmin"] .modalCx{border-radius:17px!important;}
+}
+@media(max-width:390px){
+  body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .kpis{grid-template-columns:1fr 1fr!important;}
+  body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .kpi .v{font-size:22px!important;}
+}
+@media(prefers-reduced-motion:reduce){
+  body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) .btn{transition:none!important;}
+}
+
+/* Correção de precedência: o legado tinha
+   body[data-ondis-refresh] header:not(.crm-topbar):not(.top) !important
+   com especificidade maior. O painel administrativo precisa de cabeçalho
+   escuro próprio, independentemente do tema das superfícies. */
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) header:not(.crm-topbar):not(.top){
+  background:linear-gradient(110deg,#111722 0%,#1b1a27 65%,#2d1522 100%)!important;
+  border-bottom:1px solid rgba(255,255,255,.10)!important;
+  box-shadow:0 7px 28px rgba(7,13,28,.16)!important;
+  color:#fff!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) header:not(.crm-topbar):not(.top) .brand,
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) header:not(.crm-topbar):not(.top) .brand h1{
+  color:#fff!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) header:not(.crm-topbar):not(.top) .brand .sub{
+  color:#c5d0e1!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) header:not(.crm-topbar):not(.top) .brand h1 > span[style]{
+  color:#ffbdc9!important;
+}
+
+/* Mantém leitura e navegação em tabelas menores sem esmagar palavras.
+   O deslocamento horizontal fica DENTRO do cartão, não na página. */
+body[data-ondis-refresh="superadmin"] #tabelaLojas table{min-width:1040px!important;}
+body[data-ondis-refresh="superadmin"] #tabelaUsuarios table{min-width:830px!important;}
+body[data-ondis-refresh="admin"] #tabelaVendedores table{min-width:900px!important;}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) :is(#tabelaLojas,#tabelaUsuarios,#tabelaVendedores) table td:not(:last-child){
+  white-space:nowrap!important;overflow-wrap:normal!important;
+}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]) :is(#tabelaLojas,#tabelaUsuarios,#tabelaVendedores){
+  scrollbar-width:thin;
+  scrollbar-color:color-mix(in srgb,var(--adm-muted) 42%,transparent) transparent;
+}
+/* Vermelho um pouco mais profundo nos botões do tema escuro: branco passa 4.5:1. */
+:root:is([data-theme="neon"],[data-theme="ocean"],[data-theme="sunset"],[data-theme="purple"],[data-theme="textured"])
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]),
+:root[data-theme="custom"][data-ondis-surface-tone="dark"]
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"]){
+  --adm-accent:#cc1d3d;
+  --adm-accent-hover:#b31532;
+}
