@@ -1,0 +1,126 @@
+/* ONDIS V16 · Light Premium · ISOLATED BY MODULE
+   Pure presentation, no data writes; intentionally does NOT target Operation. */
+:root { --v16-red:#d20b31; --v16-red-hover:#b60b2d; --v16-bordeaux:#79152b; --v16-ink:#182437; --v16-muted:#58687e; --v16-line:#dce3ee; --v16-page:#f5f7fb; --v16-card:#fff; --v16-soft:#fff3f5; --v16-shadow:0 10px 28px rgba(31,52,77,.06); }
+body[data-ondis-refresh="crm-simple"],body[data-ondis-refresh="crm-full"],body[data-ondis-refresh="team"],body[data-ondis-refresh="commission"],body[data-ondis-refresh="timeclock"],body[data-ondis-refresh="admin"],body[data-ondis-refresh="superadmin"],body[data-ondis-refresh="loyalty"]{--ondis-primary:var(--v16-red);--ondis-accent:var(--v16-red);--ondis-bg:var(--v16-page);--ondis-surface:#fff;--ondis-surface-soft:#f9fafc;--ondis-text:var(--v16-ink);--ondis-muted:var(--v16-muted);--ondis-line:var(--v16-line);--crm-primary:var(--v16-red);--crm-accent:var(--v16-red);--crm-navy:var(--v16-ink);--crm-bg:var(--v16-page);--crm-surface:#fff;--crm-soft:#f9fafc;--crm-text:var(--v16-ink);--crm-muted:var(--v16-muted);--crm-line:var(--v16-line);background:var(--v16-page)!important;color:var(--v16-ink)!important;color-scheme:light;font-family:Inter,system-ui,-apple-system,'Segoe UI',sans-serif!important;}
+/* Shared elements below are scoped to the eight updated modules. */
+body:is([data-ondis-refresh="crm-simple"],[data-ondis-refresh="crm-full"],[data-ondis-refresh="team"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"],[data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="loyalty"]) :is(input:not([type="checkbox"]):not([type="radio"]),select,textarea){background:#fff!important;color:var(--v16-ink)!important;border:1px solid #d2dce9!important;border-radius:10px!important;color-scheme:light!important;min-width:0;box-shadow:none!important;}
+body:is([data-ondis-refresh="crm-simple"],[data-ondis-refresh="crm-full"],[data-ondis-refresh="team"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"],[data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="loyalty"]) :is(input,select,textarea):focus-visible{outline:3px solid #fbcbd5!important;outline-offset:1px!important;border-color:var(--v16-red)!important;}
+body:is([data-ondis-refresh="crm-simple"],[data-ondis-refresh="crm-full"],[data-ondis-refresh="team"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"],[data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="loyalty"]) :is(input,textarea)::placeholder{color:#68768a!important;opacity:1;}
+body:is([data-ondis-refresh="crm-simple"],[data-ondis-refresh="crm-full"],[data-ondis-refresh="team"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"],[data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="loyalty"]) :is(.card,.section-card,.kpi,.kpi-card,.box,.result,.insight,.table-card){border-color:var(--v16-line)!important;box-shadow:var(--v16-shadow);}
+body:is([data-ondis-refresh="crm-simple"],[data-ondis-refresh="crm-full"],[data-ondis-refresh="team"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"],[data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="loyalty"]) :is(th,small,.hint,.sub,.muted,.kpi .t,.k-label){color:var(--v16-muted)!important;}
+body:is([data-ondis-refresh="crm-simple"],[data-ondis-refresh="crm-full"],[data-ondis-refresh="team"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"],[data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="loyalty"]) :is(button,a,input,select,textarea):focus-visible{outline:3px solid #f9a5b7!important;outline-offset:2px!important;}
+body:is([data-ondis-refresh="crm-simple"],[data-ondis-refresh="crm-full"],[data-ondis-refresh="team"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"],[data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="loyalty"]) button{font-family:inherit;}
+/* CRM Completo: light sidebar, legible hero, buttons and empty states. */
+body[data-ondis-refresh="crm-full"] .crm-sidebar{background:#fff!important;color:var(--v16-ink)!important;border-right:1px solid var(--v16-line)!important;box-shadow:8px 0 35px #1723340b!important;}
+body[data-ondis-refresh="crm-full"] .crm-brand{background:#fff!important;border-color:var(--v16-line)!important;padding-left:14px!important;gap:10px!important;}
+body[data-ondis-refresh="crm-full"] .crm-brand .brand-mark{color:#fff!important;background:linear-gradient(135deg,#d20b31,#94102b)!important;flex:0 0 37px!important;width:37px!important;height:37px!important;}
+body[data-ondis-refresh="crm-full"] .crm-brand .brand-mark svg{width:26px!important;height:26px!important;}
+body[data-ondis-refresh="crm-full"] .crm-brand-copy{display:flex!important;flex-direction:column!important;min-width:0!important;gap:2px!important;}
+body[data-ondis-refresh="crm-full"] .crm-brand-copy strong{color:var(--v16-ink)!important;font-size:16px!important;letter-spacing:.08em!important;line-height:1.1!important;}
+body[data-ondis-refresh="crm-full"] .crm-brand-copy span{color:var(--v16-muted)!important;font-size:10px!important;}
+body[data-ondis-refresh="crm-full"] .crm-brand :is(.brand-logo,.brand-full-logo,.logo-clone,.onx-brand,.onx-logo,.ondis-brand-duplicate){display:none!important;}
+body[data-ondis-refresh="crm-full"] .crm-nav{background:#fff!important;padding:16px 9px!important;}
+body[data-ondis-refresh="crm-full"] .crm-nav .nav-group>span{color:#8c4758!important;font-weight:800!important;}
+body[data-ondis-refresh="crm-full"] .crm-nav .nav-link{background:transparent!important;color:#344359!important;font-size:12px!important;min-height:42px!important;height:auto!important;padding:10px 11px!important;white-space:normal!important;line-height:1.25!important;overflow-wrap:break-word;}
+body[data-ondis-refresh="crm-full"] .crm-nav .nav-link i{color:#67738a!important;}
+body[data-ondis-refresh="crm-full"] .crm-nav .nav-link:is(:hover,.active){background:#fceaf0!important;color:#a40929!important;box-shadow:none!important;}
+body[data-ondis-refresh="crm-full"] .crm-nav .nav-link:is(:hover,.active) i{color:#b40b31!important;}
+body[data-ondis-refresh="crm-full"] .sidebar-foot{background:#fff!important;border-color:var(--v16-line)!important;}
+body[data-ondis-refresh="crm-full"] .sidebar-foot a{color:#40516a!important;}
+body[data-ondis-refresh="crm-full"] :is(.crm-topbar,.global-filters){background:#fff!important;border-color:var(--v16-line)!important;color:var(--v16-ink)!important;}
+body[data-ondis-refresh="crm-full"] .crm-main{background:var(--v16-page)!important;}
+body[data-ondis-refresh="crm-full"] .crmV15FullHero{background:linear-gradient(110deg,#fff,#fff5f7 80%)!important;border:1px solid #efd5dc!important;box-shadow:var(--v16-shadow)!important;color:var(--v16-ink)!important;}
+body[data-ondis-refresh="crm-full"] .crmV15FullHero :is(h1,h2){color:var(--v16-ink)!important;text-shadow:none!important;}
+body[data-ondis-refresh="crm-full"] .crmV15FullHero p{color:#566479!important;}
+body[data-ondis-refresh="crm-full"] .crmV15FullHero .crmV15Eyebrow{color:#b50d2e!important;}
+body[data-ondis-refresh="crm-full"] .crmV15FullLinks button{background:#fff!important;color:#9a1531!important;border:1px solid #ebc5d0!important;box-shadow:none!important;}
+body[data-ondis-refresh="crm-full"] .crmV15FullLinks button:first-child{background:#ce1237!important;color:#fff!important;border-color:#ce1237!important;}
+body[data-ondis-refresh="crm-full"] :is(.section-card,.kpi-card,.crm-view .card,.empty-state,.crm-dialog){background:#fff!important;color:var(--v16-ink)!important;border-color:var(--v16-line)!important;}
+body[data-ondis-refresh="crm-full"] :is(.section-card,.kpi-card,.crm-view .card,.empty-state,.crm-dialog) :is(h1,h2,h3,h4,strong,.k-value){color:var(--v16-ink)!important;}
+body[data-ondis-refresh="crm-full"] :is(.section-card,.crm-dialog,.empty-state) :is(p,small,span:not(.badge):not(.eyebrow)){color:inherit;}
+body[data-ondis-refresh="crm-full"] .crm-dialog{max-width:calc(100vw - 24px)!important;max-height:calc(100dvh - 24px)!important;overflow:auto!important;border-radius:20px!important;}
+body[data-ondis-refresh="crm-full"] .crm-dialog :is(header,footer){background:#fff!important;color:var(--v16-ink)!important;border-color:var(--v16-line)!important;}
+body[data-ondis-refresh="crm-full"] :is(.btn-primary,.crm-dialog .btn-primary){background:var(--v16-red)!important;color:#fff!important;border-color:var(--v16-red)!important;}
+body[data-ondis-refresh="crm-full"] :is(.btn-primary,.crm-dialog .btn-primary) :is(span,strong){color:#fff!important;}
+body[data-ondis-refresh="crm-full"] :is(.btn-ghost,.crm-dialog .btn-ghost,.icon-btn){background:#fff!important;color:#26374e!important;border:1px solid var(--v16-line)!important;}
+body[data-ondis-refresh="crm-full"] .btn-super{background:#fff!important;color:#a0102c!important;border-color:#e8c6cf!important;}
+body[data-ondis-refresh="crm-full"] .empty-state :is(.btn,.btn-primary,button){opacity:1!important;visibility:visible!important;min-height:36px!important;}
+body[data-ondis-refresh="crm-full"] .crm-view :is(.toolbar,.table-wrap,.kpi-grid){min-width:0;}
+body[data-ondis-refresh="crm-full"] .table-wrap{overflow-x:auto;}
+body[data-ondis-refresh="crm-full"] .table-wrap :is(th,td){color:#304057!important;}
+body[data-ondis-refresh="crm-full"] .table-wrap th{background:#f6f8fc!important;color:#526278!important;}
+/* CRM Simplificado */
+body[data-ondis-refresh="crm-simple"] .crmV15Hero{background:linear-gradient(115deg,#fff,#fff1f4)!important;color:var(--v16-ink)!important;border:1px solid #efd4da!important;box-shadow:var(--v16-shadow)!important;}
+body[data-ondis-refresh="crm-simple"] .crmV15Hero h2{color:var(--v16-ink)!important;text-shadow:none!important;}
+body[data-ondis-refresh="crm-simple"] .crmV15Hero p{color:#55667c!important;}
+body[data-ondis-refresh="crm-simple"] .crmV15Eyebrow{color:#b50c30!important;}
+body[data-ondis-refresh="crm-simple"] .crmV15Shortcut{background:#fff!important;color:#911632!important;border:1px solid #eac5ce!important;}
+body[data-ondis-refresh="crm-simple"] .crmV15Shortcut.primary{background:var(--v16-red)!important;color:#fff!important;border-color:var(--v16-red)!important;}
+body[data-ondis-refresh="crm-simple"] :is(.card,.kpi,.col,.crmV15SegmentBanner){background:#fff!important;color:var(--v16-ink)!important;border-color:var(--v16-line)!important;}
+body[data-ondis-refresh="crm-simple"] .tabs{background:#fff!important;}
+body[data-ondis-refresh="crm-simple"] .tab:not(.active){color:#40516b!important;background:#fff!important;}
+body[data-ondis-refresh="crm-simple"] .tab.active{background:var(--v16-red)!important;color:#fff!important;}
+/* Admin, commissions and clock – old dark pages get explicitly light surfaces. */
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"])>header{background:#fff!important;color:var(--v16-ink)!important;border-bottom:1px solid var(--v16-line)!important;box-shadow:0 4px 20px #152a4510!important;}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"])>header :is(h1,h2,strong){color:var(--v16-ink)!important;}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"])>header .sub{color:#53647d!important;}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"]) .wrap{max-width:1200px!important;padding:24px 18px!important;}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"]) :is(.card,.kpi,.resultado,.vazio,.pc-intro,.adminv3-hero){background:#fff!important;color:var(--v16-ink)!important;border:1px solid var(--v16-line)!important;border-radius:17px!important;box-shadow:var(--v16-shadow)!important;}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"]) :is(.card,.kpi,.resultado,.vazio,.pc-intro,.adminv3-hero) :is(h1,h2,h3,h4,.v,.tit,strong){color:var(--v16-ink)!important;}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"]) :is(.hint,.det,.txt,.pc-intro p,.adminv3-hero p){color:var(--v16-muted)!important;}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"]) :is(.pc-eyebrow,.adminv3-kicker){color:#af0b2f!important;}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"]) .tabs{background:#fff!important;border:1px solid var(--v16-line)!important;border-radius:14px!important;padding:5px!important;}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"]) .tab{background:transparent!important;color:#526077!important;border:1px solid transparent!important;border-radius:9px!important;}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"]) .tab.active{background:var(--v16-red)!important;color:#fff!important;}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"]) .btn:not(.good):not(.bad):not(.warn){background:#fff!important;color:#263950!important;border:1px solid var(--v16-line)!important;}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"]) .btn.good{background:var(--v16-red)!important;border-color:var(--v16-red)!important;color:#fff!important;}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"]) .btn.bad{background:#fff1f3!important;border-color:#efb9c6!important;color:#a00d2c!important;}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"]) .btn.warn{background:#fff7e8!important;border-color:#f3d5a1!important;color:#8e5418!important;}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"]) :is(th,td){border-color:#e7ebf2!important;color:#324157!important;}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"]) th{background:#f6f8fb!important;color:#59677c!important;}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"]) :is(.chip,.tag){background:#fff2f5!important;color:#a10d2e!important;border-color:#f3d4dc!important;}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"]) select option{background:#fff!important;color:#1d293a!important;}
+body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"]) .loading.show{background:#fffffff0!important;color:#152136!important;}
+/* Face recognition and status sections remain readable (no behavioral change). */
+body[data-ondis-refresh="timeclock"] :is(.relogio,.facePanel,.faceCamera,.faceBox,.faceStatus,.historico,.registro){background:#fff!important;color:var(--v16-ink)!important;border-color:var(--v16-line)!important;}
+body[data-ondis-refresh="timeclock"] :is(.facePanel,.faceStatus,.relogio) :is(b,strong,span){color:inherit;}
+body[data-ondis-refresh="commission"] :is(.pc-sim-fields,.faixaRow){min-width:0;}
+body[data-ondis-refresh="commission"] .resultado{background:#fff6f8!important;border-left:4px solid var(--v16-red)!important;}
+/* Team 360 and loyalty: retail-os common layout */
+body:is([data-ondis-refresh="team"],[data-ondis-refresh="loyalty"]) :is(.top,header.top){background:#fff!important;color:var(--v16-ink)!important;border-bottom:1px solid var(--v16-line)!important;box-shadow:0 4px 20px #152a4510!important;}
+body:is([data-ondis-refresh="team"],[data-ondis-refresh="loyalty"]) .top :is(.brand,small){color:var(--v16-ink)!important;}
+body:is([data-ondis-refresh="team"],[data-ondis-refresh="loyalty"]) .hero{background:linear-gradient(120deg,#fff,#fff2f5)!important;color:var(--v16-ink)!important;border:1px solid #f1d5de!important;border-radius:18px!important;}
+body:is([data-ondis-refresh="team"],[data-ondis-refresh="loyalty"]) .hero :is(h1,h2){color:var(--v16-ink)!important;}
+body:is([data-ondis-refresh="team"],[data-ondis-refresh="loyalty"]) .hero p{color:var(--v16-muted)!important;}
+body:is([data-ondis-refresh="team"],[data-ondis-refresh="loyalty"]) :is(.card,.kpi,.insight,.agent){background:#fff!important;color:var(--v16-ink)!important;border:1px solid var(--v16-line)!important;border-radius:16px!important;box-shadow:var(--v16-shadow)!important;}
+body:is([data-ondis-refresh="team"],[data-ondis-refresh="loyalty"]) :is(.card,.kpi,.agent) :is(h2,h3,h4,b,strong){color:var(--v16-ink)!important;}
+body:is([data-ondis-refresh="team"],[data-ondis-refresh="loyalty"]) .agent .chips button{background:#fff3f5!important;color:#9e1230!important;border:1px solid #ebc7d1!important;}
+/* V15 IA floating assistant: style only, never replace its rules or external model. */
+body:is([data-ondis-refresh="crm-simple"],[data-ondis-refresh="crm-full"],[data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="timeclock"],[data-ondis-refresh="commission"]) :is(.ondis-ia-panel,.ondis-ai-panel,.ondis-ia-chat,.ondisAiPanel,.aiPanel,.ondisAiDrawer){background:#fff!important;color:var(--v16-ink)!important;border:1px solid var(--v16-line)!important;box-shadow:0 20px 70px #17223424!important;}
+body:is([data-ondis-refresh="crm-simple"],[data-ondis-refresh="crm-full"],[data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="timeclock"],[data-ondis-refresh="commission"]) :is(.ondis-ia-panel,.ondis-ai-panel,.ondis-ia-chat,.ondisAiPanel,.aiPanel,.ondisAiDrawer) :is(h2,h3,strong,p){color:var(--v16-ink)!important;}
+/* Error/loading/empty UI legibility */
+body:is([data-ondis-refresh="crm-simple"],[data-ondis-refresh="crm-full"],[data-ondis-refresh="team"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"],[data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="loyalty"]) :is(.empty-state,.vazio,.error-banner,.permission-banner){color:var(--v16-ink)!important;}
+@media(max-width:900px){body[data-ondis-refresh="crm-full"] .crm-content{padding:14px!important}body[data-ondis-refresh="crm-full"] .crmV15FullHero{margin:12px!important;padding:17px!important}body[data-ondis-refresh="crm-full"] .crm-brand-copy strong{font-size:15px!important}}
+@media(max-width:600px){body:is([data-ondis-refresh="crm-simple"],[data-ondis-refresh="crm-full"],[data-ondis-refresh="team"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"],[data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="loyalty"]) .wrap{padding:12px!important}body[data-ondis-refresh="crm-full"] .crmV15FullHero{margin:10px!important;border-radius:14px!important}body[data-ondis-refresh="crm-full"] .crm-dialog{width:calc(100vw - 20px)!important;max-width:calc(100vw - 20px)!important}body:is([data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"]) .card{padding:14px!important}body:is([data-ondis-refresh="team"],[data-ondis-refresh="loyalty"]) .hero{padding:16px!important}}
+@media(prefers-reduced-motion:reduce){body:is([data-ondis-refresh="crm-simple"],[data-ondis-refresh="crm-full"],[data-ondis-refresh="team"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"],[data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="loyalty"]) *{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* V16.1 final pass — actual ONDIS Intelligence selector, always isolated from Operation. */
+body:is([data-ondis-refresh="crm-simple"],[data-ondis-refresh="crm-full"],[data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"]) #v11Agent.aiV15{
+  background:#fff!important;color:#182437!important;border:1px solid #dce3ee!important;
+  box-shadow:0 24px 68px rgba(26,39,62,.18)!important;
+}
+body:is([data-ondis-refresh="crm-simple"],[data-ondis-refresh="crm-full"],[data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"]) #v11Agent.aiV15 .v11-agent-head{
+  background:linear-gradient(120deg,#9a102d,#d20b31)!important;color:white!important;
+}
+body:is([data-ondis-refresh="crm-simple"],[data-ondis-refresh="crm-full"],[data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"]) #v11Agent.aiV15 :is(.v11-agent-body,.v11-agent-foot){background:#fff!important}
+body:is([data-ondis-refresh="crm-simple"],[data-ondis-refresh="crm-full"],[data-ondis-refresh="admin"],[data-ondis-refresh="superadmin"],[data-ondis-refresh="commission"],[data-ondis-refresh="timeclock"]) #v11Agent.aiV15 :is(.aiV15Topic.active,#v11AgentSend){background:#c10e32!important;color:white!important}
+/* Brand: the CRM has exactly one local mark; global-injected marks must never overlap. */
+body[data-ondis-refresh="crm-full"] .crm-brand .ondisBrandModern{display:none!important}
+body[data-ondis-refresh="crm-full"] .crm-brand .brand-mark{color:white!important;z-index:2!important}
+body[data-ondis-refresh="crm-full"] .crm-brand .brand-mark svg{filter:none!important}
+body[data-ondis-refresh="crm-full"] .crm-sidebar .crm-brand-copy strong{color:#182437!important}
+body[data-ondis-refresh="crm-full"] .crm-sidebar .crm-brand-copy span{color:#657388!important}
+/* All critical actions remain readable regardless of legacy theme selectors. */
+body[data-ondis-refresh="crm-full"] .crm-dialog form>footer .btn-primary,
+body[data-ondis-refresh="crm-full"] .crm-view .btn-primary{color:#fff!important;-webkit-text-fill-color:#fff!important;background:#c80d32!important;border-color:#c80d32!important}
+body[data-ondis-refresh="crm-full"] .crm-dialog form>footer [data-crm-close-dialog]{color:#26364b!important;-webkit-text-fill-color:#26364b!important;background:#fff!important}

@@ -76,7 +76,7 @@
 <link rel="stylesheet" href="./ondis-visual-v4.css?v=4.0.0"/>
 
 <link rel="stylesheet" href="./ondis-contraste-global-v6.css?v=6.0.0">
-<link rel="stylesheet" href="./ondis-superadmin-console-v9.css?v=9.0.0">
+<link rel="stylesheet" href="./ondis-design-system-v16.css?v=16.0.0"/>
 </head>
 <body data-ondis-refresh="superadmin">
 
@@ -85,98 +85,59 @@
   <div id="loadingMsg">Carregando...</div>
 </div>
 
-<div class="sa-shell">
-  <aside class="sa-sidebar" aria-label="Navegação administrativa">
-    <div class="sa-brand">
-      <div class="sa-brand-mark" aria-hidden="true"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" fill="none" stroke="currentColor" stroke-width="6" stroke-dasharray="68 21" transform="rotate(-44 20 20)"/><circle cx="20" cy="20" r="5.5" fill="currentColor"/></svg></div>
-      <div><strong>ONDIS</strong><span>CONSOLE ADMIN</span></div>
+<header>
+  <div class="brand">
+    <h1>ONDIS <span style="color:#c9b6ff">SUPER ADMIN</span></h1>
+    <div class="sub" id="meEmail">—</div>
+  </div>
+  <div class="adminv3-actions" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+    <span class="chip">⚡ Super Admin</span>
+    <button class="btn" onclick="window.location.href='./crm.html'">📇 CRM</button>
+    <button class="btn" onclick="window.location.href='./catalogo.html'">🛍️ Catálogo</button>
+    <button class="btn" onclick="window.location.href='./index.html'">ONDIS</button>
+    <button class="btn bad" onclick="sair()">Sair</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="adminv3-hero" aria-label="Painel de super administração">
+    <div class="adminv3-hero-copy"><span class="adminv3-kicker">CONTROLE DA REDE · ONDIS</span>
+      <h2>Central de administração</h2><p>Visão das lojas, equipes e módulos em um único lugar. As configurações continuam vinculadas a cada loja.</p>
+    </div><div class="adminv3-hero-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 10h.01M15 10h.01M9 14h.01M15 14h.01M10 21v-4h4v4"/></svg></div>
+  </section>
+  <div class="kpis" id="kpis"></div>
+
+  <!-- Criar loja -->
+  <div class="card">
+    <div class="cardHead"><h2><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14l1 13H4L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span>Lojas / Franquias</h2></div>
+    <div class="row" style="margin-bottom:16px">
+      <div class="field" style="flex:1;min-width:200px"><label>Nome da loja</label><input id="novaLojaNome" placeholder="Ex: TXC Araguaína"/></div>
+      <div class="field" style="min-width:160px"><label>Código (login dos vendedores)</label><input id="novaLojaCodigo" placeholder="Ex: TXC2024" style="text-transform:uppercase"/></div>
+      <div class="field" style="min-width:170px"><label>Segmento</label>
+        <select id="novaLojaSegmento"><option value="otica">Ótica</option><option value="vestuario">Vestuário</option><option value="outros">Outros</option></select></div>
+      <button class="btn good" onclick="criarLoja()">+ Criar loja</button>
     </div>
-    <div class="sa-side-space"><span class="sa-side-light"></span><div><b>Gestão da rede</b><small>Ambiente administrativo</small></div></div>
-    <div class="sa-side-label">WORKSPACE</div>
-    <nav class="sa-nav" aria-label="Seções da central">
-      <button class="sa-nav-btn is-active" type="button" data-sa-nav="overview"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="10" width="8" height="11" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/></svg><span>Visão geral</span></button>
-      <button class="sa-nav-btn" type="button" data-sa-nav="stores"><svg viewBox="0 0 24 24"><path d="M3 10l2-6h14l2 6v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M5 13v8h14v-8M9 21v-6h6v6"/></svg><span>Lojas e franquias</span></button>
-      <button class="sa-nav-btn" type="button" data-sa-nav="users"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2.5 21v-2a6.5 6.5 0 0 1 13 0v2M17 5a4 4 0 0 1 0 7.5M18 15a6 6 0 0 1 3.5 6"/></svg><span>Usuários e acessos</span></button>
-      <button class="sa-nav-btn" type="button" data-sa-nav="backup"><svg viewBox="0 0 24 24"><path d="M12 3 4 7v5c0 5 3 8 8 9 5-1 8-4 8-9V7z"/><path d="M9 12l2 2 4-4"/></svg><span>Backups</span></button>
-    </nav>
-    <div class="sa-sidebar-bottom">
-      <div class="sa-access-indicator"><span class="sa-live-dot"></span><div><b>Super administrador</b><small>Controle completo da rede</small></div></div>
-      <button class="sa-logout" type="button" onclick="sair()"><svg viewBox="0 0 24 24"><path d="M10 17l5-5-5-5M15 12H3M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7"/></svg><span>Sair da conta</span></button>
+    <div id="tabelaLojas"><div class="hint">Carregando lojas...</div></div>
+  </div>
+
+  <!-- Usuários -->
+  <div class="card">
+    <div class="cardHead"><h2><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Todos os usuários</h2><button class="btn" onclick="carregarTudo()">↻ Atualizar</button></div>
+    <div id="tabelaUsuarios"><div class="hint">Carregando usuários...</div></div>
+  </div>
+
+  <!-- Backup -->
+  <div class="card">
+    <div class="cardHead"><h2><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 22 8-4V6l-8-4-8 4v12l8 4Z"/><path d="m9 12 2 2 4-4"/></svg></span>Backup dos dados</h2></div>
+    <p class="hint" style="text-align:left;padding:0 0 14px">Baixe uma cópia de segurança de TODOS os dados de TODAS as lojas (vendas, clientes, ponto, produtos, configurações). Guarde em local seguro. Recomendado fazer semanalmente.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn good" onclick="backupJSON()">⬇️ Backup completo (JSON)</button>
+      <button class="btn" onclick="backupCSV()">📊 Backup em planilhas (CSV)</button>
     </div>
-  </aside>
-
-  <div class="sa-main">
-    <div class="sa-topbar" role="banner">
-      <div class="sa-breadcrumb"><span>Administração</span><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg><strong id="saBreadcrumb">Visão geral</strong></div>
-      <div class="sa-top-actions">
-        <a class="sa-top-link" href="./index.html">Abrir ONDIS</a>
-        <a class="sa-top-link sa-top-link-secondary" href="./crm.html">CRM</a>
-        <a class="sa-top-link sa-top-link-secondary" href="./catalogo.html">Catálogo</a>
-        <span class="sa-user-mini"><span class="sa-user-avatar">SA</span><span class="sa-user-caption"><b>Super Admin</b><small id="meEmail">—</small></span></span>
-      </div>
-    </div>
-
-    <main class="sa-content" id="saMainContent">
-      <div class="sa-headingbar">
-        <div><span class="sa-eyebrow"><span></span> PAINEL DE CONTROLE</span><h1>Central de administração</h1><p>Organize unidades, pessoas, permissões e informações da sua rede em um só lugar.</p></div>
-        <div class="sa-heading-actions"><button class="sa-button sa-button-soft" type="button" onclick="carregarTudo()"><svg viewBox="0 0 24 24"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5 8a8 8 0 0 1 14-1l1 5M4 12l1 5a8 8 0 0 0 14-1"/></svg> Atualizar dados</button><button class="sa-button sa-button-primary" type="button" data-sa-target="stores" data-sa-focus="novaLojaNome"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg> Nova loja</button></div>
-      </div>
-
-      <!-- OVERVIEW -->
-      <section class="sa-panel is-active" id="saOverview" data-sa-panel="overview" aria-label="Visão geral da rede">
-        <div class="sa-welcome">
-          <div class="sa-welcome-content"><span class="sa-welcome-kicker">VISÃO EXECUTIVA</span><h2>Controle total, sem complicação.</h2><p>Acompanhe as informações principais e acesse rapidamente as configurações de cada unidade.</p><div class="sa-welcome-actions"><button type="button" data-sa-target="stores">Gerenciar lojas <span aria-hidden="true">→</span></button><button type="button" data-sa-target="users">Gerenciar acessos <span aria-hidden="true">→</span></button></div></div>
-          <div class="sa-welcome-art" aria-hidden="true"><span></span><span></span><span></span></div>
-        </div>
-        <div class="sa-section-title"><div><h2>Panorama da rede</h2><p>Indicadores baseados nos cadastros existentes.</p></div><span class="sa-live-status"><span></span> Dados da rede</span></div>
-        <div class="kpis" id="kpis"><div class="sa-loading-card">Carregando indicadores...</div></div>
-        <div class="sa-overview-columns">
-          <div class="sa-surface sa-shortcuts"><div class="sa-surface-heading"><div><span class="sa-label-overline">ACESSO RÁPIDO</span><h3>Gerencie o que precisa</h3></div></div>
-            <button type="button" class="sa-shortcut" data-sa-target="stores"><span class="sa-shortcut-icon stores">01</span><span><b>Unidades e franquias</b><small>Cadastros, segmentos e módulos liberados</small></span><span class="sa-shortcut-arrow">→</span></button>
-            <button type="button" class="sa-shortcut" data-sa-target="users"><span class="sa-shortcut-icon people">02</span><span><b>Equipes e permissões</b><small>Perfis, vínculos e recuperação de acesso</small></span><span class="sa-shortcut-arrow">→</span></button>
-            <button type="button" class="sa-shortcut" data-sa-target="backup"><span class="sa-shortcut-icon security">03</span><span><b>Exportação de dados</b><small>Baixe arquivos para sua guarda e conferência</small></span><span class="sa-shortcut-arrow">→</span></button>
-          </div>
-          <div class="sa-surface sa-guide"><div class="sa-surface-heading"><div><span class="sa-label-overline">ORGANIZAÇÃO</span><h3>Fluxo de administração</h3></div></div>
-            <div class="sa-guide-step"><span>1</span><div><b>Cadastre ou escolha a loja</b><p>Cada unidade possui sua própria configuração.</p></div></div>
-            <div class="sa-guide-step"><span>2</span><div><b>Defina os módulos</b><p>Ative somente o que a unidade deve visualizar.</p></div></div>
-            <div class="sa-guide-step"><span>3</span><div><b>Gerencie a equipe</b><p>Confira perfis e lojas vinculadas aos usuários.</p></div></div>
-            <div class="sa-guide-step"><span>4</span><div><b>Exporte seus registros</b><p>Mantenha cópias de segurança periodicamente.</p></div></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- STORES -->
-      <section class="sa-panel" data-sa-panel="stores" id="saStores" aria-label="Lojas e franquias">
-        <div class="sa-section-title"><div><span class="sa-label-overline">ESTRUTURA DA REDE</span><h2>Lojas e franquias</h2><p>Cadastre unidades e configure seus segmentos, equipes e módulos.</p></div><span class="sa-section-chip">Gerenciamento por loja</span></div>
-        <div class="sa-surface sa-creation">
-          <div class="sa-surface-heading"><div><span class="sa-label-overline">NOVA UNIDADE</span><h3>Cadastrar loja</h3><p>Preencha as informações para criar uma nova unidade na rede.</p></div></div>
-          <div class="sa-store-form">
-            <div class="field"><label for="novaLojaNome">Nome da loja</label><input id="novaLojaNome" placeholder="Ex.: Loja Centro" autocomplete="off"/></div>
-            <div class="field"><label for="novaLojaCodigo">Código de acesso</label><input id="novaLojaCodigo" placeholder="Ex.: CENTRO01" style="text-transform:uppercase" autocomplete="off"/></div>
-            <div class="field"><label for="novaLojaSegmento">Segmento</label><select id="novaLojaSegmento"><option value="otica">Ótica</option><option value="vestuario">Vestuário</option><option value="outros">Outros</option></select></div>
-            <button class="sa-button sa-button-primary sa-create-btn" type="button" onclick="criarLoja()"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg> Criar loja</button>
-          </div>
-        </div>
-        <div class="sa-surface sa-table-card"><div class="sa-surface-heading sa-table-toolbar"><div><span class="sa-label-overline">UNIDADES CADASTRADAS</span><h3>Rede de lojas <span class="sa-number-chip" id="saStoresCount">—</span></h3></div><div class="sa-table-filters"><label class="sa-search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg><input id="saStoreSearch" type="search" placeholder="Buscar loja ou código" aria-label="Buscar loja"/></label><select id="saStoreSegment" aria-label="Filtrar segmento"><option value="">Todos os segmentos</option><option value="ótica">Ótica</option><option value="vestuário">Vestuário</option><option value="outros">Outros</option></select></div></div><div class="sa-table-scroll" id="tabelaLojas"><div class="hint">Carregando lojas...</div></div><div class="sa-table-footer" id="saStoresFooter">—</div></div>
-      </section>
-
-      <!-- USERS -->
-      <section class="sa-panel" data-sa-panel="users" id="saUsers" aria-label="Usuários e permissões">
-        <div class="sa-section-title"><div><span class="sa-label-overline">PESSOAS E PERMISSÕES</span><h2>Usuários e acessos</h2><p>Administre perfis, vincule unidades e auxilie no acesso das equipes.</p></div><span class="sa-section-chip">Permissões por usuário</span></div>
-        <div class="sa-surface sa-table-card"><div class="sa-surface-heading sa-table-toolbar"><div><span class="sa-label-overline">CONTAS CADASTRADAS</span><h3>Equipe da rede <span class="sa-number-chip" id="saUsersCount">—</span></h3></div><div class="sa-table-filters"><label class="sa-search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg><input id="saUserSearch" type="search" placeholder="Buscar nome ou e-mail" aria-label="Buscar usuário"/></label><select id="saUserRole" aria-label="Filtrar perfil"><option value="">Todos os perfis</option><option value="superadmin">Super Admin</option><option value="admin">Administrador</option><option value="seller">Vendedor</option></select><select id="saUserStatus" aria-label="Filtrar situação"><option value="">Todos os status</option><option value="ativo">Ativos</option><option value="inativo">Inativos</option></select></div></div><div class="sa-table-scroll" id="tabelaUsuarios"><div class="hint">Carregando usuários...</div></div><div class="sa-table-footer" id="saUsersFooter">—</div></div>
-        <div class="sa-note"><span aria-hidden="true">i</span><p>Alterações de perfil, loja e exclusão afetam as permissões de acesso. Confira o usuário selecionado antes de confirmar cada ação.</p></div>
-      </section>
-
-      <!-- BACKUP -->
-      <section class="sa-panel" data-sa-panel="backup" id="saBackup" aria-label="Backups e exportações">
-        <div class="sa-section-title"><div><span class="sa-label-overline">GESTÃO DE DADOS</span><h2>Backups e exportações</h2><p>Obtenha cópias dos registros disponíveis no exportador atual do ONDIS.</p></div><span class="sa-section-chip">Operação manual</span></div>
-        <div class="sa-backup-grid">
-          <div class="sa-surface sa-backup-card"><div class="sa-backup-icon json">{ }</div><span class="sa-label-overline">DADOS ESTRUTURADOS</span><h3>Exportar em JSON</h3><p>Arquivo com dados das coleções atualmente suportadas pelo exportador. Útil para guardar o conteúdo estruturado.</p><button class="sa-button sa-button-primary" type="button" onclick="backupJSON()">Baixar arquivo JSON <span aria-hidden="true">↓</span></button></div>
-          <div class="sa-surface sa-backup-card"><div class="sa-backup-icon csv">CSV</div><span class="sa-label-overline">PLANILHAS</span><h3>Exportar em CSV</h3><p>Planilhas de vendas, clientes e ponto para consultar e conferir no Excel ou em outros programas.</p><button class="sa-button sa-button-soft" type="button" onclick="backupCSV()">Baixar planilhas CSV <span aria-hidden="true">↓</span></button></div>
-        </div>
-        <div class="sa-note sa-backup-note"><span aria-hidden="true">!</span><p><b>Importante:</b> o exportador existente inclui coleções específicas e não substitui uma estratégia completa de recuperação do Firebase. Proteja os arquivos baixados, pois podem conter dados pessoais de clientes e funcionários.</p></div>
-      </section>
-    </main>
+    <p class="hint" style="text-align:left;padding:12px 0 0">
+      <b>JSON</b>: arquivo completo para restaurar tudo se precisar.<br>
+      <b>CSV</b>: planilhas separadas (vendas, clientes, ponto) para abrir no Excel.
+    </p>
   </div>
 </div>
 
@@ -293,9 +254,9 @@
         <td>${segmentoResumo(l)}</td>
         <td>${modulosResumo(l)}</td>
         <td>
-          <button class="btn" onclick="abrirSegmento('${l.id}')">Segmento</button>
-          <button class="btn purple" onclick="abrirModulos('${l.id}')">Módulos</button>
-          <button class="btn" onclick="verUsuariosDaLoja('${l.id}')">Ver usuários</button>
+          <button class="btn" onclick="abrirSegmento('${l.id}')">🏷️ Segmento</button>
+          <button class="btn purple" onclick="abrirModulos('${l.id}')">🧩 Módulos</button>
+          <button class="btn" onclick="verUsuariosDaLoja('${l.id}')">👥 Ver usuários</button>
           <button class="btn bad" onclick="excluirLoja('${l.id}','${(l.name||"").replace(/'/g,"")}')">Excluir loja</button>
         </td>
       </tr>`;
@@ -307,9 +268,9 @@
     const wrap = document.getElementById("tabelaUsuarios");
     if(USERS.length===0){ wrap.innerHTML='<div class="hint">Nenhum usuário ainda.</div>'; return; }
     const rows = USERS.map(u=>{
-      const roleTag = u.role==="superadmin" ? '<span class="tag super">Super Admin</span>'
-                    : u.role==="admin" ? '<span class="tag admin">Administrador</span>'
-                    : '<span class="tag seller">Vendedor</span>';
+      const roleTag = u.role==="superadmin" ? '<span class="tag super">⚡ Super</span>'
+                    : u.role==="admin" ? '<span class="tag admin">👑 ADM</span>'
+                    : '<span class="tag seller">🧑 Vendedor</span>';
       // checkboxes de lojas (para admin)
       const lojasChk = LOJAS.map(l=>{
         const checked = (u.storeIds||[]).includes(l.id) ? "checked":"";
@@ -325,18 +286,17 @@
       }
       // Recuperar senha — disponível para TODOS, inclusive super admins (recuperar um do outro)
       if(u.email){
-        acoes += ` <button class="btn" onclick="recuperarSenha('${(u.email||"").replace(/'/g,"")}','${(u.name||"").replace(/'/g,"")}')">Recuperar senha</button>`;
+        acoes += ` <button class="btn" onclick="recuperarSenha('${(u.email||"").replace(/'/g,"")}','${(u.name||"").replace(/'/g,"")}')">📧 Recuperar senha</button>`;
       }
 
       return `<tr>
         <td><b>${u.name||"—"}</b><br><span style="font-size:11px;color:#9db0d0">${u.email||""}</span></td>
         <td>${roleTag}</td>
-        <td><span class="tag ${u.active===false?'inactive':'active'}">${u.active===false?'Inativo':'Ativo'}</span></td>
         <td>${ u.role==="admin" ? `<div class="storesChk">${lojasChk}</div>` : (u.role==="seller" ? selectLojaVendedor(u) : "—") }</td>
         <td>${acoes}</td>
       </tr>`;
     }).join("");
-    wrap.innerHTML = `<table><thead><tr><th>Usuário</th><th>Perfil</th><th>Status</th><th>Loja(s)</th><th>Ações</th></tr></thead><tbody>${rows}</tbody></table>`;
+    wrap.innerHTML = `<table><thead><tr><th>Usuário</th><th>Perfil</th><th>Loja(s)</th><th>Ações</th></tr></thead><tbody>${rows}</tbody></table>`;
   }
 
   window.criarLoja = async function(){
@@ -412,7 +372,7 @@
     SEG_LOJA_ID = lojaId;
     const r = S.resolve(loja);
     const box = document.getElementById("modalSegmento");
-    box.querySelector(".sgTitulo").textContent = "Segmento de " + (loja.name || loja.code);
+    box.querySelector(".sgTitulo").textContent = "🏷️ Segmento de " + (loja.name || loja.code);
     const sel = document.getElementById("sgSegmento");
     sel.innerHTML = S.list().map(s => '<option value="' + s.id + '">' + s.nome + '</option>').join("");
     sel.value = r.segmento;
@@ -493,7 +453,7 @@
     if(!M){ alert("Não foi possível carregar a lista de módulos. Recarregue a página (Ctrl+Shift+R)."); return; }
     MOD_LOJA_ID = lojaId;
     const box = document.getElementById("modalModulos");
-    box.querySelector(".mmTitulo").textContent = "Módulos de " + (loja.name || loja.code);
+    box.querySelector(".mmTitulo").textContent = "🧩 Módulos de " + (loja.name || loja.code);
     box.querySelector(".mmSub").textContent = M.hasConfig(loja.modules)
       ? "Marque o que esta loja pode usar. O que ficar desmarcado some do menu dela."
       : "Esta loja ainda não tem restrições (tudo liberado). Ao salvar, só ficará liberado o que estiver marcado.";
@@ -558,7 +518,7 @@
     if(!loja) return;
     const daLoja = USERS.filter(u=> (u.storeIds||[]).includes(lojaId) || u.storeId===lojaId);
     const box = document.getElementById("modalUsuariosLoja");
-    box.querySelector(".mulTitulo").textContent = "Usuários de " + (loja.name || loja.code);
+    box.querySelector(".mulTitulo").textContent = "👥 Usuários de " + (loja.name || loja.code);
     box.querySelector(".mulSub").textContent = daLoja.length + " usuário(s) vinculado(s) · Código: " + (loja.code||"—");
     if(daLoja.length===0){
       box.querySelector(".mulBody").innerHTML = '<div class="hint">Nenhum usuário vinculado a esta loja ainda.</div>';
@@ -567,9 +527,9 @@
         const ordem={superadmin:0,admin:1,seller:2};
         return (ordem[a.role]??3)-(ordem[b.role]??3) || (a.name||"").localeCompare(b.name||"");
       }).map(u=>{
-        const roleTag = u.role==="superadmin" ? '<span class="tag super">Super Admin</span>'
-                      : u.role==="admin" ? '<span class="tag admin">Administrador</span>'
-                      : '<span class="tag seller">Vendedor</span>';
+        const roleTag = u.role==="superadmin" ? '<span class="tag super">⚡ Super</span>'
+                      : u.role==="admin" ? '<span class="tag admin">👑 ADM</span>'
+                      : '<span class="tag seller">🧑 Vendedor</span>';
         return `<tr>
           <td><b>${u.name||"—"}</b><br><span style="font-size:11px;color:#9db0d0">${u.email||""}</span></td>
           <td>${roleTag}</td>
@@ -693,13 +653,12 @@
     }catch(e){ console.error(e); hideLoading(); alert(msgErro(e,"gerar as planilhas")); }
   };
 </script>
-<script src="./ondis-superadmin-console-v9.js?v=9.0.0" defer></script>
 <!-- MODAL USUÁRIOS DA LOJA -->
 <div class="modalBack" id="modalUsuariosLoja">
   <div class="modalCx">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
       <h2 class="mulTitulo" style="font-size:18px;font-weight:900"><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Usuários da loja</h2>
-      <button class="btn" type="button" aria-label="Fechar janela" onclick="fecharUsuariosLoja()">Fechar</button>
+      <button class="btn" onclick="fecharUsuariosLoja()">✕</button>
     </div>
     <p class="mulSub hint" style="text-align:left;padding:0 0 14px"></p>
     <div class="mulBody" style="max-height:60vh;overflow:auto"></div>
@@ -711,7 +670,7 @@
   <div class="modalCx modalModulos">
     <div class="mmHead">
       <h2 class="sgTitulo"><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14l1 13H4L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span>Segmento da loja</h2>
-      <button class="btn" type="button" aria-label="Fechar janela" onclick="fecharSegmento()">Fechar</button>
+      <button class="btn" onclick="fecharSegmento()">✕</button>
     </div>
     <p class="hint" style="text-align:left;padding:0 0 10px">O segmento define as categorias de produto e os motivos de “não vendeu” que aparecem no atendimento (lista da vez) desta loja. Você pode ajustar as listas abaixo — uma opção por linha.</p>
     <div class="field"><label>Segmento</label><select id="sgSegmento" onchange="trocarSegmentoNoModal()"></select></div>
@@ -733,7 +692,7 @@
   <div class="modalCx modalModulos">
     <div class="mmHead">
       <h2 class="mmTitulo"><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14l1 13H4L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span>Módulos da loja</h2>
-      <button class="btn" type="button" aria-label="Fechar janela" onclick="fecharModulos()">Fechar</button>
+      <button class="btn" onclick="fecharModulos()">✕</button>
     </div>
     <p class="mmSub hint" style="text-align:left;padding:0 0 10px"></p>
     <div class="mmPresets">
@@ -742,7 +701,6 @@
       <button class="btn" onclick="presetModulos('crm')">Só CRM</button>
       <button class="btn" onclick="presetModulos('painel')">Só painel (sem módulos extras)</button>
     </div>
-    <div class="sa-mm-tools"><label class="sa-search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg><input type="search" id="saModuleSearch" placeholder="Buscar módulo" aria-label="Buscar módulo"/></label><span class="sa-mm-count" id="saModuleSelected">—</span></div>
     <div class="mmList" id="mmList"></div>
     <div class="mmFoot">
       <button class="btn warn" onclick="liberarTudoSemRestricao()">Remover restrições</button>
