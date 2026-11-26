@@ -94,6 +94,7 @@
 <link rel="stylesheet" href="./ondis-visual-v4.css?v=4.0.0"/>
 
 <link rel="stylesheet" href="./ondis-contraste-global-v6.css?v=6.0.0">
+<link rel="stylesheet" href="./ondis-crm-retail-v15.css?v=15.0.0">
 </head>
 <body data-ondis-refresh="crm-simple">
 
@@ -101,8 +102,8 @@
 
 <header>
   <div class="brand">
-    <h1>ONDIS <span style="color:#a0c8ff">CRM</span></h1>
-    <div class="sub" id="ctxInfo">—</div>
+    <h1>ONDIS <span style="color:#e61b38">CRM</span></h1>
+    <div class="sub" id="ctxInfo">—</div><div class="crmV15BrandCaption">Relacionamento para óticas e moda</div>
   </div>
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
     <span class="chip" id="roleChip">—</span>
@@ -111,14 +112,16 @@
   </div>
 </header>
 
-<div class="wrap">
+<div class="wrap crmV15Simple">
+  <div class="crmV15Hero"><div><span class="crmV15Eyebrow">RELACIONAMENTO · ONDIS</span><h2>CRM Simplificado</h2><p>Atenda melhor, acompanhe retornos e crie oportunidades de recompra.</p></div><div class="crmV15HeroActions"><button type="button" class="crmV15Shortcut" data-crm-simple-go="clientes">Ver clientes</button><button type="button" class="crmV15Shortcut primary" data-crm-simple-go="lembretes">Acompanhar retornos</button></div></div>
+  <div class="crmV15SegmentBanner" role="note"><span class="crmV15SegIcon">◉</span><div><strong>CRM de varejo · Ótica e Moda</strong><small>Priorize preferências, atendimento, pós-venda e fidelização. O cadastro existente permanece preservado.</small></div><a href="./crm-completo.html">Abrir CRM Completo →</a></div>
   <div class="tabs">
-    <button class="tab active" id="tabHoje" onclick="showTab('hoje')">⚡ Hoje</button>
-    <button class="tab" id="tabClientes" onclick="showTab('clientes')">👥 Clientes</button>
-    <button class="tab" id="tabFunil" onclick="showTab('funil')">📊 Funil</button>
-    <button class="tab" id="tabMetricas" onclick="showTab('metricas')">📈 Métricas</button>
-    <button class="tab" id="tabLembretes" onclick="showTab('lembretes')">🔔 Lembretes</button>
-    <button class="tab" id="tabCampanhas" onclick="showTab('campanhas')">📣 Campanhas</button>
+    <button class="tab active" id="tabHoje" onclick="showTab('hoje')">Visão geral</button>
+    <button class="tab" id="tabClientes" onclick="showTab('clientes')">Clientes 360°</button>
+    <button class="tab" id="tabFunil" onclick="showTab('funil')">Jornada de compra</button>
+    <button class="tab" id="tabMetricas" onclick="showTab('metricas')">Indicadores</button>
+    <button class="tab" id="tabLembretes" onclick="showTab('lembretes')">Retornos</button>
+    <button class="tab" id="tabCampanhas" onclick="showTab('campanhas')">Campanhas</button>
   </div>
 
   <!-- HOJE (ações do dia) -->
@@ -164,11 +167,11 @@
   <!-- FUNIL -->
   <div id="viewFunil" style="display:none">
     <div class="card">
-      <div class="cardHead"><h2><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 9h18M16 14h2"/></svg></span>Funil de vendas</h2><span class="hint" style="padding:0">Arraste os cards entre as colunas</span></div>
+      <div class="cardHead"><h2><span class="onx-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 9h18M16 14h2"/></svg></span>Jornada de compra</h2><span class="hint" style="padding:0">Acompanhe contatos, atendimento e compra</span></div>
       <div class="funil">
-        <div class="col" data-etapa="lead" ondragover="permitirDrop(event)" ondrop="soltarCard(event,'lead')" ondragleave="sairDrop(event)"><h3>🔵 Lead <span id="cntLead" class="tag">0</span></h3><div id="colLead"></div></div>
-        <div class="col" data-etapa="negociacao" ondragover="permitirDrop(event)" ondrop="soltarCard(event,'negociacao')" ondragleave="sairDrop(event)"><h3>🟡 Negociação <span id="cntNeg" class="tag">0</span></h3><div id="colNeg"></div></div>
-        <div class="col" data-etapa="fechado" ondragover="permitirDrop(event)" ondrop="soltarCard(event,'fechado')" ondragleave="sairDrop(event)"><h3>🟢 Fechado <span id="cntFec" class="tag">0</span></h3><div id="colFec"></div></div>
+        <div class="col" data-etapa="lead" ondragover="permitirDrop(event)" ondrop="soltarCard(event,'lead')" ondragleave="sairDrop(event)"><h3>Novo contato <span id="cntLead" class="tag">0</span></h3><div id="colLead"></div></div>
+        <div class="col" data-etapa="negociacao" ondragover="permitirDrop(event)" ondrop="soltarCard(event,'negociacao')" ondragleave="sairDrop(event)"><h3>Em atendimento <span id="cntNeg" class="tag">0</span></h3><div id="colNeg"></div></div>
+        <div class="col" data-etapa="fechado" ondragover="permitirDrop(event)" ondrop="soltarCard(event,'fechado')" ondragleave="sairDrop(event)"><h3>Compra concluída <span id="cntFec" class="tag">0</span></h3><div id="colFec"></div></div>
       </div>
     </div>
   </div>
@@ -307,6 +310,7 @@
         </div>
       </div>
     </div>
+    <section class="crmV15PreferenceEditor" aria-label="Preferências de compra"><div class="crmV15PrefHeading"><strong>Preferências do cliente</strong><span>Informações comerciais para um atendimento personalizado</span></div><div class="crmV15PrefGrid"><div class="field"><label>Marcas favoritas</label><input id="cliMarcas" placeholder="Ex.: Chilli Beans, Ray-Ban"/></div><div class="field"><label>Formato de armação</label><input id="cliFormato" placeholder="Ex.: quadrado, redondo"/></div><div class="field"><label>Tamanho (moda)</label><input id="cliTamanho" placeholder="Ex.: M ou 40"/></div><div class="field"><label>Estilo (moda)</label><input id="cliEstilo" placeholder="Ex.: casual, clássico"/></div></div></section>
     <div class="field"><label>Observações</label><textarea id="cliObs" rows="2" placeholder="Anotações..."></textarea></div>
     <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:10px">
       <button class="btn" onclick="fecharModal()">Cancelar</button>
@@ -695,7 +699,7 @@
   window.abrirNovoCliente=function(){
     document.getElementById("modalTitulo").textContent="Novo cliente";
     document.getElementById("cliId").value="";
-    ["cliNome","cliTel","cliEmail","cliCpf","cliNasc","cliObs","cliProx"].forEach(id=>document.getElementById(id).value="");
+    ["cliNome","cliTel","cliEmail","cliCpf","cliNasc","cliObs","cliProx","cliMarcas","cliFormato","cliTamanho","cliEstilo"].forEach(id=>document.getElementById(id).value="");
     document.getElementById("cliEtapa").value="lead";
     document.querySelectorAll(".tagChk").forEach(ch=>ch.checked=false);
     document.getElementById("modalCliente").classList.add("show");
@@ -712,6 +716,10 @@
     document.getElementById("cliEtapa").value=c.etapa||"lead";
     document.getElementById("cliProx").value=c.proximoContato||"";
     document.getElementById("cliObs").value=c.obs||"";
+    document.getElementById("cliMarcas").value=(c.marcasPreferidas||[]).join(', ');
+    document.getElementById("cliFormato").value=c.preferenciasOtica?.formato||'';
+    document.getElementById("cliTamanho").value=c.preferenciasModa?.tamanho||'';
+    document.getElementById("cliEstilo").value=c.preferenciasModa?.estilo||'';
     document.querySelectorAll(".tagChk").forEach(ch=> ch.checked=(c.tags||[]).includes(ch.value));
     document.getElementById("modalCliente").classList.add("show");
   };
@@ -733,6 +741,9 @@
       etapa:document.getElementById("cliEtapa").value,
       proximoContato:document.getElementById("cliProx").value,
       obs:document.getElementById("cliObs").value.trim(),
+      marcasPreferidas:document.getElementById("cliMarcas").value.split(',').map(v=>v.trim()).filter(Boolean),
+      preferenciasOtica:{...(existente?.preferenciasOtica||{}),formato:document.getElementById("cliFormato").value.trim()},
+      preferenciasModa:{...(existente?.preferenciasModa||{}),tamanho:document.getElementById("cliTamanho").value.trim(),estilo:document.getElementById("cliEstilo").value.trim()},
       tags,
       interacoes: existente?.interacoes || [],
       compras: existente?.compras || [],
@@ -742,7 +753,7 @@
       atualizadoEm: new Date().toISOString()
     };
     showLoading("Salvando...");
-    try{ await setDoc(doc(clientesRef,id),dados); fecharModal(); }
+    try{ await setDoc(doc(clientesRef,id),dados,{merge:true}); fecharModal(); }
     catch(e){ console.error(e); alert(msgErro(e,"salvar o cliente")); }
     hideLoading();
   };
@@ -820,7 +831,7 @@
     if(!texto){ alert("Escreva o que aconteceu."); return; }
     const interacoes=[...(c.interacoes||[]), { tipo, texto, quem:MY.name||MY.email, ts:Date.now() }];
     showLoading("Salvando...");
-    try{ await setDoc(doc(clientesRef,c.id),{ ...c, interacoes, atualizadoEm:new Date().toISOString() }); document.getElementById("interTexto").value=""; }
+    try{ await updateDoc(doc(clientesRef,c.id),{interacoes, atualizadoEm:new Date().toISOString()}); document.getElementById("interTexto").value=""; }
     catch(e){ console.error(e); alert(msgErro(e,"salvar")); }
     hideLoading();
   };
@@ -832,7 +843,7 @@
     if(valor<=0){ alert("Digite um valor válido."); return; }
     const compras=[...(c.compras||[]), { valor, desc:desc||"Compra", ts:Date.now() }];
     showLoading("Salvando...");
-    try{ await setDoc(doc(clientesRef,c.id),{ ...c, compras, atualizadoEm:new Date().toISOString() }); document.getElementById("compraValor").value=""; document.getElementById("compraDesc").value=""; }
+    try{ await updateDoc(doc(clientesRef,c.id),{compras, atualizadoEm:new Date().toISOString()}); document.getElementById("compraValor").value=""; document.getElementById("compraDesc").value=""; }
     catch(e){ console.error(e); alert(msgErro(e,"salvar")); }
     hideLoading();
   };
@@ -922,7 +933,7 @@
     const cli=CLIENTES.find(x=>x.id===id);
     if(cli){
       const interacoes=[...(cli.interacoes||[]), { tipo:"📣 Campanha", texto:"Campanha enviada: "+texto.slice(0,50)+(texto.length>50?"...":""), quem:MY.name||MY.email, ts:Date.now() }];
-      try{ await setDoc(doc(clientesRef,cli.id),{ ...cli, interacoes, atualizadoEm:new Date().toISOString() }); }catch(e){}
+      try{ await updateDoc(doc(clientesRef,cli.id),{interacoes, atualizadoEm:new Date().toISOString()}); }catch(e){}
     }
     renderDisparoLista();
   };
@@ -960,7 +971,7 @@
     window.open(url,"_blank");
     // registra como interação automaticamente
     const interacoes=[...(c.interacoes||[]), { tipo:"💬 WhatsApp", texto:"Mensagem enviada: "+texto.slice(0,60)+(texto.length>60?"...":""), quem:MY.name||MY.email, ts:Date.now() }];
-    try{ await setDoc(doc(clientesRef,c.id),{ ...c, interacoes, atualizadoEm:new Date().toISOString() }); }catch(e){}
+    try{ await updateDoc(doc(clientesRef,c.id),{interacoes, atualizadoEm:new Date().toISOString()}); }catch(e){}
     fecharZap();
   };
 
@@ -973,7 +984,7 @@
     if(!dragId) return;
     const c=CLIENTES.find(x=>x.id===dragId); if(!c||c.etapa===etapa){ dragId=null; return; }
     showLoading("Movendo...");
-    try{ await setDoc(doc(clientesRef,dragId),{ ...c, etapa, atualizadoEm:new Date().toISOString() }); }catch(e){ console.error(e); }
+    try{ await updateDoc(doc(clientesRef,dragId),{etapa, atualizadoEm:new Date().toISOString()}); }catch(e){ console.error(e); }
     dragId=null; hideLoading();
   };
   function renderFunil(){
@@ -1068,5 +1079,6 @@
     }</tbody></table>` : '<div class="hint">Nenhum cliente para pós-venda agora.</div>';
   }
 </script>
+<script src="./ondis-crm-retail-v15.js?v=15.0.0" defer></script>
 </body>
 </html>

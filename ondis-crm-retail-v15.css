@@ -1,0 +1,62 @@
+/* ONDIS V15 | CRM varejo. Estilos restritos às páginas de CRM. */
+:root{--crm15-red:#d80b2d;--crm15-red-dark:#75091d;--crm15-ink:#182133;--crm15-sub:#596679;--crm15-stroke:#e1e6ef;--crm15-bg:#f4f6fb;--crm15-card:#fff}
+body:has(.crmV15Simple),body:has(.crm-shell){font-family:Inter,system-ui,-apple-system,'Segoe UI',sans-serif!important}
+body:has(.crmV15Simple){background:#f5f6fb!important;color:var(--crm15-ink)!important}
+body:has(.crmV15Simple)>header{background:#fff!important;border-bottom:1px solid #e4e8f0!important;color:#172132!important;padding:14px clamp(16px,3vw,40px)!important;box-shadow:0 2px 18px #14263d0a}
+body:has(.crmV15Simple) .brand h1{color:#151e2f!important;font-size:21px!important;letter-spacing:-.04em}
+body:has(.crmV15Simple) .brand .sub,body:has(.crmV15Simple) .crmV15BrandCaption{color:#677487!important;font-size:11px}
+body:has(.crmV15Simple) .chip{color:#8b1b30!important;background:#fff0f2!important;border-color:#f5cfd6!important}
+body:has(.crmV15Simple) .wrap{max-width:1480px!important;padding:20px clamp(12px,2.6vw,38px)!important}
+.crmV15Eyebrow{display:block;color:#b60e29;letter-spacing:.16em;font-weight:850;font-size:10px;margin-bottom:8px}
+.crmV15Hero{display:flex;align-items:center;justify-content:space-between;gap:20px;border-radius:20px;background:linear-gradient(112deg,#440918 0%,#750b23 52%,#b31332 100%);padding:25px 28px;color:#fff;margin:0 0 13px;box-shadow:0 12px 30px #620f2b20;position:relative;overflow:hidden}
+.crmV15Hero::after{content:'';position:absolute;width:290px;height:290px;border:1px solid #ffffff2c;border-radius:50%;right:-75px;top:-170px;pointer-events:none}
+.crmV15Hero .crmV15Eyebrow{color:#ffc2ce}.crmV15Hero h2{font-size:clamp(23px,3vw,32px);font-weight:900;letter-spacing:-.04em;line-height:1.15;margin:0 0 6px;color:#fff}.crmV15Hero p{font-size:13px;line-height:1.55;color:#fce3e8;margin:0;max-width:540px}
+.crmV15HeroActions{display:flex;gap:9px;flex-wrap:wrap;position:relative;z-index:1}.crmV15Shortcut{border:1px solid #ffffff55;border-radius:11px;color:#fff;background:#ffffff15;padding:12px 14px;font-size:12px;font-weight:750;cursor:pointer}.crmV15Shortcut.primary{color:#761229;background:#fff}.crmV15Shortcut:hover{filter:brightness(1.1)}
+.crmV15SegmentBanner{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--crm15-stroke);border-radius:15px;padding:12px 16px;margin-bottom:18px;box-shadow:0 4px 12px #10243d08}.crmV15SegIcon{display:grid;place-items:center;border-radius:12px;background:#fcebef;color:#b1122b;width:39px;height:39px;font-size:22px;flex-shrink:0}.crmV15SegmentBanner div{display:grid;gap:3px;flex:1}.crmV15SegmentBanner strong{font-size:13px;color:#192337}.crmV15SegmentBanner small{font-size:11px;color:#67758a;line-height:1.45}.crmV15SegmentBanner a{color:#b41131;font-size:12px;font-weight:850;text-decoration:none;white-space:nowrap}
+body:has(.crmV15Simple) .tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;padding:7px;border-radius:14px;background:#fff;border:1px solid var(--crm15-stroke)}
+body:has(.crmV15Simple) .tab{color:#475469!important;background:transparent!important;border:1px solid transparent!important;border-radius:10px;font-size:12px!important;font-weight:760;padding:10px 14px}
+body:has(.crmV15Simple) .tab.active{color:#fff!important;background:linear-gradient(110deg,#bf0c2a,#e51d3c)!important;box-shadow:0 4px 13px #c50d2b35}
+body:has(.crmV15Simple) .card,body:has(.crmV15Simple) .kpi,body:has(.crmV15Simple) .col{background:#fff!important;color:#172033!important;border:1px solid var(--crm15-stroke)!important;box-shadow:0 5px 20px #1c34590b;border-radius:16px!important}
+body:has(.crmV15Simple) .card{padding:20px!important;margin-bottom:15px}body:has(.crmV15Simple) .cardHead h2{font-size:15px!important;color:#1a2334!important;letter-spacing:-.01em}
+body:has(.crmV15Simple) .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:12px}
+body:has(.crmV15Simple) .kpi{padding:17px!important;min-width:0;border-top:3px solid #e31738!important}body:has(.crmV15Simple) .kpi .t{color:#647188!important;font-size:11px!important;font-weight:780}body:has(.crmV15Simple) .kpi .v{color:#192134!important;font-size:clamp(21px,2.2vw,27px)!important;overflow-wrap:anywhere}
+body:has(.crmV15Simple) .hint,body:has(.crmV15Simple) th,body:has(.crmV15Simple) .leadCard .meta{color:#647188!important}
+body:has(.crmV15Simple) .btn{border:1px solid #d9dfea;background:#fff;color:#293449;border-radius:10px;font-size:12px;padding:9px 13px}body:has(.crmV15Simple) .btn.good,body:has(.crmV15Simple) .btn.warn{background:#d31032!important;border-color:#d31032!important;color:white!important}
+body:has(.crmV15Simple) .btn.bad{color:#a31831!important;background:#fff0f2!important;border-color:#ffccd5!important}
+body:has(.crmV15Simple) input,body:has(.crmV15Simple) select,body:has(.crmV15Simple) textarea{background:#fff!important;color:#1d293c!important;border:1px solid #d9e0ec!important;border-radius:9px!important;min-height:38px;color-scheme:light!important}
+body:has(.crmV15Simple) input::placeholder,body:has(.crmV15Simple) textarea::placeholder{color:#8893a4!important}
+body:has(.crmV15Simple) .field label{color:#59687c!important}
+body:has(.crmV15Simple) th{background:#f4f6fa!important;font-size:10px!important;color:#617085!important}body:has(.crmV15Simple) td{color:#283548!important;border-color:#e9eef4!important}body:has(.crmV15Simple) tr:hover td{background:#f7f9fc!important}
+body:has(.crmV15Simple) .funil{gap:12px}body:has(.crmV15Simple) .col{background:#f8f9fc!important;padding:12px!important;min-height:210px}body:has(.crmV15Simple) .col h3{color:#253248!important;font-size:12px!important;letter-spacing:0!important;text-transform:none!important}body:has(.crmV15Simple) .leadCard{color:#1d2737!important;background:#fff!important;border:1px solid #dce3ec!important}
+body:has(.crmV15Simple) .modal{background:#fff!important;color:#192537!important;border:1px solid #e4e9f1!important;box-shadow:0 24px 70px #0003}
+body:has(.crmV15Simple) .modal :is(h2,h3,h4,strong){color:#1c293e!important}body:has(.crmV15Simple) .modal .btn.good{color:white!important}
+/* CRM completo: preserve grids, controls and data-view navigation */
+body:has(.crm-shell){background:#f4f6fa!important;color:#172137!important}
+body:has(.crm-shell) .crm-sidebar{background:linear-gradient(170deg,#350713,#620a21 55%,#3c0717)!important;color:#fff!important;border-right:1px solid #702a3a!important}
+body:has(.crm-shell) .crm-brand{border-color:#ffffff29!important}body:has(.crm-shell) .crm-brand strong{color:#fff!important}body:has(.crm-shell) .crm-brand span{color:#f6bec8!important}
+body:has(.crm-shell) .crm-sidebar .nav-group>span{color:#e7a2af!important;letter-spacing:.12em!important}
+body:has(.crm-shell) .crm-sidebar .nav-link{color:#f7dce1!important;border-radius:11px!important;font-weight:650!important}
+body:has(.crm-shell) .crm-sidebar .nav-link.active,body:has(.crm-shell) .crm-sidebar .nav-link:hover{color:#fff!important;background:linear-gradient(105deg,#ba0929,#e21a3b)!important}
+body:has(.crm-shell) .sidebar-foot a{color:#fff!important}
+body:has(.crm-shell) .crm-main{background:#f4f6fa!important;color:#172137!important}
+body:has(.crm-shell) .crm-topbar{background:#fff!important;border-bottom:1px solid #e0e6ef!important;color:#243046!important}
+body:has(.crm-shell) .top-title strong{color:#192338!important}body:has(.crm-shell) .top-title span{color:#637087!important}
+.crmV15FullHero{display:flex;align-items:center;justify-content:space-between;gap:15px;margin:18px 22px 14px;padding:22px 25px;border-radius:19px;background:linear-gradient(115deg,#450b18,#850f29 65%,#ad1534);color:#fff;box-shadow:0 10px 26px #7c15321e}
+.crmV15FullHero h1{font-size:clamp(20px,2.6vw,29px);letter-spacing:-.035em;line-height:1.16;color:#fff!important;margin:0 0 7px}.crmV15FullHero p{font-size:12px;color:#ffe4ea!important;line-height:1.55;margin:0;max-width:610px}.crmV15FullHero .crmV15Eyebrow{color:#ffc5d0}.crmV15FullLinks{display:flex;flex-wrap:wrap;gap:7px}.crmV15FullLinks button{border:1px solid #ffffff57;background:#ffffff19;color:white;border-radius:10px;padding:11px 13px;cursor:pointer;font-weight:750;font-size:11px;white-space:nowrap}.crmV15FullLinks button:first-child{background:#fff;color:#831127}
+body:has(.crm-shell) .section-card,body:has(.crm-shell) .kpi-card,body:has(.crm-shell) .crm-view .card{border-radius:15px!important;box-shadow:0 5px 20px #2135500a!important;border:1px solid #e1e6ef!important;background:#fff!important;color:#192439!important}
+body:has(.crm-shell) .crm-view h1,body:has(.crm-shell) .section-card h2{color:#19243a!important}
+body:has(.crm-shell) .crm-view :is(p,small){line-height:1.5}body:has(.crm-shell) .view-head p,body:has(.crm-shell) .section-head p{color:#62718a!important}
+body:has(.crm-shell) .btn-primary{background:#c60f2f!important;color:#fff!important;border-color:#c60f2f!important}
+body:has(.crm-shell) .global-filters{background:#fff!important;border-radius:13px!important;border:1px solid #e0e5ef!important;margin:0 22px 18px!important;padding:12px!important}
+body:has(.crm-shell) :is(input,select,textarea){color:#202b40!important;background:#fff!important;border-color:#d9e0ea!important}body:has(.crm-shell) :is(input,textarea)::placeholder{color:#929dad!important}
+body:has(.crm-shell) .crm-dialog{background:#fff!important;color:#19253b!important}body:has(.crm-shell) .crm-dialog :is(h2,h3,strong){color:#19253b!important}
+body:has(.crm-shell) .crm-view .eyebrow{color:#bc1734!important}body:has(.crm-shell) .section-card :is(th,td){color:#29364b!important}
+@media(max-width:900px){.crmV15Hero,.crmV15FullHero{flex-direction:column;align-items:flex-start}.crmV15SegmentBanner{flex-wrap:wrap}.crmV15FullHero{margin:12px;padding:19px}}
+@media(max-width:600px){body:has(.crmV15Simple) .wrap{padding:12px!important}.crmV15Hero{padding:19px!important;border-radius:16px}.crmV15SegmentBanner{padding:12px}.crmV15SegmentBanner a{width:100%}.crmV15HeroActions{width:100%}.crmV15Shortcut{flex:1}.crmV15FullLinks{width:100%}.crmV15FullLinks button{flex:1}.crmV15FullHero h1{font-size:22px}.crmV15SegmentBanner small{overflow-wrap:anywhere}body:has(.crmV15Simple) .tabs{overflow-x:auto;flex-wrap:nowrap;scrollbar-width:thin}body:has(.crmV15Simple) .tab{white-space:nowrap}body:has(.crmV15Simple) .card{padding:12px!important}body:has(.crmV15Simple) .grid2{grid-template-columns:1fr!important}body:has(.crmV15Simple) .funil{grid-template-columns:1fr!important}body:has(.crmV15Simple) .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* Editable segment preferences, both CRM forms */
+.crmV15PreferenceEditor{padding:14px!important;margin:12px 0!important;border:1px solid #e7d6db!important;background:#fff8fa!important;border-radius:13px!important;min-width:0!important}
+.crmV15PrefHeading{display:flex;flex-direction:column;gap:4px;margin-bottom:11px}.crmV15PrefHeading strong{color:#83152e!important;font-size:13px!important}.crmV15PrefHeading span{color:#6a7283!important;font-size:11px!important}.crmV15PrefGrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}.crmV15PrefGrid .field{min-width:0!important;margin-bottom:0!important}.crmV15PrefGrid label{color:#405068!important;font-size:11px!important;display:grid;gap:7px}.crmV15PrefGrid input{width:100%!important;min-width:0!important}.crmV15PreferenceEditor legend{color:#83152e!important;font-weight:850;font-size:13px;padding:0 5px}.crmV15PrefHelp{color:#7a8796!important;font-size:10px!important;margin:12px 0 0!important}
+@media(max-width:580px){.crmV15PrefGrid{grid-template-columns:1fr!important}}
+
+/* Protect dialog titles against old sticky global header rules */
+body:has(.crmV15Simple) .modalBack .modal header{background:transparent!important;color:#1c293d!important;position:static!important;box-shadow:none!important;border:0!important;padding:0!important}body:has(.crmV15Simple) .modalBack .modal :is(label,small,p){color:#5f6e80!important}body:has(.crmV15Simple) .modalBack .modal .field input,body:has(.crmV15Simple) .modalBack .modal .field textarea{color:#17263c!important}body:has(.crm-shell) .crm-dialog header{background:#fff!important;color:#192539!important;box-shadow:none!important}

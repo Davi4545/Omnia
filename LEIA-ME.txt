@@ -1,0 +1,45 @@
+ONDIS V15 — CRM DE VAREJO + INTELLIGENCE (ATUALIZAÇÃO)
+===================================================
+
+1. Faça um BACKUP completo do projeto e das regras/coleções do Firestore.
+2. Teste em homologação, sem lojas ativas, antes de publicar.
+3. Copie para a RAIZ do repositório estes arquivos:
+   crm.html
+   crm-completo.html
+   crm-completo.js
+   ondis-v11.js
+   ondis-crm-retail-v15.css
+   ondis-crm-retail-v15.js
+   ondis-ia-v15.css
+4. Atualize a página com Ctrl+F5 e confirme que todos os recursos e permissões funcionam.
+5. Se já alterou crm.html, crm-completo.html, crm-completo.js ou ondis-v11.js depois
+   da base V6, FAÇA MERGE DAS MUDANÇAS em vez de substituir cegamente esses arquivos.
+
+O QUE FOI FEITO
+- CRM Simplificado: interface clara com vermelho/bordô ONDIS, topo compacto,
+  navegação clara, atalhos para clientes e retornos, cores legíveis.
+- CRM Completo: interface premium com menu bordô e atalhos Cliente 360°, Retornos
+  e Fidelização. Textos e fluxos apresentados para varejo, ótica e moda.
+- Cliente 360°: campos opcionais para preferências comerciais de ótica
+  (formato/cor/material de armação) e vestuário (tamanho/estilo/categoria).
+- CRM Simplificado: campos de marcas, formato, tamanho e estilo; atualização
+  limitada aos campos alterados em interações, compras e etapa.
+- IA: painel de assistência local redesenhado, com temas, perguntas sugeridas,
+  histórico em tela, Enter/Shift+Enter, limpeza e fechamento por Escape.
+- IA não é iniciada em catalogo.html (página pública do cliente).
+
+LIMITES IMPORTANTES
+- Não há integração com modelo externo de IA: este assistente continua local.
+- Não adicionamos envio automático de WhatsApp, mensagens, pagamentos ou ordens.
+- Não há novas regras de Firestore ou migração obrigatória; os campos novos são opcionais.
+- Não foi feita validação funcional conectada ao Firebase de produção.
+- O navegador de teste ficou bloqueado neste ambiente: o contraste foi codificado
+  e a sintaxe foi testada, mas é necessária validação visual real em homologação.
+- O novo CSS é carregado apenas pelas páginas CRM; o CSS da IA é carregado pelo script
+  global ondis-v11.js (em páginas internas) e não em links públicos de catálogo.
+
+CRÍTICO
+- O CRM Simplificado tem outros fluxos existentes de cadastro/compra; a atualização
+  não reestrutura regras de negócio ou integrações. Verifique ações concorrentes.
+- As permissões de banco devem continuar sendo reforçadas antes de comercializar.
+- Dados médicos/prescrições ópticas não foram incluídos nos novos campos.

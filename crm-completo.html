@@ -17,6 +17,7 @@
 <link rel="stylesheet" href="./ondis-visual-v4.css?v=4.0.0"/>
 
 <link rel="stylesheet" href="./ondis-contraste-global-v6.css?v=6.0.0">
+<link rel="stylesheet" href="./ondis-crm-retail-v15.css?v=15.0.0">
 </head>
 <body data-ondis-refresh="crm-full">
   <div class="loading show" id="loadingScreen" role="status" aria-live="polite">
@@ -28,13 +29,13 @@
     <aside class="crm-sidebar" id="crmSidebar">
       <div class="crm-brand">
         <div class="brand-mark">O</div>
-        <div><strong>ONDIS</strong><span>CRM Completo</span></div>
+        <div><strong>ONDIS</strong><span>Relacionamento de varejo</span></div>
         <button class="icon-btn sidebar-close" id="sidebarClose" aria-label="Fechar menu">×</button>
       </div>
 
       <nav class="crm-nav" aria-label="Navegação do CRM">
-        <div class="nav-group"><span>Visão geral</span>
-          <button class="nav-link active" data-view="hoje"><i>⌂</i>Hoje</button>
+        <div class="nav-group"><span>Painel</span>
+          <button class="nav-link active" data-view="hoje"><i>⌂</i>Visão geral</button>
         </div>
         <div class="nav-group"><span>Relacionamento</span>
           <button class="nav-link" data-view="clientes"><i>◉</i>Clientes</button>
@@ -43,14 +44,14 @@
           <button class="nav-link" data-view="agenda"><i>□</i>Agenda</button>
         </div>
         <div class="nav-group"><span>Vendas</span>
-          <button class="nav-link" data-view="funil"><i>▥</i>Funil</button>
-          <button class="nav-link" data-view="orcamentos"><i>▤</i>Orçamentos</button>
-          <button class="nav-link" data-view="produtos"><i>⌁</i>Produtos e interesses</button>
+          <button class="nav-link" data-view="funil"><i>▥</i>Jornada de compra</button>
+          <button class="nav-link" data-view="orcamentos"><i>▤</i>Orçamentos de clientes</button>
+          <button class="nav-link" data-view="produtos"><i>⌁</i>Preferências e produtos</button>
         </div>
         <div class="nav-group"><span>Engajamento</span>
           <button class="nav-link" data-view="campanhas"><i>◈</i>Campanhas</button>
           <button class="nav-link" data-view="jornadas"><i>↝</i>Jornadas</button>
-          <button class="nav-link" data-view="fidelidade"><i>☆</i>Fidelidade</button>
+          <button class="nav-link" data-view="fidelidade"><i>☆</i>Pós-venda e fidelidade</button>
         </div>
         <div class="nav-group"><span>Performance</span>
           <button class="nav-link" data-view="metricas"><i>⌁</i>Métricas</button>
@@ -72,7 +73,7 @@
     <main class="crm-main">
       <header class="crm-topbar">
         <button class="icon-btn menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button>
-        <div class="top-title"><strong id="pageTitle">Hoje</strong><span id="storeContext">Carregando loja…</span></div>
+        <div class="top-title"><strong id="pageTitle">CRM Completo</strong><span id="storeContext">Carregando loja…</span></div>
         <div class="top-actions">
           <button class="btn btn-super" id="openSuper">✦ Super</button>
           <span class="role-pill" id="rolePill">—</span>
@@ -80,6 +81,7 @@
         </div>
       </header>
 
+      <div class="crmV15FullHero"><div><span class="crmV15Eyebrow">GESTÃO COMERCIAL · ONDIS</span><h1>Relacionamento que traz o cliente de volta.</h1><p>Uma visão da carteira, dos atendimentos e das oportunidades de recompra na ótica ou loja de moda.</p></div><div class="crmV15FullLinks"><button type="button" data-crm-view-shortcut="clientes">Clientes 360°</button><button type="button" data-crm-view-shortcut="agenda">Retornos</button><button type="button" data-crm-view-shortcut="fidelidade">Fidelização</button></div></div>
       <section class="global-filters" id="globalFilters">
         <label>Período
           <select id="periodFilter">
@@ -100,7 +102,7 @@
       <div class="permission-banner hidden" id="permissionBanner"></div>
       <div class="crm-content">
         <section class="crm-view active" id="view-hoje" data-title="Hoje">
-          <div class="view-head"><div><span class="eyebrow">Central de comando</span><h1>Prioridades que movem a venda</h1><p>O que sua equipe precisa fazer agora, calculado com os dados da loja.</p></div><button class="btn btn-primary" data-action="new-deal">+ Nova negociação</button></div>
+          <div class="view-head"><div><span class="eyebrow">Central de comando</span><h1>Prioridades do relacionamento</h1><p>Clientes que precisam de contato, retornos e oportunidades com base nos registros da loja.</p></div><button class="btn btn-primary" data-action="new-deal">+ Nova oportunidade</button></div>
           <div class="kpi-grid" id="todayKpis"></div>
           <div class="section-card priority-card"><div class="section-head"><div><h2>Prioridades de hoje</h2><p id="prioritySummary">Carregando recomendações…</p></div><select id="priorityFilter"><option value="">Todas</option><option value="atrasada">Atrasadas</option><option value="alto">Alto potencial</option><option value="posvenda">Pós-venda</option></select></div><div id="priorityList"></div></div>
           <div class="two-columns"><div class="section-card"><div class="section-head"><h2>Pipeline por etapa</h2></div><div id="todayPipeline"></div></div><div class="section-card"><div class="section-head"><h2>Próximas atividades</h2><button class="text-btn" data-action="new-task">Criar tarefa</button></div><div id="todayTasks"></div></div></div>
@@ -138,19 +140,19 @@
         </section>
 
         <section class="crm-view" id="view-funil" data-title="Funil">
-          <div class="view-head"><div><span class="eyebrow">Vendas</span><h1>Funil de negociações</h1><p>Várias oportunidades por cliente, sem alterar o cadastro do cliente.</p></div><button class="btn btn-primary" data-action="new-deal">+ Nova negociação</button></div>
+          <div class="view-head"><div><span class="eyebrow">Vendas</span><h1>Jornada de compra</h1><p>Acompanhe contatos, interesse em armações ou roupas, orçamento, retorno e compra.</p></div><button class="btn btn-primary" data-action="new-deal">+ Nova negociação</button></div>
           <div class="kpi-grid compact" id="pipelineKpis"></div>
           <div class="toolbar"><select id="dealOriginFilter"><option value="">Todas as origens</option><option>Loja</option><option>WhatsApp</option><option>Instagram</option><option>Indicação</option><option>Campanha</option><option>Site</option><option>Outro</option></select><select id="dealValueFilter"><option value="">Todos os valores</option><option value="1000">Acima de R$ 1.000</option><option value="3000">Acima de R$ 3.000</option><option value="5000">Acima de R$ 5.000</option></select><label>Fechamento até<input type="date" id="dealCloseFilter"></label></div>
           <div class="kanban-wrap"><div class="kanban" id="dealKanban"></div></div>
         </section>
 
         <section class="crm-view" id="view-orcamentos" data-title="Orçamentos">
-          <div class="view-head"><div><span class="eyebrow">Vendas</span><h1>Orçamentos</h1><p>Propostas vinculadas a negociações e clientes reais.</p></div><button class="btn btn-primary" data-action="new-quote">+ Novo orçamento</button></div>
+          <div class="view-head"><div><span class="eyebrow">Vendas</span><h1>Orçamentos de clientes</h1><p>Orçamentos e produtos consultados pelos clientes da loja.</p></div><button class="btn btn-primary" data-action="new-quote">+ Novo orçamento</button></div>
           <div class="section-card table-card"><div class="table-wrap"><table><thead><tr><th>Cliente</th><th>Produto</th><th>Valor</th><th>Envio</th><th>Validade</th><th>Responsável</th><th>Status</th><th>Ações</th></tr></thead><tbody id="quoteRows"></tbody></table></div><div id="quoteEmpty"></div></div>
         </section>
 
         <section class="crm-view" id="view-produtos" data-title="Produtos e interesses">
-          <div class="view-head"><div><span class="eyebrow">Inteligência de demanda</span><h1>Produtos e interesses</h1><p>Interesses declarados e produtos presentes nas oportunidades.</p></div></div>
+          <div class="view-head"><div><span class="eyebrow">Inteligência de demanda</span><h1>Preferências e produtos</h1><p>Marcas, modelos, estilos, tamanhos e itens procurados pelos clientes.</p></div></div>
           <div class="kpi-grid compact" id="productKpis"></div><div class="two-columns"><div class="section-card"><div class="section-head"><h2>Interesses mais frequentes</h2></div><div id="interestRanking"></div></div><div class="section-card"><div class="section-head"><h2>Oportunidades por origem</h2></div><div id="originRanking"></div></div></div>
         </section>
 
@@ -165,7 +167,7 @@
         </section>
 
         <section class="crm-view" id="view-fidelidade" data-title="Fidelidade">
-          <div class="view-head"><div><span class="eyebrow">Experiência</span><h1>Fidelidade e satisfação</h1><p>Pontos, cashback, cupons, indicações, NPS e recuperação de insatisfeitos.</p></div><button class="btn btn-primary" data-action="new-loyalty">Registrar movimentação</button></div>
+          <div class="view-head"><div><span class="eyebrow">Experiência</span><h1>Pós-venda e fidelização</h1><p>Pontos, cashback, cupons, indicações, NPS e recuperação de insatisfeitos.</p></div><button class="btn btn-primary" data-action="new-loyalty">Registrar movimentação</button></div>
           <div class="kpi-grid compact" id="loyaltyKpis"></div><div class="two-columns"><div class="section-card"><div class="section-head"><h2>Clientes no programa</h2></div><div id="loyaltyClients"></div></div><div class="section-card"><div class="section-head"><h2>Avaliações recentes</h2><button class="text-btn" data-action="new-survey">Registrar avaliação</button></div><div id="surveyList"></div></div></div>
         </section>
 
@@ -202,7 +204,7 @@
   </aside><div class="drawer-backdrop" id="drawerBackdrop"></div>
 
   <dialog class="crm-dialog" id="clientDialog"><form method="dialog" id="clientForm"><header><div><span class="eyebrow">Cliente 360°</span><h2 id="clientDialogTitle">Novo cliente</h2></div><button class="icon-btn" value="cancel">×</button></header><div class="form-grid three">
-    <label>Tipo<select name="tipo"><option value="pf">Pessoa física</option><option value="pj">Pessoa jurídica</option></select></label><label class="span-2">Nome completo / Razão social *<input name="nome" required></label><label>Nome fantasia<input name="nomeFantasia"></label><label>CPF / CNPJ<input name="documento"></label><label>Nascimento / Fundação<input name="nascimento" type="date"></label><label>Telefone principal *<input name="telefone" required placeholder="(00) 00000-0000"></label><label>WhatsApp<input name="whatsapp" placeholder="(00) 00000-0000"></label><label>E-mail<input name="email" type="email"></label><label>CEP<input name="cep"></label><label>Endereço<input name="endereco"></label><label>Número<input name="numero"></label><label>Complemento<input name="complemento"></label><label>Bairro<input name="bairro"></label><label>Cidade<input name="cidade"></label><label>Estado<input name="estado" maxlength="2"></label><label>Origem<select name="origem"><option>Loja</option><option>WhatsApp</option><option>Instagram</option><option>Indicação</option><option>Campanha</option><option>Site</option><option>Outro</option></select></label><label>Vendedor responsável<select name="ownerUid" id="clientOwnerSelect"><option value="">Sem responsável</option></select></label><label>Marcas preferidas<input name="marcas" placeholder="Separe por vírgulas"></label><label>Produtos de interesse<input name="interesses" placeholder="Separe por vírgulas"></label><label class="span-3">Observações<textarea name="obs" rows="3"></textarea></label><fieldset class="span-3"><legend>Consentimentos</legend><label class="check"><input type="checkbox" name="consentWhatsapp"> WhatsApp</label><label class="check"><input type="checkbox" name="consentEmail"> E-mail</label><label class="check"><input type="checkbox" name="consentSms"> SMS</label><label class="check"><input type="checkbox" name="optOut"> Não deseja receber comunicações</label></fieldset></div><input type="hidden" name="id"><footer><button class="btn btn-ghost" value="cancel">Cancelar</button><button class="btn btn-primary" value="default" id="saveClientButton">Salvar cliente</button></footer></form></dialog>
+    <label>Tipo<select name="tipo"><option value="pf">Pessoa física</option><option value="pj">Pessoa jurídica</option></select></label><label class="span-2">Nome completo / Razão social *<input name="nome" required></label><label>Nome fantasia<input name="nomeFantasia"></label><label>CPF / CNPJ<input name="documento"></label><label>Nascimento / Fundação<input name="nascimento" type="date"></label><label>Telefone principal *<input name="telefone" required placeholder="(00) 00000-0000"></label><label>WhatsApp<input name="whatsapp" placeholder="(00) 00000-0000"></label><label>E-mail<input name="email" type="email"></label><label>CEP<input name="cep"></label><label>Endereço<input name="endereco"></label><label>Número<input name="numero"></label><label>Complemento<input name="complemento"></label><label>Bairro<input name="bairro"></label><label>Cidade<input name="cidade"></label><label>Estado<input name="estado" maxlength="2"></label><label>Origem<select name="origem"><option>Loja</option><option>WhatsApp</option><option>Instagram</option><option>Indicação</option><option>Campanha</option><option>Site</option><option>Outro</option></select></label><label>Vendedor responsável<select name="ownerUid" id="clientOwnerSelect"><option value="">Sem responsável</option></select></label><label>Marcas preferidas<input name="marcas" placeholder="Separe por vírgulas"></label><label>Produtos de interesse<input name="interesses" placeholder="Separe por vírgulas"></label><fieldset class="span-3 crmV15PreferenceEditor"><legend>Preferências do varejo</legend><div class="crmV15PrefGrid"><label>Formato de armação (ótica)<input name="formatoArmacoes" placeholder="Ex.: quadrado, gatinho"></label><label>Cor de armação (ótica)<input name="corArmacoes" placeholder="Ex.: preto, dourado"></label><label>Material preferido (ótica)<input name="materialArmacoes" placeholder="Ex.: acetato, metal"></label><label>Tamanho de roupa (moda)<input name="tamanhoModa" placeholder="Ex.: P, M, G, 40"></label><label>Estilo preferido (moda)<input name="estiloModa" placeholder="Ex.: clássico, casual"></label><label>Categorias favoritas (moda)<input name="categoriasModa" placeholder="Ex.: camisas, vestidos"></label></div><p class="crmV15PrefHelp">Registre preferências comerciais, não receitas médicas ou informações sensíveis.</p></fieldset><label class="span-3">Observações<textarea name="obs" rows="3"></textarea></label><fieldset class="span-3"><legend>Consentimentos</legend><label class="check"><input type="checkbox" name="consentWhatsapp"> WhatsApp</label><label class="check"><input type="checkbox" name="consentEmail"> E-mail</label><label class="check"><input type="checkbox" name="consentSms"> SMS</label><label class="check"><input type="checkbox" name="optOut"> Não deseja receber comunicações</label></fieldset></div><input type="hidden" name="id"><footer><button class="btn btn-ghost" value="cancel">Cancelar</button><button class="btn btn-primary" value="default" id="saveClientButton">Salvar cliente</button></footer></form></dialog>
 
   <dialog class="crm-dialog wide" id="client360Dialog"><div id="client360Content"></div></dialog>
 
@@ -246,6 +248,7 @@
       window.__ONDIS_CRM_RECOVERY__={timer:timer,release:releaseLoading};
     })();
   </script>
-  <script type="module" src="./crm-completo.js?v=13.3"></script>
+  <script type="module" src="./crm-completo.js?v=15.0.0"></script>
+<script src="./ondis-crm-retail-v15.js?v=15.0.0" defer></script>
 </body>
 </html>
