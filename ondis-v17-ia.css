@@ -1,0 +1,13 @@
+/* ONDIS V17 — Assistente visual, isolado nas páginas do pacote. */
+body[data-ondis-refresh] #v11Agent{background:#fff!important;color:#182338!important;border:1px solid #dce5f0!important;box-shadow:0 22px 80px #17223835!important;border-radius:19px!important;overflow:hidden!important}
+body[data-ondis-refresh] #v11Agent .v11-agent-head{background:linear-gradient(110deg,#72172d,#c70d34)!important;color:#fff!important;border:0!important}
+body[data-ondis-refresh] #v11Agent .v11-agent-head :is(h2,h3,span,strong,b,small){color:#fff!important;-webkit-text-fill-color:#fff!important}
+body[data-ondis-refresh] #v11Agent .v11-agent-head button{color:#fff!important;-webkit-text-fill-color:#fff!important;background:#ffffff21!important;border-color:#ffffff4a!important}
+body[data-ondis-refresh] #v11Agent :is(.v11-agent-body,.v11-agent-foot){background:#fff!important;color:#172238!important}
+body[data-ondis-refresh] #v11Agent .v11-agent-msg.ai{background:#f5f7fb!important;border:1px solid #e4eaf1!important;color:#182338!important}
+body[data-ondis-refresh] #v11Agent .v11-agent-msg.user{background:#af1535!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+body[data-ondis-refresh] #v11Agent #v11AgentSend{background:#cb1034!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:#cb1034!important}
+body[data-ondis-refresh="crm-full"] .super-drawer{background:#fff!important;color:#182338!important;box-shadow:0 20px 50px #10223d24!important;border-left:1px solid #dfe7f0!important}
+body[data-ondis-refresh="crm-full"] .super-drawer .super-head{background:linear-gradient(105deg,#75142e,#c91036)!important;color:#fff!important}
+body[data-ondis-refresh="crm-full"] .super-drawer .super-head :is(strong,small,button,span){color:#fff!important;-webkit-text-fill-color:#fff!important}
+body[data-ondis-refresh="crm-full"] .super-drawer .super-body{background:#fff!important;color:#182338!important}

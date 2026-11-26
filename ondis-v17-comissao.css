@@ -1,0 +1,19 @@
+
+body[data-ondis-refresh="commission"]>header{position:sticky!important;top:0!important;z-index:30!important;min-height:68px!important;padding:13px max(18px,calc((100vw - 1260px)/2))!important;background:linear-gradient(105deg,#111722,#231521)!important;color:#fff!important;border-bottom:3px solid #d51035!important;display:flex!important;align-items:center!important;gap:12px!important}
+body[data-ondis-refresh="commission"]>header :is(.brand,.brand *,.sub){color:#fff!important;-webkit-text-fill-color:#fff!important}
+body[data-ondis-refresh="commission"]>header .btn{border:1px solid #fff4!important;background:#ffffff14!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:10px!important;min-height:35px!important}
+body[data-ondis-refresh="commission"] .wrap{max-width:1250px!important;margin:24px auto!important;padding:0 22px!important;box-sizing:border-box!important}
+body[data-ondis-refresh="commission"] :is(.kpis,.grid2){gap:13px!important}
+body[data-ondis-refresh="commission"] .card{padding:17px!important}
+body[data-ondis-refresh="commission"] .cardHead{border-bottom:1px solid #e6ebf3!important;padding-bottom:12px!important;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+body[data-ondis-refresh="commission"] :is(.tab,.tabs button){background:#fff!important;color:#26374f!important;-webkit-text-fill-color:#26374f!important;border:1px solid #dce4ef!important;border-radius:11px!important;min-height:40px!important;padding:9px 14px!important;font-weight:700!important}
+body[data-ondis-refresh="commission"] :is(.tab.active,.tabs button.active){background:#d51035!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:#d51035!important}
+body[data-ondis-refresh="commission"] .modalBack{z-index:1000!important;background:#0d152287!important;backdrop-filter:blur(3px)}
+body[data-ondis-refresh="commission"] .modal{max-height:90vh;overflow:auto}
+body[data-ondis-refresh="commission"] :is(.btn,.chip){min-height:36px}
+@media(max-width:700px){body[data-ondis-refresh="commission"]>header{padding:11px 14px!important;flex-wrap:wrap!important}}
+
+body[data-ondis-refresh="commission"] .pc-intro{background:linear-gradient(100deg,#fff,#fff2f5)!important;color:#17233a!important;border:1px solid #e3e8ef!important;padding:20px!important;border-radius:18px!important}
+body[data-ondis-refresh="commission"] .pc-intro :is(h1,h2,strong){color:#17233a!important}
+body[data-ondis-refresh="commission"] .resultado{background:#f8fafc!important;color:#17233a!important;border:1px solid #e5eaf2!important;border-radius:14px!important}
+body[data-ondis-refresh="commission"] .resultado :is(b,strong,.big){color:#17233a!important}

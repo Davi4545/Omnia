@@ -1,0 +1,50 @@
+{
+  "crm": {
+    "ids_preservados": 79,
+    "scripts_inalterados": 6,
+    "novos_css": 3,
+    "sem_v16": true
+  },
+  "crm-completo": {
+    "ids_preservados": 142,
+    "scripts_inalterados": 8,
+    "novos_css": 3,
+    "sem_v16": true
+  },
+  "equipe-360": {
+    "ids_preservados": 6,
+    "scripts_inalterados": 5,
+    "novos_css": 3,
+    "sem_v16": true
+  },
+  "comissao": {
+    "ids_preservados": 21,
+    "scripts_inalterados": 4,
+    "novos_css": 3,
+    "sem_v16": true
+  },
+  "ponto": {
+    "ids_preservados": 51,
+    "scripts_inalterados": 6,
+    "novos_css": 3,
+    "sem_v16": true
+  },
+  "fidelidade": {
+    "ids_preservados": 0,
+    "scripts_inalterados": 3,
+    "novos_css": 3,
+    "sem_v16": true
+  },
+  "admin": {
+    "ids_preservados": 9,
+    "scripts_inalterados": 5,
+    "novos_css": 3,
+    "sem_v16": true
+  },
+  "superadmin": {
+    "ids_preservados": 16,
+    "scripts_inalterados": 4,
+    "novos_css": 3,
+    "sem_v16": true
+  }
+}
