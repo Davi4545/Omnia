@@ -1070,7 +1070,7 @@ body{ background-attachment: fixed; }
 <style id="v10-dashboard-fix">
 .dashboardPanel{min-height:280px}.dashboardSvgChart{min-height:210px}.dashboardSvgChart.compact{min-height:170px}.dashboardBarList,.dashboardFunnel,.dashboardDonutWrap{min-height:190px;display:flex;flex-direction:column;justify-content:center}.dashboardEmptyList{padding:28px 14px;border:1px dashed var(--line);border-radius:14px;text-align:center;color:var(--muted);background:color-mix(in srgb,var(--panel) 85%,var(--bg))}.dashboardMainGrid .dashboardPanel,.dashboardSecondaryGrid .dashboardPanel{background:linear-gradient(180deg,var(--panel),color-mix(in srgb,var(--panel) 94%,var(--bg)));box-shadow:0 10px 28px rgba(15,23,42,.045)}
 </style><link rel="stylesheet" href="./ondis-v11.css?v=12.3.0"><script src="./ondis-v11.js?v=13.3" defer></script>  <link rel="stylesheet" href="./ondis-visual-refresh.css?v=1.0.0">
-<link rel="stylesheet" href="./ondis-metas-operacao.css?v=1.0.0">
+<link rel="stylesheet" href="./ondis-metas-operacao.css?v=1.0.1">
 <link rel="stylesheet" href="./ondis-ui-v2.css?v=2.1.1"/>
 <script defer src="./ondis-theme-v2.js?v=2.1.0"></script>
 <link rel="stylesheet" href="./ondis-visual-v4.css?v=4.0.0"/>
@@ -7718,86 +7718,5 @@ body{ background-attachment: fixed; }
 </div>
 </div>
 
-
-<!-- Operacao: painel de acoes fora do empilhamento dos cartoes (mantem os botoes originais). -->
-<script>
-(function () {
-  'use strict';
-  const scope = '#viewOps #queueList details.queueMenu > summary';
-  let menu = null;
-  let panel = null;
-  let anchor = null;
-
-  function fechar() {
-    if (!panel) return;
-    const antigo = panel;
-    antigo.classList.remove('ondisQueueMenuPortal');
-    antigo.style.removeProperty('left');
-    antigo.style.removeProperty('top');
-    antigo.style.removeProperty('width');
-    if (menu && menu.isConnected) menu.appendChild(antigo);
-    else antigo.remove();
-    if (anchor) anchor.setAttribute('aria-expanded', 'false');
-    panel = menu = anchor = null;
-  }
-
-  function posicionar() {
-    if (!panel || !anchor || !anchor.isConnected) { fechar(); return; }
-    const rect = anchor.getBoundingClientRect();
-    const largura = Math.min(236, window.innerWidth - 24);
-    const altura = Math.min(panel.scrollHeight, window.innerHeight - 24);
-    const esquerda = Math.max(12, Math.min(rect.right - largura, window.innerWidth - largura - 12));
-    const embaixo = window.innerHeight - rect.bottom - 8;
-    const acima = rect.top - 8;
-    const topo = embaixo < altura && acima > embaixo
-      ? Math.max(12, rect.top - altura - 8)
-      : Math.min(window.innerHeight - altura - 12, rect.bottom + 8);
-    panel.style.left = esquerda + 'px';
-    panel.style.top = Math.max(12, topo) + 'px';
-    panel.style.width = largura + 'px';
-  }
-
-  function abrir(sumario) {
-    const detalhe = sumario.closest('details.queueMenu');
-    const conteudo = detalhe && detalhe.querySelector(':scope > .queueMenuPanel');
-    if (!conteudo) return;
-    fechar();
-    menu = detalhe;
-    panel = conteudo;
-    anchor = sumario;
-    // O elemento real, inclusive seus listeners dos botoes, e movido sem clonagem.
-    document.body.appendChild(panel);
-    panel.classList.add('ondisQueueMenuPortal');
-    sumario.setAttribute('aria-expanded', 'true');
-    posicionar();
-  }
-
-  document.addEventListener('click', function (evento) {
-    if (!(evento.target instanceof Element)) return;
-    const sumario = evento.target.closest(scope);
-    if (sumario) {
-      evento.preventDefault(); // impede o details nativo de reabrir dentro do cartao
-      const mesmo = sumario === anchor;
-      fechar();
-      if (!mesmo) abrir(sumario);
-      return;
-    }
-    if (panel && panel.contains(evento.target)) {
-      if (evento.target.closest('button[data-act]')) {
-        // Primeiro executa o listener original do botao, depois fecha.
-        setTimeout(fechar, 0);
-      }
-      return;
-    }
-    fechar();
-  }, true);
-
-  document.addEventListener('keydown', function (evento) {
-    if (evento.key === 'Escape') fechar();
-  });
-  window.addEventListener('resize', posicionar);
-  window.addEventListener('scroll', posicionar, true);
-})();
-</script>
-
+</body>
 </html>
